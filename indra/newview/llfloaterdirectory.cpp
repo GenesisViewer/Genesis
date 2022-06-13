@@ -257,6 +257,7 @@ LLFloaterDirectory::LLFloaterDirectory(const std::string& name)
 	}
 	
 	LLTabContainer* container = getChild<LLTabContainer>("Directory Tabs");
+	
 	if (secondlife)
 	{
 		// Remove unused tabs
@@ -264,7 +265,9 @@ LLFloaterDirectory::LLFloaterDirectory(const std::string& name)
 		LLPanel* p = getChild<LLPanel>("find_all_panel");
 		container->removeTabPanel(p); // This should be at the end
 		p->setLabel(p->getString("classic_label")); // Give it a special label
-		container->addTabPanel(p, p->getLabel());
+		//Mely : we don't want the classic planel as it doesn't work anymore
+		//TODO what was the need of this?
+		//container->addTabPanel(p, p->getLabel());
 	}
 	else
 	{

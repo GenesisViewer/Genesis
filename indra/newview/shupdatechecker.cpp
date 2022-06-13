@@ -49,8 +49,9 @@ void onCompleted(const LLSD& data, bool release)
 	args["URL"] = data["url"].asString();
 
 	static LLCachedControl<S32> lastver(release ? "SinguLastKnownReleaseBuild" : "SinguLastKnownAlphaBuild", 0);
-
-	if (build < minimum_build || build < recommended_build)
+	//Mely : deletion of critical update on startup
+	//TODO find a way to replace this
+	/**if (build < minimum_build || build < recommended_build)
 	{
 		if (lastver.get() < recommended_build)
 		{
@@ -63,7 +64,7 @@ void onCompleted(const LLSD& data, bool release)
 			LLUI::sIgnoresGroup->getWarning("UrgentUpdateModal") ? "UrgentUpdateModal" : "UrgentUpdate" :
 			"RecommendedUpdate"; //build < recommended_build
 		LLNotificationsUtil::add(notification, args, LLSD(), boost::bind(onNotifyButtonPress, _1, _2, notification, data["url"].asString()));
-	}
+	}*/
 }
 
 extern AIHTTPTimeoutPolicy getUpdateInfoResponder_timeout;

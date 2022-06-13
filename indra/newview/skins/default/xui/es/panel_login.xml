@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel name="panel_login">
+	<web_browser name="login_html"/>
+	<string name="real_url">
+		http://secondlife.com/app/login/
+	</string>
+	<string name="forgot_password_url">
+		http://secondlife.com/account/request.php
+	</string>
+	<layout_stack name="element_stack">
+		<layout_panel name="name_panel">
+			<text name="name_label">
+				Usuario:
+			</text>
+			<combo_box name="username_combo"/>
+		</layout_panel>
+		<layout_panel name="password_panel">
+			<text name="password_text">
+				Contraseña:
+			</text>
+			<line_editor name="password_edit"/>
+		</layout_panel>
+		<layout_panel name="grids_panel">
+			<text name="grids_combo_text">
+				Grid o Login URI:
+			</text>
+			<combo_box name="grids_combo" tool_tip="Ingresa el nombre/nick de un grid conocido o el uri de inicio de sesión del mismo, o selecciona uno de la lista"/>
+			<button name="grids_btn" label="Administrar Grid"/>
+		</layout_panel>
+		<layout_panel name="location_panel">
+			<text name="start_location_text">
+				Posición Inicial:
+			</text>
+			<combo_box name="start_location_combo">
+				<combo_item name="MyHome">
+					Mi Base
+				</combo_item>
+				<combo_item name="MyLastLocation">
+					Mi Última Ubicación
+				</combo_item>
+				<combo_item name="Typeregionname">
+					&lt;Escribe el Nombre de la Región&gt;
+				</combo_item>
+			</combo_box>
+		</layout_panel>
+		<layout_panel name="connect_panel">
+			<button label="Iniciar Sesión" label_selected="Iniciar Sesión" name="connect_btn"/>
+		</layout_panel>
+	</layout_stack>
+	<check_box label="Recordar Nombre" name="remember_name_check"/>
+	<button label="" tool_tip="Borrar la información de inicio de sesión de este usuario, si la hubiera." name="remove_login"/>
+	<check_box label="Recordar Contraseña" name="remember_check"/>
+	
+	<text name="create_new_account_text">
+		Crear una Cuenta
+	</text>	
+	<text name="forgot_password_text">
+		¿Olvidaste tu Nombre o tu Contraseña?
+	</text>
+	<text name="channel_text">
+		[CHANNEL] [VERSION]
+	</text>
+</panel>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel top="20" left="10" height="400" width="517" border="true" label="System" name="ascsys">
+  <tab_container label="System" bottom="0" height="440" width="497" left="0" name="Ascent System" tab_min_width="70" tab_position="top">
+
+    <panel border="true" left="1" bottom="-408" height="408" width="500" label="General" name="User Interface">
+      <text left="12" bottom_delta="-20" follows="top" name="double_click_text" value="Enable double-click"/>
+      <check_box left_delta="105" bottom_delta="-5" control_name="DoubleClickTeleport" follows="top"
+        label="teleport" tool_tip="Double-clicking on an object/person will teleport you to that location." name="double_click_teleport_check"/>
+      <check_box left_delta="67" bottom_delta="0" control_name="DoubleClickAutoPilot" follows="top" label="autopilot" tool_tip="Double-clicking on something will make you walk to that location." name="double_click_autopilot_check"/>
+      <check_box enabled_control="DoubleClickTeleport" left="20" bottom_delta="-18" control_name="OptionRotateCamAfterLocalTP" follows="top" initial_value="false"
+		label="Reset camera after teleporting" tool_tip="Centers the camera behind you after a local teleport." name="center_after_teleport_check"/>
+      <check_box enabled_control="DoubleClickTeleport" bottom_delta="-18" control_name="OptionOffsetTPByAgentHeight" follows="left|top" font="SansSerifSmall" height="16" initial_value="false"
+        label="Offset TP target by half agent height" tool_tip="Tries to aim the TP so that your feet land at the point you're aiming for." name="offset_teleport_check"/>
+      <check_box left="10" follows="top" bottom_delta="-18" control_name="ClearBeaconAfterTeleport" name="clear_beacon_after_tp" label="Clear red destination beacon after teleporting"/>
+      <check_box left="10" follows="top" bottom_delta="-18" control_name="LiruFlyAfterTeleport" name="fly_after_tp" label="Always fly after teleports" tool_tip="Avoid those falls from great heights by automatically flying after teleporting in."/>
+      <check_box left="10" follows="top" bottom_delta="-18" control_name="LiruContinueFlyingOnUnsit" name="continue_flying" label="Continue flying upon standing" tool_tip="Keeps your Fly state the same as when you sat down, so you continue to fly or not when you stand up. Useful for birds, fairies, or those who just wish to make a dramatic leap from their chairs."/>
+      <check_box left="10" bottom_delta="-18" control_name="PreviewAnimInWorld" follows="top" initial_value="false"
+        label="Preview animations on the avatar instead on a dummy before uploading" tool_tip="The Animation upload window will play animations on your avatar when previewing them." name="preview_anim_in_world_check"/>
+      <check_box bottom_delta="-18" control_name="SaveInventoryScriptsAsMono" follows="left|top" initial_value="true"
+        label="Save scripts in inventory as Mono scripts instead of LSL2" tool_tip="Scripts will automatically be compiled in Mono when saving - Usually only possible when placed in an object." name="save_scripts_as_mono_check"/>
+      <check_box bottom_delta="-18" control_name="AscentAlwaysRezInGroup" follows="left|top" initial_value="true"
+        label="Always rez objects as land group when available" tool_tip="Rez objects with the same group that the object is being rezzed on has, regardless of your active tag." name="always_rez_in_group_check"/>
+      <check_box bottom_delta="-18" control_name="AscentBuildAlwaysEnabled" follows="left|top" initial_value="true"
+        label="Always show Build as enabled" tool_tip="Allows you to use the Build menu without having to be tricky about it. May not mean you can actually build there." name="always_build_check"/>
+      <check_box bottom_delta="-18" control_name="AscentFlyAlwaysEnabled" follows="left|top" initial_value="true"
+        label="Always allow Fly" tool_tip="Lets you fly in locations you shouldn't be allowed to. Use at your own risk - Just because you can doesn't mean you should." name="always_fly_check"/>
+      <check_box bottom_delta="-18" control_name="AscentDisableMinZoomDist" follows="left|top" initial_value="true"
+        label="Disable camera minimum distance" tool_tip="Allows the camera to get reeeaaally close to things." name="disable_camera_zoom_check"/>
+      <check_box bottom_delta="-18" follows="left|top" initial_value="true"
+        label="Enable Power User functionality" tool_tip="Adds features deemed too dangerous for normal use. These features can wreak havoc or do bad things if misused - Mostly to yourself or your belongings. If you're sure, activate the checkbox below as well." name="power_user_check"/>
+      <check_box bottom_delta="-18" enabled="true" follows="top" left="20" initial_value="true"
+        label="Confirm Power User functionality" tool_tip="Confirms Power User activation. Turn this on at your own risk, and use any features it enables responsibly. [SHORT_APP_NAME] devs won't replace anything you break. We recommend having a backup copy of anything to be victim to these powers. Unlike most checkboxes, you must click Apply or OK before this will activate." name="power_user_confirm_check"/>
+      <check_box bottom_delta="-18" control_name="FetchInventoryOnLogin" follows="top" left="10" initial_value="true"
+        label="Automatically fetch the inventory in the background after login" tool_tip="Inventory will preload when you log in, so you don't have to wait for it to load when doing an initial search." name="fetch_inventory_on_login_check"/>
+      <check_box bottom_delta="-18" control_name="WindEnabled" follows="left|top" initial_value="false" label="Enable Wind Effects" name="enable_wind"/>
+      <check_box bottom_delta="-18" control_name="CloudsEnabled" follows="left|top" initial_value="true" label="Enable Clouds" name="enable_clouds"/>
+      <check_box enabled_control="CloudsEnabled" bottom_delta="-18" left_delta="10" control_name="SkyUseClassicClouds" follows="top" initial_value="true" label="Enable Classic Clouds" name="enable_classic_clouds"/>
+      <check_box bottom_delta="-18" left_delta="-10" control_name="SpeedRez" follows="top" initial_value="false" label="Enable speed-rezzing via draw distance stepping" name="speed_rez_check" tool_tip="When active, this will progressively increase your draw distance, which allows closer objects/people to rez first."/>
+      <spinner enabled_control="SpeedRez" bottom_delta="-16" left="30" control_name="SpeedRezInterval" decimal_digits="0" follows="top" height="16" width="230"
+        label="Draw distance stepping interval:" label_width="180" max_val="60" min_val="5" initial_val="20" increment="5" name="speed_rez_interval" />
+      <text enabled_control="SpeedRez" bottom_delta="0" left_delta="235" follows="left|top" height="16" name="speed_rez_seconds">seconds</text>
+      <check_box bottom_delta="-18" control_name="LiruUseContextMenus" follows="top" left="10" name="use_context_menus" label="Use context menus instead of pie menus"/>
+      <check_box bottom_delta="-18" control_name="UseWebProfiles" follows="top" left="10" name="use_web_profiles" label="Use web profiles instead of legacy v1 profiles" tool_tip="May not be available on certain grids"/>
+      <check_box bottom_delta="-18" control_name="UseWebSearch" follows="top" left="10" name="use_web_search" label="Use web-based search instead of legacy v1 search" tool_tip="May not be available on certain grids"/>
+    </panel>
+
+    <panel border="true" bottom="-580" height="525" label="Command Line" left="1" name="Command Line" width="418">
+      <check_box bottom="-25" left="10" follows="top" initial_value="false" label="Enable usage of chat bar as a command line" name="chat_cmd_toggle" control_name="AscentCmdLine"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-22" follows="top" height="16" left_delta="10" name="cmd_line_text_2">Teleport within sim (usage: cmd x y z)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdLinePos" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" left_delta="0" name="cmd_line_text_3">Teleport to ground (usage: cmd)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdLineGround" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_4" width="512">Teleport to altitude (usage: cmd z)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdLineHeight" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_5" width="512">Teleport home (usage: cmd)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdLineTeleportHome" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_6">Rez a platform (usage: cmd 0 - 30)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdLineRezPlatform" width="200"/>
+      <slider enabled_control="AscentCmdLine" bottom_delta="-22" name="AscentPlatformSize" control_name="AscentPlatformSize" decimal_digits="1" follows="top" height="18" increment="0.5"
+        initial_val="5" label="Default width:" label_width="75" max_val="30" min_val="5" width="205" tool_tip="How big do you want the platform to be?"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-20" follows="top" height="16" name="cmd_line_text_8">Calc. expressions (usage: cmd 2 + 2)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdLineCalc" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_15">Clear the chat history (usage: cmd)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" tool_tip="Clears the Chat History to prevent lag effects from chat spammers." name="AscentCmdLineClearChat" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_16">Open url/slurl (usage: cmd slurl)</text>
+      <line_editor enabled_control="AscentCmdLine" bottom_delta="-20" follows="top" height="20" max_length="256" name="SinguCmdLineURL" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="hover_txt">Resync Animations (usage: cmd)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AlchemyChatCommandResyncAnim" width="200"/>
+      <!-- Column Split -->
+      <view_border enabled_control="AscentCmdLine" bevel_style="none" border_thickness="1" bottom_delta="-5" follows="top|left" height="371" left="230" name="CmdDivisor" width="0"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="353" follows="top" height="16" left_delta="10" name="cmd_line_text_9">Change Draw Distance (usage: cmd meters)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdLineDrawDistance" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_10">Teleport to cam position (usage: cmd)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdTeleportToCam" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_11">Get avatar name from key (usage: cmd key)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdLineKeyToName" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_12">Offer teleport to avatar (usage: cmd key)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdLineOfferTp" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_7">Teleport to sim x (usage: cmd simname)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AscentCmdLineMapTo" width="200"/>
+      <check_box enabled_control="AscentCmdLine" bottom_delta="-24" follows="top" initial_value="false" label="Use same position between sims" name="map_to_keep_pos" control_name="AscentMapToKeepPos"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_13">Teleport to avatar (usage: cmd name)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" tool_tip="The syntax of this command allows partial names and is not case sensitive. Better results if used while the Radar is open." name="AscentCmdLineTP2" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_14">Toggle Fake Away Status (usage: cmd)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="SinguCmdLineAway" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="cmd_line_text_15">Send region message (usage: cmd msg)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="SinguCmdLineRegionSay" tool_tip="Only works properly on permissive regions (Estate Managers only), falls back on normal chat pipes" width="200"/>
+      <text enabled_control="AscentCmdLine" bottom_delta="-18" follows="top" height="16" name="hover_txt">Hover Height (usage: cmd height)</text>
+      <line_editor enabled_control="AscentCmdLine" bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-20" follows="top" height="20" max_length="256" name="AlchemyChatCommandHoverHeight" width="200"/>
+    </panel>
+
+    <panel border="true" left="1" bottom="-408" height="408" width="500" label="Security &amp; Privacy" name="Security">
+      <check_box bottom_delta="-25" control_name="BroadcastViewerEffects" follows="top" initial_value="true" label="Broadcast Viewer Effects (does not affect pointat and lookat)" left="10" name="broadcast_viewer_effects" width="400"/>
+      <check_box bottom_delta="-20" control_name="DisablePointAtAndBeam" follows="top" initial_value="true" label="Disable Point At And Beam" tool_tip="Don't point at or show your edit beam when selecting an object." name="disable_point_at_and_beams_check"/>
+      <check_box bottom_delta="-20" control_name="PrivateLookAt" follows="top" initial_value="false" label="Do not Look At objects and/or avatars" tool_tip="Disables headturns and lookat beacons, causing your avatar to look straight ahead (unless scripted to do otherwise)." name="private_look_at_check"/>
+      <check_box bottom_delta="-20" control_name="AlchemyLookAtHideSelf" follows="top" initial_value="false" label="Don't show me my LookAt beacon" tool_tip="Don't show me my own camera crosshairs" name="LookAtHideOwn"/>
+      <check_box bottom_delta="-20" control_name="AscentShowLookAt" follows="top" initial_value="false" label="Show LookAt beacons" tool_tip="Shows you where people are looking." name="show_look_at_check"/>
+      <combo_box bottom_delta="-1" left_delta="200" follows="top" height="18" control_name="LookAtNameSystem" name="lookat_namesystem_combobox" width="130" tool_tip="Style for displaying names on LookAt beacons">
+        <combo_item name="No Names" value="-1">No Names</combo_item>
+        <combo_item name="Old Names" value="0">Old Names</combo_item>
+        <combo_item name="Display Names (with Username)" value="1">Display Names (w/Username)</combo_item>
+        <combo_item name="Display Names only" value="2">Display Names only</combo_item>
+        <combo_item name="Old Names (with Display Names)" value="3">Old Names (w/Display)</combo_item>
+      </combo_box>
+      <check_box bottom_delta="-18" left="10" control_name="AlchemyLookAtLines" follows="top" label="Show a line from look at beacon to avatar" tool_tip="See a line connecting the camera focus point to the avatar. Useful to find where they are." name="lineslookat"/>
+      <check_box bottom_delta="-20" control_name="AnnounceBumps" follows="top" label="Announce in chat when people bump you" name="announce_bumps"/>
+      <check_box bottom_delta="-20" control_name="AlchemySitOnAway" follows="top" label="Sit down when you go AFK" name="AlchemySitOnAway"/>
+      <check_box bottom_delta="-20" control_name="SGDetachBridge" follows="top" initial_value="false" label="Auto detach LSL Bridge" tool_tip="Automatically detach LSL Bridge of Phoenix or Firestorm viewer." name="detach_bridge"/>
+      <check_box bottom_delta="-20" follows="top" label="Render muted avatars" name="render_muted" control_name="LiruLegacyDisplayMuteds"/>
+      <check_box bottom_delta="-20" control_name="QuietSnapshotsToDisk" follows="top" initial_value="false" label="Quiet Snapshots to Disk" tool_tip="Doesn't make a camera sound nor alert everyone when you take a snapshot to your computer." name="quiet_snapshots_check"/>
+      <check_box bottom_delta="-20" control_name="RevokePermsOnStandUp" follows="top" initial_value="false" label="On standing up, revoke perms for the object your avatar was sitting on" tool_tip="Objects generally retain Take Control and Trigger Animation permissions until reset or given permission by another user. Enabling this will make sure you revoke these permissions immediately." name="revoke_perms_on_stand_up_check"/>
+      <check_box bottom_delta="-20" control_name="DisableClickSit" follows="top" initial_value="false" label="Disable click-to-sit on objects" tool_tip="Some griefer tools rely on forcing or tricking you to click on an object that will make you sit, giving the object automatic permissions to trigger animations amongst other things. This will disable llSitTarget - It does mean that you will need to select 'Sit' on poseballs and furniture." name="disable_click_sit_check"/>
+      <check_box disabled_control="DisableClickSit" bottom_delta="0" left_delta="170" control_name="DisableClickSitOtherOwner" follows="top" label="you don't own" tool_tip="Disables click to sit on objects you don't own (If used with the group check, only one is needed)" name="disable_click_sit_own_check"/>
+      <check_box bottom_delta="-20" left="10" follows="top" initial_value="false" label="Display Total Script Count changes:" name="totalscriptjumps" control_name="AscentDisplayTotalScriptJumps" tool_tip="Displays script count changes in your region, dependant on the threshold you choose to the right."/>
+      <spinner bottom_delta="0" decimal_digits="0" follows="top" height="16" increment="1" left_delta="210" max_val="9999" min_val="1" name="ScriptJumpCount" width="50" control_name="Ascentnumscriptdiff" tool_tip="Threshold for the script jump message [Default: 100]"/>
+      <check_box bottom_delta="-20" left="10" follows="top" label="Restrained Love API Support (RLVa)" name="RestrainedLove" control_name="RestrainedLove" tool_tip="Allows scripts to take greater control of the viewer, if you wear compliant objects."/>
+      <check_box bottom_delta="-20" follows="top" label="Replace slurls and formatted links with labels" name="SinguReplaceLinks" control_name="SinguReplaceLinks" tool_tip="While you can right click to see where they really lead by copying them, this does allow links to be misleading at first glance."/>
+      <text name="EmergencyTeleportDesc" left="14" bottom_delta="-12" follows="top">Drop a landmark below to autoteleport to before region restarts</text>
+      <spinner name="EmergencyTeleportSeconds" label="Seconds before restart to begin teleport attempts" label_width="380" width="432" control_name="EmergencyTeleportSeconds" bottom_delta="-26" decimal_digits="0" max_val="3600" min_val="0" follows="left|top" height="18" increment="1"/>
+      <drop_target control_name="EmergencyTeleportLandmark" bottom_delta="-4" left="15" height="17" name="emergency_teleport_landmark_drop" width="430"/>
+      <text name="EmergencyTeleportBackupDesc" halign="center" width="432" left="14" bottom_delta="-26" follows="top">Drop a backup landmark to autoteleport to below, should you already be at above</text>
+      <drop_target control_name="EmergencyTeleportLandmarkBackup" bottom_delta="-8" left="15" height="17" name="emergency_teleport_landmark_backup_drop" width="430"/>
+    </panel>
+
+    <panel border="true" left="1" bottom="-408" height="408" width="500" label="Building" name="Building">
+      <text bottom_delta="-19" follows="top" height="10" left_delta="30" name="text_box6" halign="center" width="80">Pivot Point</text>
+      <spinner bottom_delta="-20" decimal_digits="5" follows="top" height="16" increment="0.05" label="X pos" label_width="40" left="10" max_val="256" min_val="-256" name="X pos" width="120" control_name="AscentBuildPrefs_PivotX"/>
+      <spinner bottom_delta="-20" decimal_digits="5" follows="top" height="16" increment="0.05" label="Y pos" label_width="40" max_val="256" min_val="-256" name="Y pos" width="120" control_name="AscentBuildPrefs_PivotY"/>
+      <spinner bottom_delta="-20" decimal_digits="5" follows="top" height="16" increment="0.05" label="Z pos" label_width="40" max_val="256" min_val="-256" name="Z pos" width="120" control_name="AscentBuildPrefs_PivotZ"/>
+      <check_box bottom_delta="-20" follows="top" label="Values are percent" left_delta="-5" tool_tip="Default settings are Percentages and every axis set at 50" name="EmPivotPercToggle" control_name="AscentBuildPrefs_PivotIsPercent"/>
+      <text bottom="-19" left="170" name="Dimensions" halign="center" width="70">Dimensions</text>
+      <spinner bottom_delta="-20" left_delta="-20" decimal_digits="5" follows="left|top" height="16" increment="0.0005" label="X size" label_width="40" max_val="10" min_val="0.0001" name="X size" width="110" control_name="BuildPrefs_Xsize"/>
+      <spinner bottom_delta="-20" decimal_digits="5" follows="left|top" height="16" increment="0.0005" label="Y size" label_width="40" max_val="10" min_val="0.0001" name="Y size" width="110" control_name="BuildPrefs_Ysize"/>
+      <spinner bottom_delta="-20" decimal_digits="5" follows="left|top" height="16" increment="0.0005" label="Z size" label_width="40" max_val="10" min_val="0.0001" name="Z size" width="110" control_name="BuildPrefs_Zsize"/>
+      <text bottom_delta="-15" left_delta="-6" follows="top" name="Material">Material:</text>
+      <combo_box bottom_delta="-5" left_delta="48" follows="top" height="18" name="material" width="74" control_name="BuildPrefs_Material">
+        <combo_item name="Stone" value="Stone">Stone</combo_item>
+        <combo_item name="Metal" value="Metal">Metal</combo_item>
+        <combo_item name="Glass" value="Glass">Glass</combo_item>
+        <combo_item name="Wood" value="Wood">Wood</combo_item>
+        <combo_item name="Flesh" value="Flesh">Flesh</combo_item>
+        <combo_item name="Plastic" value="Plastic">Plastic</combo_item>
+        <combo_item name="Rubber" value="Rubber">Rubber</combo_item>
+      </combo_box>
+      <text bottom="-19" left_delta="85" name="text_box7" halign="center" width="145">Next Owner Perms</text>
+      <text bottom="-34" left_delta="0" name="text_box8" halign="center" width="65">Objects</text>
+        <check_box follows="top" height="16" initial_value="false" label="Copy" tool_tip="Next owner can make copies of creations" name="next_owner_copy" control_name="ObjectsNextOwnerCopy"/>
+        <check_box follows="top" height="16" initial_value="false" label="Modify" tool_tip="Next owner can edit creations" name="next_owner_modify" control_name="ObjectsNextOwnerModify"/>
+        <check_box follows="top" height="16" initial_value="true" label="Transfer" tool_tip="Next owner can give(or sell) creations" name="next_owner_transfer" control_name="ObjectsNextOwnerTransfer" enabled_control="ObjectsNextOwnerCopy"/>
+      <text bottom="-34" left_delta="85" name="text_box9" halign="center" width="65">Scripts</text>
+        <check_box follows="top" height="16" label="Copy" tool_tip="Next owner can make copies of scripts" name="script_next_owner_copy" control_name="ScriptsNextOwnerCopy"/>
+        <check_box follows="top" height="16" label="Modify" tool_tip="Next owner can edit scripts" name="script_next_owner_modify" control_name="ScriptsNextOwnerModify"/>
+        <check_box follows="top" height="16" label="Transfer" tool_tip="Next owner can give(or sell) scripts" name="script_next_owner_transfer" control_name="ScriptsNextOwnerTransfer" enabled_control="ScriptsNextOwnerCopy"/>
+      <check_box bottom="-131" left="5" follows="top" height="16" label="Phantom" name="EmPhantomToggle" control_name="EmeraldBuildPrefs_Phantom"/>
+      <check_box follows="top" height="16" label="Physical" name="EmPhysicalToggle" control_name="EmeraldBuildPrefs_Physical"/>
+      <check_box follows="top" height="16" label="Temporary" name="EmTemporaryToggle" control_name="EmeraldBuildPrefs_Temporary"/>
+      <texture_picker allow_no_texture="false" bottom="-190" can_apply_immediately="true" default_image_name="Default" follows="top" height="80" label="     Texture" left="108" name="texture control" control_name="EmeraldBuildPrefs_Texture" tool_tip="Click to choose a texture" width="64"/>
+      <color_swatch border_color="0.45098, 0.517647, 0.607843, 1" bottom="-190" can_apply_immediately="true" color="1, 1, 1, 1" follows="top" height="80" label="      Color" left_delta="88" name="colorswatch" tool_tip="Click to open Color Picker" width="64" control_name="EmeraldBuildPrefs_Color"/>
+      <spinner bottom_delta="60" decimal_digits="0" follows="top" height="16" increment="1" label="Alpha" label_width="45" left_delta="88" max_val="100" min_val="0" name="alpha" width="97" control_name="EmeraldBuildPrefs_Alpha"/>
+      <spinner bottom_delta="-20" decimal_digits="2" follows="top" height="16" increment="0.05" label="Glow" label_width="45" max_val="1" min_val="0" name="glow" width="97" control_name="EmeraldBuildPrefs_Glow"/>
+      <check_box follows="top" height="16" label="Full Bright" name="EmFBToggle" control_name="EmeraldBuildPrefs_FullBright"/>
+      <text name="shine" follows="top">Shine</text>
+      <combo_box bottom_delta="-5" follows="top" left_delta="33" height="18" name="combobox shininess" tool_tip="Set the amount of shine for the object" width="64" control_name="EmeraldBuildPrefs_Shiny">
+        <combo_item name="None" value="None">None</combo_item>
+        <combo_item name="Low" value="Low">Low</combo_item>
+        <combo_item name="Medium" value="Medium">Medium</combo_item>
+        <combo_item name="High" value="High">High</combo_item>
+      </combo_box>
+      <check_box name="EmeraldBuildPrefsEmbedItem" left="5" bottom_delta="-20" follows="top" initial_value="false" label="Put an item into new objects" control_name="EmeraldBuildPrefs_EmbedItem"/>
+       <drop_target control_name="EmeraldBuildPrefs_Item" bottom_delta="-3" left="9" height="17" name="build_item_add_disp_rect" width="274"/>
+      <check_box bottom_delta="4" follows="top" left_delta="274" label="Highlight selected prims" name="EmBuildPrefsRenderHighlight_toggle" control_name="RenderHighlightSelections"/>
+      <check_box bottom_delta="-20" follows="top" initial_value="false" label="Axis arrow on root prim position" tool_tip="Default behaviour is to show the axis on the center of mass of a linkset. If enabled, the axis will be shown on the root prim of the linkset instead." name="EmBuildPrefsActualRoot_toggle" control_name="AscentBuildPrefs_ActualRoot"/>
+    </panel>
+
+  </tab_container>
+</panel>

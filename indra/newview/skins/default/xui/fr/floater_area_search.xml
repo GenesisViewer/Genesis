@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="area search" title="Recherche d'objets par zone">
+	<text name="name_label">
+		Recherche par Nom:
+	</text>
+	<text name="desc_label">
+		Recherche par Description:
+	</text>
+	<text name="owner_label">
+		Recherche par Propriétaire:
+	</text>
+	<text name="group_label">
+		Recherche par Groupe:
+	</text>
+	<scroll_list name="result_list">
+		<column name="Name" label="Nom" tool_tip="Double-clic pour obtenir la position."/>
+		<column name="Description" label="Description" tool_tip="Double-clic pour obtenir la position."/>
+		<column name="Owner" label="Propriétaire" tool_tip="Double-clic pour obtenir la position."/>
+		<column name="Group" label="Groupe" tool_tip="Double-clic pour obtenir la position."/>
+	</scroll_list>
+	<text name="counter">
+		Liste/Attente/Total
+	</text>
+</floater>

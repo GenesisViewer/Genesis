@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel label="Prohibir Residentes" name="bulk_ban_panel" width="210">
+    <panel.string name="loading">
+        (cargando...)
+    </panel.string>
+    <panel.string name="ban_selection_too_large">
+        Prohibición de Grupo no enviada: Demasiados residentes seleccionados. La Prohibición de Grupo está limitada a 100 residentes por requerimiento.
+    </panel.string>
+    <panel.string name="ban_not_permitted">
+        Prohibición de Grupo no enviada: No tienes la capacidad "Administrar lista de prohibición".
+    </panel.string>
+    <panel.string name="ban_limit_fail">
+        Prohibición de Grupo no enviada: Tu grupo ha alcanzado el límite de registros de prohibiciones.
+    </panel.string>
+    <panel.string name="partial_ban">
+        Algunas prohibiciones en el grupo no han sido enviadas:
+[REASONS]
+    </panel.string>
+    <panel.string name="ban_failed">
+        Prohibiciones de Grupo no enviadas: 
+[REASONS]
+    </panel.string>
+    <panel.string name="residents_already_banned">
+        - Los siguientes residentes ya se encuentran prohibidos: [RESIDENTS].
+    </panel.string>
+    <panel.string name="ban_limit_reached">
+        - Límite de prohibiciones alcanzado, los siguientes agentes no fueron prohibidos: [RESIDENTS].
+    </panel.string>
+    <panel.string name="cant_ban_yourself">
+        No puedes prohibirte a ti mismo del grupo.
+    </panel.string>
+    <text name="help_text">
+        Puedes seleccionar múltiples residentesYou can select multiple Residents to
+para prohibirles el acceso al grupo. Pulsa &apos;Abrir
+Selector de Residentes&apos; para comenzar.
+    </text>
+    <button label="Abrir Selector de Residentes" name="add_button"/>
+    <name_list name="banned_agent_list" tool_tip="Mantén presionada la tecla Ctrl y pulsa sobre el nombre del residente para selección múltiple"/>
+    <button label="Quitar seleccionado de la lista" name="remove_button" tool_tip="Eliminar de la lista de prohibición a los residentes seleccionados"/>
+    <button label="Prohibir Residentes" name="ban_button"/>
+    <button label="Cancelar" name="cancel_button"/>
+    <string name="GroupBulkBan">
+        Prohibición al Grupo
+    </string>
+</panel>

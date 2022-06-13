@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel border="true" bottom="-409" height="408" label="General" left="102" name="general_panel" width="517">
+  <radio_group bottom="-44" height="40" left="109" name="default_start_location" width="220">
+    <radio_item bottom="-20" height="20" name="home" tool_tip="Log into my home location by default.">My Home</radio_item>
+    <radio_item bottom="-20" height="20" left="93" name="last" tool_tip="Log into my last location by default.">My Last Location</radio_item>
+  </radio_group>
+  <check_box bottom="-42" height="16" initial_value="true" label="Show Start Location on Login Screen" name="show_location_checkbox"/>
+	<combo_box bottom_delta="-27" follows="top" height="18" left="103" name="fade_out_combobox" width="111">
+		<combo_item name="Never" value="Never">Never</combo_item>
+		<combo_item name="Show Temporarily" value="Show Temporarily">Show Temporarily</combo_item>
+		<combo_item name="Always" value="Always">Always</combo_item>
+	</combo_box>
+	<combo_box bottom_delta="0" follows="top" height="18" left="220" name="namesystem_combobox" width="166">
+		<combo_item name="Old Names" value="0">Old Names</combo_item>
+		<combo_item name="Display Names (with Username)" value="1">Display Names (w/Username)</combo_item>
+		<combo_item name="Display Names only" value="2">Display Names only</combo_item>
+		<combo_item name="Old Names (with Display Names)" value="3">Old Names (w/Display)</combo_item>
+	</combo_box>
+	<check_box bottom_delta="0" follows="top" height="16" label="Show Resident" left_delta="174" name="show_resident_checkbox"/>
+	<check_box bottom_delta="-25" follows="top" height="16" initial_value="true" label="Small Avatar Names" left="101" name="small_avatar_names_checkbox"/>
+	<check_box bottom_delta="-18" follows="top" height="16" initial_value="false" label="Hide My Name On My Screen" name="show_my_name_checkbox"/>
+	<text bottom_delta="-24" follows="top" height="16" left="10" name="group_titles_textbox">Group Titles:</text>
+	<check_box bottom_delta="0" follows="top" height="16" initial_value="false" label="Hide All Group Titles" left="101" name="show_all_title_checkbox"/>
+	<check_box bottom_delta="-18" follows="top" height="16" initial_value="false" label="Hide My Group Title" left="101" name="show_my_title_checkbox"/>
+	<text bottom="-180" height="12" left="10" name="UI Size:">UI Size:</text>
+	<slider bottom="-180" can_edit_text="true" height="16" increment="0.025" initial_val="1" left="98" max_val="2.4" min_val="0.5" name="ui_scale_slider" value="1" width="227" />
+	<check_box bottom="-195" height="16" initial_value="false" label="Use resolution independent scale" left="101" name="ui_auto_scale"/>
+	<check_box bottom="-219" height="16" left="10" label="Go away when idle" name="away_when_idle_checkbox"/>
+	<spinner bottom="-220" decimal_digits="0" height="16" increment="1" initial_val="300" label="Away Timeout:" label_width="91" left="136" max_val="600" min_val="0" name="afk_timeout_spinner" width="137"/>
+	<check_box bottom="-257" height="16" initial_value="false" label="Notify when in-world currency is exchanged" left="10" name="notify_money_change_checkbox"/>
+	<check_box bottom="-257" height="16" label="without filling up the corner" left="280" name="no_transaction_clutter_checkbox" tool_tip="Still present the notifications, but have them pop up in the bottom right momentarily, then leave, so the transaction draws attention but doesn't get in the way."/>
+	<text bottom="-291" height="10" left="10" name="maturity_desired_label">Rating:</text>
+	<text bottom="-291" height="10" left="101" name="maturity_desired_prompt">I want to access content rated:</text>
+	<combo_box bottom="-297" follows="left|top" height="18" left="267" name="maturity_desired_combobox" width="120" control_name="PreferredMaturity">
+		<combo_item name="Desired_Adult" value="42">PG, Mature &amp; Adult</combo_item>
+		<combo_item name="Desired_Mature" value="21">PG &amp; Mature</combo_item>
+		<combo_item name="Desired_PG" value="13">PG only</combo_item>
+	</combo_box>
+	<text bottom="-291" height="10" left="265" name="maturity_desired_textbox">PG only</text>
+	<text bottom="-20" height="10" left="10" name="start_location_textbox">Start Location:</text>
+	<text bottom="-64" height="10" name="show_names_textbox">Show Names:</text>
+	<text bottom="-214" height="10" left="276" name="seconds_textbox">seconds</text>
+	<text bottom="-331" height="18" left="10" name="crash_report_textbox">Crash reports:</text>
+	<text bottom="-363" height="18" name="language_textbox">Language:</text>
+	<text bottom_delta="6" follows="top" height="18" left_delta="243" name="language_textbox2">(Requires restart for full effect)
+          *Uses English UI</text>
+	<combo_box allow_text_entry="true" bottom="-361" follows="top" height="16" left="103" name="language_combobox" max_chars="32" width="140">
+		<combo_item name="System Default Language" value="default">System Default</combo_item>
+		<combo_item name="English" value="en-us">English</combo_item>		
+		<!-- After "System Default" and "English", please keep the rest of these combo_items in alphabetical order by the first character in the string.-->
+		<combo_item name="Deutsch(German)" value="de">Deutsch(German)</combo_item>
+		<combo_item name="Spanish" value="es">Español(Spanish)</combo_item>
+		<combo_item name="French" value="fr">Français(French)</combo_item>
+		<combo_item name="Italian" value="it">Italiano(Italian)</combo_item>
+		<combo_item name="Portugese" value="pt">Portugués(Portuguese)</combo_item>
+		<!-- Also, with the above advice in mind, keep completed UI translations above this line.-->
+		<combo_item name="Danish" value="da">Dansk(Danish)*</combo_item>
+		<combo_item name="Hungarian" value="hu">Magyar(Hungarian)*</combo_item>
+		<combo_item name="Dutch" value="nl">Nederlands(Dutch)*</combo_item>
+		<combo_item name="Polish" value="pl">Polski(Polish)*</combo_item>
+ 		<combo_item name="Russian" value="ru">Русский(Russian)*</combo_item>
+		<combo_item name="Turkish" value="tr">Türkçe(Turkish)*</combo_item>
+ 		<combo_item name="Ukrainian" value="uk">Українська(Ukrainian)*</combo_item>
+		<combo_item name="Chinese" value="zh">中文(简体)(Chinese)*</combo_item>
+		<combo_item name="(Japanese)" value="ja">日本語(Japanese)*</combo_item>
+		<combo_item name="(Korean)" value="ko">한국어(Korean)*</combo_item>
+	</combo_box>
+	<string name="region_name_prompt">&lt;Type region name&gt;</string>
+	<combo_box bottom="-328" height="18" left="103" name="crash_behavior_combobox" width="140">
+		<combo_item name="Neversend" value="0">Never send</combo_item>
+		<combo_item name="Alwayssend" value="1">Always send</combo_item>
+	</combo_box>
+  <check_box bottom="-385" height="16" initial_value="false" label="Share language with objects" left="101" name="language_is_public" tool_tip="This lets in-world objects know your preferred language."/>
+  <button bottom="-425" height="25" label="Reset All Settings" name="clear_settings" width="200" />
+</panel>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<panel label="Estado" name="Estate">
+	<text name="estate_help_text">
+		En esta pestaña, los cambios en la configuración afectarán a todas las regiones del estado.
+	</text>
+	<text name="estate_text">
+		Estado:
+	</text>
+	<text name="estate_name">
+		(desconocido)
+	</text>
+	<text name="owner_text">
+		Propietario del estado:
+	</text>
+	<name_box name="estate_owner">
+		(desconocido)
+	</name_box>
+	<check_box label="Permitir el acceso público" name="externally_visible_check"/>
+	<button label="?" name="externally_visible_help"/>	
+	<check_box label="Permitir el chat de voz" name="voice_chat_check"/>
+	<button label="?" name="voice_chat_help"/>
+	<check_box label="Permitir teleporte a cualquier punto" name="allow_direct_teleport"/>
+	<button label="?" name="allow_direct_teleport_help"/>
+	<check_box label="Usar el horario global" name="use_global_time_check"/>
+	<button label="?" name="use_global_time_help"/>
+	<check_box label="Fijar el Sol" name="fixed_sun_check"/>
+	<button label="?" name="fixed_sun_help"/>
+	<slider label="Fase" name="sun_hour_slider"/>
+	<button label="Aplicar" name="apply_btn"/>
+	<text name="Only Allow">
+		Permitir acceso únicamente a Residentes que:
+	</text>
+	<check_box label="Han aportado la información de pago." name="limit_payment" tool_tip="Para poder acceder a este estado los Residentes deben haber aportado información de pago en su cuenta. Para más información, ver support.secondlife.com."/>
+	<check_box label="Son mayores de 18 años" name="limit_age_verified" tool_tip="Para poder acceder a este estado, los Residentes deben ser mayores de 18 años. Para más información, consulta support.secondlife.com."/>
+	<button label="Enviar un mensaje al estado..." name="message_estate_btn"/>
+	<button label="Expulsar a un Residente del estado..." name="kick_user_from_estate_btn"/>
+</panel>

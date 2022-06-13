@@ -1,0 +1,8 @@
+<textures version="101">
+  <texture name="toolbar_btn_enabled.tga" scale.left="7" scale.top="50" scale.right="121" scale.bottom="0" />
+  <texture name="Rounded_Square" file_name="rounded_square.tga" preload="true" scale.left="16" scale.top="16" scale.right="112" scale.bottom="16" />
+  <texture name="Rounded_Square_Soft" file_name="rounded_square_soft.tga" preload="true" scale.left="16" scale.top="16" scale.right="112" scale.bottom="16" />
+  <texture name="SliderThumb_Off" file_name="icn_slide-thumb_dark.tga" scale.left="2" scale.top="5" scale.right="29" scale.bottom="4" />
+  <texture name="UIImgBtnCloseActiveUUID" file_name="closebox.png" />
+  <texture name="UIImgBtnClosePressedUUID" file_name="closebox_active.png" />
+</textures>

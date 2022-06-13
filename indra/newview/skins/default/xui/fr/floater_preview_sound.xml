@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater name="preview_sound">
+	<text name="desc">
+		Description:
+	</text>
+	<button label="Jouer dans le monde" label_selected="Jouer dans le monde"
+	     name="Sound play btn"
+	     tool_tip="Jouer ce son qui sera entendu par les avatars dans le &#x22;range&#x22;" width="138" left_delta="-142"/>
+	<button label="Jouer localement" label_selected="Jouer localement"
+	     name="Sound audition btn"
+	     tool_tip="Jouer ce son en &#xE9;tant le seul à l'entendre." width="125" left="162"/>
+</floater>

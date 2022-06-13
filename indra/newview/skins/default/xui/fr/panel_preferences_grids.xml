@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel label="Grilles" name="Grids panel">
+  <!-- Grid Selector -->
+  <text name="grid_selector_label">
+    Choisir une grille :
+  </text>
+  <!-- Buttons -->
+  <button label="Supprimer" name="btn_delete"/>
+  <button label="Ajouter" name="btn_add"/>
+  <button label="Copier" name="btn_copy"/>
+  <!-- Advanced -->
+  <button label="Avancé" name="btn_advanced"/>
+  <!-- Login URI -->
+  <text name="loginuri_label">
+    Login URL :
+  </text>
+  <!-- Platform -->
+  <text name="platform_label">
+    Plateforme :
+  </text>
+  <!-- Grid Name -->
+  <text name="gridname_label">
+    Nom :
+  </text>
+
+  <!-- Grid Message -->
+  <text name="gridmessage_label">
+    Infos :
+  </text>
+
+  <!-- Grid Splash Page -->
+  <text name="loginpage_label">
+    Page Splash :
+  </text>
+  <!-- Helper URI -->
+  <text name="helperuri_label">
+    Aide URL :
+  </text>
+  <!-- Web Site -->
+  <text name="website_label">
+    Site Web :
+  </text>
+  <!-- Support URL -->
+  <text name="support_label">
+    Support URL :
+  </text>
+  <!-- Account URL -->
+  <text name="register_label">
+    Compte URL :
+  </text>
+  <!-- Password URL -->
+  <text name="password_label">
+    Mot de Passe URL :
+  </text>
+  <!-- Search URL -->
+  <text name="search_label">
+    Recherche URL :
+  </text>
+  <!-- Rendering Compatibility -->
+  <check_box label="Rendu de la compatibilé" name="render_compat"/>
+</panel>

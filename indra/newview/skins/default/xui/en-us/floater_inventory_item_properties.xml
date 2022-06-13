@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater can_close="true" can_drag_on_left="false" can_minimize="true"
+     can_resize="false" height="360" min_height="100" min_width="100"
+     name="item properties" rect_control="PropertiesRect"
+     title="Inventory Item Properties" width="350">
+	<icon bottom="-21" follows="top|right" height="16" image_name="icon_lock.tga"
+	     left="294" mouse_opaque="true" name="IconLocked" width="16" />
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-14" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left="10"
+	     mouse_opaque="true" name="LabelItemNameTitle" v_pad="0" width="78">
+		Name:
+	</text>
+	<line_editor bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-6"
+	     enabled="true" follows="left|top|right" font="SansSerifSmall" height="16"
+	     is_unicode="false" left="88" max_length="63" mouse_opaque="true"
+	     name="LabelItemName" width="252" />
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-14" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left="10"
+	     mouse_opaque="true" name="LabelItemDescTitle" v_pad="0" width="78">
+		Description:
+	</text>
+	<line_editor bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-6"
+	     enabled="true" follows="left|top|right" font="SansSerifSmall" height="16"
+	     is_unicode="false" left="88" max_length="127" mouse_opaque="true"
+	     name="LabelItemDesc" width="252" spell_check="true" />
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
+	     mouse_opaque="true" name="LabelCreatorTitle" v_pad="0" width="78">
+		Creator:
+	</text>
+	<name_box bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="0" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="78"
+	     mouse_opaque="true" name="LabelCreatorName" v_pad="0" rlv_sensitive="true">
+		Nicole Linden
+	</name_box>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
+	     mouse_opaque="true" name="LabelOwnerTitle" v_pad="0" width="78">
+		Owner:
+	</text>
+	<name_box bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="0" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="78"
+	     mouse_opaque="true" name="LabelOwnerName" v_pad="0" rlv_sensitive="true">
+		Thrax Linden
+	</name_box>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
+	     mouse_opaque="true" name="LabelLastOwnerTitle" v_pad="0" width="78">
+		Last Owner:
+	</text>
+	<name_box bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="0" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="78"
+	     mouse_opaque="true" name="LabelLastOwnerName" v_pad="0" rlv_sensitive="true">
+		OnceUponA Linden
+	</name_box>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-16" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
+	     mouse_opaque="true" name="LabelAcquiredTitle" v_pad="0" width="78">
+		Acquired:
+	</text>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="0" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="78"
+	     mouse_opaque="true" name="LabelAcquiredDate" v_pad="0" width="252">
+		Wed May 24 12:50:46 2006
+	</text>
+      <text
+        type="string"
+        length="1"
+        follows="left|top"
+        height="10"
+        layout="topleft"
+        left="10"
+        name="LabelItemExperienceTitle"
+        bottom_delta="-10"
+        width="78"
+        visible="true">
+        Experience:
+      </text>
+      <name_box
+        type="string"
+        length="1"
+        follows="left|top|right"
+        height="10"
+        layout="topleft"
+        left_delta="78"
+        name="LabelItemExperience"
+        bottom_delta="0"
+        width="210"
+        id_type="3"
+        visible="true"
+        />
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-16" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left="10"
+	     mouse_opaque="true" name="OwnerLabel" v_pad="0" width="78">
+		You can:
+	</text>
+	<check_box bottom_delta="-20" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Modify" left="10" mouse_opaque="true"
+	     name="CheckOwnerModify" radio_style="false" width="78" />
+	<check_box bottom_delta="0" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Copy" left_delta="78" mouse_opaque="true"
+	     name="CheckOwnerCopy" radio_style="false" width="88" />
+	<check_box bottom_delta="0" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Transfer" left_delta="88"
+	     mouse_opaque="true" name="CheckOwnerTransfer" radio_style="false"
+	     width="106" />
+	<check_box name="CheckOwnerExport" label="Export" bottom_delta="0" follows="left|top" left_delta="88" enabled="false"/>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-10" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left="10"
+	     mouse_opaque="true" name="BaseMaskDebug" v_pad="0" width="330">
+		B:
+	</text>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="0" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left_delta="60"
+	     mouse_opaque="true" name="OwnerMaskDebug" v_pad="0" width="270">
+		O:
+	</text>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="0" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left_delta="60"
+	     mouse_opaque="true" name="GroupMaskDebug" v_pad="0" width="210">
+		G:
+	</text>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="0" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left_delta="60"
+	     mouse_opaque="true" name="EveryoneMaskDebug" v_pad="0" width="150">
+		E:
+	</text>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="0" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left_delta="60"
+	     mouse_opaque="true" name="NextMaskDebug" v_pad="0" width="90">
+		N:
+	</text>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left="10"
+	     mouse_opaque="true" name="GroupLabel" v_pad="0" width="198">
+		Group members can:
+	</text>
+	<check_box bottom_delta="-20" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Modify" left="10" mouse_opaque="true"
+	     name="CheckGroupMod" radio_style="false" width="78" />
+	<check_box bottom_delta="0" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Copy" left_delta="78" mouse_opaque="true"
+	     name="CheckGroupCopy" radio_style="false" width="88" />
+	<check_box bottom_delta="0" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Move" left_delta="88" mouse_opaque="true"
+	     name="CheckGroupMove" radio_style="false" width="106" />
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-17" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left="10"
+	     mouse_opaque="true" name="EveryoneLabel" v_pad="0" width="88">
+		Anyone can:
+	</text>
+	<check_box bottom_delta="-8" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Copy" left="88" mouse_opaque="true"
+	     name="CheckEveryoneCopy" radio_style="false" width="88" />
+	<check_box bottom_delta="0" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Move" left_delta="88" mouse_opaque="true"
+		 name="CheckEveryoneMove" radio_style="false" width="88" />
+	<check_box name="CheckExport" label="Export" bottom_delta="0" follows="left|top" left_delta="88"/>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-13" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left="10"
+	     mouse_opaque="true" name="NextOwnerLabel" v_pad="0" width="88">
+		Next owner can:
+	</text>
+	<check_box bottom_delta="-20" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Modify" left="10" mouse_opaque="true"
+	     name="CheckNextOwnerModify" radio_style="false" width="78" />
+	<check_box bottom_delta="0" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Copy" left_delta="78" mouse_opaque="true"
+	     name="CheckNextOwnerCopy" radio_style="false" width="88" />
+	<check_box bottom_delta="0" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Transfer" left_delta="88"
+	     mouse_opaque="true" name="CheckNextOwnerTransfer" radio_style="false"
+	     width="106" />
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="10" left="10"
+	     mouse_opaque="true" name="SaleLabel" v_pad="0" width="330">
+		Mark Item:
+	</text>
+	<check_box bottom_delta="-20" follows="left|top" font="SansSerifSmall" height="16"
+	     initial_value="false" label="For Sale" left="10" mouse_opaque="true"
+	     name="CheckPurchase" radio_style="false" width="78" />
+	<radio_group bottom_delta="0" draw_border="false" follows="left|top|right" height="16"
+	     left_delta="78" mouse_opaque="true" name="RadioSaleType" width="252">
+		<radio_item bottom="-16" follows="left|top" height="16" left="0" mouse_opaque="true"
+		     name="radio" width="70">
+			Original
+		</radio_item>
+		<radio_item bottom="-16" follows="left|top" height="16" left_delta="60" mouse_opaque="true"
+		     name="radio2" width="70">
+			Copy
+		</radio_item>
+	</radio_group>
+	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="42"
+	     mouse_opaque="true" name="TextPrice" v_pad="0" width="56">
+		Price:  [CURRENCY]
+	</text>
+	<line_editor bevel_style="in" border_style="line" border_thickness="1" bottom_delta="0"
+	     enabled="true" follows="left|top|right" font="SansSerifSmall" height="16"
+	     is_unicode="false" left_delta="56" max_length="25" mouse_opaque="true"
+	     name="Edit Cost" width="242" />
+    <floater.string name="loading_experience">(loading)</floater.string>
+	<string name="unknown">
+		(unknown)
+	</string>
+	<string name="public">
+		(public)
+	</string>
+	<string name="you_can">
+		You can:
+	</string>
+	<string name="owner_can">
+		Owner can:
+	</string>
+</floater>

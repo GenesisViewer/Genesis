@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel label="Th&#xE8;mes" name="Skins panel">
+          <text left="150" name="Skin_txt1">Choisir une Skin/Th&#xE8;me (red&#xE9;marrage requis)</text>
+          <combo_box left_delta="-50" name="custom_skin_combo"/>
+</panel>

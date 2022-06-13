@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel border="true" bottom="-409" height="408" label="Network" left="102" name="network" width="517">
+	<text bottom="-20" follows="top" height="10" left="12" name="text_box">Maximum Bandwidth:</text>
+	<slider bottom_delta="-4" left_delta="110" can_edit_text="true" decimal_digits="0" follows="top" height="15" increment="10" initial_val="50" max_val="10000" min_val="50" name="max_bandwidth" show_text="true" value="500" width="180"/>
+	<text bottom_delta="4" follows="top" height="10" left_delta="186" name="text_box2">kbps (kilobits per second)</text>
+	<text bottom_delta="-20" follows="top" height="10" left="12" name="text_box3">Texture Bandwidth:</text>
+	<slider bottom_delta="-4" left_delta="110" can_edit_text="true" decimal_digits="0" follows="top" height="15" increment="10" initial_val="50" max_val="10000" min_val="50" name="tex_bandwidth" show_text="true" value="500" width="180"/>
+	<text bottom_delta="4" follows="top" height="10" left_delta="186" name="text_box4">kbps (kilobits per second)</text>
+	<text bottom_delta="-25" follows="top" height="10" left="12" name="use_http_for" visible="false">Use HTTP for:</text>
+	<check_box bottom_delta="-5" follows="top" left_delta="90" label="Textures" name="http_textures" visible="false"/>
+	<check_box bottom_delta="0" follows="top" left_delta="90" label="Inventory" name="http_inventory" visible="false"/>
+	<text bottom_delta="-20" follows="top" height="10" left="12" name="cache_size_label_l">Disk Cache Size:</text>
+	<slider bottom_delta="-4" left_delta="110" can_edit_text="true" decimal_digits="0" follows="top" height="15" increment="64" initial_val="1024" max_val="9984" min_val="64" name="cache_size" show_text="true" width="180"/>
+	<text bottom_delta="4" follows="top" height="10" left_delta="186" name="text_box5">MB</text>
+	<button bottom_delta="-8" follows="top" height="22" label="Clear Cache" left_delta="30" name="clear_cache" scale_image="true" width="100"/>
+	<text bottom_delta="-17" follows="top" height="10" left="12" name="cache_location_label">Disk Cache Location:</text>
+	<line_editor bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-28" follows="top" handle_edit_keys_directly="true" height="20" left_delta="7" max_length="4096" name="cache_location" width="470"/>
+	<button bottom_delta="-25" follows="top" height="22" label="Set" label_selected="Set" name="set_cache" scale_image="true" width="100"/>
+	<button bottom_delta="0" follows="top" height="22" label="Reset" label_selected="Set" left_delta="103" name="reset_cache" scale_image="true" width="100"/>
+	<check_box bottom_delta="-35" follows="top" height="16" initial_value="false" label="Custom Port Connection" left="12" name="connection_port_enabled"/>
+	<spinner bottom_delta="-20" decimal_digits="0" follows="top" height="16" increment="1" initial_val="13000" label="Port Number:" label_width="75" left_delta="20" max_val="65535" min_val="0" name="connection_port" width="150"/>
+	<text bottom_delta="-24" follows="top" height="10" left="12" name="socks5_auth_label">Http Proxy:</text>
+  <radio_group bottom_delta="-8" draw_border="false" follows="left|top" height="20" left="12"
+	     name="socks5_http_proxy_type" width="380" >
+    <radio_item height="20" bottom="0" left="100" name="None" width="50" tool_tip="No Http Proxy">None</radio_item>
+	<radio_item height="20" bottom="0" left="170" name="Socks" width="50" tool_tip="Use Socks for Http Proxy">Socks</radio_item>
+    <radio_item height="20" bottom="0" left="250" name="Web" width="50" tool_tip="Use web proxy for Http Proxy">Web</radio_item>
+  </radio_group>
+	<check_box bottom_delta="-24" follows="top" height="16" initial_value="false" label="Enable SOCKS 5 Proxy" left="6" mouse_opaque="true"	     name="socks5_proxy_enabled" radio_style="false" width="256" />
+	<text bottom_delta="-26" follows="top" height="10" left="12" name="socks5_host_label">Socks 5 Host:</text>
+	<line_editor bottom_delta="-6" follows="top" font="SansSerif" height="20" left="90" name="socks5_proxy_host" tool_tip="The name or IP address of the SOCKS5 proxy you would like to use" width="311"/>
+	<spinner bottom_delta="-30" decimal_digits="0" follows="top" height="16" increment="1" initial_val="80" label="Port Number:" label_width="75" max_val="65535" min_val="0" name="socks5_proxy_port" width="140"/>
+	<text bottom_delta="-20" follows="top" height="10" left="12" name="socks5_auth_label2">Socks5 Authentication:</text>
+	<radio_group bottom_delta="-6" draw_border="false" follows="top" height="20" name="socks5_auth" width="420">
+		<radio_item bottom="0" height="20" left_delta="80" name="None" tool_tip="No authentication">None</radio_item>
+		<radio_item bottom="0" height="20" left_delta="50" name="UserPass" tool_tip="Username / Password authentication">Username/Password</radio_item>
+	</radio_group>
+	<text bottom_delta="-22" follows="top" height="10" left="12" name="socks5_username_label">Username:</text>
+	<line_editor bottom_delta="-8" follows="top" font="SansSerif" height="20" left="90" name="socks5_proxy_username" tool_tip="Username for the Socks5 proxy" width="311"/>
+	<text bottom_delta="-20" follows="top" height="10" left="12" name="socks5_password_label">Password:</text>
+	<line_editor bottom_delta="-8" follows="top" font="SansSerif" height="20" left="90" name="socks5_proxy_password" tool_tip="Password for the Socks5 proxy" width="311"/>
+</panel>

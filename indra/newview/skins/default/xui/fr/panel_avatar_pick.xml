@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel name="Pick" title="Favori">
+	<button label="Définir position" name="set_location_btn" left="200"/>
+	<button label="Ouvrir la photo" name="open_picture_btn"/>
+	<button label="Téléporter" name="pick_teleport_btn" width="80"/>
+	<button label="Voir sur la carte" name="pick_map_btn" width="110" left="90"/>
+</panel>

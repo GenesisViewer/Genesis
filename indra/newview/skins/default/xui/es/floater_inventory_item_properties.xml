@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="item properties" title="Propiedades Ítems de Inventario">
+	<icon name="IconLocked"/>
+	<text name="LabelItemNameTitle">
+		Nombre:
+	</text>
+	<line_editor name="LabelItemName"/>
+	<text name="LabelItemDescTitle">
+		Descripción:
+	</text>
+	<line_editor name="LabelItemDesc"/>
+	<text name="LabelCreatorTitle">
+		Creador:
+	</text>
+	<text name="LabelOwnerTitle">
+		Propietario:
+	</text>
+	<text name="LabelLastOwnerTitle">
+		Últ. Propiet.:
+	</text>
+	<text name="LabelAcquiredTitle">
+		Adquirido:
+	</text>
+	<text name="LabelAcquiredDate">
+		Mie May 24 12:50:46 2006
+	</text>
+	<text name="LabelItemExperienceTitle" >
+        Experiencia:
+	</text>
+	<text name="OwnerLabel">
+		Puedes:
+	</text>
+	<check_box label="Modificarlo" name="CheckOwnerModify"/>
+	<check_box label="Copiarlo" name="CheckOwnerCopy"/>
+	<check_box label="Transferirlo" name="CheckOwnerTransfer"/>
+	<check_box name="CheckOwnerExport" label="Exportarlo"/>	
+	<text name="BaseMaskDebug">
+		B:
+	</text>
+	<text name="OwnerMaskDebug">
+		O:
+	</text>
+	<text name="GroupMaskDebug">
+		G:
+	</text>
+	<text name="EveryoneMaskDebug">
+		E:
+	</text>
+	<text name="NextMaskDebug">
+		N:
+	</text>
+	<text name="GroupLabel">
+		Los miembros del grupo pueden:
+	</text>
+	<check_box label="Modificarlo" name="CheckGroupMod"/>
+	<check_box label="Copiarlo" name="CheckGroupCopy" left_delta="88"/>
+	<check_box label="Moverlo" name="CheckGroupMove" left_delta="78"/>
+	<text name="EveryoneLabel">
+		Cualquiera puede:
+	</text>
+	<check_box label="Copiarlo" name="CheckEveryoneCopy" left="98"/>
+	<check_box label="Moverlo" name="CheckEveryoneMove" left_delta="78"/>
+	<check_box name="CheckExport" label="Exportarlo"/>	
+	<text name="NextOwnerLabel" width="250">
+		El próximo propietario puede:
+	</text>
+	<check_box label="Modificarlo" name="CheckNextOwnerModify"/>
+	<check_box label="Copiarlo" name="CheckNextOwnerCopy" left_delta="88"/>
+	<check_box label="Transferirlo" name="CheckNextOwnerTransfer" left_delta="78"/>
+	<text name="SaleLabel" width="150">
+		Marcar Ítem como:
+	</text>
+	<check_box label="En Venta" name="CheckPurchase"/>
+	<radio_group name="RadioSaleType">
+		<radio_item name="radio">
+			Original
+		</radio_item>
+		<radio_item name="radio2">
+			Copia
+		</radio_item>
+	</radio_group>
+	<text name="TextPrice">
+		Precio:  [CURRENCY]
+	</text>
+	<line_editor name="Edit Cost"/>
+    <floater.string name="loading_experience">(cargando)</floater.string>
+	<string name="unknown">
+		(desconocido)
+	</string>
+	<string name="public">
+		(público)
+	</string>
+	<string name="you_can">
+		Puedes:
+	</string>
+	<string name="owner_can">
+		El Propietario Puede:
+	</string>
+</floater>

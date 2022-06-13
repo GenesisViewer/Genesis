@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<panel name="status">
+	<text name="ParcelNameText" tool_tip="Nombre de la parcela en la que estás. Pulsa aquí para ver Acerca del Terreno.">
+		El nombre de la parcela va aquí
+	</text>
+	<text name="BalanceText" tool_tip="Saldo de tu cuenta">
+		Cargando...
+	</text>
+	<text name="UPCText" tool_tip="Subir Créditos">
+		UPC - N/A -
+	</text>	
+	<button name="buycurrency" tool_tip="Comprar dinero"/>
+	<text type="string" name="TimeText" tool_tip="Hora actual (Del Pacífico)">
+		12:00 AM
+	</text>
+	<string name="StatBarDaysOfWeek">
+		Domingo:Lunes:Martes:Miércoles:Jueves:Viernes:Sábado
+	</string>
+	<string name="StatBarMonthsOfYear">
+		Enero:Febrero:Marzo:Abril:Mayo:Junio:Julio:Agosto:Setiembre:Octubre:Noviembre:Diciembre
+	</string>
+	<button name="scriptout" tool_tip="Aviso de Errores de Scripts" />
+	<button name="health" tool_tip="Salud"/>
+	<text name="HealthText" tool_tip="Salud">
+		100%
+	</text>
+	<button name="no_fly" tool_tip="Prohibido volar"/>
+	<button name="no_build" tool_tip="Prohibido Construir/Rezear"/>
+	<button name="no_scripts" tool_tip="Prohibido ejecutar Scripts" />
+	<button name="restrictpush" tool_tip="Sin Empujones" />
+	<button name="status_no_voice" tool_tip="Chat de Voz No Disponible"/>
+	<button label="" label_selected="" name="status_SeeAV" tool_tip="La Parcela tiene Privacidad del Avatar" width="44" />
+  <button label="" name="pf_dirty" tool_tip="Los Objectos que se mueven pueden no tener un comportamiento correcto en esta región hasta que se haga un rebake de la misma."/>
+  <button label="" name="pf_disabled" tool_tip="El Pathfinding Dinámico no está habilitado en esta región."/>
+	<button name="buyland" tool_tip="Comprar esta parcela" />
+	<line_editor label="Buscar" name="search_editor" tool_tip="Buscar"/>
+	<button name="search_btn" tool_tip="Buscar"/>
+	<string name="packet_loss_tooltip">
+		Paquetes Perdidos
+	</string>
+	<string name="bandwidth_tooltip">
+		Ancho de Banda
+	</string>
+	<string name="Local">Local</string>
+</panel>

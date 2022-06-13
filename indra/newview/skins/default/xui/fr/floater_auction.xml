@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater name="floater_auction" title="Commencer la vente de terrain Linden.">
+	<check_box label="Inclure le marquage de sélection jaune" name="fence_check"/>
+	<button label="Capture d'écran" label_selected="Capture d'écran" name="snapshot_btn" width="110"/>
+	<button label="OK" label_selected="OK" name="ok_btn" left_delta="114"/>
+	<string name="already for sale">
+		Vous ne pouvez pas mettre aux enchères des parcelles déjà en vente.
+	</string>
+</floater>

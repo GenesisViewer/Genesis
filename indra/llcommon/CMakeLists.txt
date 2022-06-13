@@ -1,0 +1,318 @@
+# -*- cmake -*-
+
+project(llcommon)
+
+include(Cwdebug)
+include(00-Common)
+include(Linking)
+include(LLCommon)
+include(EXPAT)
+include(APR)
+include(Linking)
+include(Boost)
+include(OpenSSL)
+include(LLSharedLibs)
+include(Copy3rdPartyLibs)
+include(ZLIB)
+include(URIPARSER)
+
+include_directories(
+    ${EXPAT_INCLUDE_DIRS}
+    ${LLCOMMON_INCLUDE_DIRS}
+    ${OPENSSL_INCLUDE_DIRS}
+    ${JSON_INCLUDE_DIR}
+    ${ZLIB_INCLUDE_DIRS}
+    ${BREAKPAD_INCLUDE_DIRECTORIES}
+    )
+
+set(llcommon_SOURCE_FILES
+    aialert.cpp
+    aiframetimer.cpp
+    aisyncclient.cpp
+    aithreadid.cpp
+    imageids.cpp
+    indra_constants.cpp
+    llallocator.cpp
+    llallocator_heap_profile.cpp
+    llapp.cpp
+    llapr.cpp
+    llaprpool.cpp
+    llassettype.cpp
+    llbase32.cpp
+    llbase64.cpp
+    llcallbacklist.cpp
+    llcommon.cpp
+    llcommonutils.cpp
+    llcoros.cpp
+    llcrc.cpp
+    llcriticaldamp.cpp
+    llcursortypes.cpp
+    lldate.cpp
+    lldependencies.cpp
+    lldictionary.cpp
+    llerror.cpp
+    llerrorthread.cpp
+    llevent.cpp
+    lleventapi.cpp
+    lleventcoro.cpp
+    lleventdispatcher.cpp
+    lleventfilter.cpp
+    llevents.cpp
+    lleventtimer.cpp
+    llfasttimer_class.cpp
+    llfile.cpp
+    llfindlocale.cpp
+    llfixedbuffer.cpp
+    llformat.cpp
+    llframetimer.cpp
+    llheartbeat.cpp
+    llinitparam.cpp
+    llinstancetracker.cpp
+    llliveappconfig.cpp
+    lllivefile.cpp
+    lllog.cpp
+    llmd5.cpp
+    llmemory.cpp
+    llmemorystream.cpp
+    llmetrics.cpp
+    llmortician.cpp
+    lloptioninterface.cpp
+    llpredicate.cpp
+    llprocesslauncher.cpp
+    llprocessor.cpp
+    llptrto.cpp 
+    llqueuedthread.cpp
+    llrand.cpp
+    llrefcount.cpp
+    llrun.cpp
+    llscopedvolatileaprpool.h
+    llsd.cpp
+    llsdjson.cpp
+    llsdparam.cpp
+    llsdserialize.cpp
+    llsdserialize_xml.cpp
+    llsdutil.cpp
+    llsecondlifeurls.cpp
+    llsingleton.cpp
+    llstacktrace.cpp
+    llstat.cpp
+    llstreamtools.cpp
+    llstring.cpp
+    llstringtable.cpp
+    llsys.cpp
+    llthread.cpp
+    llthreadsafequeue.cpp
+    lltimer.cpp
+    lluri.cpp
+    lluriparser.cpp
+    lluuid.cpp
+    llworkerthread.cpp
+    metaclass.cpp
+    metaproperty.cpp
+    reflective.cpp
+    timing.cpp
+    u64.cpp
+    )
+    
+set(llcommon_HEADER_FILES
+    CMakeLists.txt
+
+    aialert.h
+    aiframetimer.h
+    airecursive.h
+    aisyncclient.h
+    aithreadid.h
+    aithreadsafe.h
+    bitpack.h
+    ctype_workaround.h
+    fix_macros.h
+    imageids.h
+    indra_constants.h
+    linden_common.h
+    llaccountingcost.h
+    llalignedarray.h
+    llagentconstants.h
+    llallocator.h
+    llallocator_heap_profile.h
+    llapp.h
+    llapr.h
+    llaprpool.h
+    llassettype.h
+    llassoclist.h
+    llatomic.h
+    llavatarconstants.h
+    llbase32.h
+    llbase64.h
+    llboost.h
+    llcallbacklist.h
+    llchat.h
+    llclickaction.h
+    llcommon.h
+    llcommonutils.h
+    llcoros.h
+    llcrc.h
+    llcriticaldamp.h
+    llcursortypes.h
+    lldate.h
+    lldefs.h
+    lldependencies.h
+    lldepthstack.h
+    lldictionary.h
+    llendianswizzle.h
+    llerror.h
+    llerrorcontrol.h
+    llerrorthread.h
+    llevent.h
+    lleventapi.h
+    lleventcoro.h
+    lleventdispatcher.h
+    lleventemitter.h
+    lleventfilter.h
+    llevents.h
+    lleventtimer.h
+    llextendedstatus.h
+    llfasttimer.h
+    llfasttimer_class.h
+    llfile.h
+    llfindlocale.h
+    llfixedbuffer.h
+    llformat.h
+    llframetimer.h
+    llhandle.h
+    llheartbeat.h
+    llhttpstatuscodes.h
+    llindexedvector.h
+    llinitparam.h
+    llinstancetracker.h
+    llkeythrottle.h
+    lllinkedqueue.h
+    llliveappconfig.h
+    lllivefile.h
+    lllocalidhashmap.h
+    lllog.h
+    lllslconstants.h
+    llmap.h
+    llmd5.h
+    llmemory.h
+    llmemorystream.h
+    llmetrics.h
+    llmortician.h
+    llnametable.h
+    lloptioninterface.h
+    llpointer.h
+    llpredicate.h
+    llpreprocessor.h
+    llpriqueuemap.h
+    llprocesslauncher.h
+    llprocessor.h
+    llptrto.h
+    llqueuedthread.h
+    llrand.h
+    llrefcount.h
+    llregistry.h
+    llrun.h
+    llsafehandle.h
+    llsd.h
+    llsdjson.h
+    llsdparam.h
+    llsdserialize.h
+    llsdserialize_xml.h
+    llsdutil.h
+    llsecondlifeurls.h
+    llsimplehash.h
+    llsingleton.h
+    llskiplist.h
+    llskipmap.h
+    llsortedvector.h
+    llstacktrace.h
+    llstat.h
+    llstatenums.h
+    llstl.h
+    llstreamtools.h
+    llstrider.h
+    llstring.h
+    llstringtable.h
+    llstaticstringtable.h
+    llsys.h
+    llthread.h
+    llthreadsafequeue.h
+    lltimer.h
+    lltreeiterators.h
+    llunits.h
+    llunittype.h
+    lltypeinfolookup.h
+    lluri.h
+    lluriparser.h
+    lluuid.h
+    llwin32headers.h
+    llwin32headerslean.h
+    llworkerthread.h
+    metaclass.h
+    metaclasst.h
+    metaproperty.h
+    metapropertyt.h
+    reflective.h
+    reflectivet.h
+    stdenums.h
+    stdtypes.h
+    stringize.h
+    timer.h
+    timing.h
+    u64.h
+    )
+
+set_source_files_properties(${llcommon_HEADER_FILES}
+                            PROPERTIES HEADER_FILE_ONLY TRUE)
+
+list(APPEND llcommon_SOURCE_FILES ${cwdebug_SOURCE_FILES})
+
+list(APPEND llcommon_SOURCE_FILES ${llcommon_HEADER_FILES})
+
+if(LLCOMMON_LINK_SHARED)
+  add_library (llcommon SHARED ${llcommon_SOURCE_FILES})
+  if(WINDOWS)
+    # always generate llcommon.pdb, even for "Release" builds
+    set_target_properties(llcommon PROPERTIES LINK_FLAGS "/DEBUG")
+  endif(WINDOWS)
+  ll_stage_sharedlib(llcommon)
+else(LLCOMMON_LINK_SHARED)
+    add_library (llcommon ${llcommon_SOURCE_FILES})
+endif(LLCOMMON_LINK_SHARED)
+
+set_target_properties(llcommon PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+
+target_link_libraries(
+    llcommon
+    PUBLIC
+    absl::hash
+    ${APRUTIL_LIBRARIES}
+    ${APR_LIBRARIES}
+    ${EXPAT_LIBRARIES}
+    ${CRYPTO_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
+    ${CRYPTO_LIBRARIES}
+    ${ZLIB_LIBRARIES}
+    ${WINDOWS_LIBRARIES}
+    ${Boost_CONTEXT_LIBRARY}
+    ${Boost_REGEX_LIBRARY}
+    ${Boost_THREAD_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
+    ${CORESERVICES_LIBRARY}
+    ${URIPARSER_LIBRARY}
+    fmt::fmt
+    nlohmann_json::nlohmann_json
+    absl::strings
+    ${RT_LIBRARY}
+    )
+
+if (DARWIN)
+    # Don't embed a full path in the library's install name
+    set_target_properties(
+        llcommon
+        PROPERTIES
+        BUILD_WITH_INSTALL_RPATH 1
+        INSTALL_NAME_DIR "@executable_path/../Resources"
+      )
+endif (DARWIN)
+
+add_dependencies(llcommon stage_third_party_libs)

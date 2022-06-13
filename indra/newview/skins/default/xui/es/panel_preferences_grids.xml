@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel label="Grids" name="Grids panel">
+	<!-- Grid Selector -->
+	<text name="grid_selector_label" >
+		Elegir un grid:
+	</text>
+	<combo_box name="grid_selector" width="180" />
+	<button label="Predeterminado" name="btn_default" width="92" left_delta="190"/>
+	<text name="default_grid" left_delta="100">
+		([DEFAULT])
+	</text>
+	<!-- Buttons -->
+	<button label="Borrar" label_selected="Borrar"  name="btn_delete" tool_tip="Borrar de la lista el Grid seleccionado"/>
+	<button label="Crear" label_selected="Añadir" name="btn_add" tool_tip="Agregar un nuevo Grid a la lista"/>
+	<button label="Copiar" label_selected="Copiar" name="btn_copy" tool_tip="Crear una nueva entrada usando la seleccionada como plantilla"/>
+	<!-- Advanced -->
+	<button label="Avanzado" label_selected="Avanzado" name="btn_advanced"/>
+	<!-- Login URI -->
+	<text name="loginuri_label">
+		URL de Inicio:
+	</text>
+	<button label="Actualizar Información del Grid" name="btn_gridinfo" width="174" left="120" tool_tip="Recuperar toda la información del grid desde la URI de inicio de sesión indicada (sobreescribiendo las URLs actuales, ver Avanzado)"/>-->
+	<!-- Platform -->
+	<text name="platform_label">
+		Plataforma:
+	</text>
+	<!-- Grid Name -->
+	<text name="gridname_label">
+		Nombre del Grid:
+	</text>
+	<!-- Grid Message -->
+	<text name="gridmessage_label">
+		Info del Grid:
+	</text>
+	<!-- Advanced settings -->
+	<!-- Grid Splash Page -->
+	<text name="loginpage_label">
+		Pág. de Bienvenida:
+	</text>
+	<!-- Helper URI -->
+	<text name="helperuri_label">
+		URI de Ayuda:
+	</text>
+	<!-- Web Site -->
+	<text name="website_label">
+		Sitio Web:
+	</text>
+	<!-- Support URL -->
+	<text name="support_label">
+		URL de Soporte:
+	</text>
+	<!-- Account URL -->
+	<text name="register_label">
+		URL de Usuario:
+	</text>
+	<!-- Password URL -->
+	<text name="password_label">
+		URL Contraseña:
+	</text>
+	<!-- Partner URL -->
+	<text name="partner_label" >
+		URL de Pareja:
+	</text>
+	<!-- Search URL -->
+	<text name="search_label">
+		URL de Búsqueda:
+	</text>
+	<!-- Rendering Compatibility -->
+	<check_box label="Compatibilidad de Renderizado" name="render_compat"/>
+	<button label="?" name="btn_help_render_compat" left_delta="200" />
+</panel>

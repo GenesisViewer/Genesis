@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<panel label="Audio et vidéo" name="Media panel">
+	<text name="streaming_prefs_text">Préférences de Stream:</text>
+	<text name="audio_prefs_text">Préférences Audio:</text>
+  <check_box label="Demande la permission d'activer les médias (active les filtres)" name="media_filter_enable"/>
+	<check_box label="Jouer la musique disponible (gourmand en bande passante)" name="streaming_music"/>
+	<check_box label="Jouer le média disponible  (gourmand en bande passante)" name="streaming_video"/>
+  <check_box label="Joue automatiquement le média sur un prim" name="auto_prim_streaming_video"/>
+	<check_box label="Joue automatiquement les médias sur la parcelle" name="auto_streaming_video"/>
+	<check_box label="Couper le son lorsque la fenêtre est minimisée" name="mute_when_minimized"/>
+	<slider label="Effet Doppler" label_width="115" name="Doppler Effect"/>
+	<slider label="Facteur d'atténuation" label_width="115" name="Rolloff Factor"/>
+  <slider label="Facteur d'atténuation (sous marin)" label_width="170" name="Underwater Rolloff Factor"/>
+  <spinner label="Alerte [CURRENCY]:" left="148" name="currency_change_threshold"/>
+	<spinner label="Alerte santé" name="Health Change Threshold"/>
+</panel>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel label="Chat Avanc&#xE9;" name="ascsys">
+  <tab_container name="Ascent Chat">
+
+    <panel label="Chat/IM" name="Chat/IM">
+      <check_box label="Annonce les IMs entrants" name="quickstart_im_check"/>
+      <check_box label="Ne pas envoyer &#x22;[Machin Truc] is typing..." name="hide_typing_check"/>
+      <check_box label="N'accepter les IMs que de ses amis" name="InstantMessagesFriendsOnly"/>
+      <check_box label="Montrer le nom du groupe dans le chat" name="append_group_name_check"/>
+      <check_box label="Jouer le son typique pour le chat local" name="play_typing_sound_check"/>
+      <check_box label="Ne pas afficher les notifs. de log dans le chat" name="hide_notifications_in_chat_check"/>
+      <check_box label="Permet d'utiliser &#x22;/me&#x22; aussi bien que &#x22;:&#x22;" name="allow_mu_pose_check"/>
+      <check_box label="Ajoute les fins des commentaires (RP mode)" tool_tip="Ajoute automatiquement &#x22;))&#x22; &#xE0; chaque message commen&#xE7;ant par &#x22;((&#x22;, et vice-versa." name="close_ooc_check"/>
+      <check_box label="Montre les changements de display name" tool_tip="" name="display_name_change"/>
+      <check_box label="Signale, au dessus de la t&#xEA;te, si l'avatar écrit" name="use_typing_bubbles"/>
+      <text name="objects_link_text_box3">Active un lien qui montre le nom du propri&#xE9;taire dans l'historique du chat pour :</text>
+      <radio_group name="objects_link">
+        <radio_item name="no_object">Aucun objet</radio_item>
+        <radio_item name="others_objects">Les objets des autres</radio_item>
+        <radio_item left_delta="65" name="anyones_objects">Tous les objets</radio_item>
+      </radio_group>
+      <text name="time_format_text_box">Type d'heure :</text>
+      <combo_box name="time_format_combobox">
+        <combo_item name="24hours">Horloge 24/H</combo_item>
+        <combo_item name="12hours">Horloge 12/H</combo_item>
+      </combo_box>
+      <check_box label="Secondes dans les Chat/IMs" name="seconds_in_chat_and_ims_check"/>
+      <text name="date_format_text_box">Type de date :</text>
+      <combo_box name="date_format_combobox">
+        <combo_item name="year_first">AAAA-MM-JJ</combo_item>
+        <combo_item name="day_first">JJ/MM/AAAA</combo_item>
+        <combo_item name="month_first">MM/JJ/AAA</combo_item>
+      </combo_box>
+      <check_box label="Secondes dans les horaires de log" name="seconds_in_log"/>
+    </panel>
+
+    <panel label="Chat UI" name="ChatUI">
+      <check_box label="IMs Verticaux (Déco Reco)" name="use_vertical_ims_check"/>
+      <check_box label="Ouvre les nouveaux IMs séparements" name="chats_torn_off"/>
+      <check_box label="Signale les nouveaux IM entrants" name="chat_steal_focus"/>
+      <check_box label="Montre la barre du chat local séparée (Déco Reco)" tool_tip="" name="show_local_chat_floater_bar"/>
+      <check_box label="boutons horizontaux pour les contacts (Déco Reco)" tool_tip="Activé, les boutons amis/groupes seront en bas et horizontaux et non plus verticaux et à droite." name="horiz_butt"/>
+      <combo_box name="friends_namesystem_combobox">
+        <combo_item name="Old Names">Anciens Names</combo_item>
+        <combo_item name="Display Names (with Username)">Display Names(w/Username)</combo_item>
+        <combo_item name="Display Names only">Display Names only</combo_item>
+        <combo_item name="Old Names (with Display Names)">Anciens Names (w/Display)</combo_item>
+      </combo_box>
+      <combo_box name="group_members_namesystem_combobox">
+        <combo_item name="Old Names">Anciens Names</combo_item>
+        <combo_item name="Display Names (with Username)">Display Names(w/Username)</combo_item>
+        <combo_item name="Display Names only">Display Names only</combo_item>
+        <combo_item name="Old Names (with Display Names)">Anciens Names (w/Display)</combo_item>
+      </combo_box>
+      <combo_box name="land_management_namesystem_combobox">
+        <combo_item name="Old Names">Anciens Names</combo_item>
+        <combo_item name="Display Names (with Username)">Display Names(w/Username)</combo_item>
+        <combo_item name="Display Names only">Display Names only</combo_item>
+        <combo_item name="Old Names (with Display Names)">Anciens Names (w/Display)</combo_item>
+      </combo_box>
+      <combo_box name="radar_namesystem_combobox">
+        <combo_item name="Old Names">Anciens Names</combo_item>
+        <combo_item name="Display Names (with Username)">Display Names(w/Username)</combo_item>
+        <combo_item name="Display Names only">Display Names only</combo_item>
+        <combo_item name="Old Names (with Display Names)">Anciens Names (w/Display)</combo_item>
+      </combo_box>
+      <combo_box name="speaker_namesystem_combobox">
+        <combo_item name="Old Names">Anciens Names</combo_item>
+        <combo_item name="Display Names (with Username)">Display Names(w/Username)</combo_item>
+        <combo_item name="Display Names only">Display Names only</combo_item>
+        <combo_item name="Old Names (with Display Names)">Anciens Names (w/Display)</combo_item>
+      </combo_box>
+      <check_box label="Utilise les anciens noms pour la liste des voices actives" tool_tip="Aide à une meilleure modération en ne montrant que le nom àl'ancienne" name="legacy_speaker_names"/>
+      <check_box label="Boutons sur la même ligne que les noms pour les IMs" name="im_concise_butt"/>
+      <check_box label="Boutons sur la ligne des noms des chats de groupe" name="group_concise_butt"/>
+      <check_box label="Boutons sur la ligne de titre des conférences" name="conf_concise_butt"/>
+      <check_box label="Ouvre les logs avec un éditeur de texte externe" name="legacy_log_launch"/>
+      <check_box label="Désactive le raccourci ouvrant détacher la liste d'amis" name="only_comm"/>
+      <check_box label="Ecrit en Italiques le /me" name="italicize_actions"/>
+    </panel>
+
+  <panel label="Auto Réponse" name="Autoresponse">
+    <text name="Autoresponse Info">
+Cette fonction vous permet de répondre avec des messages personnalisés.
+Et aussi : #n Pour le nom classique, #d Pour le Display, #r Pour la SLURL de vôtre emplacement,
+#i Pour vôtre 'Idle Time' (inoccupation) en minutes.
+    </text>
+    <check_box name="AscentInstantMessageResponseRepeat" label="Auto Répond à chaque message reçu dont vous avez activé le choix"/>
+    <check_box name="AutoresponseAnyone" label="Auto Réponse basique" tool_tip="Envoye à toute personne non mutée"/>
+    <check_box name="AutoresponseAnyoneFriendsOnly" label="Amis seulement" tool_tip=""/>
+    <check_box name="AutoresponseAnyoneItem" label="Envoyer un élément"/>
+    <check_box left_delta="125" name="AutoresponseAnyoneShow" label="Montrer l'envoi"/>
+    <drop_target name="AutoresponseAnyoneItemID" tool_tip=""/>
+    <check_box name="AutoresponseNonFriends" label="Auto Réponse aux 'non amis'" tool_tip=""/>
+    <check_box left_delta="200" name="AutoresponseNonFriendsItem" label="Envoyer un élément"/>
+    <check_box left_delta="125" name="AutoresponseNonFriendsShow" label="Montrer l'envoi"/>
+    <drop_target name="AutoresponseNonFriendsItemID" tool_tip=""/>
+    <check_box name="AutoresponseMuted" label="Auto Réponse aux mutés" tool_tip=""/>
+    <check_box left_delta="200" name="AutoresponseMutedItem" label="Envoyer un élément"/>
+    <drop_target name="AutoresponseMutedItemID" tool_tip=""/>
+    <check_box left_delta="125" name="AutoresponseMutedShow" label="Montrer l'envoi"/>
+    <text name="BusyModeResponseText" tool_tip="">Mode Busy:</text>
+    <check_box left_delta="200" name="BusyModeResponseItem" label="Envoyer un élément"/>
+    <check_box left_delta="125" name="BusyModeResponseShow" label="Montrer l'envoi"/>
+    <drop_target name="BusyModeResponseItemID" tool_tip=""/>
+  </panel>
+
+    <panel label="Spam" name="Spam">
+      <check_box label="Activer l'antispam" name="enable_as"/>
+      <check_box label="Aucun message spécifique dans la file d'attente de spam" name="spammsg_checkbox"/>
+      <button label="Réinitialiser la file d'attente" label_selected="d&#xE9;bloquer les sources de spam" name="reset_antispam"/>
+      <spinner label="Antispam (Dur&#xE9;e/secondes):" tool_tip="Le plus bas sera le moins sensible - O d&#xE9;sactive" name="antispamtime"/>
+      <spinner label="Nombre min. de messages par spam:" name="antispamamount"/>
+      <spinner label="Multiplicateur du nombre de messages pour les sons:" name="antispamsoundmulti"/>
+      <spinner label="Multiplicateur du nombre de sons &#xE0; pr&#xE9;charger par spam:" name="antispamsoundpreloadmulti"/>
+      <spinner label="Nombre de lignes max. d'un message:" name="antispamnewlines"/>
+      <check_box label="Me notifier quand un spam est bloqu&#xE9;" name="Notify On Spam"/>
+      <check_box label="D&#xE9;sactive toutes les fen&#xEA;tres de dialogue (D&#xE9;co/Reco)" name="antispam_checkbox"/>
+      <text name="Block All Dialogs From">Bloquer tous les dialogues provenants de :</text>
+      <check_box label="Alertes" name="Alerts"/>
+      <check_box label="Demande d'amitié" name="Friendship Offers"/>
+      <check_box label="Invitation de groupe" name="Group Invites"/>
+      <check_box label="Invit. de frais de grp" name="Group Fee Invites"/>
+      <check_box label="Offre d'objets" name="Item Offers"/>
+      <check_box label="Scripts" name="Scripts"/>
+      <check_box label="Offres de TP" name="Teleport Offers"/>
+      <check_box label="Notices de groupes" name="Group Notices"/>
+      <check_box label="Demande de TP" name="Teleport Requests"/>
+      <text name="Except those from:">Excepté ceux venant de :</text>
+      <check_box label="Mes objets" name="My objects"/>
+      <check_box label="Mes amis" name="My friends"/>
+      <check_box label="Active les sons des gestures" name="Enable Gesture Sounds"/>
+    </panel>
+
+    <panel label="Options de Texte" name="TextOptions">
+      <check_box label="Montre les 'fot de frap' ou suppos&#xE9;es telles en ROUGE" name="SpellDisplay"/>
+      <text name="EmSpell_txt1">Langage courant (dictionnaire) :</text>
+      <text name="EmSpell_txt3">T&#xE9;l&#xE9;charger les langues (dictionnaires) :</text>
+      <button label="Installer" name="EmSpell_Add"/>
+      <button label="T&#xE9;l&#xE9;charger +++" name="EmSpell_GetMore" tool_tip="Obtenez plus de dictionnaires en ligne"/>
+      <text name="EmSpell_txt2">Langues additionnelles (dictionnaires) :</text>
+      <button label="Supprimer" name="EmSpell_Remove"/>
+      <button label="Editer un dictionnaire" name="EmSpell_EditCustom"/>
+      <text name="EmSpell_txt4">
+Clic droit sur le mot mal &#xE9;crit et choisir son remplacement.
+      </text>
+
+      <check_box label="Mettre en valeur les messages si l'un deux contient les termes suivants :" name="KeywordsOn"/>
+      <text name="keyword_txt1">(s&#xE9;par&#xE9;s par des virgules)</text>
+      <text name="EmKeyw">Est trouv&#xE9; dans :</text>
+      <check_box label="Chat local" name="KeywordsInChat"/>
+      <check_box label="IMs" name="KeywordsInIM"/>
+      <check_box label="Mettre en valeur le message avec cette couleur :" name="KeywordsChangeColor"/>
+      <check_box label="Jouer cette alerte sonore : (UUID)" name="KeywordsPlaySound"/>
+    </panel>
+
+  </tab_container>
+</panel>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater name="preview_anim">
+	<text name="desc">
+		Description:
+	</text>
+	<button label="Jouer dans le monde" label_selected="Stop" left="4"  name="Anim play btn" tool_tip="Tout le monde voit" width="145" />
+	<button label="Jouer localement" label_selected="Stop" left_delta="150" name="Anim audition btn" tool_tip="Vous êtes seul(e) à voir" width="135"/>
+</floater>

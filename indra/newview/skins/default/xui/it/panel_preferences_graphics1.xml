@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<panel label="Grafica" name="Display panel">
+	<button label="?" name="GraphicsPreferencesHelpButton"/>
+	<check_box label="Esegui in una finestra" name="windowed mode"/>
+	<text_editor name="FullScreenInfo" width="480">
+		Se deselezionato, all&apos;avvio il programma partirà a schermo intero.
+	</text_editor>
+	<text name="WindowSizeLabel">
+		Dimensione della finestra:
+	</text>
+	<text name="DisplayResLabel">
+		Risoluzione del monitor:
+	</text>
+	<text name="AspectRatioLabel1" tool_tip="larghezza/altezza">
+		Rapporto di visualizzazione:
+	</text>
+	<combo_box name="aspect_ratio" tool_tip="larghezza/altezza"/>
+	<check_box label="Autoconfigurazione" name="aspect_auto_detect"/>
+ <tab_container name="graphics_tab">
+	<panel name="Main">
+	<text name="HigherText">
+		Qualità e
+	</text>
+	<text name="QualityText">
+		Performance:
+	</text>
+	<text left="120" name="FasterText">
+		Più veloce
+	</text>
+	<text name="ShadersPrefText" left_delta="38">
+		Basso
+	</text>
+	<text name="ShadersPrefText2">
+		Medio
+	</text>
+	<text name="ShadersPrefText3">
+		Alto
+	</text>
+	<text name="ShadersPrefText4">
+		Ultra
+	</text>
+	<text name="HigherText2">
+		Più alto
+	</text>
+	<text name="QualityText2">
+		Qualità
+	</text>
+	<check_box label="Personalizzate" name="CustomSettings"/>
+	<text name="ShadersText">
+		Effetti grafici:
+	</text>
+	<check_box label="Piccoli rilievi e scintillii" name="BumpShiny"/>
+	<check_box label="Effetti grafici base" name="BasicShaders" tool_tip="Disabilitare questa opzione può evitare che qualche scheda grafica vada in crash."/>
+	<check_box label="Effetti grafici atmosferici" name="WindLightUseAtmosShaders"/>
+	<check_box label="Riflessi dell&apos;acqua" name="Reflections"/>
+	<text name="ReflectionDetailText">
+		Dettaglio dei riflessi
+	</text>
+	<combo_box name="ReflectionDetailCombo">
+		<combo_item name="1">
+			Terreno ed alberi
+		</combo_item>
+		<combo_item name="2">
+			Tutti gli aggetti statici
+		</combo_item>
+		<combo_item name="3">
+			Tutti gli avatar e gli oggetti
+		</combo_item>
+		<combo_item name="4">
+			Tutto
+		</combo_item>
+	</combo_box>
+	<text name="AvatarRenderingText" left="216">
+		Rendering dell&apos;avatar:
+	</text>
+	<check_box label="Avatar bidimensionali (Impostor)" name="AvatarImpostors"/>
+	<check_box label="Hardware Skinning" name="AvatarVertexProgram"/>
+	<check_box label="Abiti dell&apos;avatar" name="AvatarCloth"/>
+	<slider label="Distanza di disegno:" name="DrawDistance"/>
+	<slider label="Conteggio massimo particelle:" name="MaxParticleCount" label_width="144"/>
+	<slider label="Qualità in post-produzione:" name="RenderPostProcess" label_width="130"/>
+	<text name="MeshDetailText">
+		Dettagli reticolo:
+	</text>
+	<slider label="  Oggetti:" name="ObjectMeshDetail"/>
+	<slider label="  Prims flessibili:" name="FlexibleMeshDetail"/>
+	<slider label="  Alberi:" name="TreeMeshDetail"/>
+	<slider label="  Avatar:" name="AvatarMeshDetail"/>
+	<slider label="  Terreno:" name="TerrainMeshDetail"/>
+	<slider label="  Cielo:" name="SkyMeshDetail"/>
+	<text name="PostProcessText">
+		Basso
+	</text>
+	<text name="ObjectMeshDetailText">
+		Basso
+	</text>
+	<text name="FlexibleMeshDetailText">
+		Basso
+	</text>
+	<text name="TreeMeshDetailText">
+		Basso
+	</text>
+	<text name="AvatarMeshDetailText">
+		Basso
+	</text>
+	<text name="TerrainMeshDetailText">
+		Basso
+	</text>
+	<text name="SkyMeshDetailText">
+		Basso
+	</text>
+	<text name="LightingDetailText">
+		Dettagli illuminazione:
+	</text>
+	<text name="TerrainDetailText">
+		Dettagli terreno:
+	</text>
+	<radio_group name="TerrainDetailRadio">
+		<radio_item name="0">
+			Bassi
+		</radio_item>
+		<radio_item name="2">
+			Alti
+		</radio_item>
+	</radio_group>
+	<button label="Configurazione raccomandata" name="Defaults" width="190" />
+	<string name="resolution_format">
+		[RES_X] x [RES_Y]
+	</string>
+	<string name="aspect_ratio_text">
+		[NUM]:[DEN]
+	</string>
+  </panel>
+ </tab_container>
+</panel>

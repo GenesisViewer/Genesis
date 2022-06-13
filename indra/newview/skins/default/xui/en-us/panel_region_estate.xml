@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel
+ border="true"
+ follows="top|left"
+ help_topic="panel_region_estate_tab"
+ label="Estate"
+ layout="topleft"
+ left="0"
+ name="Estate"
+ bottom="0"
+ height="320"
+ width="480">
+    <text
+     type="string"
+     length="1"
+     follows="left|top"
+     font="SansSerifSmall"
+     height="32"
+     layout="topleft"
+     left="10"
+     name="estate_help_text"
+     bottom="-46"
+     word_wrap="true"
+     >
+        Changes to settings on this tab will affect all regions in the estate.
+    </text>
+    <text
+     type="string"
+     length="1"
+     follows="left|top"
+     font="SansSerif"
+     height="20"
+     layout="topleft"
+     right="160"
+     name="estate_text"
+     bottom_delta="-12"
+     halign="right"
+     width="140">
+        Estate:
+    </text>
+    <text
+     type="string"
+     length="1"
+     follows="left|top"
+     font="SansSerif"
+     height="20"
+     layout="topleft"
+     bottom_delta="0"
+     name="estate_name"
+     left_delta="146">
+        (unknown)
+    </text>
+    <text
+     type="string"
+     length="1"
+     follows="left|top"
+     font="SansSerif"
+     height="20"
+     layout="topleft"
+     left="10"
+     name="owner_text"
+     bottom_delta="-21"
+     halign="right"
+     width="150">
+        Estate owner:
+    </text>
+    <name_box
+     type="string"
+     length="1"
+     follows="left|top"
+     font="SansSerif"
+     height="20"
+     layout="topleft"
+     bottom_delta="0"
+     name="estate_owner"
+     left_delta="156"
+     use_ellipses="true">
+        (unknown)
+    </name_box>
+
+    <view_border
+     bevel_style="none"
+     follows="top|left"
+     height="110"
+     layout="topleft"
+     left="10"
+     bottom_delta="-115"
+     width="460" />
+
+    <check_box
+     follows="left|top"
+     height="20"
+     label="Allow Public Access"
+     layout="topleft"
+     left="20"
+     name="externally_visible_check"
+     bottom_delta="90"
+     width="200" />
+    <button
+     bottom_delta="0"
+     follows="left|top"
+     font="SansSerifSmall"
+     height="18"
+     label="?"
+     name="externally_visible_help"
+     left_delta="200"
+     width="18" />
+
+    <check_box
+     follows="left|top"
+     height="20"
+     label="Allow Voice Chat"
+     layout="topleft"
+     left_delta="-200"
+     name="voice_chat_check"
+     bottom_delta="-18"
+     width="200" />
+    <button
+     bottom_delta="0"
+     follows="left|top"
+     font="SansSerifSmall"
+     height="18"
+     label="?"
+     name="voice_chat_help"
+     left_delta="200"
+     width="18" />
+
+    <check_box
+     follows="left|top"
+     height="20"
+     label="Allow Direct Teleport"
+     layout="topleft"
+     left_delta="-200"
+     name="allow_direct_teleport"
+     bottom_delta="-18"
+     width="80" />
+    <button
+     bottom_delta="0"
+     follows="left|top"
+     font="SansSerifSmall"
+     height="18"
+     label="?"
+     name="allow_direct_teleport_help"
+     left_delta="200"
+     width="18" />
+    <check_box bottom_delta="36" follows="left|top" height="20" label="Use Global Time" left="250" name="use_global_time_check" width="200" />
+    <button bottom_delta="0" follows="left|top" font="SansSerifSmall" height="18" label="?" name="use_global_time_help" left_delta="200" width="18" />
+    <check_box bottom_delta="-18" follows="left|top" height="20" label="Fixed Sun" left_delta="-200" name="fixed_sun_check" width="100" />
+    <button bottom_delta="0" follows="left|top" font="SansSerifSmall" height="18" label="?" name="fixed_sun_help" left_delta="200" width="18" />
+    <icon bottom_delta="-27" follows="left|top" height="20" image_name="icon_day_cycle.tga" left_delta="-160" name="daycycle" width="160"/>
+    <slider bottom_delta="-16" follows="left|top" height="20" increment="0.001"
+     label="Phase" left_delta="-35" max_val="30" min_val="6" name="sun_hour_slider" show_text="false" width="200" />
+    <button
+     enabled="false"
+     follows="left|top"
+     height="23"
+     label="Apply"
+     layout="topleft"
+     name="apply_btn"
+     bottom_delta="-23"
+     left_delta="90"
+     width="120" />
+
+    <text
+     type="string"
+     length="1"
+     follows="top|left"
+     font="SansSerifSmall"
+     height="16"
+     layout="topleft"
+     left="20"
+     name="Only Allow"
+     bottom_delta="28"
+     width="278">
+        Allow access only to Residents who:
+    </text>
+    <check_box
+     follows="top|left"
+     font="SansSerifSmall"
+     height="16"
+     label="Have payment information on file"
+     layout="topleft"
+     left_delta="0"
+     name="limit_payment"
+     tool_tip="Residents must have payment information on file to access this estate."
+     bottom_delta="-16"
+     width="278" />
+    <check_box
+     follows="top|left"
+     font="SansSerifSmall"
+     height="16"
+     label="Are age 18 or older"
+     layout="topleft"
+     left_delta="0"
+     name="limit_age_verified"
+     tool_tip="Residents must be age 18 or older to access this estate. See support.secondlife.com for more information."
+     bottom_delta="-16"
+     width="278" />
+
+    <button
+     follows="left|top"
+     height="23"
+     label="Send Message To Estate..."
+     layout="topleft"
+     left="10"
+     name="message_estate_btn"
+     bottom_delta="-28"
+     width="220" />
+    <button
+     follows="left|top"
+     height="23"
+     label="Kick Resident from Estate..."
+     layout="topleft"
+     left="250"
+     name="kick_user_from_estate_btn"
+     bottom_delta="0"
+     width="220" />
+
+</panel>

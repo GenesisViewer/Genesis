@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater name="avatarpicker" title="Elegir a un Residente">
+	<string name="not_found">
+		No se ha encontrado a '[TEXT]'
+	</string>
+	<string name="no_one_near">
+		Nadie Cercano
+	</string>
+	<string name="no_results">
+		Sin resultados
+	</string>
+	<string name="searching">
+		Buscando...
+	</string>
+	<string name="Select">
+		Seleccionar
+	</string>
+	<string name="Close">
+		Cerrar
+	</string>
+	<tab_container name="ResidentChooserTabs">
+		<!-- ========================= -->
+		<panel name="SearchPanel" label="Buscar">
+			<text name="InstructSearchResidentName">
+				Escribe parte del nombre del residente:
+			</text>
+			<button label="Buscar" label_selected="Buscar" name="Find"/>
+		</panel>
+		<!-- ========================= -->		
+		<panel name="FriendsPanel" label="Amigos">
+			<text name="InstructSelectFriend">
+				Elige a una persona:
+			</text>
+			<button label="Actualizar Lista" label_selected="Actualizar Lista" name="RefreshFriends" left_delta="15" width="100"/>
+		</panel>
+		<!-- ========================= -->		
+		<panel name="NearMePanel" label="Cercanos">
+			<text name="InstructSelectResident">
+				Seleccionar un residente cercano:
+			</text>
+			<button label="Actualizar Lista" label_selected="Actualizar Lista" name="Refresh" left_delta="15" width="100"/>
+			<slider name="near_me_range" label="Alcance"/>
+			<text name="meters">
+				Metros
+			</text>
+		</panel>
+		<!-- ========================= -->		
+		<panel name="KeyPanel" label="Por UUID" >
+			<text name="InstructSelectResident">
+				UUID del Avatar o Grupo:
+			</text>
+		</panel>
+	</tab_container>
+	<button label="Aceptar" label_selected="Aceptar" name="ok_btn"/>
+	<button label="Cancelar" label_selected="Cancelar" name="cancel_btn"/>
+</floater>

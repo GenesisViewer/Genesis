@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="beacons" title="Balises">
+	<panel name="beacons_panel">
+    <check_box label="Montrer les balises" name="beacons"/>
+    <check_box label="Mettre en surbrillance" name="highlights"/>
+    <text name="beacon_width_label">
+      Largeur de la balise :
+    </text>
+    <check_box label="Objets physiques" name="physical"/>
+    <check_box label="Objets scriptés" name="scripted"/>
+    <check_box label="Objets scriptés avec &#x22;Toucher&#x22; uniquement" name="touch_only"/>
+    <check_box label="Sources sonores" name="sounds"/>
+    <check_box label="Sources des particules" name="particles"/>
+    <check_box label="Sources des médias" name="moapbeacon"/>
+	</panel>
+</floater>

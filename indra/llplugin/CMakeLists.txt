@@ -1,0 +1,81 @@
+# -*- cmake -*-
+
+project(llplugin)
+
+include(00-Common)
+include(LLCommon)
+include(LLMath)
+include(LLMessage)
+include(LLRender)
+include(Boost)
+
+include_directories(
+    ${LLCOMMON_INCLUDE_DIRS}
+    ${LLMATH_INCLUDE_DIRS}
+    ${LLMESSAGE_INCLUDE_DIRS}
+    ${LLRENDER_INCLUDE_DIRS}
+    )
+
+set(llplugin_SOURCE_FILES
+    llpluginclassbasic.cpp
+    llpluginclassmedia.cpp
+    #llplugincookiestore.cpp
+    llplugininstance.cpp
+    llpluginmessage.cpp
+    llpluginmessagepipe.cpp
+    llpluginprocesschild.cpp
+    llpluginprocessparent.cpp
+    llpluginsharedmemory.cpp
+    )
+
+set(llplugin_HEADER_FILES
+    CMakeLists.txt
+
+    llpluginclassbasic.h
+    llpluginclassmedia.h
+    llpluginclassmediaowner.h
+    #llplugincookiestore.h
+    llplugininstance.h
+    llpluginmessage.h
+    llpluginmessageclasses.h
+    llpluginmessagepipe.h
+    llpluginprocesschild.h
+    llpluginprocessparent.h
+    llpluginsharedmemory.h
+    )
+
+set_source_files_properties(${llplugin_HEADER_FILES}
+                            PROPERTIES HEADER_FILE_ONLY TRUE)
+
+list(APPEND llplugin_SOURCE_FILES ${llplugin_HEADER_FILES})
+
+add_library (llplugin ${llplugin_SOURCE_FILES})
+if(LINUX AND STANDALONE)
+    target_link_libraries (llplugin llcommon rt dl)
+else()
+    target_link_libraries(
+        llplugin
+        PUBLIC
+        llcommon
+        )
+endif()
+
+set_target_properties(llplugin PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+
+add_subdirectory(slplugin)
+
+# # Add tests
+# include(LLAddBuildTest)
+# # UNIT TESTS
+# SET(llplugin_TEST_SOURCE_FILES
+#   llplugincookiestore.cpp
+#   )
+# 
+# # llplugincookiestore has a dependency on curl, so we need to link the curl library into the test.
+# set_source_files_properties(
+#   llplugincookiestore.cpp
+#   PROPERTIES
+#     LL_TEST_ADDITIONAL_LIBRARIES "${CURL_LIBRARIES}"
+#   )
+# 
+# LL_ADD_PROJECT_UNIT_TESTS(llplugin "${llplugin_TEST_SOURCE_FILES}")

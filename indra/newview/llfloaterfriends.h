@@ -1,0 +1,141 @@
+/** 
+ * @file llfloaterfriends.h
+ * @author Phoenix
+ * @date 2005-01-13
+ * @brief Declaration of class for displaying the local agent's friends.
+ *
+ * $LicenseInfo:firstyear=2005&license=viewergpl$
+ * 
+ * Copyright (c) 2005-2009, Linden Research, Inc.
+ * 
+ * Second Life Viewer Source Code
+ * The source code in this file ("Source Code") is provided by Linden Lab
+ * to you under the terms of the GNU General Public License, version 2.0
+ * ("GPL"), unless you have obtained a separate licensing agreement
+ * ("Other License"), formally executed by you and Linden Lab.  Terms of
+ * the GPL can be found in doc/GPL-license.txt in this distribution, or
+ * online at http://secondlifegrid.net/programs/open_source/licensing/gplv2
+ * 
+ * There are special exceptions to the terms and conditions of the GPL as
+ * it is applied to this Source Code. View the full text of the exception
+ * in the file doc/FLOSS-exception.txt in this software distribution, or
+ * online at
+ * http://secondlifegrid.net/programs/open_source/licensing/flossexception
+ * 
+ * By copying, modifying or distributing this software, you acknowledge
+ * that you have read and understood your obligations described above,
+ * and agree to abide by those obligations.
+ * 
+ * ALL LINDEN LAB SOURCE CODE IS PROVIDED "AS IS." LINDEN LAB MAKES NO
+ * WARRANTIES, EXPRESS, IMPLIED OR OTHERWISE, REGARDING ITS ACCURACY,
+ * COMPLETENESS OR PERFORMANCE.
+ * $/LicenseInfo$
+ */
+
+#ifndef LL_LLFLOATERFRIENDS_H
+#define LL_LLFLOATERFRIENDS_H
+
+#include "llpanel.h"
+#include "llstring.h"
+#include "lluuid.h"
+
+#include "llcallingcard.h"
+
+class LLAvatarName;
+class LLFriendObserver;
+class LLRelationship;
+class LLScrollListCtrl;
+class LLScrollListItem;
+
+/** 
+ * @class LLPanelFriends
+ * @brief An instance of this class is used for displaying your friends
+ * and gives you quick access to all agents which a user relationship.
+ *
+ * @sa LLFloater
+ */
+class LLPanelFriends : public LLPanel
+{
+public:
+	LLPanelFriends();
+	virtual ~LLPanelFriends();
+
+	/** 
+	 * @brief This method is called in response to the LLAvatarTracker
+	 * sending out a changed() message.
+	 */
+	void updateFriends(U32 changed_mask);
+
+	virtual BOOL postBuild();
+
+	void populateContactGroupSelect();
+
+private:
+
+	enum FRIENDS_COLUMN_ORDER
+	{
+		LIST_ONLINE_STATUS,
+		LIST_FRIEND_NAME,
+		LIST_VISIBLE_ONLINE,
+		LIST_VISIBLE_MAP,
+		LIST_EDIT_MINE,
+		LIST_VISIBLE_ONLINE_THEIRS,
+		LIST_VISIBLE_MAP_THEIRS,
+		LIST_EDIT_THEIRS,
+		LIST_FRIEND_UPDATE_GEN
+	};
+
+	// protected members
+	typedef std::map<LLUUID, S32> rights_map_t;
+	void refreshNames(U32 changed_mask);
+	// <dogmode> Contacts search and group system
+	void filterContacts(const std::string& search_name);
+	void categorizeContacts();
+	void setContactGroup(const std::string& contact_grp);
+	//std::string cleanFileName(std::string filename);
+	// --
+	void refreshNamesSync(const LLAvatarTracker::buddy_map_t & all_buddies);
+	void refreshNamesPresence(const LLAvatarTracker::buddy_map_t & all_buddies);
+	void refreshUI();
+	void refreshRightsChangeList();
+	void applyRightsToFriends();
+	void addFriend(const LLUUID& agent_id);
+	void updateFriendItem(const LLUUID& agent_id, const LLRelationship* relationship);
+
+	typedef enum 
+	{
+		GRANT,
+		REVOKE
+	} EGrantRevoke;
+	void confirmModifyRights(rights_map_t& ids, EGrantRevoke command);
+	void sendRightsGrant(rights_map_t& ids);
+
+	// callback methods
+	void onSelectName();
+	static void onPickAvatar(const uuid_vec_t& ids, const std::vector<LLAvatarName>& names);
+	void onClickIM(const uuid_vec_t& ids);
+	void updateColumns(bool collapsed);
+	void onClickAddFriend();
+/*
+	void onClickExport();
+	void onClickExport_continued(class AIFilePicker* filepicker);
+	void onClickImport();
+	void onClickImport_filepicker_continued(AIFilePicker* filepicker);
+*/
+public:
+	static void FriendImportState(LLUUID id, bool accepted);
+private:
+
+	bool modifyRightsConfirmation(const LLSD& notification, const LLSD& response, rights_map_t rights);
+
+private:
+	// member data
+	LLFriendObserver* mObserver;
+	LLUUID mAddFriendID;
+	std::string mAddFriendName;
+	LLScrollListCtrl* mFriendsList;
+	S32 mNumOnline;
+	std::string mLastContactSearch;
+};
+
+#endif // LL_LLFLOATERFRIENDS_H

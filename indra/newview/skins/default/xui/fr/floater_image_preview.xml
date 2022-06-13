@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater name="Image Preview" title="">
+	<text name="name_label">
+		Nom:
+	</text>
+	<line_editor name="name_form"/>
+	<text name="description_label">
+		Description:
+	</text>
+	<line_editor name="description_form"/>
+	<text name="preview_label">
+		Prévisualiser comme:
+	</text>
+	<combo_box label="Habits" name="clothing_type_combo">
+		<combo_item name="Image">
+			Image
+		</combo_item>
+		<combo_item name="Hair">
+			Cheveux
+		</combo_item>
+		<combo_item name="FemaleHead">
+			Tête de femme
+		</combo_item>
+		<combo_item name="FemaleUpperBody">
+			Corps de femme (haut)
+		</combo_item>
+		<combo_item name="FemaleLowerBody">
+			Corps de femme (bas)
+		</combo_item>
+		<combo_item name="MaleHead">
+			Tête d'homme
+		</combo_item>
+		<combo_item name="MaleUpperBody">
+			Corps d'homme (haut)
+		</combo_item>
+		<combo_item name="MaleLowerBody">
+			Corps d'homme (bas)
+		</combo_item>
+		<combo_item name="Skirt">
+			Jupe
+		</combo_item>
+		<combo_item name="SculptedPrim">
+			Sculptie
+		</combo_item>
+	</combo_box>
+	<text name="bad_image_text">
+		Impossible de lire l'image.
+
+Sauvegarder en Targa 24 bits (.tga).
+	</text>
+	<check_box label="Compression sans perte" name="lossless_check"/>
+	<check_box label="Temporaire (Gratuit)" name="temp_check" tool_tip="chargement gratuit mais qui disparaitra &#xE0; votre de&#xE9;connection."/>
+	<button label="Annuler" name="cancel_btn"/>
+	<button label="Charger ([UPLOADFEE])" name="ok_btn"/>
+</floater>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater label="(desconocido)" name="im_floater" title="(desconocido)">
+	<string name="answering">
+		Conectando...
+	</string>
+	<string name="ringing">
+		Llamando...
+	</string>
+	<string name="connected">
+		Conectado. Pulsa Terminar LLamada para colgar
+	</string>
+	<string name="hang_up">
+		Llamada terminada
+	</string>
+	<string name="title_string">
+		Mensaje Instantáneo con [NAME]
+	</string>
+	<string name="typing_start_string">
+		[NAME] está escribiendo...
+	</string>
+	<string name="session_start_string">
+		Iniciando sesión con [NAME], por favor espera.
+	</string>
+	<string name="default_text_label">
+		Pulsa aquí para enviar un Mensaje Instantáneo.
+	</string>
+	<string name="unavailable_text_label">
+		El chat de texto no está disponible para esta llamada.
+	</string>
+	<string name="inventory_item_offered">
+		Ofrecido un Ítem de Inventario
+	</string>
+	<flyout_button label="Perfil" name="instant_message_flyout" left="200" width="190">
+		<flyout_button_item label="Perfil" name="profile_item"/>
+		<flyout_button_item label="Historial" name="history_btn"/>
+		<flyout_button_item label="Ofrecer Teleporte" name="profile_tele_btn"/>
+		<flyout_button_item label="Solicitar Teleporte" name="request_teleport_item"/>
+		<flyout_button_item label="Pagar" name="pay_item"/>
+		<flyout_button_item label="Invitar a Grupo" name="group_invite_item"/>
+		<flyout_button_item label="Copiar SLURL" name="copy_slurl_item"/>
+		<flyout_button_item label="Añadir a la Conferencia" name="conference"/>
+		<flyout_button_item label="Denunciar Infracción" name="report"/>
+	</flyout_button>
+	<string name="find on map" value="Ubicar en el Mapa"/>
+	<string name="ding on" value="Timbre en Nuevos Mensajes (Encendido)"/>
+	<string name="ding off" value="Timbre en Nuevos Mensajes (Apagado)"/>
+	<string name="rp mode on" value="Modo RP (Encendido)"/>
+	<string name="rp mode off" value="Modo RP (Apagado)"/>
+	<string name="add friend" value="Añadir Contacto"/>
+	<string name="remove friend" value="Eliminar Contacto"/>
+	<string name="mute" value="Ignorar"/>
+	<string name="unmute" value="No Ignorar"/>
+	<button label="Llamar" name="start_call_btn" left_delta="100" width="70"/>
+	<button label="Finalizar" name="end_call_btn" width="77"/>
+	<panel left_delta="16" name="speaker_controls" width="60">
+		<volume_slider name="speaker_volume" width="48"/>
+		<button label="" left_delta="42" name="mute_btn" tool_tip="Ignorar Voz" width="25"/>
+	</panel>
+	<text_editor left="5" name="im_history" width="488"/>
+	<line_editor label="Pulsa aquí para enviar un Mensaje Instantáneo" name="chat_editor" width="423"/>
+	<button label="Enviar" left="433" name="send_btn" width="60"/>
+	<string name="live_help_dialog">
+		*** Bienvenido a la Petición de Ayuda ***
+Por favor, primero revisa nuestras páginas de ayuda presionando F1 o yendo a la Base de Conocimientos en http://secondlife.com/knowledgebase/
+Si la respuesta no está ahi, por favor, ingresa tu consulta y espera un momento a que uno de nuestros soportistas esté disponible para responderte.
+-=-=- El tiempo de respuesta puede variar, especialmente en horas pico -=-=-</string>
+</floater>

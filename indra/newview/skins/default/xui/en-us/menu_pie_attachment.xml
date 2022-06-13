@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<pie_menu name="Attachment Pie">
+	<menu_item_call enabled="true" label="Profile..." name="Profile...">
+		<on_click function="ShowAgentProfile" userdata="agent" />
+	</menu_item_call>
+	<menu_item_call enabled="false" label="Drop" mouse_opaque="true" name="Drop">
+		<on_click function="Attachment.Drop" />
+		<on_enable function="Attachment.EnableDrop" />
+	</menu_item_call>
+	<menu_item_call enabled="false" label="Touch" mouse_opaque="true" name="Attachment Object Touch">
+		<on_click function="Object.Touch" />
+		<on_enable function="Object.EnableTouch" userdata="Touch" name="EnableTouch"/>
+	</menu_item_call>
+	<menu_item_call enabled="true" label="Stand Up" name="Stand Up">
+		<on_click function="Self.SitOrStand"/>
+		<on_enable function="Self.EnableSitOrStand" userdata="Sit Down,Stand Up"/>
+	</menu_item_call>
+	<menu_item_call enabled="false" label="Detach" mouse_opaque="true" name="Detach">
+		<on_click function="Attachment.Detach" />
+		<on_enable function="Attachment.EnableDetach" />
+	</menu_item_call>
+	<pie_menu label="Tools" name="Tools">
+        <pie_menu label="Scripts" name="ScriptsMenu">
+          <menu_item_call mouse_opaque="true" label="Make Mono" name="CompileMono">
+            <on_click function="Tools.SelectedScriptAction" userdata="compile mono" />
+            <on_enable function="EditableSelectedMono" />
+          </menu_item_call>
+          <menu_item_call mouse_opaque="true" label="Make LSL" name="CompileLSL">
+            <on_click function="Tools.SelectedScriptAction" userdata="compile lsl" />
+            <on_enable function="EditableSelected" />
+          </menu_item_call>
+          <menu_item_call mouse_opaque="true" label="Reset" name="Reset Scripts">
+            <on_click function="Tools.SelectedScriptAction" userdata="reset" />
+            <on_enable function="EditableSelected" />
+          </menu_item_call>
+          <menu_item_call mouse_opaque="true" label="Start" name="Object Set Scripts to Running">
+            <on_click function="Tools.SelectedScriptAction" userdata="start" />
+            <on_enable function="EditableSelected" />
+          </menu_item_call>
+          <menu_item_call mouse_opaque="true" label="Stop" name="Object Set Scripts to Not Running">
+            <on_click function="Tools.SelectedScriptAction" userdata="stop" />
+            <on_enable function="EditableSelected" />
+          </menu_item_call>
+          <menu_item_call mouse_opaque="true" label="Remove" name="Remove Scripts From Selection">
+            <on_click function="Tools.ScriptDelete" />
+            <on_enable function="Tools.EnableScriptDelete" />
+          </menu_item_call>
+          <menu_item_call mouse_opaque="true" label="Count" name="ScriptCount">
+            <on_click function="Object.ScriptCount" />
+            <on_visible function="Object.VisibleScriptCount" />
+          </menu_item_call>
+          <menu_item_call label="Script Info" mouse_opaque="true" name="Script Info">
+            <on_click function="ShowFloater" userdata="script info" />
+            <on_visible function="Self.VisibleScriptInfo" />
+          </menu_item_call>
+        </pie_menu>
+		<menu_item_call enabled="true" label="Inspect" mouse_opaque="true" name="Object Inspect">
+			<on_click function="ShowFloater" userdata="show inspect" />
+			<on_enable function="Object.EnableInspect"/>
+		</menu_item_call>
+		<menu_item_call enabled="false" label="Data" mouse_opaque="true" name="Data">
+    		<on_click function="Object.Data" />
+		</menu_item_call>
+		<menu_item_call enabled="true" label="Derender" mouse_opaque="true" name="Derender">
+			<on_click function="Object.DERENDER" />
+			<on_enable function="Object.EnableDerender" />
+		</menu_item_call>
+    <menu_item_call enabled="true" label="Reload" mouse_opaque="true" name="Reload Textures">
+      <on_click function="Object.ReloadTextures" />
+    </menu_item_call>
+    <pie_menu label="Avatar" name="Avatar Tools">
+      <menu_item_call enabled="true" label="Reload" mouse_opaque="true" name="Reload Textures">
+        <on_click function="Avatar.ReloadTextures" />
+      </menu_item_call>
+      <menu_item_call enabled="true" label="Reset Skel" mouse_opaque="true" name="Reset Skeleton">
+        <on_click function="Avatar.ResetSkeleton" />
+      </menu_item_call>
+      <menu_item_call enabled="true" label="Reset Anims" mouse_opaque="true" name="Reset Skeleton And Animations">
+        <on_click function="Avatar.ResetSkeletonAndAnimations" />
+      </menu_item_call>
+      <menu_item_call enabled="true" hidden="false" label="Anims..." mouse_opaque="true" name="Anims...">
+        <on_click function="ShowFloater" userdata="anims_explorer" />
+      </menu_item_call>
+      <menu_item_call enabled="false" hidden="false" label="S. Count" mouse_opaque="true" name="ScriptCount">
+        <on_click function="Object.ScriptCount" userdata="agent"/>
+        <on_visible function="Object.VisibleScriptCount" userdata="agent"/>
+      </menu_item_call>
+      <menu_item_call label="Script Info" mouse_opaque="true" name="Script Info">
+        <on_click function="ShowFloater" userdata="script info" />
+        <on_visible function="Self.VisibleScriptInfo" />
+      </menu_item_call>
+      <menu_item_call enabled="true" label="Copy UUID" mouse_opaque="true" name="CopyUUID">
+        <on_click function="Avatar.CopyUUID" />
+      </menu_item_call>
+      <menu_item_call label="Save OBJ..." mouse_opaque="true" name="Save OBJ...">
+        <on_click function="Avatar.SaveAsOBJ" />
+      </menu_item_call>
+    </pie_menu>
+    <menu_item_call label="Save OBJ..." mouse_opaque="true" name="Save OBJ...">
+      <on_click function="Object.SaveAsOBJ" />
+      <on_enable function="Object.EnableExport" />
+    </menu_item_call>
+    <menu_item_call label="Save DAE..." mouse_opaque="true" name="Save DAE...">
+      <on_click function="Object.SaveAsDAE" />
+      <on_enable function="Object.EnableExport" />
+    </menu_item_call>
+	</pie_menu>
+	<menu_item_call enabled="true" label="Appearance..." name="Appearance...">
+		<on_click function="ShowFloater" userdata="appearance" />
+		<on_enable function="Edit.EnableCustomizeAvatar" />
+	</menu_item_call>
+	<menu_item_call enabled="false" label="Edit..." mouse_opaque="true" name="Edit...">
+		<on_click function="Object.Edit" />
+		<on_enable function="EnableEdit" />
+	</menu_item_call>
+</pie_menu>

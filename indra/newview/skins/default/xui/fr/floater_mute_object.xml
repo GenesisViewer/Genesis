@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="mute by name" title="Ignorer(mute) les objets par le nom">
+	<text name="message">
+		Saisir le nom exact de l'objet pour muter son spam dans le chat et les ims. Ne permet pas de muter les sons de cet objet.
+	</text>
+	<line_editor name="object_name">
+		Nom de l'objet:
+	</line_editor>
+	<button label="OK" name="OK"/>
+	<button label="Annuler" name="Cancel"/>
+</floater>

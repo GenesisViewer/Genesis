@@ -1,0 +1,205 @@
+# -*- cmake -*-
+
+project(llui)
+
+include(00-Common)
+include(LLCommon)
+include(LLImage)
+include(LLMath)
+include(LLMessage)
+include(LLRender)
+include(LLWindow)
+include(LLVFS)
+include(LLXML)
+
+include_directories(
+    ${LLCOMMON_INCLUDE_DIRS}
+    ${LLIMAGE_INCLUDE_DIRS}
+    ${LLMATH_INCLUDE_DIRS}
+    ${LLMESSAGE_INCLUDE_DIRS}
+    ${LLRENDER_INCLUDE_DIRS}
+    ${LLWINDOW_INCLUDE_DIRS}
+    ${LLVFS_INCLUDE_DIRS}
+    ${LLXML_INCLUDE_DIRS}
+    )
+
+set(llui_SOURCE_FILES
+    lfidbearer.cpp
+    llaccordionctrl.cpp
+    llaccordionctrltab.cpp
+    llalertdialog.cpp
+    llbutton.cpp
+    llcheckboxctrl.cpp
+    llclipboard.cpp
+    llcombobox.cpp
+    llcontainerview.cpp
+    llctrlselectioninterface.cpp
+    lldraghandle.cpp
+    lleditmenuhandler.cpp
+    llfiltereditor.cpp
+    llflatlistview.cpp
+    llfloater.cpp
+    llflyoutbutton.cpp
+    llfocusmgr.cpp
+    llfunctorregistry.cpp
+    lliconctrl.cpp
+    llkeywords.cpp
+    lllayoutstack.cpp
+    lllineeditor.cpp
+    llloadingindicator.cpp
+    lllocalcliprect.cpp
+    llmenugl.cpp
+    llmodaldialog.cpp
+    llmultifloater.cpp 
+    llmultislider.cpp
+    llmultisliderctrl.cpp
+    llnotifications.cpp
+    llnotificationsutil.cpp
+    llpanel.cpp
+    llprogressbar.cpp
+    llradiogroup.cpp
+    llresizebar.cpp
+    llresizehandle.cpp
+    llresmgr.cpp
+    llrootview.cpp
+    llscrollbar.cpp
+    llscrollcontainer.cpp
+    llscrollingpanellist.cpp
+    llscrolllistcell.cpp
+    llscrolllistcolumn.cpp
+    llscrolllistctrl.cpp
+    llscrolllistitem.cpp
+    llsearcheditor.cpp
+    llslider.cpp
+    llsliderctrl.cpp
+    llspinctrl.cpp
+    llstatbar.cpp
+    llstatgraph.cpp
+    llstatview.cpp
+    llstyle.cpp
+    lltabcontainer.cpp
+    lltextbox.cpp
+    lltexteditor.cpp
+    lltextparser.cpp
+    lltrans.cpp
+    llui.cpp
+    lluicolor.cpp
+    lluictrl.cpp
+    lluictrlfactory.cpp
+    lluistring.cpp
+    llundo.cpp
+    llurlaction.cpp
+    llurlentry.cpp
+    llurlmatch.cpp
+    llurlregistry.cpp
+    llview.cpp
+    llviewborder.cpp
+    llviewmodel.cpp
+    llviewquery.cpp
+    llxuiparser.cpp
+    )
+    
+set(llui_HEADER_FILES
+    CMakeLists.txt
+
+    ailist.h
+    lfidbearer.h
+    llaccordionctrl.h
+    llaccordionctrltab.h
+    llalertdialog.h
+    llbutton.h
+    llcallbackmap.h
+    llcheckboxctrl.h
+    llclipboard.h
+    llcombobox.h
+    llcontainerview.h
+    llctrlselectioninterface.h
+    lldraghandle.h
+    lleditmenuhandler.h
+    llfiltereditor.h 
+    llflatlistview.h
+    llfloater.h
+    llflyoutbutton.h
+    llfocusmgr.h
+    llfunctorregistry.h
+    llhtmlhelp.h
+    lliconctrl.h
+    llkeywords.h
+    lllayoutstack.h
+    lllineeditor.h
+    llloadingindicator.h
+    lllocalcliprect.h
+    llmemberlistener.h
+    llmenugl.h
+    llmodaldialog.h
+    llmultifloater.h 
+    llmultislider.h
+    llmultisliderctrl.h
+    llnotificationptr.h
+    llnotifications.h
+    llnotificationsutil.h
+    llnotificationtemplate.h
+    llpanel.h
+    llprogressbar.h
+    llradiogroup.h
+    llresizebar.h
+    llresizehandle.h
+    llresmgr.h
+    llrootview.h
+    llsearcheditor.h 
+    llscrollbar.h
+    llscrollcontainer.h
+    llscrollingpanellist.h
+    llscrolllistcell.h
+    llscrolllistcolumn.h
+    llscrolllistctrl.h
+    llscrolllistitem.h
+    llslider.h
+    llsliderctrl.h
+    llspinctrl.h
+    llstatbar.h
+    llstatgraph.h
+    llstatview.h
+    llstyle.h
+    lltabcontainer.h
+    lltextbox.h
+    lltexteditor.h
+    lltextparser.h
+    lltrans.h
+    llui.h
+    lluicolor.h
+    lluiconstants.h
+    lluictrl.h
+    lluictrlfactory.h
+    lluifwd.h
+    lluistring.h
+    lluixmltags.h
+    llundo.h
+    llurlaction.h
+    llurlentry.h
+    llurlmatch.h
+    llurlregistry.h
+    llview.h
+    llviewborder.h
+    llviewmodel.h
+    llviewquery.h
+    llxuiparser.h
+    )
+
+set_source_files_properties(${llui_HEADER_FILES}
+                            PROPERTIES HEADER_FILE_ONLY TRUE)
+
+list(APPEND llui_SOURCE_FILES ${llui_HEADER_FILES})
+
+add_library (llui ${llui_SOURCE_FILES})
+# Libraries on which this library depends, needed for Linux builds
+# Sort by high-level to low-level
+target_link_libraries(llui
+    llrender
+    llwindow
+    llimage
+    llvfs       # ugh, just for LLDir
+    llxml
+    llcommon    # must be after llimage, llwindow, llrender
+    llmath
+    )

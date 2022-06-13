@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater name="Display Name" title="Display Name">
+	<text name="lockout_text">
+		Prochain changement possible: [TIME].
+	</text>
+	<text name="set_name_label">
+		Nouveau Display Name:
+	</text>
+	<line_editor name="display_name_editor"/>
+	<text name="name_confirm_label">
+		R&#xE9;&#xE9;crire le Display Name pour confirmer:
+	</text>
+	<line_editor name="display_name_confirm"/>
+	<button label="Sauver" name="save_btn" tool_tip=""/>
+	<button label="Effacer" name="reset_btn" tool_tip="Efface le Display Name en cours"/>
+	<button label="Annuler" name="cancel_btn" tool_tip="Annule et ferme la fen&#xEA;tre"/>
+	<text name="name_confirm_label2">
+		Le Display Name est le nom ajout&#xE9; &#xE0; l&#x27;avatar.
+	</text>
+	<text name="name_confirm_label3">
+		Vous pouvez le changer une fois par semaine.
+	</text>
+</floater>
+    

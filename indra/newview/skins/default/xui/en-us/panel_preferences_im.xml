@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel border="true" bottom="-409" height="408" label="Communication" left="102" name="im" width="517">
+	<text bottom="-20" left="12" name="text_box">My Online Status:</text>
+	<check_box bottom="-25" height="16" initial_value="false" label="Only my Friends and Groups can see when I am online" left="148" name="online_visibility"/>
+	<text bottom="-40" height="10" left="12" name="text_box2">IM Options:</text>
+	<string name="log_in_to_change">log in to change</string>
+    <string name="email_unverified_tooltip">Please verify your email to enable IM to Email. You can do so on the grid's website.</string>
+    <check_box bottom_delta="-5" follows="top|left" height="16" label="Send IM to Email ([EMAIL])" left="148" name="send_im_to_email"/>
+    <check_box bottom_delta="-20" follows="top|left" height="16" label="Include IM in chat console" name="include_im_in_chat_console"/>
+    <check_box bottom_delta="-20" follows="top|left" height="16" label="Show timestamps in IM" name="show_timestamps_check"/>
+    <check_box bottom_delta="-20" follows="top|left" height="16" label="Show online Friend notifications" name="friends_online_notify_checkbox"/>
+    <text bottom_delta="-15" follows="top|left" left_delta="4" name="conference_block_text">Incoming conferences:</text>
+    <radio_group follows="top|left" bottom_delta="-6" left_delta="120" height="16" width="204" draw_border="true" control_name="LiruBlockConferences" name="block_conferences_radio">
+      <radio_item bottom_delta="0" name="accept" width="30" value="0">Accept</radio_item>
+      <radio_item bottom_delta="0" left_delta="30" name="friends only" width="44" value="2">Friends Only</radio_item>
+      <radio_item bottom_delta="0" left_delta="44" name="block" width="30" value="1">Block</radio_item>
+    </radio_group>
+	<text bottom="-218" height="10" left="12" name="text_box4">Logging Options:</text>
+	<check_box bottom="-225" height="16" initial_value="false" label="Save a log of IM on my computer" left="148" name="log_instant_messages" />
+	<check_box bottom="-245" height="16" initial_value="false" label="Show timestamps in IM log" left="168" name="log_instant_messages_timestamp"/>
+	<check_box bottom="-265" height="16" initial_value="false" label="Show the end of last IM conversation" name="log_show_history"/>
+	<check_box bottom="-285" height="16" initial_value="false" label="Save a log of Local Chat on my computer" left="148" name="log_chat"/>
+	<check_box bottom="-305" height="16" initial_value="false" label="Show timestamps in Local Chat log" left="168" name="log_chat_timestamp"/>
+	<check_box bottom="-325" height="16" initial_value="false" label="Show incoming IM in Local Chat log" name="log_chat_IM"/>
+	<check_box bottom="-345" height="16" initial_value="false" label="Include date with timestamps" left="148" name="log_date_timestamp"/>
+	<check_box bottom="-365" height="16" initial_value="false" label="Append date to log filename" name="logfile_name_datestamp"/>
+	<button bottom="-353" follows="right|bottom" height="20" label="Change Path" label_selected="Change Path" left="70" name="log_path_button" width="90" />
+	<line_editor border_drop_shadow_visible="false" border_visible="false" bottom="-386" drop_shadow_visible="true" follows="top|left|right" height="19" left="148"	max_length="254" mouse_opaque="false" name="log_path_string" right="-20" />
+</panel>

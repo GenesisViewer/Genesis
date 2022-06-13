@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater name="Sound Preview" title="sound.wav">
+	<text name="name_label">
+		Nom:
+	</text>
+	<text name="description_label">
+		Description:
+	</text>
+	<button label="Annuler" label_selected="Annuler" name="cancel_btn"/>
+	<button label="Importer ([UPLOADFEE])" label_selected="Charger ([UPLOADFEE])" name="ok_btn"/>
+</floater>

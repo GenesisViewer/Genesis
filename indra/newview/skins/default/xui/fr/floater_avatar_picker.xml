@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="avatarpicker" title="Choisir le résident">
+	<string name="not_found">
+		'[TEXT]' introuvable
+	</string>
+	<string name="no_one_near">
+		Il n'y a personne près de vous
+	</string>
+	<string name="no_results">
+		Aucun résultat
+	</string>
+	<string name="searching">
+		Recherche...
+	</string>
+	<string label="OK" label_selected="OK" name="Select">
+		Sélectionner
+	</string>
+	<string name="Close">
+		Fermer
+	</string>
+	<tab_container name="ResidentChooserTabs">
+		<panel label="Rechercher" name="SearchPanel">
+			<text name="InstructSearchResidentName">
+				Saisir une partie du nom du résident:
+			</text>
+			<button label="Trouver" label_selected="Trouver" name="Find"/>
+		</panel>
+		<panel name="FriendsPanel" label="Amis">
+			<text name="InstructSelectFriend">
+				Sélectionner une personne:
+			</text>
+			<button font="SansSerifSmall" label="Rafraîchir la liste" label_selected="Rafraîchir la liste" name="RefreshFriends" left_delta="10" width="105"/>
+		</panel>
+		<panel name="NearMePanel" label="Près de moi">
+			<text name="InstructSelectResident">
+				Choisir un résident près de vous:
+			</text>
+			<button font="SansSerifSmall" label="Rafraîchir la liste" label_selected="Rafraîchir la liste" name="Refresh" left_delta="10" width="105"/>
+			<slider label="Distance" name="near_me_range" bottom_delta="-36"/>
+			<text name="meters">
+				Mètres
+			</text>
+			<scroll_list bottom_delta="-169" height="159" name="NearMe"/>
+		</panel>
+		<panel name="KeyPanel" label="Avec UUID" >
+			<text name="InstructSelectResident">
+				Avatar ou Group UUID:
+			</text>
+		</panel>
+	</tab_container>
+	<button label="OK" label_selected="OK" name="ok_btn"/>
+	<button label="Annuler" label_selected="Annuler" name="cancel_btn"/>
+</floater>

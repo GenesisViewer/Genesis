@@ -18,6 +18,7 @@ Extract the INetC Plugin and move the Plugins directory into your NSIS Install d
 pip install git+https://bitbucket.org/lindenlab/autobuild.git@v3
 
 ## Generating the project
+set the environment variable AUTOBUILD_VARIABLES_FILE=<path-to-your-variables-file>
 autobuild configure -cRelease -A64 -- -DFMOD:BOOL=TRUE
 
 ## Building the project

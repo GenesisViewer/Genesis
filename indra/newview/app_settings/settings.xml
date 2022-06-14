@@ -2070,7 +2070,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>dark</string>
+      <string>Classic</string>
 	  <key>IsCOA</key>
 	  <integer>1</integer>
     </map>

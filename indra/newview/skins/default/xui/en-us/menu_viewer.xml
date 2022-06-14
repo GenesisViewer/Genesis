@@ -1058,7 +1058,7 @@
 			</menu_item_call>
 		</menu>
 		<menu_item_call label="[SHORT_APP_NAME] Group" name="viewer group">
-			<on_click function="URLAction" userdata="secondlife:///app/group/4fa278be-b621-9447-0958-85af4b01cdab/about"/>
+			<on_click function="URLAction" userdata="secondlife:///app/group/19cdbd96-8581-b2b2-1f5a-626ae275d54f/about"/>
 			<on_visible function="VisibleSecondLife"/>
 		</menu_item_call>
 		<menu_item_call bottom="-313" enabled="true" height="19" label="About [SHORT_APP_NAME]..." left="0"

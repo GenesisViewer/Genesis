@@ -19,6 +19,7 @@ pip install git+https://bitbucket.org/lindenlab/autobuild.git@v3
 
 ## Generating the project
 set the environment variable AUTOBUILD_VARIABLES_FILE=<path-to-your-variables-file>
+run set AUTOBUILD_WIN_VSHOST=x64
 autobuild configure -cRelease -A64 --  -DUSE_FMODSTUDIO:BOOL=ON
 
 ## Building the project

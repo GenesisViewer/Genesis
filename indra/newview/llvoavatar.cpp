@@ -4053,7 +4053,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 
 			// Singu Note: The following tweak may be a bad idea, though they've asked for actions to be italicized, the chat type for actions becomes irrelevant
 			// If LLFontGL::StyleFlags wasn't the parameter type, font styles could be combined and underline could be used, but that may be unnatural...
-			static const LLCachedControl<bool> italicize("LiruItalicizeActions");
+			static const LLCachedControl<bool> italicize("GenesisItalicizeActions");
 			if (italicize && chat_iter->mChatStyle == CHAT_STYLE_IRC)
 				style = LLFontGL::ITALIC;
 			else

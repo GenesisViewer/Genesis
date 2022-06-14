@@ -416,7 +416,7 @@ void LLFloaterIMPanel::onAvatarNameLookup(const LLAvatarName& avatar_name)
 	if (!ns || ns == 3) // Remove Resident, if applicable.
 	{
 		size_t pos(title.find(" Resident"));
-		if (pos != std::string::npos && !gSavedSettings.getBOOL("LiruShowLastNameResident"))
+		if (pos != std::string::npos && !gSavedSettings.getBOOL("GenesisShowLastNameResident"))
 			title.erase(pos, 9);
 	}
 	setShortTitle(title);
@@ -825,7 +825,7 @@ void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, LLColor4 incol
 		{
 			system = !from_user;
 			// IRC style text starts with a colon here; empty names and system messages aren't irc style.
-			static const LLCachedControl<bool> italicize("LiruItalicizeActions");
+			static const LLCachedControl<bool> italicize("GenesisItalicizeActions");
 			is_irc = italicize && utf8msg[0] != ':';
 			if (from_user)
 				LLAvatarNameCache::getNSName(source, show_name);

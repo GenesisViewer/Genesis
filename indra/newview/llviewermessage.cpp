@@ -4964,7 +4964,7 @@ static void process_money_balance_reply_extended(LLMessageSystem* msg)
 		return;
 	}
 
-	if ((U32)amount < gSavedSettings.getU32("LiruShowTransactionThreshold")) return; // <singu/> Don't show transactions of small amounts the user doesn't care about.
+	if ((U32)amount < gSavedSettings.getU32("GenesisShowTransactionThreshold")) return; // <singu/> Don't show transactions of small amounts the user doesn't care about.
 
 	std::string reason =
 		reason_from_transaction_type(transaction_type, item_description);

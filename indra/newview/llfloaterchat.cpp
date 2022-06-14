@@ -209,7 +209,7 @@ void add_timestamped_line(LLViewerTextEditor* edit, LLChat chat, const LLColor4&
 		}
 	}
 
-	static const LLCachedControl<bool> italicize("LiruItalicizeActions");
+	static const LLCachedControl<bool> italicize("GenesisItalicizeActions");
 	bool is_irc = italicize && chat.mChatStyle == CHAT_STYLE_IRC;
 	// If the chat line has an associated url, link it up to the name.
 	if (!chat.mURL.empty()

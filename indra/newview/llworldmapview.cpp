@@ -510,7 +510,7 @@ void LLWorldMapView::draw()
 			{
 				mesg = info->getName();
 
-				static const LLCachedControl<bool> show_avs("LiruMapShowAvCount");
+				static const LLCachedControl<bool> show_avs("GenesisMapShowAvCount");
 				if (show_avs) mesg += llformat(" (%d)", info->getAgentCount());
 
 				mesg += llformat(" (%s)", info->getAccessString().c_str());

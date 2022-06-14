@@ -876,7 +876,7 @@ void settings_setup_listeners()
     // [Ansariel: Display name support]
 	gSavedSettings.getControl("PhoenixNameSystem")->getSignal()->connect(boost::bind(&handlePhoenixNameSystemChanged, _2));
     // [/Ansariel: Display name support]
-	gSavedSettings.getControl("LiruShowLastNameResident")->getSignal()->connect(boost::bind(handlePhoenixNameSystemChanged, _2));
+	gSavedSettings.getControl("GenesisShowLastNameResident")->getSignal()->connect(boost::bind(handlePhoenixNameSystemChanged, _2));
 	gSavedSettings.getControl("FriendNameSystem")->getSignal()->connect(boost::bind(handleUpdateFriends));
 
 	gSavedSettings.getControl("AllowLargeSounds")->getSignal()->connect(boost::bind(&handleAllowLargeSounds, _2));

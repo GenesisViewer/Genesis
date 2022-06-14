@@ -2987,7 +2987,7 @@
                   <string>-A</string>
                   <string>${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
                   <string>-T</string>
-                  <string>host=${AUTOBUILD_WIN_VSHOST|NOTWIN}</string>
+                  <string>host=WIN64</string>
                 </array>
               </map>
               <key>default</key>

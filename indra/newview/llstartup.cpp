@@ -1045,8 +1045,10 @@ bool idle_startup()
 			LLScriptEdCore::parseFunctions("lsl_functions_os.xml"); //Singu Note: This appends to the base functions parsed from lsl_functions_sl.xml
 		}
 		// Avination doesn't want the viewer to do bandwidth throttling (it is done serverside, taking UDP into account too).
-		AIPerService::setNoHTTPBandwidthThrottling(gHippoGridManager->getConnectedGrid()->isAvination());
-
+		//AIPerService::setNoHTTPBandwidthThrottling(gHippoGridManager->getConnectedGrid()->isAvination());
+		//Mely test no Throttle
+		AIPerService::setNoHTTPBandwidthThrottling(gSavedSettings.getBOOL("GenesisUnlimitedBandwith"));
+		LL_INFOS() << "Unlimited bandwith " << gSavedSettings.getBOOL("GenesisUnlimitedBandwith") << LL_ENDL;
 		// create necessary directories
 		// *FIX: these mkdir's should error check
 		if (gHippoGridManager->getCurrentGrid()->isSecondLife()) 

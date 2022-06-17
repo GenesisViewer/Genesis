@@ -74,6 +74,8 @@ BOOL LLPanelNetwork::postBuild()
 	}
 	childSetValue("max_bandwidth", gSavedSettings.getF32("ThrottleBandwidthKBPS"));
 	childSetValue("tex_bandwidth", gSavedSettings.getF32("HTTPThrottleBandwidth"));
+	childSetValue("unlimited_bandwith",gSavedSettings.getBOOL("GenesisUnlimitedBandwith"));
+	childSetCommitCallback("unlimited_bandwith", onCommitUnlimitedBandwith, this);
 	childSetValue("connection_port_enabled", gSavedSettings.getBOOL("ConnectionPortEnabled"));
 	childSetValue("connection_port", (F32)gSavedSettings.getU32("ConnectionPort"));
 
@@ -94,12 +96,14 @@ BOOL LLPanelNetwork::postBuild()
 		}
 
 		// If in Avination, hide the texture bandwidth slider, Avination throttles server-side
-		if (grid->isAvination())
+		
+		if (grid->isAvination() )
 		{
 			childSetVisible("text_box4", FALSE);
 			childSetVisible("tex_bandwidth", FALSE);
 			childSetVisible("text_box3", FALSE);
 		}
+		
 	}
 
 	// Socks 5 proxy settings, commit callbacks
@@ -124,6 +128,9 @@ BOOL LLPanelNetwork::postBuild()
 	
 	// Socks 5 settings, Set all controls and labels enabled state
 	updateProxyEnabled(this, gSavedSettings.getBOOL("Socks5ProxyEnabled"), gSavedSettings.getString("Socks5AuthType"));
+
+	//UnlimitedBandwith settings
+	updateUnlimitedBandwith(this, gSavedSettings.getBOOL("GenesisUnlimitedBandwith"));
 
 	sSocksSettingsChanged = false;
 
@@ -172,6 +179,7 @@ void LLPanelNetwork::apply()
 			//LLSocks::getInstance()->updated();
 		}
 	}
+	gSavedSettings.setBOOL("GenesisUnlimitedBandwith", childGetValue("unlimited_bandwith"));
 }
 
 void LLPanelNetwork::cancel()
@@ -248,7 +256,16 @@ void LLPanelNetwork::onCommitPort(LLUICtrl* ctrl, void* data)
   self->childSetEnabled("connection_port", check->get());
   LLNotificationsUtil::add("ChangeConnectionPort");
 }
+// static
+void LLPanelNetwork::onCommitUnlimitedBandwith(LLUICtrl* ctrl, void* data)
+{
+	LLPanelNetwork* self  = (LLPanelNetwork*)data;
+	LLCheckBoxCtrl* check = (LLCheckBoxCtrl*)ctrl;
 
+	
+	
+	updateUnlimitedBandwith(self, check->get());
+}
 // static
 void LLPanelNetwork::onCommitSocks5ProxyEnabled(LLUICtrl* ctrl, void* data)
 {
@@ -321,4 +338,15 @@ void LLPanelNetwork::updateProxyEnabled(LLPanelNetwork * self, bool enabled, std
 		self->childSetEnabled("socks5_proxy_username", true);
 		self->childSetEnabled("socks5_proxy_password", true);
 	}
+}
+// static
+void LLPanelNetwork::updateUnlimitedBandwith(LLPanelNetwork * self, bool enabled)
+{
+	self->childSetVisible("text_box4", !enabled);
+	self->childSetVisible("tex_bandwidth", !enabled);
+	self->childSetVisible("text_box3", !enabled);
+	
+	self->childSetVisible("text_box", !enabled);
+	self->childSetVisible("max_bandwidth", !enabled);
+	self->childSetVisible("text_box2", !enabled);
 }

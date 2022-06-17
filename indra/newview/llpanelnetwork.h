@@ -59,7 +59,8 @@ private:
 	static void onSocksSettingsModified(LLUICtrl* ctrl, void* data);
 	static void onSocksAuthChanged(LLUICtrl* ctrl, void* data);
 	static void updateProxyEnabled(LLPanelNetwork * self, bool enabled, std::string authtype);
-	
+	static void onCommitUnlimitedBandwith(LLUICtrl* ctrl, void* data);
+	static void updateUnlimitedBandwith(LLPanelNetwork * self, bool enabled);
 	static bool sSocksSettingsChanged;
 
 };

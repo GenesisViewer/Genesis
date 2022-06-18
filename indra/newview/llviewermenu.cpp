@@ -9455,6 +9455,15 @@ class ListRequestTeleport final : public view_listener_t
 	}
 };
 
+class ListZoomAtResident final : public view_listener_t
+{
+	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
+	{
+		LLAvatarActions::zoomAtResident(active_owner_or_id(userdata));
+		return true;
+	}
+};
+
 class ListShare final : public view_listener_t
 {
 	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
@@ -9674,7 +9683,19 @@ class ListIsNearby final : public view_listener_t
 		return true;
 	}
 };
-
+/**
+ * Mely : Checks if avatar is in Region or not
+ * */
+class ListIsInRegion final : public view_listener_t
+{
+	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
+	{
+		
+		const auto& id = active_owner_or_id(userdata);
+		gMenuHolder->findControl(userdata["control"].asString())->setValue(gObjectList.findObject(id) != NULL);
+		return true;
+	}
+};
 class ListFollow final : public view_listener_t
 {
 	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
@@ -10350,6 +10371,7 @@ void initialize_menus()
 	addMenu(new ListRemoveFriend(), "List.RemoveFriend");
 	addMenu(new ListRequestFriendship(), "List.RequestFriendship");
 	addMenu(new ListRequestTeleport(), "List.RequestTeleport");
+	addMenu(new ListZoomAtResident(), "List.ZoomAtResident");
 	addMenu(new ListShare(), "List.Share");
 	addMenu(new ListShowLog(), "List.ShowLog");
 	addMenu(new ListShowProfile(), "List.ShowProfile");
@@ -10363,6 +10385,7 @@ void initialize_menus()
 	addMenu(new ListTeleportTo, "List.TeleportTo");
 	addMenu(new ListAbuseReport(), "List.AbuseReport");
 	addMenu(new ListIsNearby, "List.IsNearby");
+	addMenu(new ListIsInRegion, "List.IsInRegion");
 	addMenu(new ListFollow, "List.Follow");
 	addMenu(new ListGoTo, "List.GoTo");
 	addMenu(new ListTrack, "List.Track");

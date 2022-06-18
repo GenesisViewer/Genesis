@@ -42,6 +42,11 @@
       <on_enable function="List.EnableSingleSelected"/>
       <on_visible function="List.IsNearby"/>
     </menu_item_call>
+    <menu_item_call label="Zoom at resident" name="Zoom resident">
+      <on_click function="List.ZoomAtResident"/>
+      <on_visible function="List.EnableSingleSelected"/>
+      <on_enable function="List.IsInRegion"/>
+    </menu_item_call>
     <menu_item_call label="Offer Teleport" name="Offer Teleport">
       <on_click function="List.OfferTeleport"/>
     </menu_item_call>

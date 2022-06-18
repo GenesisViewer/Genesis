@@ -35,6 +35,7 @@
 #include "roles_constants.h"    // for GP_MEMBER_INVITE
 
 #include "llagent.h"
+#include "llagentcamera.h"
 #include "llcallingcard.h"		// for LLAvatarTracker
 #include "llfloateravatarinfo.h"
 #include "llfloateravatarpicker.h"	// for LLFloaterAvatarPicker
@@ -59,6 +60,7 @@
 #include "llpanelmaininventory.h"
 #include "llavatarname.h"
 #include "llagentui.h"
+#include "llviewerobjectlist.h"
 // [RLVa:KB] - Checked: 2011-04-11 (RLVa-1.3.0)
 #include "rlvactions.h"
 #include "rlvcommon.h"
@@ -494,7 +496,30 @@ void LLAvatarActions::teleportRequest(const LLUUID& id)
 	else
 		LLAvatarNameCache::get(id, boost::bind(&on_avatar_name_cache_teleport_request, _1, _2));
 }
+// static
+void LLAvatarActions::zoomAtResident(const LLUUID& id)
+{
+	LLViewerObject* object = gObjectList.findObject(id);
+	if (object)
+	{
+		gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
 
+		
+		LLVector3d object_center_global=object->getPositionGlobal();
+
+		float eye_distance=2.5f;
+		float eye_z_offset=1.0f;
+		LLVector3d focus_z_offset=0.6f;
+
+		LLVector3d eye_offset(eye_distance,0.0f,eye_z_offset);
+		eye_offset=eye_offset*object->getRotationRegion();
+
+		gAgentCamera.setCameraPosAndFocusGlobal(object_center_global+eye_offset, 
+										object_center_global+focus_z_offset, id );
+		
+	}
+	
+}
 // static
 void LLAvatarActions::on_avatar_name_cache_teleport_request(const LLUUID& id, const LLAvatarName& av_name)
 {

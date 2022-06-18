@@ -2967,6 +2967,7 @@ bool LLAgentCamera::lookAtObject(const LLUUID &object_id, bool self)
 			else
 				mCameraFocusOffsetTarget.setVec(radius, radius, 0.f);
 		}
+		
 	}
 	else
 	{
@@ -2994,6 +2995,7 @@ bool LLAgentCamera::lookAtObject(const LLUUID &object_id, bool self)
 		else
 			mCameraFocusOffsetTarget.setVec(radius, radius, 0.f);
 	}
+	mCameraFocusOffsetTarget.rotVec(F_PI,0,0,1);
 	return true;
 }
 

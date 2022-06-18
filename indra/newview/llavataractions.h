@@ -62,6 +62,7 @@ public:
 	static void offerTeleport(const LLUUID& invitee);
 	static void offerTeleport(const uuid_vec_t& ids);
 
+
 	/**
 	 * Start instant messaging session.
 	 */
@@ -111,6 +112,11 @@ public:
 	 */
 	static void teleportRequest(const LLUUID& id);
 	static void teleport_request_callback(const LLSD& notification, const LLSD& response);
+	/**
+	 * lookAt function - Zoom on resident
+	 * 
+	 * */
+	static void zoomAtResident(const LLUUID& id);
 
 	/**
 	 * Share items with the avatar.

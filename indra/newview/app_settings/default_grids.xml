@@ -37,32 +37,6 @@
       <key>auto_update</key><boolean>0</boolean>
     </map>
 
-    <!-- OSGrid -->
-    <map>
-      <key>auto_update</key> <boolean>0</boolean>
-      <key>gridname</key> <string>OSGrid</string>
-      <key>gridnick</key> <string>osgrid</string>
-      <key>helperuri</key> <string>http://helper.osgrid.org/</string>
-      <key>loginpage</key> <string>http://www.osgrid.org/splash/</string>
-      <key>loginuri</key> <string>http://login.osgrid.org/</string>
-      <key>password</key> <string>http://www.osgrid.org/</string>
-      <key>platform</key> <string>OpenSim</string>
-      <key>register</key> <string>http://www.osgrid.org/</string>
-      <key>render_compat</key> <boolean>1</boolean>
-      <key>search</key> <string />
-      <key>support</key> <string>http://www.osgrid.org/</string>
-      <key>website</key> <string>http://www.osgrid.org/</string>
-    </map>
-
-    <!-- Local Host -->
-    <map>
-      <key>gridnick</key><string>local</string>
-      <key>gridname</key><string>Local Host</string>
-      <key>platform</key><string>OpenSim</string>
-      <key>loginuri</key><string>http://127.0.0.1:9000/</string>
-      <key>helperuri</key><string>http://127.0.0.1:9000/</string>
-      <key>auto_update</key><boolean>0</boolean>
-    </map>
-
+    
   </array>
 </llsd>

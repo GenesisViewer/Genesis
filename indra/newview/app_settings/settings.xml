@@ -16926,7 +16926,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <real>1.0</real>
+      <real>1.125</real>
     </map>
     <key>UploadBakedTexOld</key>
     <map>

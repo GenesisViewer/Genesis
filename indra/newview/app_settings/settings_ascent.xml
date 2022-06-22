@@ -453,7 +453,7 @@
 			<key>Type</key>
 			<string>Boolean</string>
 			<key>Value</key>
-			<real>0</real>
+			<real>1</real>
 		</map>
 		<key>AscentAvatarXModifier</key>
 		<map>
@@ -497,7 +497,7 @@
 			<key>Type</key>
 			<string>Boolean</string>
 			<key>Value</key>
-			<integer>1</integer>
+			<integer>0</integer>
 		</map>
 		<key>AscentBroadcastTag</key>
 		<map>

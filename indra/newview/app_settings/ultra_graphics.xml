@@ -15,7 +15,7 @@
 	<!--Sun/Moon only-->
   <RenderLocalLights value="1"/>
 	<!--Low number-->
-	<RenderMaxPartCount value="4096"/>
+	<RenderMaxPartCount value="256"/>
 	<!--bump okay-->
 	<RenderObjectBump value="TRUE"/>
 	<!--NO SHADERS-->

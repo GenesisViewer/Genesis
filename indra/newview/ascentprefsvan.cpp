@@ -123,7 +123,7 @@ void LLPrefsAscentVan::refreshValues()
     mPlayTPSound			= gSavedSettings.getBOOL("OptionPlayTpSound");
     mShowLogScreens			= !gSavedSettings.getBOOL("AscentDisableLogoutScreens");
 	mDisableChatAnimation   = gSavedSettings.getBOOL("SGDisableChatAnimation");
-	mAddNotReplace = gSavedSettings.getBOOL("LiruAddNotReplace");
+	mAddNotReplace = gSavedSettings.getBOOL("GenesisAddNotReplace");
 	mTurnAround = gSavedSettings.getBOOL("TurnAroundWhenWalkingBackwards");
 	mCustomizeAnim = gSavedSettings.getBOOL("LiruCustomizeAnim");
 	mAnnounceSnapshots = gSavedSettings.getBOOL("AnnounceSnapshots");
@@ -197,7 +197,7 @@ void LLPrefsAscentVan::cancel()
     gSavedSettings.setBOOL("OptionPlayTpSound",             mPlayTPSound);
     gSavedSettings.setBOOL("AscentDisableLogoutScreens",   !mShowLogScreens);
 	gSavedSettings.setBOOL("SGDisableChatAnimation",		mDisableChatAnimation);
-	gSavedSettings.setBOOL("LiruAddNotReplace", mAddNotReplace);
+	gSavedSettings.setBOOL("GenesisAddNotReplace", mAddNotReplace);
 	gSavedSettings.setBOOL("TurnAroundWhenWalkingBackwards", mTurnAround);
 	gSavedSettings.setBOOL("LiruCustomizeAnim", mCustomizeAnim);
 	gSavedSettings.setBOOL("AnnounceSnapshots", mAnnounceSnapshots);

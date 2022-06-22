@@ -666,7 +666,7 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-    <key>LiruAddNotReplace</key>
+    <key>GenesisAddNotReplace</key>
     <map>
       <key>Comment</key>
       <string>Add clothing and attachments instead of having them replace the currently worn or attached item at their destination.</string>
@@ -675,7 +675,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>LiruBlockConferences</key>
     <map>
@@ -1078,7 +1078,7 @@ Found in Advanced->Rendering->Info Displays</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>GenesisShowTransactionThreshold</key>
     <map>
@@ -1089,7 +1089,7 @@ Found in Advanced->Rendering->Info Displays</string>
       <key>Type</key>
       <string>U32</string>
       <key>Value</key>
-      <integer>2</integer>
+      <integer>1</integer>
     </map>
     <key>LiruUseAdvancedMenuShortcut</key>
     <map>
@@ -2481,7 +2481,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>1e506d0c-4811-bdf3-5ec7-d624284c9040</string>
+      <string>03ee8ead-bef5-58d0-d012-215676b6c832</string>
     </map>
     <key>UISndSnapshot</key>
     <map>
@@ -2985,7 +2985,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>AutoAcceptAllNewInventory</key>
     <map>
@@ -4089,7 +4089,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>U32</string>
       <key>Value</key>
-      <integer>512</integer>
+      <integer>1536</integer>
     </map>
     <key>CacheValidateCounter</key>
     <map>
@@ -5156,7 +5156,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <real>0.700</real>
+      <real>0.900</real>
     </map>
     <key>ConsoleBottomOffset</key>
     <map>
@@ -7120,7 +7120,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>%d/%m/%Y</string>
+      <string>%m/%d/%Y</string>
     </map>
     <key>ShortTimeFormat</key>
     <map>
@@ -9535,7 +9535,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <real>1</real>
+      <real>1.7</real>
     </map>
     <key>InBandwidth</key>
     <map>
@@ -11857,7 +11857,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>1</integer>
+      <integer>0</integer>
     </map>
     <key>PluginAttachDebuggerToPlugins</key>
     <map>
@@ -11948,7 +11948,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>1</integer>
+      <integer>0</integer>
     </map>
     <key>PrecachingDelay</key>
     <map>
@@ -12911,7 +12911,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <real>1.0</real>
+      <real>0.1</real>
     </map>
     <key>RenderAvatarInvisible</key>
     <map>
@@ -14139,7 +14139,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
-      <integer>4096</integer>
+      <integer>256</integer>
     </map>
     <key>RenderMaxNodeSize</key>
     <map>
@@ -14459,7 +14459,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>RenderUseFBO</key>
     <map>
@@ -15258,7 +15258,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>ShowChatHistory</key>
     <map>
@@ -16005,7 +16005,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>1</integer>
+      <integer>0</integer>
     </map>
     <key>SnapEnabled</key>
     <map>
@@ -16926,7 +16926,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <real>1.0</real>
+      <real>1.125</real>
     </map>
     <key>UploadBakedTexOld</key>
     <map>
@@ -17431,7 +17431,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>1</integer>
+      <integer>0</integer>
     </map>
     <key>VoiceDisableMic</key>
     <map>

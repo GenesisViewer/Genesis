@@ -202,7 +202,7 @@ std::string LLAvatarName::getLegacyName() const
 		return mDisplayName;
 	}
 
-	static const LLCachedControl<bool> show_resident("LiruShowLastNameResident", false);
+	static const LLCachedControl<bool> show_resident("GenesisShowLastNameResident", false);
 	if (show_resident || mLegacyLastName != "Resident")
 		return mLegacyFirstName + ' ' + mLegacyLastName;
 	return mLegacyFirstName;

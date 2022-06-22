@@ -14139,7 +14139,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
-      <integer>4096</integer>
+      <integer>256</integer>
     </map>
     <key>RenderMaxNodeSize</key>
     <map>

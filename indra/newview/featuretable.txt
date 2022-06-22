@@ -37,7 +37,7 @@ RenderFogRatio				1	4.0
 RenderGamma					1	0
 RenderGlowResolutionPow		1	9
 RenderGround				1	1
-RenderMaxPartCount			1	8192
+RenderMaxPartCount			1	256
 RenderObjectBump			1	1
 RenderLocalLights			1	1
 RenderReflectionDetail		1	4
@@ -82,7 +82,7 @@ RenderAvatarVP				1	0
 RenderFarClip				1	64
 RenderFlexTimeFactor		1	0
 RenderGlowResolutionPow		1	8
-RenderMaxPartCount			1	512
+RenderMaxPartCount			1	256
 RenderObjectBump			1	0
 RenderLocalLights			1	0
 RenderReflectionDetail		1	0
@@ -114,7 +114,7 @@ RenderAvatarVP				1	1
 RenderFarClip				1	96
 RenderFlexTimeFactor		1	1.0
 RenderGlowResolutionPow		1	8
-RenderMaxPartCount			1	2048
+RenderMaxPartCount			1	256
 RenderObjectBump			1	1
 RenderLocalLights			1	1
 RenderReflectionDetail		1	0
@@ -147,7 +147,7 @@ RenderAvatarVP				1	1
 RenderFarClip				1	128
 RenderFlexTimeFactor		1	1.0
 RenderGlowResolutionPow		1	9
-RenderMaxPartCount			1	4096
+RenderMaxPartCount			1	256
 RenderObjectBump			1	1
 RenderLocalLights			1	1
 RenderReflectionDetail		1	2
@@ -178,7 +178,7 @@ RenderAvatarVP				1	1
 RenderFarClip				1	256
 RenderFlexTimeFactor		1	1.0
 RenderGlowResolutionPow		1	9
-RenderMaxPartCount			1	8192
+RenderMaxPartCount			1	256
 RenderObjectBump			1	1
 RenderLocalLights			1	1
 RenderReflectionDetail		1	4
@@ -270,7 +270,7 @@ RenderAvatarCloth			0	0
 RenderAvatarVP				0	0
 RenderObjectBump			0	0
 RenderLocalLights			1	0
-RenderMaxPartCount			1	1024
+RenderMaxPartCount			1	256
 RenderTerrainDetail 		1	0
 RenderUseImpostors			0	0
 RenderVBOEnable				1	0
@@ -287,7 +287,7 @@ RenderUseFBO				0	0
 
 // 1Ghz or less (equiv)
 list CPUSlow
-RenderMaxPartCount			1	1024
+RenderMaxPartCount			1	256
 
 //
 // RAM based feature masks
@@ -315,7 +315,7 @@ RenderVBOEnable				1	0
 
 list GeForce2
 RenderAnisotropic			1	0
-RenderMaxPartCount			1	2048
+RenderMaxPartCount			1	256
 RenderTerrainDetail			1	0
 RenderVBOEnable				1	1
 

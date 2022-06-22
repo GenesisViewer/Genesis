@@ -7120,7 +7120,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>%d/%m/%Y</string>
+      <string>%m/%d/%Y</string>
     </map>
     <key>ShortTimeFormat</key>
     <map>

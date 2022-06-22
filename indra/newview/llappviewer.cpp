@@ -358,8 +358,8 @@ const std::string START_MARKER_FILE_NAME("Singularity.start_marker");;
 const std::string ERROR_MARKER_FILE_NAME("Singularity.error_marker");
 const std::string LLERROR_MARKER_FILE_NAME("Singularity.llerror_marker");
 const std::string LOGOUT_MARKER_FILE_NAME("Singularity.logout_marker");
-const std::string LOG_FILE("Singularity.log");
-extern const std::string OLD_LOG_FILE("Singularity.old");
+const std::string LOG_FILE("Genesis.log");
+extern const std::string OLD_LOG_FILE("Genesis.old");
 static BOOL gDoDisconnect = FALSE;
 static std::string gLaunchFileOnQuit;
 

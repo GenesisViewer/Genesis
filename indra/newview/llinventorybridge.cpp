@@ -5944,7 +5944,7 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 
 void LLObjectBridge::openItem()
 {
-	static LLCachedControl<bool> add(gSavedSettings, "LiruAddNotReplace");
+	static LLCachedControl<bool> add(gSavedSettings, "GenesisAddNotReplace");
 	// object double-click action is to wear/unwear object
 	performAction(getInventoryModel(),
 		      get_is_item_worn(mUUID) ? "detach" : (add ? "wear_add" : "attach"));
@@ -7229,7 +7229,7 @@ void LLWearableBridgeAction::wearOnAvatar()
 		}
 		else
 		{
-			static LLCachedControl<bool> add(gSavedSettings, "LiruAddNotReplace");
+			static LLCachedControl<bool> add(gSavedSettings, "GenesisAddNotReplace");
 			LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, !add);
 		}
 	}

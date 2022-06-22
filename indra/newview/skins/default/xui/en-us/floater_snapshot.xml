@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <floater bottom="-300" can_close="true" can_drag_on_left="false" can_minimize="false"
      can_resize="false" follows="left|top" height="566" name="Snapshot"
-     rect_control="FloaterSnapshotRect" title="Snapshot Preview" width="219">
+     rect_control="FloaterSnapshotRect" title="Snapshot Preview" width="400">
 	<text bottom="-210" right="-10" follows="left|top" height="25" name="file_size_label" halign="right" width="150">
 		File size: [SIZE] KB
 	</text>
@@ -9,6 +9,9 @@
 		Target
 	</text>
 	<combo_box bottom_delta="-23" follows="left|top" height="20" left="10" name="snapshot_type_radio" width="200">
+		<combo_item name="local" value="3">
+			Save to hard drive
+		</combo_item>
 		<combo_item name="feed" value="0">
 			Post to profile feed
 		</combo_item>
@@ -18,9 +21,7 @@
 		<combo_item name="texture" value="2">
 			Save to inventory
 		</combo_item>
-		<combo_item name="local" value="3">
-			Save to hard drive
-		</combo_item>
+		
 	</combo_box>
 	<button bottom="-250" follows="left|top" height="20" label="Refresh" left="10"
 	  name="new_snapshot_btn" width="105"/>

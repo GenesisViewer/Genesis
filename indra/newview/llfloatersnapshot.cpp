@@ -1806,8 +1806,11 @@ void LLFloaterSnapshot::Impl::updateControls(LLFloaterSnapshot* floater, bool de
 		(is_local && shot_format == LLFloaterSnapshot::SNAPSHOT_FORMAT_JPEG);
 
 	floater->getChild<LLComboBox>(previewp->aspectComboName())->setVisible(is_advance);
-	floater->childSetVisible("more_btn", !is_advance); // the only item hidden in advanced mode
-	floater->childSetVisible("less_btn",				is_advance);
+	//floater->childSetVisible("more_btn", !is_advance); // the only item hidden in advanced mode
+	//floater->childSetVisible("less_btn",				is_advance);
+	//Mely : why not letting the advanced options always visible
+	floater->childSetVisible("more_btn", false);
+	floater->childSetVisible("less_btn", false);
 	floater->childSetVisible("type_label2",				is_advance);
 	floater->childSetVisible("keep_aspect",				is_advance);
 	floater->childSetVisible("type_label3",				is_advance);

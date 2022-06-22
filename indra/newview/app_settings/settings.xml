@@ -2622,7 +2622,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>AgentAppearanceServiceURL</key>
     <map>
@@ -10211,7 +10211,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>3</integer>
     </map>
     <key>SnapshotFeedAddLocation</key>
     <map>
@@ -16082,7 +16082,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>SnapshotLayerType</key>
     <map>

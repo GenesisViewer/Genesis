@@ -8,7 +8,7 @@ deploys:
     instance_template_base: windows-genesis-build-template-202206
     instance_template: Genesis-windows-build-${{GITHUB_RUN_NUMBER}}-${{GITHUB_SHA}}
     labels: # will also have gitsha from common section
-      version: ${{APP_VERSION}}
+      version: ${{GITHUB_SHA}}
     update_policy:
       min_ready_sec: 300
 

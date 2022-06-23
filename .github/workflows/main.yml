@@ -24,7 +24,6 @@ jobs:
           service_account_key: ${{ secrets.GCE_SA_KEY }}
           machine_zone: us-central1-a
           machine_type: n1-standard-4
-          preemptible: true
 
   test:
     needs: create-runner

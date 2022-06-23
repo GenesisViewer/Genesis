@@ -20,8 +20,7 @@ jobs:
       - id: create-runner
         uses: related-sciences/gce-github-runner@main
         with:
-          token: ${{ secrets.GH_SA_TOKEN }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ secrets.GCE_PROJECT }}
           service_account_key: ${{ secrets.GCE_SA_KEY }}
           image_project: windows-genesis-build-${{ secrets.GIT_HASH }}
           image_family: windows-genesis-build-template-202206

@@ -22,7 +22,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCE_PROJECT }}
           service_account_key: ${{ secrets.GCE_SA_KEY }}
-          image_project: windows-genesis-build
+          image_project: Genesis
           image_family: windows-genesis-build-template-202206
           machine_zone: us-central1-a
           machine_type: n1-standard-4

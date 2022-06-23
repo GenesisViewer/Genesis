@@ -11,6 +11,6 @@ deploys:
     labels: # will also have gitsha from common section
       version: ${{APP_VERSION}}
     update_policy:
-      min_ready_sec: 30
+      min_ready_sec: 300
 
 delete_instance_templates_after: true

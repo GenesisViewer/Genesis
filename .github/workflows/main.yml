@@ -12,12 +12,26 @@ env:
   GCE_INSTANCE_ZONE: us-central1-a   # TODO: update to instance zone
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: self-hosted
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  create-runner:
+    runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.create-runner.outputs.label }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - id: create-runner
+        uses: related-sciences/gce-github-runner@main
+        with:
+          token: ${{ secrets.GH_SA_TOKEN }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCE_SA_KEY }}
+          image_project: windows-genesis-build-${{ secrets.GIT_HASH }}
+          image_family: windows-genesis-build-template-202206
+
+  test:
+    needs: create-runner
+    runs-on: ${{ needs.create-runner.outputs.label }}
+    steps:
+      - run: echo "This runs on the GCE runner VM"
+      - uses: related-sciences/gce-github-runner@main
+        with:
+          command: stop
+        if: always()

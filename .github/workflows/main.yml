@@ -36,10 +36,15 @@ jobs:
        with:
           ref: ${{env.GITHUB_REF}}
           fetch-depth: 0
-     - id: destroy-runner
-       uses: MelyCosti/gcp-runner@main
+     
+  
+  destroy-runner :
+    needs: [create-runner,build]
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+     - uses: MelyCosti/gcp-runner@main
        with:
           command: stop
-       if: always()  
-  
-  
+       if: always()
+    

@@ -28,12 +28,22 @@ jobs:
           token: ${{ secrets.GH_SA_TOKEN }}
           ephemeral: true
 
-  test:
+  git_checkout :
     needs: create-runner
     runs-on: ${{ needs.create-runner.outputs.label }}
     steps:
-      - run: echo "This runs on the GCE runner VM"
-      - uses: related-sciences/gce-github-runner@main
+     - id: git_checkout
+       uses: actions/checkout@v3
+       with:
+          ref: ${{GITHUB_REF}}
+          fetch-depth: 0
+  
+  destroy_runner:
+    needs: create-runner
+    runs-on: ${{ needs.create-runner.outputs.label }}
+    steps:
+      - run: echo "This runs on the GCE VM"
+      - uses: MelyCosti/gcp-runner@main
         with:
           command: stop
         if: always()

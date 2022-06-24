@@ -1,0 +1,15 @@
+common:
+  labels:
+    gitsha: ${{GITHUB_SHA}}
+
+deploys:
+  - name: genesis-build-release
+    region: us-central1
+    instance_template_base: windows-genesis-build-template-202206
+    instance_template: Genesis-windows-build-${{GITHUB_RUN_NUMBER}}-${{GITHUB_SHA}}
+    labels: # will also have gitsha from common section
+      version: ${{GITHUB_SHA}}
+    update_policy:
+      min_ready_sec: 300
+
+delete_instance_templates_after: true

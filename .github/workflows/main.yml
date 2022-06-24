@@ -46,7 +46,9 @@ jobs:
      
      
      - id: autobuild-configure
-       run : 'set AUTOBUILD_WIN_VSHOST=x64 && autobuild configure -cRelease -A64 -- -DUSE_FMODSTUDIO:BOOL=ON'
+       run : echo 'set AUTOBUILD_WIN_VSHOST=x64 && autobuild configure -cRelease -A64 -- -DUSE_FMODSTUDIO:BOOL=ON'>configure.cmd
+     - id: run-autobuild-configure  
+       run : ./configure.cmd
      - id: build-setup
        run : autobuild build --no-configure -cRelease -A64
   

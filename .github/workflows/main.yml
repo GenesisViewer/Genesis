@@ -36,8 +36,7 @@ jobs:
        with:
           ref: ${{env.GITHUB_REF}}
           fetch-depth: 0
-     - id : unregister-runner
-       run : /actions-runner/config.cmd remove --unattended
+     
   
   destroy-runner :
     needs: [create-runner,build]

@@ -33,7 +33,7 @@ jobs:
          msbuild-architecture: x64
      
      - id: autobuild-configure
-       run : echo 'set AUTOBUILD_WIN_VSHOST=Win64 && autobuild configure -cRelease -A64 -- -DUSE_FMODSTUDIO:BOOL=ON'>configure.cmd
+       run : echo 'set AUTOBUILD_WIN_VSHOST=v143  && autobuild configure -cRelease -A64 -- -DUSE_FMODSTUDIO:BOOL=ON'>configure.cmd
      - id: run-autobuild-configure  
        run : ./configure.cmd
      - id: build-setup

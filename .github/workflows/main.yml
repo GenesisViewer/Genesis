@@ -44,10 +44,9 @@ jobs:
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
      - run : pip install git+https://bitbucket.org/lindenlab/autobuild.git@v3    
      
-     - id: set-variables
-       run : set AUTOBUILD_WIN_VSHOST=x64
+     
      - id: autobuild-configure
-       run : autobuild configure -cRelease -A64 -- -DUSE_FMODSTUDIO:BOOL=ON
+       run : 'set AUTOBUILD_WIN_VSHOST=x64 && autobuild configure -cRelease -A64 -- -DUSE_FMODSTUDIO:BOOL=ON'
      - id: build-setup
        run : autobuild build --no-configure -cRelease -A64
   

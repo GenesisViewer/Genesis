@@ -44,6 +44,10 @@ jobs:
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
      - run : pip install git+https://bitbucket.org/lindenlab/autobuild.git@v3    
      
+     - name: Add msbuild to PATH
+       uses: microsoft/setup-msbuild@v1.1
+       with:
+         msbuild-architecture: x64
      
      - id: autobuild-configure
        run : echo 'set AUTOBUILD_WIN_VSHOST=x64 && autobuild configure -cRelease -A64 -- -DUSE_FMODSTUDIO:BOOL=ON'>configure.cmd

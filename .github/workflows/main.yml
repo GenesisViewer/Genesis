@@ -27,7 +27,7 @@ jobs:
           actions_preinstalled: true
           token: ${{ secrets.GH_SA_TOKEN }}
 
-  git_checkout :
+  build :
     needs: create-runner
     runs-on: ${{ needs.create-runner.outputs.label }}
     steps:
@@ -36,13 +36,10 @@ jobs:
        with:
           ref: ${{env.GITHUB_REF}}
           fetch-depth: 0
-  
-  destroy_runner:
-    needs: create-runner
-    runs-on: ${{ needs.create-runner.outputs.label }}
-    steps:
-      - run: echo "This runs on the GCE VM"
-      - uses: MelyCosti/gcp-runner@main
+     - id: destroy VM
+       uses: MelyCosti/gcp-runner@main
         with:
           command: stop
-        if: always()
+        if: always()  
+  
+  

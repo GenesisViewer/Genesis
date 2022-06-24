@@ -36,8 +36,14 @@ jobs:
        with:
           ref: ${{env.GITHUB_REF}}
           fetch-depth: 0
+          
      - id: install-autobuild
-       run : pip install git+https://bitbucket.org/lindenlab/autobuild.git@v3    
+       uses: actions/setup-python@v4
+       with:
+          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+     - run : pip install git+https://bitbucket.org/lindenlab/autobuild.git@v3    
+     
      - id: set-variables
        run : set AUTOBUILD_WIN_VSHOST=x64
      - id: autobuild-configure

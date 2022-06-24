@@ -37,7 +37,7 @@ jobs:
           ref: ${{env.GITHUB_REF}}
           fetch-depth: 0
      - id : unregister-runner
-       run : /actions-runner/config.cmd remove --token ${{ secrets.GH_SA_TOKEN }}
+       run : /actions-runner/config.cmd remove
   
   destroy-runner :
     needs: [create-runner,build]

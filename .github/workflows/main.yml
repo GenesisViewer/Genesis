@@ -45,6 +45,12 @@ jobs:
     steps:
      - uses: MelyCosti/gcp-runner@main
        with:
+          project_id: ${{ secrets.GCE_PROJECT }}
+          service_account_key: ${{ secrets.GCE_SA_KEY }}
+          machine_zone: us-central1-a
+          machine_type: n1-standard-4
+          actions_preinstalled: true
+          token: ${{ secrets.GH_SA_TOKEN }}
           command: stop
        if: always()
     

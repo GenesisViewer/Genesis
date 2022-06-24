@@ -40,7 +40,7 @@ jobs:
        run : set AUTOBUILD_WIN_VSHOST=x64
      - id: autobuild-configure
        run : autobuild configure -cRelease -A64 -- -DUSE_FMODSTUDIO:BOOL=ON
-     - id: make setup
+     - id: build-setup
        run : autobuild build --no-configure -cRelease -A64
   
   destroy-runner :

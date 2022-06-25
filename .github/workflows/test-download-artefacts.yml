@@ -10,18 +10,18 @@ jobs:
     
     runs-on: ubuntu-latest
     steps:
-       - id: install-wget
-       uses: actions/setup-python@v4
-       with:
+      - id: install-wget
+        uses: actions/setup-python@v4
+        with:
           python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-     - run : pip install requests
-     - name: downloading-private-fmod
-       uses: jannekem/run-python-script-action@v1
-       env:
+      - run : pip install requests
+      - name: downloading-private-fmod
+        uses: jannekem/run-python-script-action@v1
+        env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-       with:
+        with:
           script: |
             import requests
             import os

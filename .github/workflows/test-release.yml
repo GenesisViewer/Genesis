@@ -46,7 +46,8 @@ jobs:
      - uses: geekyeggo/delete-artifact@v1
        with:
           name: fmod
-     
+     - name: ls
+       run: ls -l c:/temp/
      - name: Add msbuild to PATH
        uses: microsoft/setup-msbuild@v1.1
        with:

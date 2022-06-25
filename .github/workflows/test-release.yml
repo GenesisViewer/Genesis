@@ -51,6 +51,9 @@ jobs:
        uses: microsoft/setup-msbuild@v1.1
        with:
          msbuild-architecture: x64
+     - name: Create nsis installer
+       uses: joncloud/makensis-action@v3.3
+         
      - id: code-checkout
        uses: actions/checkout@v3
        with:

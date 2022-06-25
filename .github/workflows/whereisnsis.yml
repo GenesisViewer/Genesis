@@ -10,5 +10,5 @@ jobs:
     
     runs-on: windows-latest
     steps:
-      -name : ls
-       run : ls "C:\Program Files (x86)\NSIS"
+      - name : ls
+        run : ls "C:\Program Files (x86)\NSIS"

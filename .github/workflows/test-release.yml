@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-latest
     steps:
      - name: create-temp-dir
-       run: if not exist "C:\temp\" mkdir "C:\temp\" 
+       run: if not exist "C:\temp\" (mkdir "C:\temp\")
      - name: downloading-private-fmod
        uses: wei/wget@v1
        with:

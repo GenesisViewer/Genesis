@@ -25,7 +25,7 @@ jobs:
           name: fmod
           path: /tmp/fmod.tar.bz2
   build :
-    
+    needs: [download-artefacts]
     runs-on: windows-latest
     steps:
      

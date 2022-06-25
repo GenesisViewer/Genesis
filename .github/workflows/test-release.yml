@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-latest
     steps:
      - name: create-temp-dir
-       run: mkdir c:\temp
+       run: mkdir c:\temp >NUL 2>NUL
      - name: downloading-private-fmod
        uses: wei/wget@v1
        with:

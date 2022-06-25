@@ -29,7 +29,10 @@ jobs:
         with:
           name: fmod
           path: c:/temp/fmod.tar.bz2
-
+      # delete-artifact
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: fmod
       - name: ls 
         
         run: ls -l c:/temp

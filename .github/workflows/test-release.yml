@@ -19,7 +19,7 @@ jobs:
         env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-        run: mkdir -p /tmp/deps/ && curl -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2 --output /tmp/deps/fmodstudio-2.00.03-windows64-192401637.tar.bz2
+        run: mkdir -p /tmp/deps/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2 --output /tmp/deps/fmodstudio-2.00.03-windows64-192401637.tar.bz2
       - uses: actions/upload-artifact@v2
         with:
           name: fmod
@@ -33,7 +33,7 @@ jobs:
      - id: install-autobuild
        uses: actions/setup-python@v4
        with:
-          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
      - run : pip install git+https://bitbucket.org/lindenlab/autobuild.git@v3    
      

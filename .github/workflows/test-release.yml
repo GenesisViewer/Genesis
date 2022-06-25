@@ -14,21 +14,12 @@ jobs:
     
     runs-on: windows-latest
     steps:
-     - id: 'auth'
-       uses: 'google-github-actions/auth@v0'
+     - name: create-temp-dir
+       run: mkdir c:\temp
+     - name: downloading-private-fmod
+       uses: wei/wget@v1
        with:
-        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-
-     - name: 'Set up Cloud SDK'
-       uses: 'google-github-actions/setup-gcloud@v0'
-
-     - name: 'Use gcloud CLI'
-       run: 'gcloud info'
-     - id: git_checkout
-       uses: actions/checkout@v3
-       with:
-          ref: ${{env.GITHUB_REF}}
-          fetch-depth: 0
+        args: -O ${{ env.TEMP }}/fmodstudio-2.00.03-windows64-192401637.tar.bz2 https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2
           
      - id: install-autobuild
        uses: actions/setup-python@v4

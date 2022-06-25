@@ -1,0 +1,32 @@
+name: test-download-artefact
+on:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+jobs:
+  
+  build :
+    
+    runs-on: ubuntu-latest
+    steps:
+       - id: install-wget
+       uses: actions/setup-python@v4
+       with:
+          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+     - run : pip install requests
+     - name: downloading-private-fmod
+       uses: jannekem/run-python-script-action@v1
+       env:
+         dep_pass: ${{ secrets.DEP_PASS}}
+         dep_user: ${{secrets.DEP_USER}}
+       with:
+          script: |
+            import requests
+            import os
+            r = requests.get(url='http://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2',auth=(os.environ['dep_user'],os.environ['dep_pass']) ,timeout=(1000,1000))
+            #r = requests.request(url='https://depot.alchemyviewer.org/pub/windows/lib-vc141/expat-2.2.0-windows-201703090626.tar.bz2', method='GET',timeout=1000)
+            with open("/tmp/fmodstudio-2.00.03-windows64-192401637.tar.bz2", "wb") as f:
+              f.write(r.content)
+                

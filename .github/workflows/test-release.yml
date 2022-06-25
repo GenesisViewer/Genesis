@@ -37,7 +37,8 @@ jobs:
           script: |
             import requests
             import os
-            r = requests.request(url='https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2', method='GET',auth=(os.environ['dep_user'],os.environ['dep_pass']) ,timeout=100)
+            #r = requests.request(url='https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2', method='GET',auth=(os.environ['dep_user'],os.environ['dep_pass']) ,timeout=100)
+            r = requests.request(url='https://londoncitysl.com', method='GET',timeout=100)
             with open("c:/temp/fmodstudio-2.00.03-windows64-192401637.tar.bz2", "wb") as f:
               f.write(r.content)
                 

@@ -908,7 +908,7 @@
 	      <key>hash_algorithm</key>
 	      <string>md5</string>
               <key>url</key>
-              <string>file:///C:/Users/tylerdurden/Documents/fmodstudio-2.00.03-windows64-192401637.tar.bz2</string>
+              <string>file:///C:/temp/fmodstudio-2.00.03-windows64-192401637.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>

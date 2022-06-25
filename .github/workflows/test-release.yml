@@ -27,9 +27,16 @@ jobs:
        with:
           python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-     - run : pip install wget
+     - run : pip install requests
      - name: downloading-private-fmod
-       run: python -c "import wget; wget.download('https://${{secrets.DEP_USER}}:${{ secrets.DEP_PASS}}@londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2', 'C:/temp/fmodstudio-2.00.03-windows64-192401637.tar.bz2')"
+       uses: jannekem/run-python-script-action@v1
+       with:
+          script: |
+            import requests
+            r = requests.request(url='https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2', method='GET',auth=(${{secrets.DEP_USER}},${{ secrets.DEP_PASS}}))
+            with open("c:/temp/fmodstudio-2.00.03-windows64-192401637.tar.bz2", "wb") as f:
+              f.write(r.content)
+                
      - name: Add msbuild to PATH
        uses: microsoft/setup-msbuild@v1.1
        with:

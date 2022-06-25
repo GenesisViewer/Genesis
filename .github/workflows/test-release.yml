@@ -29,7 +29,7 @@ jobs:
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
      - run : pip install wget
      - name: downloading-private-fmod
-       run: wget --user ${{secrets.DEP_USER}} --password ${{ secrets.DEP_PASS}} -O c:/temp/fmodstudio-2.00.03-windows64-192401637.tar.bz2 https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2
+       run: python -m wget --user ${{secrets.DEP_USER}} --password ${{ secrets.DEP_PASS}} -O c:/temp/fmodstudio-2.00.03-windows64-192401637.tar.bz2 https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2
        
      - name: Add msbuild to PATH
        uses: microsoft/setup-msbuild@v1.1

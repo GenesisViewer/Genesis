@@ -9,7 +9,21 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  
+  download-artefacts :
+    
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: downloading-private-fmod
+        
+        env:
+         dep_pass: ${{ secrets.DEP_PASS}}
+         dep_user: ${{secrets.DEP_USER}}
+        run: curl -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2 --output /tmp/fmod.tar.bz2
+      - uses: actions/upload-artifact@v2
+        with:
+          name: fmod
+          path: /tmp/fmod.tar.bz2
   build :
     
     runs-on: windows-latest
@@ -22,26 +36,17 @@ jobs:
           python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
      - run : pip install git+https://bitbucket.org/lindenlab/autobuild.git@v3    
-     - id: install-wget
-       uses: actions/setup-python@v4
-       with:
-          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-     - run : pip install requests
+     
      - name: downloading-private-fmod
-       uses: jannekem/run-python-script-action@v1
-       env:
-         dep_pass: ${{ secrets.DEP_PASS}}
-         dep_user: ${{secrets.DEP_USER}}
+       uses: actions/download-artifact@v2
        with:
-          script: |
-            import requests
-            import os
-            r = requests.get(url='http://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2',auth=(os.environ['dep_user'],os.environ['dep_pass']) ,timeout=(1000,1000))
-            #r = requests.request(url='https://depot.alchemyviewer.org/pub/windows/lib-vc141/expat-2.2.0-windows-201703090626.tar.bz2', method='GET',timeout=1000)
-            with open("c:/temp/fmodstudio-2.00.03-windows64-192401637.tar.bz2", "wb") as f:
-              f.write(r.content)
-                
+           name: fmod
+           path: c:/temp/fmodstudio-2.00.03-windows64-192401637.tar.bz2
+     
+     - uses: geekyeggo/delete-artifact@v1
+       with:
+          name: fmod
+     
      - name: Add msbuild to PATH
        uses: microsoft/setup-msbuild@v1.1
        with:

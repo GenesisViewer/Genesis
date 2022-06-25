@@ -19,11 +19,11 @@ jobs:
         env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-        run: curl -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2 --output /tmp/fmod.tar.bz2
+        run: curl -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2 --output /tmp/fmodstudio-2.00.03-windows64-192401637.tar.bz2
       - uses: actions/upload-artifact@v2
         with:
           name: fmod
-          path: /tmp/fmod.tar.bz2
+          path: /tmp/
   build :
     needs: [download-artefacts]
     runs-on: windows-latest
@@ -41,7 +41,7 @@ jobs:
        uses: actions/download-artifact@v2
        with:
            name: fmod
-           path: c:/temp/fmodstudio-2.00.03-windows64-192401637.tar.bz2
+           path: c:/temp/
      
      - uses: geekyeggo/delete-artifact@v1
        with:

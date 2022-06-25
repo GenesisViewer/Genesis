@@ -38,4 +38,4 @@ jobs:
 
       - name: ls
         
-        run: cd c:/temp && dir
+        run: dir c:/temp/

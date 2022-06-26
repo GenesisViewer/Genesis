@@ -46,7 +46,7 @@ jobs:
           user: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local_dir: "./Genesis/"
-          remote_dir: "/genesis/nightly_builds"
+          remote_dir: "/genesis/nightly_builds/"
           delete: "false"
           max_retries: "2"
           no_symlinks: "false"

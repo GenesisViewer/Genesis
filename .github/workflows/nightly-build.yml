@@ -1,0 +1,137 @@
+# This is a basic workflow to help you get started with Actions
+
+name: test-genesis-release
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  download-artefacts :
+    
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: downloading-private-fmod
+        env:
+         dep_pass: ${{ secrets.DEP_PASS}}
+         dep_user: ${{secrets.DEP_USER}}
+        run: mkdir -p /tmp/deps/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2 --output /tmp/deps/fmodstudio-2.00.03-windows64-192401637.tar.bz2
+        
+      - name: downloading-inetc
+        env:
+         dep_pass: ${{ secrets.DEP_PASS}}
+         dep_user: ${{secrets.DEP_USER}}
+        run: mkdir -p /tmp/nsis/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/INetC.dll --output /tmp/nsis/INetC.dll 
+      - name: downloading-7z
+        env:
+         dep_pass: ${{ secrets.DEP_PASS}}
+         dep_user: ${{secrets.DEP_USER}}
+        run: mkdir -p /tmp/nsis/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/nsis7z.dll --output /tmp/nsis/nsis7z.dll
+      - name: downloading-stdutil-dll
+        env:
+         dep_pass: ${{ secrets.DEP_PASS}}
+         dep_user: ${{secrets.DEP_USER}}
+        run: mkdir -p /tmp/nsis/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/StdUtils.dll --output /tmp/nsis/StdUtils.dll
+      - name: downloading-stdutil-nsh
+        env:
+         dep_pass: ${{ secrets.DEP_PASS}}
+         dep_user: ${{secrets.DEP_USER}}
+        run: mkdir -p /tmp/nsis/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/StdUtils.nsh --output /tmp/nsis/StdUtils.nsh
+        
+      - uses: actions/upload-artifact@v2
+        with:
+          name: fmod
+          path: /tmp/deps/
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nsis
+          path: /tmp/nsis/    
+          
+  build :
+    needs: [download-artefacts]
+    runs-on: windows-latest
+    steps:
+     - id: nsis-plugins-download
+       uses: actions/download-artifact@v2
+       with:
+           name: nsis
+           path: c:/temp/
+     - id : install-nsis-plugins
+       run : cp c:/temp/*.dll "C:/Program Files (x86)/NSIS/Plugins/x86-unicode/" && cp c:/temp/*.nsh "C:/Program Files (x86)/NSIS/Include/"
+       
+     - id: install-autobuild
+       uses: actions/setup-python@v4
+       with:
+          python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+     - run : pip install git+https://bitbucket.org/lindenlab/autobuild.git@v3    
+     
+     - name: downloading-private-fmod
+       uses: actions/download-artifact@v2
+       with:
+           name: fmod
+           path: c:/temp/
+     
+     - uses: geekyeggo/delete-artifact@v1
+       with:
+          name: fmod
+     - name: ls
+       run: ls -l c:/temp/
+     - name: Add msbuild to PATH
+       uses: microsoft/setup-msbuild@v1.1
+       with:
+         msbuild-architecture: x64
+    
+         
+     - id: code-checkout
+       uses: actions/checkout@v3
+       with:
+          ref: ${{env.GITHUB_REF}}
+          fetch-depth: 0
+     - id: autobuild-configure
+       run : echo 'set AUTOBUILD_WIN_VSHOST=v143  && autobuild configure -cRelease -A64 -- -DUSE_FMODSTUDIO:BOOL=ON'>configure.cmd
+     - id: run-autobuild-configure  
+       run : ./configure.cmd
+     - id: build-setup
+       run : autobuild build --no-configure -cRelease -A64
+     
+     - name: find and rename
+       run : Get-ChildItem .\build-vc-64\newview\Release\*Setup.exe | Rename-Item -NewName "Genesis-eve-0.0.1_nightly_build_$(get-date -f yyyy-MM-dd).exe" && mv ".\build-vc-64\newview\Release\Genesis-eve-0.0.1_nightly_build_$(get-date -f yyyy-MM-dd).exe" c:/temp/
+     - name: ls
+       run : ls -l c:/temp/
+     - name: store artefact
+       uses: actions/upload-artifact@v2
+       with:
+        name: Genesis-setup
+        path: c:/temp/Genesis*
+        
+        
+  upload:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: create a tmp dir
+        run: mkdir -p ./Genesis
+      - name: download artefact
+        uses: actions/download-artifact@v2
+        with:
+          name: Genesis-setup
+          path: ./Genesis/
+       
+      - name: ls
+        run: ls -l ./Genesis/
+      - name: Upload from Genesis via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{  secrets.FTP_HOST  }}
+          username: ${{  secrets.FTP_USER  }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./Genesis/
+          server-dir: genesis/nightly_builds/
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: Genesis-setup  

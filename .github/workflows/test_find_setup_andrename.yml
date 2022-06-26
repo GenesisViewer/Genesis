@@ -40,13 +40,13 @@ jobs:
       - name: ls
         run: ls -l /tmp/Genesis/
       - name: install lftp
-        run: sudo apt-get install lftp
+        run: sudo apt install lftp
       - name: 📂 Sync files
-        uses: genietim/ftp-action@v4.0.1
+        uses: kevinpainchaud/simple-ftp-deploy-action@v1.2.1
         with:
-          host: ftp.londoncitysl.com
-          user: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}  
-          localDir : /tmp/Genesis/
-          remoteDir: genesis/nightly_builds/
-          forceSsl: true
+          ftp_host: ftp.londoncitysl.com
+          ftp_username: ${{ secrets.FTP_USER }}
+          ftp_password: ${{ secrets.FTP_PASS }}  
+          local_source_dir : /tmp/Genesis/
+          dist_target_dir: genesis/nightly_builds/
+          

@@ -17,6 +17,6 @@ jobs:
         - name: create fake Setup
           run : echo "Test" > ./build-vc-64/newview/Release/Genesis-Eve_0_0_1_52_x86_64_Setup.exe
         - name: find and rename
-          run : $DateStamp = get-date -uformat "%Y-%m-%d@%H-%M-%S" && Get-ChildItem .\build-vc-64\newview\Release\*Setup.exe | Rename-Item -NewName Genesis-eve-0.0.1_nightly_build_-$DateStamp.exe && mv .\build-vc-64\newview\Release\Genesis-eve-0.0.1_nightly_build_-$DateStamp.exe c:/temp/
+          run : Get-ChildItem .\build-vc-64\newview\Release\*Setup.exe | Rename-Item -NewName "Genesis-eve-0.0.1_nightly_build_$(get-date -f yyyy-MM-dd).exe" && mv ".\build-vc-64\newview\Release\Genesis-eve-0.0.1_nightly_build_$(get-date -f yyyy-MM-dd).exe" c:/temp/
         - name: ls
           run : ls -l c:/temp/

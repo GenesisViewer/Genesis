@@ -120,9 +120,7 @@ jobs:
         with:
           name: Genesis-setup
           path: ./Genesis/
-      - uses: geekyeggo/delete-artifact@v1
-        with:
-          name: Genesis-setup    
+       
       - name: ls
         run: ls -l ./Genesis/
       - name: Upload from Genesis via FTP
@@ -133,4 +131,6 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./Genesis/
           server-dir: genesis/nightly_builds/
-  
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: Genesis-setup  

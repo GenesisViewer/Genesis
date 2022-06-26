@@ -31,14 +31,14 @@ jobs:
     needs: [build]
     steps:
       - name: create a tmp dir
-        run: mkdir -p /tmp/Genesis
+        run: mkdir -p ~/Genesis
       - name: download artefact
         uses: actions/download-artifact@v2
         with:
           name: Genesis-setup
-          path: /tmp/Genesis/
+          path: ~/Genesis/
       - name: ls
-        run: ls -l /tmp/Genesis/
+        run: ls -l ~/Genesis/
       - name: install lftp
         run: sudo apt install lftp
       - name: 📂 Sync files
@@ -47,6 +47,6 @@ jobs:
           ftp_host: ftp.londoncitysl.com
           ftp_username: ${{ secrets.FTP_USER }}
           ftp_password: ${{ secrets.FTP_PASS }}  
-          local_source_dir : /tmp/Genesis/
+          local_source_dir : ~/Genesis/
           dist_target_dir: genesis/nightly_builds/
           

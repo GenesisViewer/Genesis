@@ -31,20 +31,31 @@ jobs:
     needs: [build]
     steps:
       - name: create a tmp dir
-        run: mkdir -p ~/Genesis
+        run: mkdir -p ./Genesis
       - name: download artefact
         uses: actions/download-artifact@v2
         with:
           name: Genesis-setup
-          path: ~/Genesis/
+          path: ./Genesis/
       - name: ls
-        run: ls -l ~/Genesis/
-      - name: install lftp
-        run: sudo apt install lftp
-      - name: 🛠️ Configure LFTP
-        run: mkdir ~/.lftp && echo "set ssl:verify-certificate false;" >> ~/.lftp/rc  
-      - name: 🔑 Load Secrets
-        run: echo "machine ${{ secrets.FTP_HOST  }} login ${{ secrets.FTP_USER  }} password ${{ secrets.FTP_PASS }}" > ~/.netrc 
-      - name: 📁 Upload Folder
-        run: lftp -e "mirror -R ~/Genesis/ genesis/nightly_builds/" ${{ secrets.FTP_HOST  }} 
+        run: ls -l ./Genesis/
+      - name: Upload from Genesis via FTP
+        uses: airvzxf/ftp-deployment-action@latest
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          user: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local_dir: "./Genesis"
+          remote_dir: "/genesis/nightly_builds"
+          delete: "false"
+          max_retries: "7"
+          no_symlinks: "false"
+          ftp_ssl_allow: "true"
+          ftp_use_feat: "true"
+          ftp_nop_interval: "9"
+          net_max_retries: "0"
+          net_persist_retries: "11"
+          net_timeout: "13s"
+          dns_max_retries: "17"
+          dns_fatal_timeout: "never"
       

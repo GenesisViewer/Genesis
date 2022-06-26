@@ -40,11 +40,11 @@ jobs:
       - name: ls
         run: ls -l /tmp/Genesis/
       - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        uses: genietim/ftp-action@releases/v4
         with:
-          server: ftp.londoncitysl.com
-          username: ${{ secrets.FTP_USER }}
+          host: ftp.londoncitysl.com
+          user: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}  
-          local-dir : /tmp/Genesis/
-          server-dir: genesis/nightly_builds/
-          protocol: ftps
+          localDir : /tmp/Genesis/
+          remoteDir: genesis/nightly_builds/
+          forceSsl: true

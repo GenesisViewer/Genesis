@@ -40,21 +40,11 @@ jobs:
       - name: ls
         run: ls -l ./Genesis/
       - name: Upload from Genesis via FTP
-        uses: airvzxf/ftp-deployment-action@latest
+        uses: SamKirkland/FTP-Deploy-Action@3.1.1
         with:
-          server: ${{ secrets.FTP_HOST }}
-          user: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          local_dir: "./Genesis/"
-          remote_dir: "/genesis/nightly_builds/"
-          delete: "false"
-          max_retries: "2"
-          no_symlinks: "false"
-          ftp_use_feat: "true"
-          ftp_nop_interval: "9"
-          net_max_retries: "0"
-          net_persist_retries: "11"
-          net_timeout: "13s"
-          dns_max_retries: "17"
-          dns_fatal_timeout: "never"
+          ftp-server: ${{  secrets.FTP_HOST  }}
+          ftp-username: ${{  secrets.FTP_USER  }}
+          ftp-password: ${{ secrets.FTP_PASS }}
+          local-dir: ./Genesis/
+          remote-dir: genesis/nightly_builds/
       

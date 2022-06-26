@@ -97,5 +97,40 @@ jobs:
        run : ./configure.cmd
      - id: build-setup
        run : autobuild build --no-configure -cRelease -A64
-  
+     
+     - name: find and rename
+       run : Get-ChildItem .\build-vc-64\newview\Release\*Setup.exe | Rename-Item -NewName "Genesis-eve-0.0.1_nightly_build_$(get-date -f yyyy-MM-dd).exe" && mv ".\build-vc-64\newview\Release\Genesis-eve-0.0.1_nightly_build_$(get-date -f yyyy-MM-dd).exe" c:/temp/
+     - name: ls
+       run : ls -l c:/temp/
+     - name: store artefact
+       uses: actions/upload-artifact@v2
+       with:
+        name: Genesis-setup
+        path: c:/temp/Genesis*
+        
+        
+  upload:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: create a tmp dir
+        run: mkdir -p ./Genesis
+      - name: download artefact
+        uses: actions/download-artifact@v2
+        with:
+          name: Genesis-setup
+          path: ./Genesis/
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: Genesis-setup    
+      - name: ls
+        run: ls -l ./Genesis/
+      - name: Upload from Genesis via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{  secrets.FTP_HOST  }}
+          username: ${{  secrets.FTP_USER  }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ./Genesis/
+          server-dir: genesis/nightly_builds/
   

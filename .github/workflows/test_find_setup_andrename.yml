@@ -39,6 +39,8 @@ jobs:
           path: /tmp/Genesis/
       - name: ls
         run: ls -l /tmp/Genesis/
+      - name: install lftp
+        run: sudo apt-get install lftp
       - name: 📂 Sync files
         uses: genietim/ftp-action@v4.0.1
         with:

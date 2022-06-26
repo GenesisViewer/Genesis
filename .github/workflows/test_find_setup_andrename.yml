@@ -45,6 +45,6 @@ jobs:
           server: ftp.londoncitysl.com
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}  
-          local-dir : /tmp/Genesis
+          local-dir : /tmp/Genesis/
           server-dir: genesis/nightly_builds/
           protocol: ftps

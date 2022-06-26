@@ -41,12 +41,8 @@ jobs:
         run: ls -l ~/Genesis/
       - name: install lftp
         run: sudo apt install lftp
-      - name: 📂 Sync files
-        uses: kevinpainchaud/simple-ftp-deploy-action@v1.2.1
-        with:
-          ftp_host: ftp.londoncitysl.com
-          ftp_username: ${{ secrets.FTP_USER }}
-          ftp_password: ${{ secrets.FTP_PASS }}  
-          local_source_dir : ~/Genesis/
-          dist_target_dir: genesis/nightly_builds/
-          
+      - name: 🔑 Load Secrets
+        run: echo "machine ${{ secrets.FTP_HOST  }} login ${{ secrets.FTP_USER  }} password ${{ secrets.FTP_PASS }}" > ~/.netrc 
+      - name: 📁 Upload Folder
+        run: lftp -e "mirror -R ~/Genesis/ genesis/nightly_builds/" ${{ secrets.FTP_HOST  }} 
+      

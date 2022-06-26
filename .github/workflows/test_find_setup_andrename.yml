@@ -41,6 +41,8 @@ jobs:
         run: ls -l ~/Genesis/
       - name: install lftp
         run: sudo apt install lftp
+      - name: 🛠️ Configure LFTP
+        run: mkdir ~/.lftp && echo "set ssl:verify-certificate false;" >> ~/.lftp/rc  
       - name: 🔑 Load Secrets
         run: echo "machine ${{ secrets.FTP_HOST  }} login ${{ secrets.FTP_USER  }} password ${{ secrets.FTP_PASS }}" > ~/.netrc 
       - name: 📁 Upload Folder

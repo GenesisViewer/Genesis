@@ -40,7 +40,7 @@ jobs:
       - name: ls
         run: ls -l ./Genesis/
       - name: Upload from Genesis via FTP
-        uses: SamKirkland/FTP-Deploy-Action@3.1.1
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           ftp-server: ${{  secrets.FTP_HOST  }}
           ftp-username: ${{  secrets.FTP_USER  }}

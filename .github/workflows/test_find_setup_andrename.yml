@@ -42,9 +42,9 @@ jobs:
       - name: Upload from Genesis via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
-          ftp-server: ${{  secrets.FTP_HOST  }}
-          ftp-username: ${{  secrets.FTP_USER  }}
-          ftp-password: ${{ secrets.FTP_PASS }}
+          server: ${{  secrets.FTP_HOST  }}
+          username: ${{  secrets.FTP_USER  }}
+          password: ${{ secrets.FTP_PASS }}
           local-dir: ./Genesis/
           server-dir: genesis/nightly_builds/
       

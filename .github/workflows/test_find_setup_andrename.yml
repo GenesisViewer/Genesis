@@ -40,7 +40,7 @@ jobs:
       - name: ls
         run: ls -l /tmp/Genesis/
       - name: 📂 Sync files
-        uses: genietim/ftp-action@releases/v4
+        uses: genietim/ftp-action@releases/v4.0.1
         with:
           host: ftp.londoncitysl.com
           user: ${{ secrets.FTP_USER }}

@@ -32,8 +32,7 @@
       <check_box label="Display client tag for others" tool_tip="Enabling this will show client tag names on others' avatar names." name="show_other_tag_check"/>
       <check_box label="Display client tag color for others" tool_tip="Enabling this sets others' avatar name color to their client's color." name="show_client_tag_color_check"/>
       <check_box label="Show Idle Time" tool_tip="Enabling this will show the amount of time an avatar has been idle." name="show_idle_time_check"/>
-      <check_box label="Automatically check website for updates to client definitions" tool_tip="Enabling this will allow [SHORT_APP_NAME] to download fresh definitions when needed." name="update_tags_check"/>
-      <button name="update_clientdefs" label="Manual Update"/>
+      
       <!-- End of Client Tag settings -->
       <text name="effects_color_textbox">Color For My Effects:</text>
       <color_swatch label="Effects" name="effect_color_swatch"/>

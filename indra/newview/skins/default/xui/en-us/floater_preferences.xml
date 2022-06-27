@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <floater can_close="true" can_drag_on_left="false" can_minimize="true"
      can_resize="false" can_tear_off="true" default_tab_group="1" enabled="true"
-     height="494" left="330" min_height="213" min_width="324"
-     mouse_opaque="true" name="Preferences" title="Preferences" width="620">
+     height="494" left="330" min_height="213" min_width="350"
+     mouse_opaque="true" name="Preferences" title="Preferences" width="800">
 	<button bottom="4" enabled="true" follows="right|bottom" font="SansSerif"
 	     halign="center" height="20" label="OK" label_selected="OK" left="335"
 	     mouse_opaque="true" name="OK" scale_image="true" width="90" />
@@ -24,5 +24,5 @@
 	     name="Help" scale_image="true" width="90" />
 	<tab_container bottom="-466" enabled="true" follows="left|top|right|bottom" height="445"
 	     left="0" mouse_opaque="false" name="pref core" tab_group="1"
-	     tab_position="left" tab_width="120" width="620" />
+	     tab_position="left" tab_width="120" width="800" />
 </floater>

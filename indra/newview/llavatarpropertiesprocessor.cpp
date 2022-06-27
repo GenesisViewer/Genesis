@@ -40,6 +40,8 @@
 #include "llui.h"				// LLUI::getLanguage()
 #include "message.h"
 
+
+
 LLAvatarPropertiesProcessor::LLAvatarPropertiesProcessor()
 {
 }

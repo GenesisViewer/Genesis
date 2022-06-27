@@ -186,6 +186,24 @@
 			<key>IsCOA</key>
 			<integer>1</integer>
 		</map>
+    <key>AscentHasNotesColor</key>
+		<map>
+			<key>Comment</key>
+			<string>Special color to distinguish people with personal notes</string>
+			<key>Persist</key>
+			<integer>1</integer>
+			<key>Type</key>
+			<string>Color4</string>
+			<key>Value</key>
+			<array>
+				<real>0.6</real>
+				<real>0.4</real>
+				<real>0.2</real>
+				<real>1.0</real>
+			</array>
+			<key>IsCOA</key>
+			<integer>1</integer>
+		</map>
 		<key>AscentEstateOwnerColor</key>
 		<map>
 			<key>Comment</key>

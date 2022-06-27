@@ -665,6 +665,7 @@ SHClientTagMgr::SHClientTagMgr()
 	gSavedSettings.getControl("AscentEstateOwnerColor")->getSignal()->connect(boost::bind(&LLVOAvatar::invalidateNameTags));
 	gSavedSettings.getControl("AscentFriendColor")->getSignal()->connect(boost::bind(&LLVOAvatar::invalidateNameTags));
 	gSavedSettings.getControl("AscentMutedColor")->getSignal()->connect(boost::bind(&LLVOAvatar::invalidateNameTags));
+	gSavedSettings.getControl("AscentHasNotesColor")->getSignal()->connect(boost::bind(&LLVOAvatar::invalidateNameTags));
 	gSavedSettings.getControl("SLBDisplayClientTagOnNewLine")->getSignal()->connect(boost::bind(&LLVOAvatar::invalidateNameTags));
 
 	//Following group of settings all actually manipulate the tag cache for agent avatar. Even if the tag system is 'disabled', we still allow an
@@ -782,6 +783,7 @@ void SHClientTagMgr::updateAgentAvatarTag()
 	if(isAgentAvatarValid())
 		updateAvatarTag(gAgentAvatarp);
 }
+
 const LLSD SHClientTagMgr::generateClientTag(const LLVOAvatar* pAvatar) const	
 {
 	static const LLCachedControl<LLColor4>		avatar_name_color(gColors,"AvatarNameColor",LLColor4(LLColor4U(251, 175, 93, 255)) );
@@ -830,6 +832,7 @@ const LLSD SHClientTagMgr::generateClientTag(const LLVOAvatar* pAvatar) const
 			LLSD info;
 			info.insert("name", client);
 			info.insert("color", pTextureEntry->getColor().getValue());
+			
 			return info;
 		}
 		if(pAvatar->getTEImage(TEX_HEAD_BODYPAINT)->getID() == IMG_DEFAULT_AVATAR)
@@ -936,12 +939,71 @@ const LLUUID SHClientTagMgr::getClientID(const LLVOAvatar* pAvatar) const
 	}
 	return tag.asUUID();
 }
+BOOL SHClientTagMgr::avatarHasNotes(const LLUUID& llid)  
+{
+	
+	std::string id = llid.asString();
+	if(mAvatarHasNotes.find(id) == mAvatarHasNotes.end())
+	{
+		LL_INFOS() << "avatar has notes - request " << id << LL_ENDL;
+		mAvatarHasNotes[id] = 0;
+		LLAvatarPropertiesProcessor& inst(LLAvatarPropertiesProcessor::instance());
+		inst.addObserver(llid, SHClientTagMgr::getInstance());
+		inst.sendAvatarNotesRequest(llid);
+		return false;
+	} else 
+	{
+		return mAvatarHasNotes[id]>1;
+	}
+	
+}
+BOOL SHClientTagMgr::notesRequested(const LLUUID& llid)  
+{
+	
+	std::string id = llid.asString();
+	return mAvatarHasNotes[id] > 0;
+	
+	
+}
+void SHClientTagMgr::setAvatarHasNotes(const LLUUID& llid,bool hasNotes)  
+{
+	std::string id = llid.asString();
+	mAvatarHasNotes[id] = hasNotes?2:1;
+	LL_INFOS() << "avatar has notes " << id << " " << hasNotes << LL_ENDL;
+
+}
+// virtual
+void SHClientTagMgr::processProperties(void* data, EAvatarProcessorType type)
+{
+	
+	switch(type)
+	{
+		
+		case APT_NOTES:
+			if (const LLAvatarNotes* pAvatarNotes = static_cast<const LLAvatarNotes*>(data))
+			{
+				LLUUID id = pAvatarNotes->target_id;
+				bool hasNotes = !pAvatarNotes->notes.empty();
+				LL_INFOS() << "avatar has notes - processProperties " << id << " " << hasNotes << LL_ENDL;
+				SHClientTagMgr::instance().setAvatarHasNotes(id, hasNotes);
+				LLVOAvatar* avatar = gObjectList.findAvatar(id);
+				if (avatar) avatar->clearNameTag();
+
+				
+				
+
+			}
+		break;
+		default: break;
+	}
+}
 bool getColorFor(const LLUUID& id, LLViewerRegion* parent_estate, LLColor4& color, bool name_restricted = false)
 {
 	static const LLCachedControl<LLColor4> ascent_linden_color("AscentLindenColor");
 	static const LLCachedControl<LLColor4> ascent_estate_owner_color("AscentEstateOwnerColor" );
 	static const LLCachedControl<LLColor4> ascent_friend_color("AscentFriendColor");
 	static const LLCachedControl<LLColor4> ascent_muted_color("AscentMutedColor");
+	static const LLCachedControl<LLColor4> ascent_has_notes_color("AscentHasNotesColor");
 	//Lindens are always more Linden than your friend, make that take precedence
 	if (LLMuteList::getInstance()->isLinden(id))
 		color = ascent_linden_color;
@@ -951,6 +1013,8 @@ bool getColorFor(const LLUUID& id, LLViewerRegion* parent_estate, LLColor4& colo
 	//without these dots, SL would suck.
 	else if (!name_restricted && LLAvatarTracker::instance().isBuddy(id))
 		color = ascent_friend_color;
+	else if (SHClientTagMgr::instance().avatarHasNotes(id))
+		color = ascent_has_notes_color;	
 	//big fat jerkface who is probably a jerk, display them as such.
 	else if (LLMuteList::getInstance()->isMuted(id))
 		color = ascent_muted_color;
@@ -961,7 +1025,7 @@ bool getColorFor(const LLUUID& id, LLViewerRegion* parent_estate, LLColor4& colo
 bool mm_getMarkerColor(const LLUUID&, LLColor4&);
 bool getCustomColor(const LLUUID& id, LLColor4& color, LLViewerRegion* parent_estate)
 {
-	return mm_getMarkerColor(id, color) || getColorFor(id, parent_estate, color);
+	return (mm_getMarkerColor(id, color)  && (SHClientTagMgr::instance().notesRequested(id))) || getColorFor(id, parent_estate, color);
 }
 bool getCustomColorRLV(const LLUUID& id, LLColor4& color, LLViewerRegion* parent_estate, bool name_restricted)
 {
@@ -970,7 +1034,7 @@ bool getCustomColorRLV(const LLUUID& id, LLColor4& color, LLViewerRegion* parent
 bool SHClientTagMgr::getClientColor(const LLVOAvatar* pAvatar, bool check_status, LLColor4& color) const
 {
 	const LLUUID& id(pAvatar->getID());
-	if (mm_getMarkerColor(id, color)) return true;
+	if (mm_getMarkerColor(id, color) && (SHClientTagMgr::instance().notesRequested(id))) return true;
 	static const LLCachedControl<bool> ascent_use_status_colors("AscentUseStatusColors",true);
 	static const LLCachedControl<bool> ascent_show_self_tag_color("AscentShowSelfTagColor");
 	static const LLCachedControl<bool> ascent_show_others_tag_color("AscentShowOthersTagColor");
@@ -4213,7 +4277,6 @@ void LLVOAvatar::idleUpdateNameTagAlpha(BOOL new_name, F32 alpha)
 		mNameAlpha = alpha;
 	}
 }
-
 LLColor4 LLVOAvatar::getNameTagColor(bool is_friend)
 {
 	LLColor4 color;

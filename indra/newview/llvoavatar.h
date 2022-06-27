@@ -54,6 +54,7 @@
 #include "llviewerstats.h"
 #include "llvovolume.h"
 #include "llavatarname.h"
+#include "llavatarpropertiesprocessor.h"
 
 //<singu>
 #if 0
@@ -84,7 +85,7 @@ class LLMeshSkinInfo;
 class LLViewerJointMesh;
 class LLControlAvatar;
 
-class SHClientTagMgr : public LLSingleton<SHClientTagMgr>, public boost::signals2::trackable
+class SHClientTagMgr : public LLSingleton<SHClientTagMgr>, public boost::signals2::trackable, public LLAvatarPropertiesObserver
 {
 public:
 	SHClientTagMgr();
@@ -92,6 +93,7 @@ public:
 	bool fetchDefinitions() const;
 	//Parse definitions from client_tags_sg1.xml
 	bool parseDefinitions();
+	/*virtual*/ void processProperties(void* data, EAvatarProcessorType type);
 private:
 	//Just refreshes the tag for the agent avatar.
 	//Used for boost::bind to verify agent avatar is valid before calling updateAvatarTag
@@ -112,15 +114,22 @@ public:
 	const std::string getClientName(const LLVOAvatar* pAvatar, bool is_friend) const;
 	//Returns ID of tag entry if it exists, else returns a null LLUUID.
 	const LLUUID getClientID(const LLVOAvatar* pAvatar) const;
+	BOOL avatarHasNotes(const LLUUID& id);
+	BOOL notesRequested(const LLUUID& id);
+	void setAvatarHasNotes(const LLUUID& id,bool hasNotes);
 	//Sets color to either 'status' color, or falls back to client color if status isn't relevant.
 	//If neither status or client color are found, returns false.
 	bool getClientColor(const LLVOAvatar* pAvatar, bool check_status, LLColor4& color) const;
-
+	
 private:
 	//UUID map associating texture uuids to client info entries parsed from client_tags_sg1.xml
 	std::map<LLUUID, LLSD> mClientDefinitions;
 	//UUID map associating avatar uuids to their CURRENT client tag info.
 	std::map<LLUUID, LLSD> mAvatarTags;
+	//UUID map associated with notes - (0 requested, 1 no notes, 2 notes)
+	std::map<std::string, int> mAvatarHasNotes;
+	
+	
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1005,9 +1014,12 @@ private:
 public:
 	std::string		getFullname() const; // Returns "FirstName LastName"
 	std::string		avString() const; // Frequently used string in log messages "Avatar '<full name'"
+	BOOL		    hasNotes() const; // Frequently used string in log messages "Avatar '<full name'"
+	void		    setHasNotes(bool hasNotes) const; // Frequently used string in log messages "Avatar '<full name'"
 protected:
 	static void		getAnimLabels(std::vector<std::string>* labels);
 	static void		getAnimNames(std::vector<std::string>* names);
+	
 private:
 	std::string		mNameString;		// UTF-8 title + name + status
 	std::string  	mTitle;
@@ -1020,6 +1032,7 @@ private:
 	bool			mNameLangolier;
 	F32				mNameAlpha;
 	BOOL      		mRenderGroupTitles;
+	BOOL            mHasNotes;
 
 	//--------------------------------------------------------------------
 	// Display the name (then optionally fade it out)

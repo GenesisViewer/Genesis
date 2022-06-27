@@ -33,8 +33,7 @@
       <color_swatch name="custom_tag_color_swatch"/>
       <check_box label="Fonction d&#xE9;sactiv&#xE9;e par Linden Lab" tool_tip="Le viewer utilis&#xE9; par les avatars ne peut plus &#xEA;tre visible depuis que Linden lab l&#x27;a d&#xE9;sactiv&#xE9;" name="show_other_tag_check"/>
       <check_box label="Afficher la couleur pour les autres avatars" name="show_client_tag_color_check"/>
-      <check_box label="Afficher la dur&#xE9;e du 'IDLE'" tool_tip="Affiche le temps pendant lequel l'avatar est immobile." name="show_idle_time_check"/>
-      <check_box label="Chercher automatiquement les Mises &#xE0; Jour des Tags" left_delta="-205" name="update_tags_check"/>
+      
       <button name="update_clientdefs" label="MAJ Manuelle"/>
       <!-- End of Client Tag settings -->
       <text name="effects_color_textbox">Couleurs de mes effets :</text>

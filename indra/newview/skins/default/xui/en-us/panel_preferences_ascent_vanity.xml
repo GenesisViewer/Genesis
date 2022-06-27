@@ -39,8 +39,7 @@
       <check_box bottom_delta="-8" control_name="AscentShowOthersTag" follows="top" height="16" initial_value="true" label="Display client tag for others" left_delta="-205" tool_tip="Enabling this will show client tag names on others' avatar names." name="show_other_tag_check"/>
       <check_box bottom_delta="-20" control_name="AscentShowOthersTagColor" follows="top" height="16" initial_value="true" label="Display client tag color for others" left_delta="0" tool_tip="Enabling this sets others' avatar name color to their client's color." name="show_client_tag_color_check"/>
       <check_box bottom_delta="-20" control_name="AscentShowIdleTime" follows="top" height="16" initial_value="true" label="Show Idle Time" tool_tip="Enabling this will show the amount of time an avatar has been idle." name="show_idle_time_check"/>
-      <check_box bottom_delta="-40" control_name="AscentUpdateTagsOnLoad" follows="top" height="16" initial_value="true" label="Automatically check website for updates to client definitions" left_delta="-230" tool_tip="Enabling this will allow [SHORT_APP_NAME] to download fresh definitions when needed." name="update_tags_check"/>
-      <button bottom_delta="0" control_name="ManualUpdate" name="update_clientdefs" follows="top" label="Manual Update" height="18" left_delta="340" width="110"/>
+      
       <!-- End of Client Tag settings -->
       <text bottom_delta="-25" follows="top" height="10" left="20" name="effects_color_textbox">Color For My Effects:</text>
       <color_swatch border_color="0.45098 0.517647 0.607843 1" bottom_delta="-34" can_apply_immediately="true" color="1 1 1 1" control_name="EffectColor" follows="top" height="47" label="Effects" left_delta="138" name="effect_color_swatch" width="44"/>

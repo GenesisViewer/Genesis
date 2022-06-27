@@ -88,6 +88,7 @@ private:
 	LLColor4 mEstateOwnerColor;
 	LLColor4 mLindenColor;
 	LLColor4 mMutedColor;
+	LLColor4 mMHasNotesColor;
 	LLColor4 mMapAvatarColor;
 	LLColor4 mCustomColor;
 	bool mColorFriendChat;

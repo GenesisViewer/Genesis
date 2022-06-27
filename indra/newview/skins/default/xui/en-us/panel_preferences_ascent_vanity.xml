@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<panel top="20" left="10" height="400" width="512" border="true" label="Vanity" name="ascvan">
-  <tab_container label="Vanity" bottom="0" height="440" width="497" name="Ascent Vanity" tab_min_width="0">
-    <panel border="true" left="1" bottom="-190" height="180" width="500" label="Main" name="General">
+<panel top="20" left="10" height="400" width="800" border="true" label="Vanity" name="ascvan">
+  <tab_container label="Vanity" bottom="0" height="440" width="600" name="Ascent Vanity" tab_min_width="0">
+    <panel border="true" left="1" bottom="-190" height="180" width="600" label="Main" name="General">
       <check_box bottom_delta="-25" control_name="AscentStoreSettingsPerAccount" follows="top" height="16" initial_value="true" label="Where applicable, save Vanity settings per-account." left="10" tool_tip="Saves settings per-account, allowing easier customization for alts." name="use_account_settings_check"/>
       <check_box bottom_delta="-20" control_name="AscentDisableTeleportScreens" follows="top" height="16" initial_value="true" label="Hide the Teleport progress screens" tool_tip="If checked, the viewer will hide the teleport progress screen, allowing you to continue to read IMs." name="disable_tp_screen_check"/>
       <check_box bottom_delta="-20" control_name="OptionPlayTpSound" follows="top" height="16" initial_value="true" label="Play the Teleport sound when teleporting between regions" tool_tip="Viewer will play the wooshing TP noise on teleport." name="tp_sound_check"/>
@@ -20,7 +20,7 @@
       <spinner bottom_delta="-20" left_delta="-222" decimal_digits="3" follows="top" height="16" increment="0.05" label="Inactive Transparency" tool_tip="When a floater loses focus, this controls how much its opacity changes." label_width="120" max_val="5" min_val="0" name="Inactive Transparency" width="200" control_name="InactiveFloaterTransparency"/>
       <spinner bottom_delta="0" left_delta="220" decimal_digits="3" follows="top" height="16" increment="0.05" label="Active Transparency" tool_tip="When a floater is in focus, this controls how much its opacity changes." label_width="110" max_val="5" min_val="0" name="Active Transparency" width="190" control_name="ActiveFloaterTransparency"/>
     </panel>
-    <panel border="true" left="1" bottom="-190" height="180" width="500" label="Tags/Colors" name="TagsColors">
+    <panel border="true" left="1" bottom="-190" height="180" width="600" label="Tags/Colors" name="TagsColors">
       <!-- Client tag options -->
       <check_box bottom_delta="-25" control_name="AscentBroadcastTag" follows="top" height="16" initial_value="true" label="Broadcast Client Tag:" left="10" tool_tip="Choose whether others see that you enjoy [SHORT_APP_NAME]." name="show_my_tag_check"/>
       <combo_box follows="top" bottom_delta="-24" height="18" left_delta="24" max_chars="32" tool_tip="The client tag (And subsequent color) to broadcast. Overridden locally by Custom Tag/Color." name="tag_spoofing_combobox" width="130">
@@ -51,6 +51,7 @@
       <color_swatch border_color="0.45098 0.517647 0.607843 1" bottom_delta="0" can_apply_immediately="true" color="1 1 1 1" control_name="AscentEstateOwnerColor" follows="top" height="47" label="Estate" left_delta="54" name="estate_owner_color_swatch" width="44" tool_tip="Color of Estate Managers"/>
       <color_swatch border_color="0.45098 0.517647 0.607843 1" bottom_delta="0" can_apply_immediately="true" color="0.6 0.6 1 1" control_name="AscentLindenColor" follows="top" height="47" label="Lindens" left_delta="54" name="linden_color_swatch" width="44" tool_tip="Color of Lindens"/>
       <color_swatch border_color="0.45098 0.517647 0.607843 1" bottom_delta="0" can_apply_immediately="true" color="0.8 1 1 1" control_name="AscentMutedColor" follows="top" height="47" label="Muted" left_delta="54" name="muted_color_swatch" width="44" tool_tip="Color of Muted"/>
+      <color_swatch border_color="0.45098 0.517647 0.607843 1" bottom_delta="0" can_apply_immediately="true" color="0.7 1 1 1" control_name="AscentHasNotesColor" follows="top" height="47" label="Notes" left_delta="54" name="hasnotes_color_swatch" width="44" tool_tip="Color of People you have notes on"/>
       <color_swatch border_color="0.45098 0.517647 0.607843 1" bottom_delta="0" can_apply_immediately="true" color="0 1 0 1" control_name="MapAvatar" follows="top" height="47" label="Others" left_delta="54" name="others_color_swatch" width="44" tool_tip="Color of everyone else on the minimap and world map"/>
       <color_swatch border_color="0.45098 0.517647 0.607843 1" bottom_delta="0" can_apply_immediately="true" color="0.375 1 1 1" control_name="MoyMiniMapCustomColor" follows="top" height="47" label="Custom  (Minimap)" left_delta="54" name="custom_color_swatch" width="44" tool_tip="Color of users picked out on the minimap only"/>
       <text bottom_delta="-9" follows="top" height="10" left="20" name="chat_color_text">Use colors for chat:</text>
@@ -60,7 +61,7 @@
       <check_box bottom_delta="0" control_name="ColorMutedChat" follows="top" height="20" label="" left_delta="54" name="color_muted_check" width="44" tool_tip="Color Muted Chat"/>
       <!--check_box bottom_delta="0" control_name="ColorCustomChat" follows="top" height="20" label="" left_delta="54" name="color_custom_check" width="44" tool_tip="Color Custom Chat"/ Not implemented, yet.-->
     </panel>
-    <panel border="true" left="1" bottom="-190" height="180" width="500" label="Body Dynamics" name="Body Dynamics">
+    <panel border="true" left="1" bottom="-190" height="180" width="600" label="Body Dynamics" name="Body Dynamics">
       <text bottom_delta="-20" height="15" left="10" name="av_mod_textbox" follows="top">Avatar Offset Modifiers</text>
       <spinner bottom_delta="-20" decimal_digits="5" follows="top" height="16" increment="0.05" label="X Modifier" label_width="65" left_delta="5" max_val="0.15" min_val="-0.15" name="X Modifier" width="128" control_name="AscentAvatarXModifier" tool_tip="Use this to manipulate, to a degree, your avatar bounding box. This can be used to distort orbiters, or to raise you up or down without altering your shape."/>
       <spinner bottom_delta="-20" decimal_digits="5" follows="top" height="16" increment="0.05" label="Y Modifier" label_width="65" max_val="0.20" min_val="-0.20" name="Y Modifier" width="128" control_name="AscentAvatarYModifier" tool_tip="Use this to manipulate, to a degree, your avatar bounding box. This can be used to distort orbiters, or to raise you up or down without altering your shape."/>

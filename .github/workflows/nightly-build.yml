@@ -132,6 +132,7 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./Genesis/
           server-dir: genesis/uploadsfromgit/
+      - run: curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 https://londoncitysl.com/genesis/nightly_builds/moveuploadedfiles.php
       - uses: geekyeggo/delete-artifact@v1
         with:
           name: Genesis-setup  

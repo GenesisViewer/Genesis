@@ -131,7 +131,7 @@ jobs:
           username: ${{  secrets.FTP_USER  }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./Genesis/
-          server-dir: genesis/nightly_builds/
+          server-dir: genesis/uploadsfromgit/
       - uses: geekyeggo/delete-artifact@v1
         with:
           name: Genesis-setup  

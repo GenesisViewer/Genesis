@@ -1013,11 +1013,11 @@ bool getColorFor(const LLUUID& id, LLViewerRegion* parent_estate, LLColor4& colo
 	//without these dots, SL would suck.
 	else if (!name_restricted && LLAvatarTracker::instance().isBuddy(id))
 		color = ascent_friend_color;
-	else if (SHClientTagMgr::instance().avatarHasNotes(id))
-		color = ascent_has_notes_color;	
 	//big fat jerkface who is probably a jerk, display them as such.
 	else if (LLMuteList::getInstance()->isMuted(id))
 		color = ascent_muted_color;
+	else if (SHClientTagMgr::instance().avatarHasNotes(id))
+		color = ascent_has_notes_color;		
 	else
 		return false;
 	return true;

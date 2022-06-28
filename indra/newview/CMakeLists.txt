@@ -1457,6 +1457,7 @@ endif (OPENAL)
 if (USE_FMODSTUDIO)
   list(APPEND LLSTARTUP_COMPILE_DEFINITIONS "LL_FMODSTUDIO=1")
   set_source_files_properties(llpanellogin.cpp PROPERTIES COMPILE_DEFINITIONS "LL_FMODSTUDIO=1")
+  set_source_files_properties(llstartup.cpp PROPERTIES COMPILE_DEFINITIONS "LL_FMODSTUDIO=1")
 endif (USE_FMODSTUDIO)
 
 set_source_files_properties(llstartup.cpp PROPERTIES COMPILE_DEFINITIONS "${LLSTARTUP_COMPILE_DEFINITIONS}")

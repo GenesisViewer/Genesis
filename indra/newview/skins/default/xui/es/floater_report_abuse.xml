@@ -3,15 +3,6 @@
     <string name="Screenshot">
         Captura de Pantalla
     </string>
-    <string name="Ridiculous1">
-        Acoso > El usuario se lame los dedos y luego me toca
-    </string>
-    <string name="Ridiculous2">
-        Terreno > Invasión > El usuario no se quiere quedar de su lado del coche
-    </string>
-    <string name="Ridiculous3">
-        Freud > Un usuario ha manifestado interes en su madre
-    </string>
 	<texture_picker label="" name="screenshot"/>
 	<check_box label="Incluir captura" name="screen_check"/>
 	<text name="reporter_title">
@@ -107,9 +98,7 @@
 		<combo_item name="Fraud__US$">
 			Fraude > US$
 		</combo_item>
-		<combo_item name="Ridiculous3">
-			Freud > Un usuario ha manifestado interes en su madre
-		</combo_item>
+		
 		<combo_item name="Harassment__Advert_farms___visual_spam">
 			Acoso > Anuncios múltiples / spam visual
 		</combo_item>
@@ -128,9 +117,7 @@
 		<combo_item name="Harassment__Verbal_abuse">
 			Acoso > Abuso verbal
 		</combo_item>
-		<combo_item name="Ridiculous1">
-			Acoso > El usuario se lame los dedos y luego me toca
-		</combo_item>
+		
 		<combo_item name="Indecency__Broadly_offensive_content_or_conduct">
 			Indecencia > En general, contenido o conducta ofensivos
 		<!--  58 = deprecated by AO -->
@@ -164,9 +151,7 @@
 		<combo_item name="Land__Encroachment__Trees_plants">
 			Terreno > Invasión > Árboles/plantas
 		</combo_item>
-		<combo_item name="Ridiculous2">
-			Terreno > Invasión > El usuario no se quiere quedar de su lado del coche
-		</combo_item>
+		
 		<combo_item name="Wagering_gambling">
 			Apuestas/Juego
 		</combo_item>

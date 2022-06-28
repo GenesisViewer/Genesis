@@ -5,9 +5,7 @@
     <string name="Screenshot">
         Screenshot
     </string>
-    <string name="Ridiculous1" value="Harassment &gt; User keeps licking finger and touching me"/>
-    <string name="Ridiculous2" value="Land &gt; Encroachment &gt; User won't stay on their side of the car"/>
-    <string name="Ridiculous3" value="Freud &gt; User has taken an interest in their mother"/>
+    
 	<texture_picker allow_no_texture="true" bottom="-150" default_image_name="None"
 	     follows="left|top" height="114" label="" left="238" mouse_opaque="true"
 	     name="screenshot" width="134" />
@@ -120,18 +118,12 @@
          label="Fraud &gt; L$ or USD $"
          name="Fraud__US$"
          value="47" />
-        <combo_box.item
-         name="Ridiculous3"
-         label="Freud &gt; User has taken an interest in their mother"
-         value="1000" />
+        
         <combo_box.item
          label="Harassment &gt; Targeted behavior intended to disrupt"
          name="Harassment__Solicting_inciting_others_to_violate_ToS"
          value="51" />
-        <combo_box.item
-         label="Harassment &gt; User keeps licking finger and touching me"
-         name="Ridiculous1"
-         value="1000"/>
+        
         <combo_box.item
          label="Indecency &gt; Broadly offensive content or conduct"
          name="Indecency__Broadly_offensive_content_or_conduct"
@@ -152,10 +144,7 @@
          label="Land &gt; Encroachment &gt; Objects or textures"
          name="Land__Encroachment__Objects_textures"
          value="63" />
-        <combo_box.item
-         name="Ridiculous2"
-         label="Land &gt; Encroachment &gt; User won't stay on their side of the car"
-         value="1000" />
+        
         <combo_box.item
          label="Skill Gaming Policy Violation"
          name="Wagering_gambling"

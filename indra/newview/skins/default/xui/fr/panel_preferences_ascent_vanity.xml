@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel name="ascvan">
-  <tab_container name="Ascent Vanity">
+  <tab_container name="Ascent Genesis">
     <panel label="Principal" name="General">
       <check_box label="Lorsque c'est possible, sauver le setting personnalisé par compte." tool_tip="Sauve le settings customis&#xE9; pour chaque alt." name="use_account_settings_check"/>
       <check_box label="Masquer la barre de 'TP in progress'" tool_tip="Ceci permet de continuer des lire vos IMs durant le TP." name="disable_tp_screen_check"/>

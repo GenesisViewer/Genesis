@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<panel label="Vanity" name="ascvan">
-	<tab_container label="Vanity" name="Ascent Vanity">
+<panel label="Genesis" name="ascvan">
+	<tab_container label="Genesis" name="Ascent Genesis">
 		<panel label="General" name="General">
-			<check_box label="Cuando sea aplicable, guardar Ajustes Vanity por cuenta." tool_tip="Guarda ajustes individuales por cuenta, permitiendo una mas fácil personalización de Alts." name="use_account_settings_check"/>
+			<check_box label="Cuando sea aplicable, guardar Ajustes Genesis por cuenta." tool_tip="Guarda ajustes individuales por cuenta, permitiendo una mas fácil personalización de Alts." name="use_account_settings_check"/>
 			<check_box label="Ocultar pantalla de progreso de Teleporte" tool_tip="Activado, el visor ocultará la pantalla de progreso de Teleportación, pemitiendo leer MIs.." name="disable_tp_screen_check"/>
 			<check_box label="Reproducir sonidos de teleportación al cambiar de sim" tool_tip="El Visor reproducirá el sonido de transportación al hacer un teleporte." name="tp_sound_check"/>
 			<check_box label="Ocultar la pantalla de inicio/cierre de sesión" tool_tip="Marcado, el visor ocultará la pantalla de progreso de inicio/cierre de sesión." name="disable_logout_screen_check"/>

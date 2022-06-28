@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <panel label="Aussehen" name="ascvan">
-  <tab_container label="System" name="Ascent Vanity">
+  <tab_container label="System" name="Ascent Genesis">
     <panel label="Haupt" name="General">
       <check_box label="Wo möglich, speichere Einstellungen pro Account." tool_tip="Speichere Einstellungen pro akkount, erlaubt das einfache ändern für Alt Accounts." name="use_account_settings_check"/>
       <check_box label="Verstecke den TP Bildschirm." tool_tip="If checked, the viewer will hide the teleport progress screen, allowing you to continue to read IMs." name="disable_tp_screen_check"/>

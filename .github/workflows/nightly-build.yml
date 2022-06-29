@@ -100,7 +100,7 @@ jobs:
        run : autobuild build --no-configure -cRelease -A64
      
      - name: find and rename
-       run : Get-ChildItem .\build-vc-64\newview\Release\*Setup.exe | Rename-Item -NewName "Genesis-eve-0.0.1_nightly_build_$(get-date -f yyyy-MM-dd).exe" && mv ".\build-vc-64\newview\Release\Genesis-eve-0.0.1_nightly_build_$(get-date -f yyyy-MM-dd).exe" c:/temp/
+       run : Get-ChildItem .\build-vc-64\newview\Release\*Setup.exe | Rename-Item -NewName "Genesis-eve_nightly_build_$(get-date -f yyyy-MM-dd).exe" && mv ".\build-vc-64\newview\Release\Genesis-eve_nightly_build_$(get-date -f yyyy-MM-dd).exe" c:/temp/
      - name: ls
        run : ls -l c:/temp/
      - name: store artefact

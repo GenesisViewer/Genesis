@@ -782,7 +782,7 @@ class WindowsManifest(ViewerManifest):
         # We use the Unicode version of NSIS, available from
         # http://www.scratchpaper.com/
         try:
-            import _winreg as reg
+            import winreg as reg
             NSIS_path = reg.QueryValue(reg.HKEY_LOCAL_MACHINE, r"SOFTWARE\NSIS") + '\\makensis.exe'
             self.run_command([proper_windows_path(NSIS_path), self.dst_path_of(tempfile)])
         except:

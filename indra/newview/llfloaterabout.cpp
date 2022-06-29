@@ -142,10 +142,9 @@ LLFloaterAbout::LLFloaterAbout()
 #if defined(_WIN64) || defined(__x86_64__)
 		+ " (64 bit)"
 #endif
-		+ llformat(" %d.%d.%d (%d) %s %s (%s)\n",
-		LLVersionInfo::getMajor(), LLVersionInfo::getMinor(), LLVersionInfo::getPatch(), LLVersionInfo::getBuild(),
-		__DATE__, __TIME__,
-		LLVersionInfo::getChannel().c_str()));
+		+ llformat(" (%d) %s %s \n",
+		LLVersionInfo::getBuild(),
+		__DATE__, __TIME__));
 	support_widget->appendColoredText(version, FALSE, FALSE, gColors.getColor("TextFgReadOnlyColor"));
 	support_widget->appendText(LLTrans::getString("ReleaseNotes"), false, false, viewer_link_style);
 

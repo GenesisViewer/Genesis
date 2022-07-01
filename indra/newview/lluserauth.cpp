@@ -225,6 +225,7 @@ void LLUserAuth::authenticate(
 #if defined(_WIN64) || defined(__x86_64__)
 	chan += " 64";
 #endif
+	LL_INFOS("Authentification channel") << chan.c_str() << LL_ENDL;
 	XMLRPC_VectorAppendString(params, "channel", chan.c_str(), 0);
 	XMLRPC_VectorAppendString(params, "platform", PLATFORM_STRING, 0);
 	XMLRPC_VectorAppendString(params, "platform_version", LLAppViewer::instance()->getOSInfo().getOSVersionString().c_str(), 0);

@@ -115,7 +115,7 @@ void check_for_updates()
 		{
 			type = "release";
 		}
-		else if (channel == "Singularity Test" || channel == "Singularity Alpha" || channel == "Singularity Beta")
+		else if (channel == "Genesis Test" || channel == "Genesis Alpha" || channel == "Genesis Beta")
 		{
 			type = "alpha";
 		}

@@ -2264,7 +2264,21 @@ void LLViewerInventoryItem::setWearableType(LLWearableType::EType type)
 	}
 	mFlags = (mFlags & ~LLInventoryItemFlags::II_FLAGS_SUBTYPE_MASK) | type;
 }
+//virtual
+bool LLViewerInventoryItem::isSettingsType() const
+{
+	return getInventoryType() == LLInventoryType::IT_SETTINGS;
+}
 
+//virtual
+LLSettingsType::EType LLViewerInventoryItem::getSettingsType() const
+{
+	if (!isSettingsType())
+	{
+		return LLSettingsType::ST_NONE;
+	}
+	return LLSettingsType::fromInventoryFlags(getFlags());
+}
 time_t LLViewerInventoryItem::getCreationDate() const
 {
 	return LLInventoryItem::getCreationDate();

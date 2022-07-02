@@ -664,7 +664,29 @@ LLParcel *LLViewerParcelMgr::getAgentParcel() const
 {
 	return mAgentParcel;
 }
+LLParcel *LLViewerParcelMgr::getAgentOrSelectedParcel() const
+{
+    LLParcel *parcel(nullptr);
 
+    LLParcelSelectionHandle sel_handle(getFloatingParcelSelection());
+    if (sel_handle)
+    {
+        LLParcelSelection *selection(sel_handle.get());
+        if (selection)
+        {
+            parcel = selection->getParcel();
+            if (parcel && (parcel->getLocalID() == INVALID_PARCEL_ID))
+            {
+                parcel = NULL;
+            }
+        }
+    }
+
+    if (!parcel)
+        parcel = LLViewerParcelMgr::instance().getAgentParcel();
+
+    return parcel;
+}
 // Return whether the agent can build on the land they are on
 bool LLViewerParcelMgr::allowAgentBuild() const
 {

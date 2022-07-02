@@ -368,7 +368,7 @@ LLVOSky::LLVOSky(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp)
 	
 	mCameraPosAgent = gAgentCamera.getCameraPositionAgent();
 	mAtmHeight = ATM_HEIGHT;
-	mEarthCenter = LLVector3(mCameraPosAgent.mV[0], mCameraPosAgent.mV[1], -EARTH_RADIUS);
+	mEarthCenter = LLVector3(mCameraPosAgent.mV[0], mCameraPosAgent.mV[1], -EARTH_RADIUS_OLD);
 
 	mSunDefaultPosition = LLVector3(LLWLParamManager::getInstance()->mCurParams.getVector("lightnorm", error));
 	if (gSavedSettings.getBOOL("SkyOverrideSimSunPosition"))

@@ -99,6 +99,7 @@ public:
 	virtual void closeItem() {}
 	virtual void previewItem() {openItem();}
 	virtual void showProperties();
+	virtual bool isMultiPreviewAllowed() const	{ return true; }
 	virtual BOOL isItemRenameable() const { return TRUE; }
 	//virtual BOOL renameItem(const std::string& new_name) {}
 	virtual BOOL isItemRemovable() const;
@@ -502,7 +503,34 @@ public:
 		LLItemBridge(inventory, root, uuid) {}
 	virtual void openItem();
 };
+class LLSettingsBridge final : public LLItemBridge
+{
+	friend class LLInvFVBridge;
 
+protected:
+	LOG_CLASS(LLSettingsBridge);
+
+public:
+	const std::string& getPrefix() override;
+
+	LLUIImagePtr getIcon() const override;
+	LLFontGL::StyleFlags getLabelStyle() const override;
+	bool isMultiPreviewAllowed() const override			{ return false; }
+	void openItem() override;
+	void previewItem() override;
+	void buildContextMenu(LLMenuGL& menu, U32 flags) override;
+	void performAction(LLInventoryModel* model, std::string action) override;
+
+protected:
+	LLSettingsBridge(LLInventoryPanel* inventory, LLFolderView* root,const LLUUID& uuid, U32 type)
+	:	LLItemBridge(inventory, root,uuid),
+		mSettingsType(type)
+	{
+	}
+
+protected:
+	U32 mSettingsType;
+};
 class LLWearableBridge : public LLItemBridge
 {
 public:

@@ -153,7 +153,7 @@ public:
 
 	//LLParcel *getParcelSelection() const;
 	LLParcel *getAgentParcel() const;
-
+	LLParcel *getAgentOrSelectedParcel() const;
 	BOOL	inAgentParcel(const LLVector3d &pos_global) const;
 
 	// Returns a pointer only when it has valid data.

@@ -34,6 +34,7 @@
 
 #include "llinventory.h"
 #include "llframetimer.h"
+#include "llsettingstype.h"
 #include "llwearable.h"
 #include "llui.h" //for LLDestroyClass
 
@@ -75,6 +76,8 @@ public:
     LLInventoryType::EType getInventoryType() const override;
 	virtual bool isWearableType() const;
 	virtual LLWearableType::EType getWearableType() const;
+	virtual bool isSettingsType() const;
+	virtual LLSettingsType::EType getSettingsType() const;
     U32 getFlags() const override;
     time_t getCreationDate() const override;
     U32 getCRC32() const override; // really more of a checksum.

@@ -84,7 +84,7 @@ public:
     virtual ptr_t               buildClone() const = 0;
     virtual ptr_t               buildDeepCloneAndUncompress() const = 0;
     virtual LLSD                getSettings() const SETTINGS_OVERRIDE;
-    virtual LLSettingsType::type_e  getSettingsTypeValue() const SETTINGS_OVERRIDE { return LLSettingsType::ST_DAYCYCLE; }
+    virtual LLSettingsType::EType  getSettingsTypeValue() const SETTINGS_OVERRIDE { return LLSettingsType::ST_DAYCYCLE; }
 
 
     //---------------------------------------------------------------------

@@ -71,7 +71,9 @@ public:
 	{
 		SG_DEFAULT = 0,
 		SG_SKY,
-		SG_WATER
+		SG_WATER,
+		SG_ANY,
+		SG_COUNT
 	};
 
 	struct gl_uniform_data_t {
@@ -460,7 +462,75 @@ public:
 	std::vector<U32> mTextureMinFilter;
 	
 };
+class LLShaderUniforms
+{
+public:
+	LLShaderUniforms()
+	:	mActive(false)
+	{
+	}
 
+	void clear()
+	{
+		mIntegers.resize(0);
+		mFloats.resize(0);
+		mVectors.resize(0);
+		mVector3s.resize(0);
+		mActive = false;
+	}
+
+	void uniform1i(S32 index, S32 value)
+	{
+		mIntegers.push_back({ index, value });
+		mActive = true;
+	}
+
+	void uniform1f(S32 index, F32 value)
+	{
+		mFloats.push_back({ index, value });
+		mActive = true;
+	}
+
+	void uniform4fv(S32 index, const LLVector4& value)
+	{
+		mVectors.push_back({ index, value });
+		mActive = true;
+	}
+
+	void uniform4fv(S32 index, const F32* value)
+	{
+		mVectors.push_back({ index, LLVector4(value) });
+		mActive = true;
+	}
+
+	void uniform3fv(S32 index, const LLVector3& value)
+	{
+		mVector3s.push_back({ index, value });
+		mActive = true;
+	}
+
+	void apply(LLGLSLShader* shader);
+
+private:
+	template<typename T>
+	struct UniformSetting
+	{
+		S32	mUniform;
+		T	mValue;
+	};
+
+	typedef UniformSetting<S32> IntSetting;
+	typedef UniformSetting<F32> FloatSetting;
+	typedef UniformSetting<LLVector4> VectorSetting;
+	typedef UniformSetting<LLVector3> Vector3Setting;
+
+	std::vector<IntSetting>		mIntegers;
+	std::vector<FloatSetting>	mFloats;
+	std::vector<VectorSetting>	mVectors;
+	std::vector<Vector3Setting>	mVector3s;
+
+	bool						mActive;
+};
 //UI shader (declared here so llui_libtest will link properly)
 extern LLGLSLShader			gUIProgram;
 //output vec4(color.rgb,color.a*tex0[tc0].a)

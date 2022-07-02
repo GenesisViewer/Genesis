@@ -40,6 +40,8 @@
 #include "llagentcamera.h"
 #include "llagentwearables.h"
 #include "llappearancemgr.h"
+#include "llparcel.h"
+#include "llenvironment.h"
 #include "llattachmentsmgr.h"
 #include "llavataractions.h"
 #include "llcallingcard.h"
@@ -83,6 +85,7 @@
 #include "llviewerobjectlist.h"
 #include "llviewerregion.h"
 #include "llviewerwindow.h"
+#include "llviewerparcelmgr.h"
 #include "llvoavatar.h"
 #include "llworldmap.h"
 #include "llwearable.h"
@@ -4973,7 +4976,115 @@ void LLTextureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	}
 	hide_context_entries(menu, items, disabled_items);	
 }
+void LLSettingsBridge::openItem()
+{
+	LLViewerInventoryItem* item = getItem();
 
+	if (item)
+	{
+		LLInvFVBridgeAction::doAction(item->getType(),mUUID,getInventoryModel());
+	}
+/*
+  LLViewerInventoryItem* item = getItem();
+  if(item && !item->getCreatorUUID().isNull())
+  {
+  LLAvatarActions::showProfile(item->getCreatorUUID());
+  }
+*/
+}
+//virtual
+void LLSettingsBridge::performAction(LLInventoryModel* model, std::string action)
+{
+	if (action == "apply_settings_local")
+	{
+		LLViewerInventoryItem* item = getItem();
+		if (item)
+		{
+			LLUUID asset_id = item->getAssetUUID();
+			gEnvironment.setEnvironment(LLEnvironment::ENV_LOCAL, asset_id,
+										LLEnvironment::TRANSITION_INSTANT);
+			gEnvironment.setSelectedEnvironment(LLEnvironment::ENV_LOCAL,
+												LLEnvironment::TRANSITION_INSTANT);
+			
+		}
+	}
+	else if (action == "apply_settings_parcel")
+	{
+		LLViewerInventoryItem* item = getItem();
+		if (!item) return;
+
+		LLUUID asset_id = item->getAssetUUID();
+		std::string name = item->getName();
+		LLParcel* parcelp(LLViewerParcelMgr::instance().getAgentOrSelectedParcel());
+		if (!parcelp)
+		{
+			llwarns << "Could not find any selected or agent parcel. Aborted."
+					<< llendl;
+			return;
+		}
+
+		if (!LLEnvironment::canAgentUpdateParcelEnvironment(parcelp))
+		{
+			LLNotifications::getInstance()->add("WLParcelApplyFail");
+			return;
+		}
+
+		S32 parcel_id = parcelp->getLocalID();
+		LL_DEBUGS("Environment") << "Applying environment settings asset Id "
+								 << asset_id << " to parcel " << parcel_id
+								 << LL_ENDL;
+
+		U32 flags = 0;
+		const LLPermissions& perms = item->getPermissions();
+		if (!perms.allowOperationBy(PERM_MODIFY, gAgentID))
+		{
+			flags |= LLSettingsBase::FLAG_NOMOD;
+		}
+		if (!perms.allowOperationBy(PERM_TRANSFER, gAgentID))
+		{
+			flags |= LLSettingsBase::FLAG_NOTRANS;
+		}
+
+		gEnvironment.updateParcel(parcel_id, asset_id, name,
+								  LLEnvironment::NO_TRACK, -1, -1, flags);
+		gEnvironment.setSharedEnvironment();
+	}
+	else if (action == "apply_settings_region")
+	{
+		LLViewerInventoryItem* item = getItem();
+		if (!item) return;
+
+		if (!LLEnvironment::canAgentUpdateRegionEnvironment())
+		{
+			LLSD args;
+			args["FAIL_REASON"] = LLTrans::getString("no_permission");
+			LLNotifications::getInstance()->add("WLRegionApplyFail", args);
+			return;
+		}
+
+		U32 flags = 0;
+		const LLPermissions& perms = item->getPermissions();
+		if (!perms.allowOperationBy(PERM_MODIFY, gAgentID))
+		{
+			flags |= LLSettingsBase::FLAG_NOMOD;
+		}
+		if (!perms.allowOperationBy(PERM_TRANSFER, gAgentID))
+		{
+			flags |= LLSettingsBase::FLAG_NOTRANS;
+		}
+
+		gEnvironment.updateRegion(item->getAssetUUID(), item->getName(),
+								  LLEnvironment::NO_TRACK, -1, -1, flags);
+	}
+	else if (action == "open")
+	{
+		openItem();
+	}
+	else
+	{
+		LLItemBridge::performAction(model, action);
+	}
+}
 // virtual
 void LLTextureBridge::performAction(LLInventoryModel* model, std::string action)
 {

@@ -43,10 +43,12 @@
 #include "v3color.h"
 #include "llunits.h"
 
-#include "llinventorysettings.h"
+#include "llsettingstype.h"
 
 #define PTR_NAMESPACE     std
 #define SETTINGS_OVERRIDE override
+
+class LLShaderUniforms;
 
 class LLSettingsBase : 
     public PTR_NAMESPACE::enable_shared_from_this<LLSettingsBase>,
@@ -99,7 +101,7 @@ public:
     //---------------------------------------------------------------------
     virtual std::string getSettingsType() const = 0;
 
-    virtual LLSettingsType::type_e getSettingsTypeValue() const = 0;
+    virtual LLSettingsType::EType getSettingsTypeValue() const = 0;
 
     //---------------------------------------------------------------------
     // Settings status 
@@ -350,9 +352,12 @@ protected:
     virtual stringset_t getSlerpKeys() const { return stringset_t(); }
 
     virtual validation_list_t getValidationList() const = 0;
-
+    // Apply any settings that need special handling.
+	inline virtual void applySpecial(LLShaderUniforms* uniforms)
+	{
+	}
     // Apply any settings that need special handling. 
-    virtual void applySpecial(void *) { };
+    virtual void applySpecial(void *, bool force = false) { };
 
     virtual parammapping_t getParameterMap() const { return parammapping_t(); }
 

@@ -13,6 +13,7 @@ include(Boost)
 include(OpenSSL)
 include(LLSharedLibs)
 include(Copy3rdPartyLibs)
+include(JsonCpp)
 include(ZLIB)
 include(URIPARSER)
 
@@ -36,7 +37,6 @@ set(llcommon_SOURCE_FILES
     llallocator_heap_profile.cpp
     llapp.cpp
     llapr.cpp
-    llaprpool.cpp
     llassettype.cpp
     llbase32.cpp
     llbase64.cpp
@@ -76,6 +76,7 @@ set(llcommon_SOURCE_FILES
     llmemorystream.cpp
     llmetrics.cpp
     llmortician.cpp
+    llmutex.cpp
     lloptioninterface.cpp
     llpredicate.cpp
     llprocesslauncher.cpp
@@ -136,7 +137,6 @@ set(llcommon_HEADER_FILES
     llallocator_heap_profile.h
     llapp.h
     llapr.h
-    llaprpool.h
     llassettype.h
     llassoclist.h
     llatomic.h
@@ -197,6 +197,7 @@ set(llcommon_HEADER_FILES
     llmemorystream.h
     llmetrics.h
     llmortician.h
+    llmutex.h
     llnametable.h
     lloptioninterface.h
     llpointer.h
@@ -293,10 +294,13 @@ target_link_libraries(
     ${CRYPTO_LIBRARIES}
     ${ZLIB_LIBRARIES}
     ${WINDOWS_LIBRARIES}
-    ${Boost_CONTEXT_LIBRARY}
-    ${Boost_REGEX_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
+    ${BOOST_FIBER_LIBRARY}
+    ${BOOST_CONTEXT_LIBRARY}
+    ${BOOST_PROGRAM_OPTIONS_LIBRARY}
+    ${BOOST_THREAD_LIBRARY}
+    ${BOOST_CHRONO_LIBRARY}
+    ${BOOST_SYSTEM_LIBRARY}
+    ${BOOST_ATOMIC_LIBRARY}
     ${CORESERVICES_LIBRARY}
     ${URIPARSER_LIBRARY}
     fmt::fmt

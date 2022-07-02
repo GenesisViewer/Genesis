@@ -4,6 +4,7 @@ project(llmessage)
 
 include(00-Common)
 include(LLCommon)
+include(JsonCpp)
 include(AIStateMachine)
 include(LLMath)
 include(LLMessage)
@@ -19,6 +20,7 @@ include_directories(
     ${LLMESSAGE_INCLUDE_DIRS}
     ${LLVFS_INCLUDE_DIRS}
     ${LLXML_INCLUDE_DIRS}
+    ${JSONCPP_INCLUDE_DIR}
     )
 
 set(llmessage_SOURCE_FILES
@@ -43,12 +45,18 @@ set(llmessage_SOURCE_FILES
     llchainio.cpp
     llcircuit.cpp
     llclassifiedflags.cpp
+    llcorebufferarray.cpp
+    llcorebufferstream.cpp
+    llcorehttpcommon.cpp
+    llcorehttputil.cpp
+    llcorerefcounted.cpp
     lldatapacker.cpp
     lldispatcher.cpp
     llexperiencecache.cpp
     llfiltersd2xmlrpc.cpp
     llhost.cpp
     llhttpclient.cpp
+    llhttpconstants.cpp
     llhttpnode.cpp
     llhttpsender.cpp
     llinstantmessage.cpp
@@ -133,6 +141,12 @@ set(llmessage_HEADER_FILES
     llcipher.h
     llcircuit.h
     llclassifiedflags.h
+    llcorebufferarray.h
+    llcorebufferstream.h
+    llcorehttpcommon.h
+    llcorehttphandler.h
+    llcorehttputil.h
+    llcorerefcounted.h
     llcororesponder.h
     llcurl.h
     lldatapacker.h
@@ -144,6 +158,7 @@ set(llmessage_HEADER_FILES
     llfollowcamparams.h
     llhost.h
     llhttpclient.h
+    llhttpconstants.h
     llhttpnode.h
     llhttpnodeadapter.h
     llhttpsender.h

@@ -47,7 +47,7 @@
 
 #define PTR_NAMESPACE     std
 #define SETTINGS_OVERRIDE override
-
+class LLShaderUniforms;
 class LLSettingsBase : 
     public PTR_NAMESPACE::enable_shared_from_this<LLSettingsBase>,
     private boost::noncopyable
@@ -353,7 +353,9 @@ protected:
 
     // Apply any settings that need special handling. 
     virtual void applySpecial(void *) { };
-
+    inline virtual void applySpecial(LLShaderUniforms* uniforms)
+	{
+	}
     virtual parammapping_t getParameterMap() const { return parammapping_t(); }
 
     LLSD        mSettings;

@@ -47,7 +47,7 @@ constexpr F32 SKY_BOX_MULT			= 16.0f;
 constexpr F32 HEAVENLY_BODY_DIST		= HORIZON_DIST - 10.f;
 constexpr F32 HEAVENLY_BODY_FACTOR	= 0.1f;
 constexpr F32 HEAVENLY_BODY_SCALE	= HEAVENLY_BODY_DIST * HEAVENLY_BODY_FACTOR;
-constexpr F32 EARTH_RADIUS			= 6.4e6f;       // exact radius = 6.37 x 10^6 m
+constexpr F32 EARTH_RADIUS_OLD			= 6.4e6f;       // exact radius = 6.37 x 10^6 m
 constexpr F32 ATM_EXP_FALLOFF		= 0.000126f;
 constexpr F32 ATM_SEA_LEVEL_NDENS	= 2.55e25f;
 // Somewhat arbitrary:
@@ -512,7 +512,7 @@ public:
 
 	F32 cosHorizon(const F32 delta = 0) const
 	{
-		const F32 sin_angle = EARTH_RADIUS/(EARTH_RADIUS + mCameraPosAgent.mV[2]);
+		const F32 sin_angle = EARTH_RADIUS_OLD/(EARTH_RADIUS_OLD + mCameraPosAgent.mV[2]);
 		return delta - (F32)sqrt(1.f - sin_angle * sin_angle);
 	}
 

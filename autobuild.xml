@@ -233,42 +233,26 @@
         <string>boost</string>
         <key>platforms</key>
         <map>
-          <key>darwin</key>
+          <key>darwin64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5e6a0930ca5c9e3c26970ac8589a538c</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>fedc8d63856f534b6098102e059dc548</string>
               <key>url</key>
-              <string>https://bitbucket.org/alchemyviewer/publiclibs-darwin/downloads/boost-1.59.0-darwin-201601091139.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/87776/805857/boost-1.72-darwin64-563847.tar.bz2</string>
             </map>
             <key>name</key>
-            <string>darwin</string>
-          </map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>2f076eae296600a1b810ce375dc4b42d</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290566/arch/Linux/installer/boost-1.55.0-linux-20140602.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
+            <string>darwin64</string>
           </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>74a88afa7ff50462059c17321f91a359</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>038853b97307a9b65de20c4c50098023</string>
               <key>url</key>
-              <string>http://depot.alchemyviewer.org/pub/linux64/lib-trusty/boost-1.60.0-linux64-201603241316.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/9675/45694/boost-1.65.1-linux64-509640.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -278,11 +262,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ae0998e5d108c77c5cea2a68ad928151</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>6cc9fb4ca21365c4470a3e516544ba71</string>
               <key>url</key>
-              <string>https://depot.alchemyviewer.org/pub/windows/lib-vc141/boost-1.63.0-windows-201703281813.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/87784/805850/boost-1.72-windows-563847.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -292,18 +274,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6faba32dcfb80c26bafd4a3e06cff268</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>0c526efc3f8825cd25cdf635e238fab3</string>
               <key>url</key>
-              <string>https://depot.alchemyviewer.org/pub/windows64/lib-vc142/boost-1.66.0-windows64-201712260832.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/87783/805851/boost-1.72-windows64-563847.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.66.0</string>
+        <string>1.72</string>
       </map>
       <key>colladadom</key>
       <map>
@@ -317,56 +297,38 @@
         <string>colladadom</string>
         <key>platforms</key>
         <map>
-          <key>darwin</key>
+          <key>darwin64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d6e279fb5ce9093c89819803be5562db</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>4699b8389dfb754da0393ddb5d325722</string>
               <key>url</key>
-              <string>https://bitbucket.org/alchemyviewer/publiclibs-darwin/downloads/colladadom-2.3-darwin-201601091204.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/95882/856117/colladadom-2.3.569219-darwin64-569219.tar.bz2</string>
             </map>
             <key>name</key>
-            <string>darwin</string>
-          </map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>bdec5fe5fd008da4328f84115128ee61</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-colladadom-update/rev/290576/arch/Linux/installer/colladadom-2.3-linux-20140602.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
+            <string>darwin64</string>
           </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c84d1be467d7198103d905f710fa31d3</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>c90613240ba3e3a171d3379275ae4ee3</string>
               <key>url</key>
-              <string>http://depot.alchemyviewer.org/pub/linux64/lib-trusty/colladadom-2.3-linux64-201603241731.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/9695/45732/colladadom-2.3.509683-linux64-509683.tar.bz2</string>
             </map>
             <key>name</key>
-            <string>linux</string>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>60bd2dbac5559141e05be6c424cf9cd0</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>343e46ea49a08ad6596d3dc702d5b812</string>
               <key>url</key>
-              <string>https://depot.alchemyviewer.org/pub/windows/lib-vc141/colladadom-2.3-windows-201703281922.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/95883/856128/colladadom-2.3.569219-windows-569219.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -376,18 +338,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>65628150b732274f0bdd0fa33d6ca650</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>de5bdfb61b31db56c5fe7d0962ad11e2</string>
               <key>url</key>
-              <string>https://depot.alchemyviewer.org/pub/windows64/lib-vc142/colladadom-2.3-windows64-201712260938.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/95884/856129/colladadom-2.3.569219-windows64-569219.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>2.3</string>
+        <string>2.3.569219</string>
       </map>
       <key>crashpad</key>
       <map>
@@ -1741,56 +1701,40 @@
         <key>version</key>
         <string>1.6.34</string>
       </map>
-      <key>libxml2</key>
+     <key>libxml2</key>
       <map>
         <key>copyright</key>
         <string>Copyright (C) 1998-2012 Daniel Veillard.  All Rights Reserved.</string>
         <key>description</key>
         <string>Libxml2 is the XML C parser and toolkit developed for the Gnome project.</string>
         <key>license</key>
-        <string>MIT</string>
+        <string>mit</string>
         <key>license_file</key>
         <string>LICENSES/libxml2.txt</string>
         <key>name</key>
         <string>libxml2</string>
         <key>platforms</key>
         <map>
-          <key>darwin</key>
+          <key>darwin64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>242ffec9e9f8fca818b750c578eba0dd</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>6f37dd6c4a5174f358b6cc5d953f121b</string>
               <key>url</key>
-              <string>https://bitbucket.org/alchemyviewer/publiclibs-darwin/downloads/libxml2-2.9.3-darwin-201511222121.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/87768/805766/libxml2-2.9.4.563845-darwin64-563845.tar.bz2</string>
             </map>
             <key>name</key>
-            <string>darwin</string>
-          </map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>7eb90f075730f8d7d176f8fb7bad5ef5</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-libxml-update/rev/290562/arch/Linux/installer/libxml2-2.9.1-linux-20140602.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
+            <string>darwin64</string>
           </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>61351b10787b06045a70c905a58ca2f6</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>740fc93f195c77b3a0c0800b31878ecb</string>
               <key>url</key>
-              <string>http://depot.alchemyviewer.org/pub/linux64/lib-trusty/libxml2-2.9.3-linux64-201603241216.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/890/1968/libxml2-2.9.4.500877-linux64-500877.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1800,11 +1744,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a3f7c3421e9e4921dda3558c3b36dc59</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>fd85d3aa13fbdfd1f1ace587e95ef151</string>
               <key>url</key>
-              <string>https://depot.alchemyviewer.org/pub/windows/lib-vc141/libxml2-2.9.4-windows-201703090740.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/87773/805797/libxml2-2.9.4.563845-windows-563845.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1814,18 +1756,46 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f69b1d4ec7ffdeec4429413ea640583d</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>d231d36c3b8942e0259aa2d9fcaa3b7e</string>
               <key>url</key>
-              <string>https://depot.alchemyviewer.org/pub/windows64/lib-vc142/libxml2-2.9.7-windows64-201712260755.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/87772/805795/libxml2-2.9.4.563845-windows64-563845.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>2.9.3</string>
+        <string>2.9.4.563845</string>
+      </map>
+      <key>llappearance_utility</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright (c) 2000-2012, Linden Research, Inc.</string>
+        <key>description</key>
+        <string>Linden Lab appearance utility for server-side avatar baking services.</string>
+        <key>license</key>
+        <string>Proprietary</string>
+        <key>license_file</key>
+        <string>LICENSES/llappearanceutility.txt</string>
+        <key>name</key>
+        <string>llappearance_utility</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>fddd634dec5ec03924d62cc774f7f8ea</string>
+              <key>url</key>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/p64_viewer-llappearance-utility/rev/317266/arch/Linux/installer/llappearance_utility-0.0.1-linux-317266.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>0.0.1</string>
       </map>
       <key>llphysicsextensions_stub</key>
       <map>

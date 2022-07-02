@@ -65,7 +65,7 @@ static F64 const NEVER = 1e16;				// 317 million years.
 
 F64 AIFrameTimer::sNextExpiration;
 AIFrameTimer::timer_list_type AIFrameTimer::sTimerList;
-LLGlobalMutex AIFrameTimer::sMutex;
+LLMutex AIFrameTimer::sMutex;
 
 // Notes on thread-safety of AIRunningFrameTimer (continued from aiframetimer.h)
 //

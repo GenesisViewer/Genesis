@@ -68,7 +68,7 @@ protected:
 	std::string mInternetStreamURL;
 };
 
-LLGlobalMutex gWaveDataMutex;	//Just to be extra strict.
+LLMutex gWaveDataMutex;	//Just to be extra strict.
 const U32 WAVE_BUFFER_SIZE = 1024;
 U32 gWaveBufferMinSize = 0;
 F32 gWaveDataBuffer[WAVE_BUFFER_SIZE] = { 0.f };

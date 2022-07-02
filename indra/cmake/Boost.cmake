@@ -1,84 +1,84 @@
 # -*- cmake -*-
+if (BOOST_CMAKE_INCLUDED)
+	return()
+endif (BOOST_CMAKE_INCLUDED)
+set (BOOST_CMAKE_INCLUDED TRUE)
+
 include(Prebuilt)
+include(Variables)
 
-set(Boost_FIND_QUIETLY ON)
-set(Boost_FIND_REQUIRED ON)
+if (ARCH STREQUAL "x86_64")
+	set(ARCH_SUFFIX "-x64")
+elseif (ARCH STREQUAL "arm64")
+	set(ARCH_SUFFIX "-a64")
+endif ()
 
-if (STANDALONE)
-  include(FindBoost)
+# Disable system libs support for now, since our boost fiber library is
+# patched, which is not the case on a standard system.
+#if (USESYSTEMLIBS)
+#  set(Boost_FIND_QUIETLY OFF)
+#  set(Boost_FIND_REQUIRED ON)
+#  include(FindBoost)
+#
+#  set(BOOST_ATOMIC_LIBRARY boost_atomic-mt)
+#  set(BOOST_CONTEXT_LIBRARY boost_context-mt)
+#  set(BOOST_FIBER_LIBRARY boost_fiber-mt)
+#  set(BOOST_PROGRAM_OPTIONS_LIBRARY boost_program_options-mt)
+#  set(BOOST_FILESYSTEM_LIBRARY boost_filesystem-mt)
+#  set(BOOST_THREAD_LIBRARY boost_thread-mt)
+#else (USESYSTEMLIBS)
+	set(Boost_INCLUDE_DIRS ${LIBS_PREBUILT_DIR}/include)
 
-  set(Boost_USE_MULTITHREADED ON)
-  find_package(Boost 1.51.0 COMPONENTS date_time filesystem program_options regex system thread wave context)
-else (STANDALONE)
-  use_prebuilt_binary(boost)
-  set(Boost_INCLUDE_DIRS ${LIBS_PREBUILT_DIR}/include)
-  set(Boost_VERSION "1.60")
+	if (DARWIN)
+		use_prebuilt_binary(boost)
 
-  if (WINDOWS)
-    set(Boost_CONTEXT_LIBRARY 
-        optimized libboost_context-mt
-        debug libboost_context-mt-gd)
-    set(Boost_FILESYSTEM_LIBRARY 
-        optimized libboost_filesystem-mt
-        debug libboost_filesystem-mt-gd)
-    set(Boost_PROGRAM_OPTIONS_LIBRARY 
-        optimized libboost_program_options-mt
-        debug libboost_program_options-mt-gd)
-    set(Boost_REGEX_LIBRARY
-        optimized libboost_regex-mt
-        debug libboost_regex-mt-gd)
-    set(Boost_SIGNALS_LIBRARY 
-        optimized libboost_signals-mt
-        debug libboost_signals-mt-gd)
-    set(Boost_SYSTEM_LIBRARY 
-        optimized libboost_system-mt
-        debug libboost_system-mt-gd)
-    set(Boost_THREAD_LIBRARY 
-        optimized libboost_thread-mt
-        debug libboost_thread-mt-gd)
-  elseif (LINUX)
-    set(Boost_CONTEXT_LIBRARY
-        optimized boost_context-mt
-        debug boost_context-mt-d)
-    set(Boost_FILESYSTEM_LIBRARY
-        optimized boost_filesystem-mt
-        debug boost_filesystem-mt-d)
-    set(Boost_PROGRAM_OPTIONS_LIBRARY
-        optimized boost_program_options-mt
-        debug boost_program_options-mt-d)
-    set(Boost_REGEX_LIBRARY
-        optimized boost_regex-mt
-        debug boost_regex-mt-d)
-    set(Boost_SIGNALS_LIBRARY
-        optimized boost_signals-mt
-        debug boost_signals-mt-d)
-    set(Boost_SYSTEM_LIBRARY
-        optimized boost_system-mt
-        debug boost_system-mt-d)
-    set(Boost_THREAD_LIBRARY
-        optimized boost_thread-mt
-        debug boost_thread-mt-d)
-  elseif (DARWIN)
-    set(Boost_CONTEXT_LIBRARY
-        optimized boost_context-mt
-        debug boost_context-mt-d)
-    set(Boost_FILESYSTEM_LIBRARY
-        optimized boost_filesystem-mt
-        debug boost_filesystem-mt-d)
-    set(Boost_PROGRAM_OPTIONS_LIBRARY
-        optimized boost_program_options-mt
-        debug boost_program_options-mt-d)
-    set(Boost_REGEX_LIBRARY
-        optimized boost_regex-mt
-        debug boost_regex-mt-d)
-    set(Boost_SIGNALS_LIBRARY
-        optimized boost_signals-mt
-        debug boost_signals-mt-d)
-    set(Boost_SYSTEM_LIBRARY
-        optimized boost_system-mt
-        debug boost_system-mt-d)
-    set(Boost_THREAD_LIBRARY
-        optimized boost_thread-mt
-        debug boost_thread-mt-d)
-  endif (WINDOWS)
-endif (STANDALONE)
+		set(BOOST_ATOMIC_LIBRARY boost_atomic-mt${ARCH_SUFFIX})
+		set(BOOST_CONTEXT_LIBRARY boost_context-mt${ARCH_SUFFIX})
+		set(BOOST_FIBER_LIBRARY boost_fiber-mt${ARCH_SUFFIX})
+		set(BOOST_FILESYSTEM_LIBRARY boost_filesystem-mt${ARCH_SUFFIX})
+		set(BOOST_PROGRAM_OPTIONS_LIBRARY boost_program_options-mt${ARCH_SUFFIX})
+		set(BOOST_THREAD_LIBRARY boost_thread-mt${ARCH_SUFFIX})
+	elseif (LINUX)
+		if (${CXX_VERSION} GREATER 749 AND NOT (${CXX_VERSION} GREATER 759))
+			use_prebuilt_binary(boost-static-gcc75)
+		else ()
+			# Given how screwed are symbols in static boost libraries, we
+			# cannot link them properly with objects compiled with a different
+			# gcc version than the version used to build boost itself (v7.5),
+			# so let's use their shared libraries counterparts in that case (at
+			# the cost of a larger distribution package)...
+			use_prebuilt_binary(boost)
+		endif ()
+
+		set(BOOST_ATOMIC_LIBRARY
+			optimized boost_atomic-mt${ARCH_SUFFIX}
+			debug boost_atomic-mt-d${ARCH_SUFFIX})
+		set(BOOST_CONTEXT_LIBRARY
+			optimized boost_context-mt${ARCH_SUFFIX}
+			debug boost_context-mt-d${ARCH_SUFFIX})
+		set(BOOST_FIBER_LIBRARY
+			optimized boost_fiber-mt${ARCH_SUFFIX}
+			debug boost_fiber-mt-d${ARCH_SUFFIX})
+		set(BOOST_FILESYSTEM_LIBRARY
+			optimized boost_filesystem-mt${ARCH_SUFFIX}
+			debug boost_filesystem-mt-d${ARCH_SUFFIX})
+		set(BOOST_PROGRAM_OPTIONS_LIBRARY
+			optimized boost_program_options-mt${ARCH_SUFFIX}
+			debug boost_program_options-mt-d${ARCH_SUFFIX})
+		set(BOOST_THREAD_LIBRARY
+			optimized boost_thread-mt${ARCH_SUFFIX}
+			debug boost_thread-mt-d${ARCH_SUFFIX})
+	elseif (WINDOWS)
+		use_prebuilt_binary(boost)
+
+		# Do not let Visual Studio try and auto-link boost libraries !
+		add_definitions(-DBOOST_ALL_NO_LIB)
+
+		set(BOOST_ATOMIC_LIBRARY libboost_atomic-mt${ARCH_SUFFIX})
+		set(BOOST_CONTEXT_LIBRARY libboost_context-mt${ARCH_SUFFIX})
+		set(BOOST_FIBER_LIBRARY libboost_fiber-mt${ARCH_SUFFIX})
+		set(BOOST_FILESYSTEM_LIBRARY libboost_filesystem-mt${ARCH_SUFFIX})
+		set(BOOST_PROGRAM_OPTIONS_LIBRARY libboost_program_options-mt${ARCH_SUFFIX})
+		set(BOOST_THREAD_LIBRARY libboost_thread-mt${ARCH_SUFFIX})
+  endif ()
+#endif (USESYSTEMLIBS)

@@ -1002,8 +1002,8 @@ namespace
 }
 
 
-LLGlobalMutex gLogMutex;
-LLGlobalMutex gCallStacksLogMutex;
+LLMutex gLogMutex;
+LLMutex gCallStacksLogMutex;
 
 namespace {
 	bool checkLevelMap(const LevelMap& map, const std::string& key,

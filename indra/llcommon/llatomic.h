@@ -91,6 +91,12 @@ public:
 	void operator+=(Type x) { mData += x; }
 	Type operator++(int) { return mData++; } // Type++
 	bool operator--() { return --mData; } // Returns (--Type != 0)
+	
+	
+	
+	inline Type operator--(int)		{ return mData--; }
+	inline Type operator++()			{ return ++mData; }
+	inline Type CurrentValue() const	{ return mData; }
 
 private:
 	typename impl_atomic_type<Type>::type mData;

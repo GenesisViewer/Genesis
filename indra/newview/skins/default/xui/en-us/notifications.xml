@@ -11329,8 +11329,8 @@ There was a problem saving the default permissions due to the following reason: 
   </notification>
 
 
-<!-- Singularity Specific notifications should go below here, alphabetically -->
-<!-- Singu Note: RLVa notifications come first here -->
+<!-- Genesis Specific notifications should go below here, alphabetically -->
+<!-- Genesis Note: RLVa notifications come first here -->
   <notification
    icon="alertmodal.tga"
    name="RLVChangeStrings"
@@ -11398,7 +11398,7 @@ the region &quot;[REGION]&quot;?
     [NAME] has given you permission to find their location on the map.
   </notification>
 
-<!-- Singu TODO: Migrate our special notifications to here -->
+<!-- Genesis TODO: Migrate our special notifications to here -->
   <notification
    icon="alert.tga"
    name="AIAlert"

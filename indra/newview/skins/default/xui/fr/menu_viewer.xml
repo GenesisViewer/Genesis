@@ -59,7 +59,7 @@
 		<menu_item_call label="Profil" name="Profile..."/>
 		<menu_item_call label="Apparence" name="Appearance..."/>
 		<menu_item_call label="Créer un ensemble" name="Make Outfit..."/>
-		<menu_item_call label="Display Name - Nom en 'Rab'" name="Display Name..."/>
+		<menu_item_call label="Nom d'affichage" name="Display Name..."/>
 		<menu_item_separator label="-----------" name="separator7"/>
 		<menu_item_check label="Amis" name="Friends..."/>
 		<menu_item_call label="Groupes" name="Groups..."/>
@@ -244,16 +244,16 @@
 	</menu>
 	<menu name="Singularity">
 		<menu_item_call label="Fermer toutes les Notices des Groupes" name="Close All Dialogs"/>
-		<menu_item_call label="Faux Absent (Simuler qu'on est ... Aplula)" name="Fake Away Status"/>
-		<menu_item_call label="Force le 'Ground Sit' (Assis par terre, plus bouger !)" name="Force Ground Sit"/>
+		<menu_item_call label="Simuler statut absence" name="Fake Away Status"/>
+		<menu_item_call label="Force le 'Ground Sit'" name="Force Ground Sit"/>
 		<menu_item_call label="AO Intégré" name="Animation Override ..."/>
-		<menu_item_check label="Nimble/Super Saut ? (Dur à traduire, littéralement...Agile !)" name="Nimble"/>
-		<menu_item_check label="Object Area Search/Recherche par Zone des Objets" name="Object Area Search"/>
-		<menu_item_check label="Sound Explorer/Panneau des Sons" name="Sound Explorer"/>
-		<menu_item_check label="Asset Blacklist/Liste des Derenders" name="Asset Blacklist"/>
+		<menu_item_check label="Super Saut" name="Nimble"/>
+		<menu_item_check label="Recherche des objets sur la zone" name="Object Area Search"/>
+		<menu_item_check label="Configuration des Sons" name="Sound Explorer"/>
+		<menu_item_check label="Liste des objets blacklistés" name="Asset Blacklist"/>
 		<menu_item_check label="Filtre des Médias" name="Media Filter"/>
-		<menu_item_check label="Affichage des Titres de la Radio + Egaliseur (joli)" name="Streaming Audio Display"/>
-		<menu_item_check label="Pose Stand (En français quel intérêt ? Pose Stand et puis voilà)" name="Pose Stand"/>
+		<menu_item_check label="Affichage des Titres de la Radio + Egaliseur" name="Streaming Audio Display"/>
+		<menu_item_check label="Pose Stand" name="Pose Stand"/>
 		<menu_item_check label="Console de 'Debug' pour la région" name="Region Debug Console"/>
 		<menu_item_call label="Rebake/Rafraîchir" name="Rebake"/>
 	</menu>

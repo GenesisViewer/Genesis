@@ -28,7 +28,7 @@
 			<check_box label="Difundir Tag de Visor:" left="10" tool_tip="Activándolo mostrará el tag de tu visor al resto de los usuarios." name="show_my_tag_check"/>
 			<combo_box tool_tip="Tag del Visor ( Y colores subsecuentes) a transmitir. Sobreescribir en forma local por Tag/Colores personalizados." name="tag_spoofing_combobox">
 				<combo_item name="Singularity" >
-					Singularity
+					Genesis
 				</combo_item>
 			</combo_box>
 			<check_box label="Mostrarte tag de cliente" tool_tip="Elige el color que verás del tag de tu visor." name="show_self_tag_check"/>

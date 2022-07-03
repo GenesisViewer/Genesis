@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <panel label="Grafik" name="Display panel">
-	<check_box label="Snowglobe in einem Fenster ausführen" name="windowed mode" tool_tip="If unchecked, viewer will display full-screen when logged in."/>
+	<check_box label="Genesis in einem Fenster ausführen" name="windowed mode" tool_tip="If unchecked, viewer will display full-screen when logged in."/>
 	<button label="Empfohlene Einstellungen" tool_tip="Reset to recommended graphics settings" name="Defaults"/>
 	<text name="WindowSizeLabel">Fenstergröße:</text>
 	<combo_box name="windowsize combo">

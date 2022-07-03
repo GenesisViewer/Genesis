@@ -2366,7 +2366,8 @@ bool LLAppViewer::initConfiguration()
 	gSavedSettings.setString("ClientSettingsFile", 
 		gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, getSettingsFilename("Default", "Global")));
 
-	gSavedSettings.setString("VersionChannelName", LLVersionInfo::getChannel());
+	
+	
 
 #if 0 //#ifndef	LL_RELEASE_FOR_DOWNLOAD
 	// provide developer build only overrides for these control variables that are not
@@ -2492,12 +2493,10 @@ bool LLAppViewer::initConfiguration()
 				channel.erase(pos, channel.npos);
 			break;
 		}
-		//Mely : do not use channel here but Genesis
-		//don't want to change the channel right now, cause I don't know the impact with Linden Labs
-		//std::string settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS,
-		//	llformat("settings_%s.xml", channel.c_str()));
+		
 		std::string settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS,
-			llformat("settings_%s.xml", "Genesis"));	
+			llformat("settings_%s.xml", channel.c_str()));
+			
 		gSavedSettings.setString("ClientSettingsFile", settings_filename);
 		LL_INFOS() << "Using default settings filename from channel: "
 			<< settings_filename << LL_ENDL;
@@ -2505,7 +2504,8 @@ bool LLAppViewer::initConfiguration()
 
 	// - load overrides from user_settings 
 	loadSettingsFromDirectory(settings_w, "User");
-
+	LL_INFOS() << "Setting VersionChannelName to " << LLVersionInfo::getChannel() << LL_ENDL;
+	gSavedSettings.setString("VersionChannelName", LLVersionInfo::getChannel());
 	// - apply command line settings 
 	clp.notify(); 
 

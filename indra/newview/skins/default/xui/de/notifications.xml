@@ -2989,8 +2989,8 @@ Bitte versuche es mit einem kleineren St&#xFC;ck Land.<tag>fehlgeschlagen</tag><
   <notification name="LargePrimAgentIntersect">Kann keine &#xFC;bergrossen Objekte erstellen wie andere Spieler behindern. Bitte versuche es wenn die Spieler sich weg bewegt haben.<tag>fehlgeschlagen</tag></notification>
 
 
-<!-- Singularity Specific notifications should go below here, alphabetically -->
-<!-- Singu TODO: Migrate our special notifications to here -->
+<!-- Genesis Specific notifications should go below here, alphabetically -->
+<!-- Genesis TODO: Migrate our special notifications to here -->
   <notification name="AntiSpamBlock">AntiSpam: Blockiert [SOURCE] wegen Spams [TYPE]s [AMOUNT] Zeit in [TIME] Sekunden.</notification>
 
   <notification name="AntiSpamNewlineFlood">AntiSpam: Blockiert neue Zeile Flood Spam from [SOURCE] (mit [AMOUNT] Zeilen).</notification>

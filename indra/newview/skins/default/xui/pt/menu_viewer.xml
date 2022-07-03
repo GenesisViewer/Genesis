@@ -155,15 +155,7 @@
 		<menu_item_call label="Portal de Scripts..." name="Scripting Portal..."/>
 		<menu_item_call label="Reportar Abuso..." name="Report Abuse..."/>
 		<menu_item_call label="Colisões, impulsos e batidas..." name="Bumps, Pushes &amp;amp; Hits..."/>
-		<menu label="Reportando Bug" name="Bug Reporting">
-			<menu_item_call label="Rastreador público de problemas..." name="Public Issue Tracker..."/>
-			<menu_item_call label="Ajuda do rastreador público de problemas..." name="Publc Issue Tracker Help..."/>
-			<menu_item_call label="Reportando Bug 101..." name="Bug Reporing 101..."/>
-			<menu_item_call label="Questões de Segurança..." name="Security Issues..."/>
-			<menu_item_call label="Wiki de QA ..." name="QA Wiki..."/>
-			<menu_item_call label="Reportar Bug..." name="Report Bug..."/>
-			<menu_item_call label="Reportar Problemas com Singularity..." name="Report Singularity Bug..."/>
-		</menu>
+		
 		<menu_item_call label="Sobre [APP_NAME]..." name="About Second Life..."/>
 	</menu>
 </menu_bar>

@@ -2713,15 +2713,15 @@
     <key>package_description</key>
     <map>
       <key>copyright</key>
-      <string>Copyright (c) 2010-2016, Singularity Viewer Team</string>
+      <string>Copyright (c) 2010-2016, Genesis Viewer Team</string>
       <key>description</key>
-      <string>Singularity Viewer</string>
+      <string>Genesis Viewer</string>
       <key>license</key>
       <string>LGPL</string>
       <key>license_file</key>
       <string>docs/LICENSE-source.txt</string>
       <key>name</key>
-      <string>Singularity Viewer</string>
+      <string>Genesis Viewer</string>
       <key>platforms</key>
       <map>
         <key>common</key>

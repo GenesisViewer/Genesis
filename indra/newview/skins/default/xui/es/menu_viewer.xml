@@ -214,17 +214,7 @@
 		<menu_item_call label="Portal de Scripting..." name="Scripting Portal..."/>
 		<menu_item_call label="Denunciar Infracción..." name="Report Abuse..."/>
 		<menu_item_call label="Choques, Empujones y Golpes..." name="Bumps, Pushes &amp;amp; Hits..."/>
-		<menu label="Informe de Fallos" name="Bug Reporting" >
-			<menu_item_call label="Seguimiento de Problemas Público..." name="Public Issue Tracker..."/>
-			<menu_item_call label="Ayuda del Seguimiento de Problemas Público..." name="Publc Issue Tracker Help..."/>
-			<menu_item_call label="Seguimiento de Problemas de [SHORT_APP_NAME]..." name="Singularity Issue Tracker..."/>
-			<menu_item_call label="Informe de Fallos 101..." name="Bug Reporting 101..."/>
-			<menu_item_call label="Problemas de Seguridad..." name="Security Issues..."/>
-			<menu_item_call label="Wiki de QA..." name="QA Wiki..."/>
-			<menu_item_call label="Informar Fallos..." name="Report Bug..."/>
-			<menu_item_call label="Informar Fallos de [SHORT_APP_NAME]..." name="Report [SHORT_APP_NAME] Bug..."/>
-			<menu_item_call label="Solicitar Nueva Característica..." name="Request New Feature..."/>
-		</menu>
+		
 		<menu_item_call label="Grupo [SHORT_APP_NAME]" name="viewer group">
 			<on_click function="URLAction" userdata="secondlife:///app/group/d21f3901-f87d-e8df-4323-f25b23a367be/about"/>
 			<on_visible function="VisibleSecondLife"/>

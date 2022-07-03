@@ -577,6 +577,8 @@ BOOL LLFloaterIMPanel::postBuild()
 		{
 			auto support = getChildView("Support Check");
 			support->setVisible(true);
+			//Genesis : Support is ticked by default
+			support->setValue(true);
 			auto control = gSavedSettings.getControl(support->getControlName());
 			if (control->get().asInteger() == -1)
 			{
@@ -1385,7 +1387,7 @@ void LLFloaterIMPanel::onSendMsg()
 
 			if (mSessionType == SUPPORT_SESSION && getChildView("Support Check")->getValue())
 			{
-				utf8_text.insert(action ? 3 : 0, llformat(action ? " (%d%s)" : "(%d%s): ", LL_VIEWER_VERSION_BUILD));
+				utf8_text.insert(action ? 3 : 0, llformat(action ? " (%s %d)" : "(%s %d): ", LLVersionInfo::getChannel(),LLVersionInfo::getBuild()));
 			}
 
 			if ( mSessionInitialized )

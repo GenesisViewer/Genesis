@@ -129,6 +129,7 @@ void LLPrefsAscentVan::refreshValues()
 	mAnnounceSnapshots = gSavedSettings.getBOOL("AnnounceSnapshots");
 	mAnnounceStreamMetadata = gSavedSettings.getBOOL("AnnounceStreamMetadata");
 	mInactiveFloaterTransparency = gSavedSettings.getF32("InactiveFloaterTransparency");
+    mBackgroundYieldTime = gSavedSettings.getS32("BackgroundYieldTime");
 	mActiveFloaterTransparency = gSavedSettings.getF32("ActiveFloaterTransparency");
 	mScriptErrorsStealFocus = gSavedSettings.getBOOL("LiruScriptErrorsStealFocus");
 	mConnectToNeighbors = gSavedSettings.getBOOL("AlchemyConnectToNeighbors");
@@ -205,6 +206,7 @@ void LLPrefsAscentVan::cancel()
 	gSavedSettings.setBOOL("AnnounceStreamMetadata", mAnnounceStreamMetadata);
 	gSavedSettings.setF32("InactiveFloaterTransparency", mInactiveFloaterTransparency);
 	gSavedSettings.setF32("ActiveFloaterTransparency", mActiveFloaterTransparency);
+    gSavedSettings.setS32("BackgroundYieldTime", mBackgroundYieldTime);
 	gSavedSettings.setBOOL("LiruScriptErrorsStealFocus",    mScriptErrorsStealFocus);
 	gSavedSettings.setBOOL("AlchemyConnectToNeighbors",     mConnectToNeighbors);
 	gSavedSettings.setBOOL("LiruRegionRestartMinimized", mRestartMinimized);

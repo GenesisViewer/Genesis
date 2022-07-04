@@ -198,6 +198,10 @@
 #include <tchar.h> // For Unicode conversion methods
 #endif
 
+//Genesis
+#include "llsqlmgr.h"
+#include "llversioninfo.h"
+
 //
 // Globals
 //
@@ -2189,6 +2193,11 @@ void LLViewerWindow::initWorldUI_postLogin()
 		gHUDView = new LLHUDView(hud_rect);
 		// put behind everything else in the UI
 		mRootView->addChildInBack(gHUDView);
+
+		//Genesis - initializing sqlite db
+		std::string db_path = gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT,
+				llformat("settings_%s.db",  LLVersionInfo::getChannel().c_str()));
+		LLSqlMgr::instance().init(db_path);		
 	}
 	//End LLViewerWindow::initWorlUI
 	//============================================

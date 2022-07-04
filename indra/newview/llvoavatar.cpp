@@ -126,6 +126,9 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
+//Genesis
+#include "lltaggedavatarsmgr.h"
+
 #if LL_DARWIN
 size_t strnlen(const char *s, size_t n)
 {
@@ -902,6 +905,7 @@ void SHClientTagMgr::updateAvatarTag(LLVOAvatar* pAvatar)
 			mAvatarTags.erase(id);
 		else
 			mAvatarTags[id]=new_tag;
+			
 		pAvatar->clearNameTag();	//LLVOAvatar::idleUpdateNameTag will pick up on mNameString being cleared.
 	}
 }
@@ -3873,11 +3877,11 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		LLColor4 name_tag_color = getNameTagColor(is_friend);
 
 		clearNameTag();
-
+		std::string contactSet = LLTaggedAvatarsMgr::instance().getContactSet(getID().asString());
 		std::string groupText;
 		std::string firstnameText;
 		std::string lastnameText;
-
+		
 		if (is_away || is_muted || is_busy || is_appearance || is_langolier || !idle_string.empty())
 		{
 			std::string line;
@@ -4051,6 +4055,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		tokenizer tokens(tag_format, sep);
 		for(tokenizer::iterator it=tokens.begin();it!=tokens.end();++it)
 		{
+			
 			std::string line = *it;
 			LLStringUtil::trim(line);
 			if(line.empty())
@@ -4077,8 +4082,12 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				if(!line.empty())
 					addNameTagLine(line, name_tag_color, LLFontGL::NORMAL, LLFontGL::getFontSansSerif());
 			}
+			
 		}
-
+		if (!contactSet.empty()) {
+			LLColor4 contactSetColor = LLTaggedAvatarsMgr::instance().getColorContactSet(getID().asString());
+			addNameTagLine(contactSet, contactSetColor, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
+		}
 		mNameAway = is_away;
 		mNameBusy = is_busy;
 		mNameMute = is_muted;

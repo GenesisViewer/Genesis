@@ -79,8 +79,10 @@ public:
 private:
 	LLPanelAvatar* mPanelAvatar;
 	bool mDataRequested;
+	
 protected:
 	LLUUID mAvatarID;
+	std::string mContactSet;
 };
 
 
@@ -119,6 +121,7 @@ public:
 	void clearControls();
 	void enableControls(BOOL own_avatar);
 	void updateOnlineText(BOOL online, BOOL have_calling_card);
+	void onSelectedContactSet();
 
 private:
 	LLUUID				mPartnerID;

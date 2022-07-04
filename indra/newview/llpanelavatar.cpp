@@ -37,6 +37,7 @@
 #include "llavatarconstants.h"
 #include "llavatarnamecache.h"
 #include "llbutton.h"
+#include "llcombobox.h"
 #include "llcheckboxctrl.h"
 #include "llclassifiedflags.h"
 #include "lltextbox.h"
@@ -77,6 +78,9 @@
 // [RLVa:KB]
 #include "rlvhandler.h"
 // [/RLVa:KB]
+
+//Genesis
+#include "lltaggedavatarsmgr.h"
 
 // Statics
 std::list<LLPanelAvatar*> LLPanelAvatar::sAllPanels;
@@ -147,6 +151,8 @@ LLPanelAvatarSecondLife::~LLPanelAvatarSecondLife()
 
 void LLPanelAvatarSecondLife::refresh()
 {
+	
+
 }
 
 //-----------------------------------------------------------------------------
@@ -166,10 +172,47 @@ void LLPanelAvatarSecondLife::clearControls()
 
 	getChild<LLScrollListCtrl>("groups")->deleteAllItems();
 }
-
+void LLPanelAvatarSecondLife::onSelectedContactSet()
+{
+	LLComboBox* contact_set = getChild<LLComboBox>("avatar_contact_set");
+	std::string selected_contact_set = contact_set->getSelectedValue();
+	if (selected_contact_set != mContactSet) {
+		
+		LL_INFOS() << "selected contact set " << selected_contact_set <<LL_ENDL;
+		std::string avatarId = mAvatarID.asString();
+		std::string avatarName = getChild<LLLineEditor>("dnname")->getText();
+		if (selected_contact_set == " ") {
+			LLTaggedAvatarsMgr::instance().deleteContactSet(avatarId);
+		} else {
+			LLTaggedAvatarsMgr::instance().updateContactSet(avatarId,selected_contact_set,avatarName);
+		}
+		auto& inst(LLAvatarPropertiesProcessor::instance());
+		
+		inst.sendAvatarNotesRequest(mAvatarID);
+	}	
+	
+}
 // virtual
 void LLPanelAvatarSecondLife::processProperties(void* data, EAvatarProcessorType type)
 {
+	//load contact set values
+	LLComboBox* contact_set = getChild<LLComboBox>("avatar_contact_set");
+	
+	if (contact_set) {
+		contact_set->removeall();
+		contact_set->add(" "," ");
+		std::map<std::string, std::string> contact_sets = LLTaggedAvatarsMgr::instance().getContactSets();
+		for (const auto& key : contact_sets) {
+			contact_set->add(key.second,key.first);
+		}
+		
+
+	}
+
+	std::string avatar_contact_set = LLTaggedAvatarsMgr::instance().getContactSet(mAvatarID.asString());
+	contact_set->setValue(avatar_contact_set);
+
+	contact_set->setCommitCallback(boost::bind(&LLPanelAvatarSecondLife::onSelectedContactSet, this));
 	if(type == APT_PROPERTIES)
 	{
 		const LLAvatarData* pAvatarData = static_cast<const LLAvatarData*>( data );
@@ -275,6 +318,10 @@ void LLPanelAvatarSecondLife::enableControls(BOOL self)
 			removeChild(drop_target);
 		if (LLTextBox* text_box = findChild<LLTextBox>("Give item:"))
 			removeChild(text_box);
+		if (LLView* contact_set = findChild<LLView>("avatar_contact_set"))
+			removeChild(contact_set);
+		if (LLTextBox* text_box = findChild<LLTextBox>("Contact set:"))
+			removeChild(text_box);	
 	}
 	childSetVisible("allow_publish", self);
 	childSetEnabled("allow_publish", self);

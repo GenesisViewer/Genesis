@@ -825,6 +825,8 @@ bool LLAppViewer::init()
 	//
 	LLFastTimer::reset();
 	
+	
+
 	// initialize LLWearableType translation bridge.
 	// Memory will be cleaned up in ::cleanupClass()
 	LLTranslationBridge::ptr_t trans = std::make_shared<LLUITranslationBridge>();
@@ -2508,7 +2510,7 @@ bool LLAppViewer::initConfiguration()
 	gSavedSettings.setString("VersionChannelName", LLVersionInfo::getChannel());
 	// - apply command line settings 
 	clp.notify(); 
-
+	
 	// Register the core crash option as soon as we can
 	// if we want gdb post-mortem on cores we need to be up and running
 	// ASAP or we might miss init issue etc.

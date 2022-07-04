@@ -57,6 +57,9 @@
 #include "rlvhandler.h"
 // [/RLVa:KB]
 
+//Genesis : 
+#include "lltaggedavatarsmgr.h"
+
 LLVector3d unpackLocalToGlobalPosition(U32 compact_local, const LLVector3d& origin);
 
 extern U32 gFrameCount;
@@ -357,6 +360,7 @@ static void cmd_toggle_mark(LLAvatarListEntry* entry)
 {
 	bool mark = !entry->isMarked();
 	void mm_setcolor(LLUUID key, LLColor4 col);
+	
 	void mm_clearMark(const LLUUID & id);
 	mark ? mm_setcolor(entry->getID(), LLColor4::red) : mm_clearMark(entry->getID());
 	entry->setMarked(mark);

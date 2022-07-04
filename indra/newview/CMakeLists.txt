@@ -473,11 +473,13 @@ set(viewer_SOURCE_FILES
     llspatialpartition.cpp
     llspeakers.cpp
     llsprite.cpp
+    llsqlmgr.cpp
     llstartup.cpp
     llstatusbar.cpp
     llstylemap.cpp
     llsurface.cpp
     llsurfacepatch.cpp
+    lltaggedavatarsmgr.cpp
     lltexturecache.cpp
     lltexturectrl.cpp
     lltexturefetch.cpp
@@ -624,6 +626,7 @@ set(viewer_SOURCE_FILES
     shcommandhandler.cpp
     shupdatechecker.cpp
     shfloatermediaticker.cpp
+    sqlite3.c
     wlfPanel_AdvSettings.cpp
     )
 
@@ -1022,12 +1025,14 @@ set(viewer_HEADER_FILES
     llspatialpartition.h
     llspeakers.h
     llsprite.h
+    llsqlmgr.h
     llstartup.h
     llstatusbar.h
     llstylemap.h
     llsurface.h
     llsurfacepatch.h
     lltable.h
+    lltaggedavatarsmgr.h
     lltexturecache.h
     lltexturectrl.h
     lltexturefetch.h
@@ -1180,6 +1185,7 @@ set(viewer_HEADER_FILES
     shcommandhandler.h
     shfloatermediaticker.h
     shupdatechecker.h
+    sqlite3.h
     wlfPanel_AdvSettings.h
     )
 

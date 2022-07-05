@@ -214,6 +214,7 @@ set(viewer_SOURCE_FILES
     llfloaterchatterbox.cpp
     llfloaterclassified.cpp
     llfloatercolorpicker.cpp
+    llfloatercontacts.cpp
     llfloatercustomize.cpp
     llfloaterdaycycle.cpp
     llfloaterdestinations.cpp
@@ -763,6 +764,7 @@ set(viewer_HEADER_FILES
     llfloaterchat.h
     llfloaterchatterbox.h
     llfloaterclassified.h
+    llfloatercontacts.h
     llfloatercolorpicker.h
     llfloatercustomize.h
     llfloaterdaycycle.h

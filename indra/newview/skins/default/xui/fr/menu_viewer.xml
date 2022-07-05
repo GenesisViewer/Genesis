@@ -212,7 +212,7 @@
             <menu_item_call label="Supprimer les scripts dans la sélection" name="Remove Scripts in Selection"/>
 	</menu>
 	<menu label="Aide" name="Help">
-		<menu_item_call label="Aide de Snowglobe/Second Life" name="Second Life Help"/>
+		<menu_item_call label="Aide de Second Life" name="Second Life Help"/>
 		<menu_item_call label="Tutoriel" name="Tutorial"/>
 		<menu_item_separator label="-----------" name="separator"/>
 		<menu_item_call label="Blog officiel" name="Official Linden Blog..."/>

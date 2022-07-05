@@ -40,6 +40,7 @@
 #include "llfloaterchat.h"
 #include "llfloaterfriends.h"
 #include "llfloatergroups.h"
+#include "llfloatercontacts.h"
 #include "llvoicechannel.h"
 #include "llimview.h"
 #include "llimpanel.h"
@@ -61,6 +62,7 @@ LLFloaterMyFriends::LLFloaterMyFriends(const LLSD& seed)
 {
 	mFactoryMap["friends_panel"] = LLCallbackMap(LLFloaterMyFriends::createFriendsPanel, NULL);
 	mFactoryMap["groups_panel"] = LLCallbackMap(LLFloaterMyFriends::createGroupsPanel, NULL);
+	mFactoryMap["contact_sets_panel"] = LLCallbackMap(LLFloaterMyFriends::createContactSetsPanel, NULL);
 	// do not automatically open singleton floaters (as result of getInstance())
 	BOOL no_open = FALSE;
 	static LLCachedControl<bool> horiz("ContactsUseHorizontalButtons");
@@ -99,6 +101,11 @@ void* LLFloaterMyFriends::createFriendsPanel(void* data)
 void* LLFloaterMyFriends::createGroupsPanel(void* data)
 {
 	return new LLPanelGroups();
+}
+//static
+void* LLFloaterMyFriends::createContactSetsPanel(void* data)
+{
+	return new LLPanelContactSets();
 }
 
 //

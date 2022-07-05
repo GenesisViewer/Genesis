@@ -2937,7 +2937,27 @@ Do you want to remove multiple friends from your Friends list?
        text="Use New Name"/>
     </form>
   </notification>
-
+ <notification
+   icon="alertmodal.tga"
+   label="Add Contact Set"
+   name="AddContactSet"
+   type="alertmodal">
+    Enter a new unique name:
+    <tag>confirm</tag>
+    <form name="form">
+      <input name="newcontactset" type="text"/>
+      <button
+       default="false"
+       index="0"
+       name="OK"
+       text="OK"/>
+      <button
+       default="true"
+       index="1"
+       name="Cancel"
+       text="Cancel"/>
+    </form>
+  </notification>
   <notification
    icon="alertmodal.tga"
    name="InvalidAutoReplaceEntry"

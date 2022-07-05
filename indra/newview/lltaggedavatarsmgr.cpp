@@ -35,7 +35,7 @@ void LLTaggedAvatarsMgr::updateContactSet(std::string avatarId, std::string cont
 
 
 
-   sqlite3_prepare(db, sql, -1, &stmt, NULL);
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
    sqlite3_bind_text(stmt, 1,  contactSet.c_str(), strlen(contactSet.c_str()), 0);
    sqlite3_bind_text(stmt, 2,  avatarId.c_str(), strlen(avatarId.c_str()), 0);
    sqlite3_bind_text(stmt, 3,  avatarName.c_str(), strlen(avatarName.c_str()), 0);
@@ -56,7 +56,7 @@ void LLTaggedAvatarsMgr::deleteContactSet(std::string avatarId) {
 
 
 
-   sqlite3_prepare(db, sql, -1, &stmt, NULL);
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
    
    sqlite3_bind_text(stmt, 1,  avatarId.c_str(), strlen(avatarId.c_str()), 0);
    
@@ -74,7 +74,7 @@ std::string LLTaggedAvatarsMgr::getContactSet(std::string avatarId) {
    LL_INFOS() << "Deleting Tagged avatars from Genesis DB" << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "SELECT CONTACT_SET_ID FROM CONTACT_SET_AVATARS WHERE AVATAR_ID=?";
-   sqlite3_prepare(db, sql, -1, &stmt, NULL);
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
    
    sqlite3_bind_text(stmt, 1,  avatarId.c_str(), strlen(avatarId.c_str()), 0);
    while ( sqlite3_step(stmt) == SQLITE_ROW) {
@@ -84,8 +84,32 @@ std::string LLTaggedAvatarsMgr::getContactSet(std::string avatarId) {
    sqlite3_finalize(stmt);
    return contactSetId;
 }
-
-LLColor4 LLTaggedAvatarsMgr::getColorContactSet(std::string avatarId) {
+LLColor4 LLTaggedAvatarsMgr::getColorContactSet(std::string csId) {
+   char *errMsg = 0;     
+   int rc;   
+   char *sql;
+   sqlite3_stmt *stmt;
+   LLColor4 colorContactSet;
+   LL_INFOS() << "Deleting Tagged avatars from Genesis DB" << LL_ENDL;
+   sqlite3 *db = LLSqlMgr::instance().getDB();
+   sql = "SELECT R,G,B,A FROM CONTACTS_SET where ID=?";
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+   
+   sqlite3_bind_text(stmt, 1,  csId.c_str(), strlen(csId.c_str()), 0);
+   while ( sqlite3_step(stmt) == SQLITE_ROW) {
+      const unsigned char *id = sqlite3_column_text(stmt, 0);
+    
+      double r = sqlite3_column_double(stmt, 0);
+      double g = sqlite3_column_double(stmt, 1);
+      double b = sqlite3_column_double(stmt, 2);
+      double a = sqlite3_column_double(stmt, 3);
+      colorContactSet = LLColor4(F32(r),F32(g),F32(b),F32(a));
+      
+   }
+   sqlite3_finalize(stmt);
+   return colorContactSet;
+}
+LLColor4 LLTaggedAvatarsMgr::getAvatarColorContactSet(std::string avatarId) {
    char *errMsg = 0;     
    int rc;   
    char *sql;
@@ -94,7 +118,7 @@ LLColor4 LLTaggedAvatarsMgr::getColorContactSet(std::string avatarId) {
    LL_INFOS() << "Deleting Tagged avatars from Genesis DB" << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "SELECT csa.AVATAR_ID,R,G,B,A FROM CONTACT_SET_AVATARS csa,CONTACTS_SET cs where csa.CONTACT_SET_ID=cs.ID and csa.AVATAR_ID=?";
-   sqlite3_prepare(db, sql, -1, &stmt, NULL);
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
    
    sqlite3_bind_text(stmt, 1,  avatarId.c_str(), strlen(avatarId.c_str()), 0);
    while ( sqlite3_step(stmt) == SQLITE_ROW) {
@@ -117,7 +141,7 @@ std::map<std::string, std::string> LLTaggedAvatarsMgr::getContactSets() {
    sqlite3_stmt *result;
    LL_INFOS() << "Loading Contact set from Genesis DB" << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
-   rc = sqlite3_prepare(db, "SELECT ID, IFNULL(ALIAS,ID) from CONTACTS_SET order by 2", -1, &result, NULL);
+   rc = sqlite3_prepare_v2(db, "SELECT ID, IFNULL(ALIAS,ID) from CONTACTS_SET order by 2", -1, &result, NULL);
   
    if (rc != SQLITE_OK) {
     
@@ -135,4 +159,32 @@ std::map<std::string, std::string> LLTaggedAvatarsMgr::getContactSets() {
    }
    sqlite3_finalize(result);
    return contact_sets;
+}
+std::string LLTaggedAvatarsMgr::insertContactSet(std::string csId, std::string csAlias) {
+   char *errMsg = 0;     
+   int rc;   
+   char *sql;
+   sqlite3_stmt *stmt;
+   std::string result;
+   LL_INFOS() << "inserting new contact set" << LL_ENDL;
+   sqlite3 *db = LLSqlMgr::instance().getDB();
+   sql = "INSERT INTO CONTACTS_SET(ID,ALIAS,R,G,B,A)"  \
+         "VALUES(?,?,?,?,?,?)";
+        
+
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+   sqlite3_bind_text(stmt, 1,  csId.c_str(), strlen(csId.c_str()), 0);
+   sqlite3_bind_text(stmt, 2,  csAlias.c_str(), strlen(csAlias.c_str()), 0);
+   sqlite3_bind_double(stmt, 3,0.0 );
+   sqlite3_bind_double(stmt, 4,0.0 );
+   sqlite3_bind_double(stmt, 5,0.0 );
+   sqlite3_bind_double(stmt, 6,1.0 );
+   
+   rc=sqlite3_step(stmt);
+  
+   if (rc == SQLITE_DONE) {
+      //enoyer un signal
+   }
+   sqlite3_finalize(stmt);
+   return result;
 }

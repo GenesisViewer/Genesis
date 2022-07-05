@@ -4085,7 +4085,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			
 		}
 		if (!contactSet.empty()) {
-			LLColor4 contactSetColor = LLTaggedAvatarsMgr::instance().getColorContactSet(getID().asString());
+			LLColor4 contactSetColor = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(getID().asString());
 			addNameTagLine(contactSet, contactSetColor, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
 		}
 		mNameAway = is_away;

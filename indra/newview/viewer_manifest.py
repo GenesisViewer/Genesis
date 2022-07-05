@@ -223,7 +223,7 @@ class ViewerManifest(LLManifest):
             'arch':self.args['arch']
             }
         #return "%(channel_vendor_base)s%(channel_variant_underscores)s_%(version_underscores)s_%(arch)s" % substitution_strings
-        return "Genesis-Eve_%(version_underscores)s_%(arch)s" % substitution_strings
+        return "%(channel_vendor_base)s-Eve_%(channel_variant_underscores)s_%(arch)s" % substitution_strings
 
     def app_name(self):
         #global CHANNEL_VENDOR_BASE
@@ -728,7 +728,8 @@ class WindowsManifest(ViewerManifest):
             'final_exe' : self.final_exe(),
             'flags':'',
             'app_name':self.app_name(),
-            'app_name_oneword':self.app_name_oneword()
+            'app_name_oneword':self.app_name_oneword(),
+            'channel_type':self.channel_type()
             }
 
         installer_file = self.installer_base_name() + '_Setup.exe'
@@ -758,8 +759,8 @@ class WindowsManifest(ViewerManifest):
         inst_vars_template = """
             !define INSTEXE  "%(final_exe)s"
             !define INSTOUTFILE "%(installer_file)s"
-            !define APPNAME   "%(app_name)s"
-            !define APPNAMEONEWORD   "%(app_name_oneword)s"
+            !define APPNAME   "%(app_name)s_%(channel_type)s"
+            !define APPNAMEONEWORD   "%(app_name_oneword)s_%(channel_type)s"
             !define URLNAME   "secondlife"
             !define CAPTIONSTR "%(caption)s"
             !define VENDORSTR "Genesis-Eve Project"

@@ -338,7 +338,7 @@ const std::string &LLDir::getDumpDir() const
 					+ "dump-" + uid.asString();
 		*/
 
-		sDumpDir = getExpandedFilename(LL_PATH_LOGS, "") + "singularity-debug";
+		sDumpDir = getExpandedFilename(LL_PATH_LOGS, "") + "genesis-debug";
 		dir_exists_or_crash(sDumpDir);
 	}
 

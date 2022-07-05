@@ -53,6 +53,7 @@ public:
 	/// return the build number as an integer
 	static S32 getBuild();
 
+	
 	/// return the full viewer version as a string like "2.0.0.200030"
 	static const std::string &getVersion();
 

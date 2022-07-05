@@ -3,7 +3,7 @@
 name: test-ftp
 
 on:
-  s
+  
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -13,5 +13,7 @@ jobs:
     
     runs-on: ubuntu-latest
     steps:
-      -run: mkdir -p /tmp/test/ && echo "test" > /tmp/test/test.ok
-      -run: git ftp push -u ${{ secrets.FTP_USER }} -p ${{ secrets.FTP_PASS }} --syncroot /tmp/test/ ftp://${{ secrets.FTP_HOST }}/genesis/
+      - name: maketestfile
+        run: mkdir -p /tmp/test/ && echo "test" > /tmp/test/test.ok
+      - name: upload  
+        run: git ftp push -u ${{ secrets.FTP_USER }} -p ${{ secrets.FTP_PASS }} --syncroot /tmp/test/ ftp://${{ secrets.FTP_HOST }}/genesis/

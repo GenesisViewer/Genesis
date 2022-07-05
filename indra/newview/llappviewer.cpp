@@ -592,7 +592,11 @@ LLAppViewer::LLAppViewer() :
 		}
 		//Mely : Change the settings dir
 		//gDirUtilp->initAppDirs("SecondLife", newview_path);
-		gDirUtilp->initAppDirs("Genesis-Eve", newview_path);
+		std::string suffix="";
+		std::string channel = LLVersionInfo::getChannel();
+		if (channel.find("Test")) suffix = "-Test";
+		if (channel.find("Beta")) suffix = "-Beta";
+		gDirUtilp->initAppDirs("Genesis-Eve" + suffix, newview_path);
 	}
 	//
 	// IMPORTANT! Do NOT put anything that will write

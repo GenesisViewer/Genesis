@@ -35,7 +35,7 @@
  || ! defined(LL_VIEWER_VERSION_MAJOR) \
  || ! defined(LL_VIEWER_VERSION_MINOR) \
  || ! defined(LL_VIEWER_VERSION_PATCH) \
- || ! defined(LL_VIEWER_VERSION_BUILD)
+ || ! defined(LL_VIEWER_VERSION_BUILD) 
  #error "Channel or Version information is undefined"
 #endif
 
@@ -115,9 +115,8 @@ const std::string &LLVersionInfo::getChannelAndVersion()
 	if (sVersionChannel.empty())
 	{
 		// cache the version string
-		//sVersionChannel = LLVersionInfo::getChannel() + " " + LLVersionInfo::getVersion();
-		//Mely : I don't want to touch the channel at the moment, so hardcoded version
-		sVersionChannel = "Genesis-Eve " + LLVersionInfo::getVersion();
+		sVersionChannel = LLVersionInfo::getChannel() + " " + LLVersionInfo::getVersion();
+		
 	}
 
 	return sVersionChannel;

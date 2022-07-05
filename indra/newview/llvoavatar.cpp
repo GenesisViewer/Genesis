@@ -3877,7 +3877,8 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		LLColor4 name_tag_color = getNameTagColor(is_friend);
 
 		clearNameTag();
-		std::string contactSet = LLTaggedAvatarsMgr::instance().getContactSet(getID().asString());
+		std::string contactSetId = LLTaggedAvatarsMgr::instance().getAvatarContactSetId(getID().asString());
+		std::string contactSetName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(getID().asString());
 		std::string groupText;
 		std::string firstnameText;
 		std::string lastnameText;
@@ -4084,9 +4085,9 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			}
 			
 		}
-		if (!contactSet.empty()) {
+		if (!contactSetId.empty()) {
 			LLColor4 contactSetColor = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(getID().asString());
-			addNameTagLine(contactSet, contactSetColor, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
+			addNameTagLine(contactSetName, contactSetColor, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
 		}
 		mNameAway = is_away;
 		mNameBusy = is_busy;

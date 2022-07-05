@@ -209,7 +209,7 @@ void LLPanelAvatarSecondLife::processProperties(void* data, EAvatarProcessorType
 
 	}
 
-	std::string avatar_contact_set = LLTaggedAvatarsMgr::instance().getContactSet(mAvatarID.asString());
+	std::string avatar_contact_set = LLTaggedAvatarsMgr::instance().getAvatarContactSetId(mAvatarID.asString());
 	contact_set->setValue(avatar_contact_set);
 
 	contact_set->setCommitCallback(boost::bind(&LLPanelAvatarSecondLife::onSelectedContactSet, this));

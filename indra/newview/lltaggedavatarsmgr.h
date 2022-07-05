@@ -22,7 +22,8 @@ public:
     void updateContactSet(std::string avatarId, std::string contactSet,std::string avatarName);
     void updateContactSetName(std::string csId, std::string csAlias);
     void deleteContactSet(std::string avatarId);
-    std::string getContactSet(std::string avatarId);
+    std::string getAvatarContactSetId(std::string avatarId);
+    std::string getAvatarContactSetName(std::string avatarId);
     LLColor4 getAvatarColorContactSet(std::string avatarId);
     LLColor4 getColorContactSet(std::string csId);
     std::string insertContactSet(std::string csId, std::string csAlias);

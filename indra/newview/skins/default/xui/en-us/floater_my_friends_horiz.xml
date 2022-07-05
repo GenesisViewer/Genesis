@@ -7,5 +7,6 @@
 	     name="friends_and_groups" tab_position="top" tab_min_width="0" width="383">
 		<panel bottom="0" filename="panel_friends_horiz.xml" label="Friends" left="0" name="friends_panel" width="370" />
 		<panel bottom="0" filename="panel_groups_horiz.xml" label="Groups" left="0" name="groups_panel" width="370" />
+		<panel bottom="0" filename="panel_contact_sets_horiz.xml" label="Contact Sets" left="0" name="contact_sets_panel" width="370" />
 	</tab_container>
 </floater>

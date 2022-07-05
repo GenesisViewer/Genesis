@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel border="true" bottom="-371" height="300" left="280" mouse_opaque="true"
+     name="contact_sets" width="350">
+	<scroll_list background_visible="true" bottom="45" column_padding="0" draw_border="true"
+	     draw_heading="true" draw_stripes="true" enabled="true"
+	     follows="left|top|right|bottom" left="10" mouse_opaque="true"
+	     multi_select="false" name="contact set list" tab_stop="true" top="-10"
+	     width="240" menu_num="-1">
+		<column dynamicwidth="true" label="Name" name="contactsetname" tool_tip="Name" />
+		<column width="0" label="ID" name="contactsetid" tool_tip="ID" />
+    
+	</scroll_list>
+	
+	<pad bottom="-7" height="0" left="-90" width="1" />
+	<button bottom_delta="-25" follows="top|right" font="SansSerif" height="22"
+	     label="Add" left_delta="0" name="Add"
+	     tool_tip="Add a contact set" width="80">
+         <button.commit_callback parameter="ContactSet.Add"/>
+    </button>     
+    <button bottom_delta="-25" follows="top|right" font="SansSerif" height="22"
+	     label="Rename" left_delta="0" name="Rename"
+	     tool_tip="Rename a contact set" width="80" />
+	
+	 <color_swatch border_color="0.45098 0.517647 0.607843 1" bottom_delta="-55" can_apply_immediately="true" color="0.7 0.9 0.7 1" follows="top|right" height="50" label="Color" left_delta="0" name="contact_set_color" width="80"/>
+	      
+</panel>

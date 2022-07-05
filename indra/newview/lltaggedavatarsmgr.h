@@ -18,7 +18,9 @@ public:
     
     
     std::map<std::string, std::string> getContactSets();
+    void updateColorContactSet(std::string csId, LLColor4 color);
     void updateContactSet(std::string avatarId, std::string contactSet,std::string avatarName);
+    void updateContactSetName(std::string csId, std::string csAlias);
     void deleteContactSet(std::string avatarId);
     std::string getContactSet(std::string avatarId);
     LLColor4 getAvatarColorContactSet(std::string avatarId);

@@ -47,6 +47,9 @@
 #include "lluuid.h"
 #include "llfloater.h"
 #include "llinstancetracker.h"
+#include "llcolorswatch.h"
+#include "llscrolllistctrl.h"
+#include "llscrolllistitem.h"
 #include <map>
 #ifndef BOOST_FUNCTION_HPP_INCLUDED
 #include <boost/function.hpp>
@@ -58,7 +61,7 @@ class LLUICtrl;
 class LLTextBox;
 class LLScrollListCtrl;
 class LLButton;
-
+class LLColorSwatchCtrl;
 
 class LLPanelContactSets : public LLPanel, public LLOldEvents::LLSimpleListener
 {
@@ -84,12 +87,18 @@ protected:
 
 	// highlight_id is a group id to highlight
 	void enableButtons();
+	void onColorChange();
+	void onSelectionEntry();
 	static void addContactSet(void* userdata);
-	
+	static void renameContactSet(void* userdata);
+	bool callbackRenameContactSet(const LLSD& notification, const LLSD& response);
 	//void onGroupSortChanged();
 	//void onGroupList();
 	//static void onBtnInvite(void* userdata);
 	//void invite();
+private:
+	LLColorSwatchCtrl*	mGlobalSwatch;	
+	LLScrollListCtrl*   mContactSetList;
 };
 
 

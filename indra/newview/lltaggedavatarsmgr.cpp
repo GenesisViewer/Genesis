@@ -84,13 +84,35 @@ std::string LLTaggedAvatarsMgr::getContactSet(std::string avatarId) {
    sqlite3_finalize(stmt);
    return contactSetId;
 }
+void LLTaggedAvatarsMgr::updateColorContactSet(std::string csId, LLColor4 color) {
+   char *errMsg = 0;     
+   int rc;   
+   char *sql;
+   sqlite3_stmt *stmt;
+   const auto rgb_color = color.getValue();
+   F32 r = rgb_color[0];
+   F32 g = rgb_color[1];
+   F32 b = rgb_color[2];
+   LL_INFOS() << "setting Color contact set  from Genesis DB " << csId << LL_ENDL;
+   sqlite3 *db = LLSqlMgr::instance().getDB();
+   sql = "UPDATE CONTACTS_SET SET R=?,G=?,B=?,A=1.0 WHERE ID = ?";
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+   sqlite3_bind_double(stmt, 1,  r);
+   sqlite3_bind_double(stmt, 2,  g);
+   sqlite3_bind_double(stmt, 3,  b);
+   sqlite3_bind_text(stmt, 4,  csId.c_str(), strlen(csId.c_str()), 0);
+   sqlite3_step(stmt);
+   
+   sqlite3_finalize(stmt);
+   
+}
 LLColor4 LLTaggedAvatarsMgr::getColorContactSet(std::string csId) {
    char *errMsg = 0;     
    int rc;   
    char *sql;
    sqlite3_stmt *stmt;
    LLColor4 colorContactSet;
-   LL_INFOS() << "Deleting Tagged avatars from Genesis DB" << LL_ENDL;
+   LL_INFOS() << "getting Color contact set  from Genesis DB " << csId << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "SELECT R,G,B,A FROM CONTACTS_SET where ID=?";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
@@ -159,6 +181,30 @@ std::map<std::string, std::string> LLTaggedAvatarsMgr::getContactSets() {
    }
    sqlite3_finalize(result);
    return contact_sets;
+}
+void LLTaggedAvatarsMgr::updateContactSetName(std::string csId, std::string csAlias) {
+   char *errMsg = 0;     
+   int rc;   
+   char *sql;
+   sqlite3_stmt *stmt;
+   std::string result;
+   LL_INFOS() << "updating  contact set name" << LL_ENDL;
+   sqlite3 *db = LLSqlMgr::instance().getDB();
+   sql = "UPDATE CONTACTS_SET SET ALIAS = ? WHERE ID= ?";
+
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+   sqlite3_bind_text(stmt, 1,  csAlias.c_str(), strlen(csAlias.c_str()), 0);
+   sqlite3_bind_text(stmt, 2,  csId.c_str(), strlen(csId.c_str()), 0);
+   
+   
+   
+   rc=sqlite3_step(stmt);
+  
+   if (rc == SQLITE_DONE) {
+      //enoyer un signal
+   }
+   sqlite3_finalize(stmt);
+   
 }
 std::string LLTaggedAvatarsMgr::insertContactSet(std::string csId, std::string csAlias) {
    char *errMsg = 0;     

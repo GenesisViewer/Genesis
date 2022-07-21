@@ -386,6 +386,7 @@ set(viewer_SOURCE_FILES
     llpaneldirplaces.cpp
     llpaneldirpopular.cpp
     llpaneldisplay.cpp
+    llpaneleditcontactset.cpp
     llpaneleditwearable.cpp
     llpanelevent.cpp
     llpanelexperiencelisteditor.cpp
@@ -937,6 +938,7 @@ set(viewer_HEADER_FILES
     llpaneldirplaces.h
     llpaneldirpopular.h
     llpaneldisplay.h
+    llpaneleditcontactset.h
     llpaneleditwearable.h
     llpanelevent.h
     llpanelexperiencelisteditor.h

@@ -26,6 +26,7 @@ public:
     std::string getAvatarContactSetName(std::string avatarId);
     LLColor4 getAvatarColorContactSet(std::string avatarId);
     LLColor4 getColorContactSet(std::string csId);
+    std::string getContactSetName(std::string csId);
     std::string insertContactSet(std::string csId, std::string csAlias);
 private:
     std::map<std::string, LLColor4> mTaggedAvatarsColors;

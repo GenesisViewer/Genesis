@@ -17,10 +17,11 @@
 	     tool_tip="Add a contact set" width="80">
          <button.commit_callback parameter="ContactSet.Add"/>
     </button>     
-    <button bottom_delta="-25" follows="top|right" font="SansSerif" height="22"
-	     label="Rename" left_delta="0" name="Rename"
-	     tool_tip="Rename a contact set" width="80" />
+    
+	<button bottom_delta="-25" follows="top|right" font="SansSerif" height="22"
+	     label="Edit" left_delta="0" name="Edit"
+	     tool_tip="Edit a contact set" width="80" />	 
 	
-	 <color_swatch border_color="0.45098 0.517647 0.607843 1" bottom_delta="-55" can_apply_immediately="true" color="0.7 0.9 0.7 1" follows="top|right" height="50" label="Color" left_delta="0" name="contact_set_color" width="80"/>
+	
 	      
 </panel>

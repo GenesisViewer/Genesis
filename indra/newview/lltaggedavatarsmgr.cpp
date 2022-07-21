@@ -150,6 +150,22 @@ LLColor4 LLTaggedAvatarsMgr::getColorContactSet(std::string csId) {
    sqlite3_finalize(stmt);
    return colorContactSet;
 }
+std::string LLTaggedAvatarsMgr::getContactSetName(std::string csId) {
+   char *errMsg = 0;     
+   int rc;   
+   char *sql;
+   std::string result;
+   sqlite3_stmt *stmt;
+   sqlite3 *db = LLSqlMgr::instance().getDB();
+   sql = "SELECT IFNULL(ALIAS,ID) from CONTACTS_SET where ID=?";
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+   sqlite3_bind_text(stmt, 1,  csId.c_str(), strlen(csId.c_str()), 0);
+   while ( sqlite3_step(stmt) == SQLITE_ROW) {
+      const unsigned char *name = sqlite3_column_text(stmt, 0);
+      result = std::string(reinterpret_cast<const char*>(name));
+   }
+   return result;
+}
 LLColor4 LLTaggedAvatarsMgr::getAvatarColorContactSet(std::string avatarId) {
    char *errMsg = 0;     
    int rc;   

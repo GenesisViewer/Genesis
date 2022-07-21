@@ -47,6 +47,7 @@
 #include "lltaggedavatarsmgr.h"
 #include "llnotificationsutil.h"
 #include "lluuid.h"
+#include "llpaneleditcontactset.h"
 using namespace LLOldEvents;
 
 // helper functions
@@ -89,41 +90,18 @@ BOOL LLPanelContactSets::postBuild()
 {
 	
 	mContactSetList = getChild<LLScrollListCtrl>("contact set list");
-	mGlobalSwatch = getChild<LLColorSwatchCtrl>("contact_set_color");
-	//getChild<LLUICtrl>("Add")->setCommitCallback(boost::bind(&LLPanelContactSets::addContactSet));
+	
 	childSetAction("Add", addContactSet, this);
-	childSetAction("Rename", renameContactSet, this);
-	//mCommitCallbackRegistrar.add("ContactSet.Add",	boost::bind(&LLPanelContactSets::addContactSet, this));
-	mContactSetList->setCommitOnSelectionChange(true);
-	mContactSetList->setCommitCallback(boost::bind(&LLPanelContactSets::onSelectionEntry, this));
+	
+	childSetAction("Edit", editContactSet, this);
+	
 
-	//mGlobalSwatch->setCommitCallback(boost::bind(&LLPanelContactSets::onColorChange, this));	
-	//getChild<LLColorSwatchCtrl>("contact_set_color")->setCommitCallback(boost::bind(&LLPanelEditWearable::onColorSwatchCommit, self, _1));
-	//childSetCommitCallback("contact_set_color", onColorChange, this);
 	
 	reset();
 
 	return TRUE;
 }
-void LLPanelContactSets::onColorChange () {
-	
-	
-	LLColor4 newColor = mGlobalSwatch->get();
-	
-	if (mContactSetList->getFirstSelected() && newColor != NULL) {
-		std::string csId = mContactSetList->getFirstSelected()->getColumn(1)->getValue().asString();
-		LLTaggedAvatarsMgr::instance().updateColorContactSet(csId, newColor);
-	}
-	
-}
-void LLPanelContactSets::onSelectionEntry () {
-	
-//
-    std::string csId = mContactSetList->getFirstSelected()->getColumn(1)->getValue().asString();
-	LLColor4 color = LLTaggedAvatarsMgr::instance().getColorContactSet(csId);
-	mGlobalSwatch->set(color);
-	enableButtons();
-}
+
 void LLPanelContactSets::enableButtons()
 {
 	
@@ -132,16 +110,20 @@ void LLPanelContactSets::enableButtons()
 	
 
 }
-void LLPanelContactSets::renameContactSet(void* userdata) {
+
+void LLPanelContactSets::editContactSet(void* userdata) {
 	LLPanelContactSets* self = (LLPanelContactSets*)userdata;
 	LLScrollListCtrl *list = self->getChild<LLScrollListCtrl>("contact set list");
 
 	if (list->getFirstSelected()) {
-		LLSD payload;
-		LLSD args;
-		args["ContactSetName"] = list->getFirstSelected()->getColumn(0)->getValue().asString();
-		LLNotificationsUtil::add("RenameContactSet", args, payload,
-							 boost::bind(&LLPanelContactSets::callbackRenameContactSet, self, _1, _2));
+		std::string csId = list->getFirstSelected()->getColumn(1)->getValue().asString();
+		
+		
+		LLPanelEditContactSet* floater = new LLPanelEditContactSet();
+		floater->center();
+		floater->open();
+		floater->setContactSetPanel(self);
+		floater->setContactSetID(csId);
 	}
 
 	
@@ -149,24 +131,7 @@ void LLPanelContactSets::renameContactSet(void* userdata) {
 	
 
 }
-bool LLPanelContactSets::callbackRenameContactSet(const LLSD& notification, const LLSD& response)
-{
-	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
-	if (option > 0) {
-		return false;
-	}
-	
-	std::string csId = mContactSetList->getFirstSelected()->getColumn(1)->getValue().asString();
-	
-	if ( response.has("contactsetname") && response["contactsetname"].isString() && !response["contactsetname"].asString().empty()) {
-		
-		LLTaggedAvatarsMgr::instance().updateContactSetName(csId,response["contactsetname"]);
-		
-		init_contact_set_list(mContactSetList);
-		mContactSetList->selectByValue(csId);
-	}
-	return false;
-}
+
 void LLPanelContactSets::addContactSet(void* userdata) {
 	LLPanelContactSets* self = (LLPanelContactSets*)userdata;
 	LL_INFOS() << "Adding Contact Set" << LL_ENDL;

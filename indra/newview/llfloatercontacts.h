@@ -88,9 +88,12 @@ protected:
 	static void addContactSet(void* userdata);
 	
 	static void editContactSet(void* userdata);
+
+	static void deleteContactSet(void* userdata);
 	
 private:
 	LLScrollListCtrl*   mContactSetList;
+	static bool handleRemove(const LLSD& notification, const LLSD& response,LLPanelContactSets* contactSetPanel);
 };
 
 

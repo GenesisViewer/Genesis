@@ -95,6 +95,7 @@ BOOL LLPanelContactSets::postBuild()
 	
 	childSetAction("Edit", editContactSet, this);
 	
+	childSetAction("Delete", deleteContactSet, this);
 
 	
 	reset();
@@ -125,13 +126,48 @@ void LLPanelContactSets::editContactSet(void* userdata) {
 		floater->setContactSetPanel(self);
 		floater->setContactSetID(csId);
 	}
-
-	
-    
-	
-
 }
 
+void LLPanelContactSets::deleteContactSet(void* userdata) {
+	LLPanelContactSets* self = (LLPanelContactSets*)userdata;
+	LLScrollListCtrl *list = self->getChild<LLScrollListCtrl>("contact set list");
+	if (list->getFirstSelected()) {
+		std::string csId = list->getFirstSelected()->getColumn(1)->getValue().asString();
+		std::string name = LLTaggedAvatarsMgr::instance().getContactSetName(csId);
+		LLSD args;
+		LLSD payload;
+		args["NAME"] = name;
+		payload["csid"].append(csId);
+		LLNotificationsUtil::add("RemoveContactSet",
+		args,
+		payload,
+		boost::bind(&handleRemove, _1, _2, self));
+	
+	}
+	
+			 							 
+}
+bool LLPanelContactSets::handleRemove(const LLSD& notification, const LLSD& response,LLPanelContactSets* contactSetPanel)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+
+	const LLSD& csIds = notification["payload"]["csid"];
+	for (LLSD::array_const_iterator itr = csIds.beginArray(); itr != csIds.endArray(); ++itr)
+	{
+		std::string csId = itr->asString();
+		
+		if (option == 0){
+			//That was a YES
+			LLTaggedAvatarsMgr::instance().deleteContactSet(csId);
+			LLScrollListCtrl *list = contactSetPanel->getChild<LLScrollListCtrl>("contact set list");
+			init_contact_set_list(list);
+			break;
+		}
+		
+		
+	}
+	return false;
+}
 void LLPanelContactSets::addContactSet(void* userdata) {
 	LLPanelContactSets* self = (LLPanelContactSets*)userdata;
 	LL_INFOS() << "Adding Contact Set" << LL_ENDL;

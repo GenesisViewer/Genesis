@@ -182,7 +182,7 @@ void LLPanelAvatarSecondLife::onSelectedContactSet()
 		std::string avatarId = mAvatarID.asString();
 		std::string avatarName = getChild<LLLineEditor>("dnname")->getText();
 		if (selected_contact_set == " ") {
-			LLTaggedAvatarsMgr::instance().deleteContactSet(avatarId);
+			LLTaggedAvatarsMgr::instance().deleteAvatarContactSet(avatarId);
 		} else {
 			LLTaggedAvatarsMgr::instance().updateContactSet(avatarId,selected_contact_set,avatarName);
 		}

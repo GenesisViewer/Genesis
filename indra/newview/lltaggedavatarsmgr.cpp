@@ -44,7 +44,29 @@ void LLTaggedAvatarsMgr::updateContactSet(std::string avatarId, std::string cont
    sqlite3_finalize(stmt);
 
 }
-void LLTaggedAvatarsMgr::deleteContactSet(std::string avatarId) {
+void LLTaggedAvatarsMgr::deleteContactSet(std::string csId) {
+    char *errMsg = 0;     
+   int rc;   
+   char *sql;
+   sqlite3_stmt *stmt;
+   LL_INFOS() << "Deleting Contact Set from Genesis DB" << LL_ENDL;
+   sqlite3 *db = LLSqlMgr::instance().getDB();
+   sql = "DELETE FROM CONTACT_SET_AVATARS WHERE CONTACT_SET_ID=?";
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+   
+   sqlite3_bind_text(stmt, 1,  csId.c_str(), strlen(csId.c_str()), 0);
+   sqlite3_step(stmt);
+   sqlite3_finalize(stmt);
+
+   sql = "DELETE FROM CONTACTS_SET WHERE ID=?";
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+   
+   sqlite3_bind_text(stmt, 1,  csId.c_str(), strlen(csId.c_str()), 0);
+   sqlite3_step(stmt);
+   sqlite3_finalize(stmt);
+
+}
+void LLTaggedAvatarsMgr::deleteAvatarContactSet(std::string avatarId) {
    char *errMsg = 0;     
    int rc;   
    char *sql;
@@ -52,10 +74,7 @@ void LLTaggedAvatarsMgr::deleteContactSet(std::string avatarId) {
    LL_INFOS() << "Deleting Tagged avatars from Genesis DB" << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "DELETE FROM CONTACT_SET_AVATARS WHERE AVATAR_ID=?";
-        
-
-
-
+     
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
    
    sqlite3_bind_text(stmt, 1,  avatarId.c_str(), strlen(avatarId.c_str()), 0);
@@ -63,7 +82,7 @@ void LLTaggedAvatarsMgr::deleteContactSet(std::string avatarId) {
    
    sqlite3_step(stmt);
    sqlite3_finalize(stmt);
-   LLTaggedAvatarsMgr::init();
+   
 }
 std::string LLTaggedAvatarsMgr::getAvatarContactSetId(std::string avatarId) {
    char *errMsg = 0;     

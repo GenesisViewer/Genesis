@@ -67,7 +67,7 @@
 #include "llviewertexteditor.h"
 #include "llviewerwindow.h"
 #include "llweb.h"
-
+#include "lltaggedavatarsmgr.h"
 // [RLVa:KB]
 #include "rlvhandler.h"
 // [/RLVa:KB]
@@ -219,10 +219,24 @@ void add_timestamped_line(LLViewerTextEditor* edit, LLChat chat, const LLColor4&
 		LLStyleSP sourceStyle = LLStyleMap::instance().lookup(chat.mFromID, chat.mURL);
 		sourceStyle->mItalic = is_irc;
 		edit->appendText(chat.mFromName, false, prepend_newline, sourceStyle, false);
+		
 		prepend_newline = false;
 	}
+	bool hasContactSet = FALSE;
+	LLColor4 contactSetColor;
+	if (chat.mSourceType == CHAT_SOURCE_AGENT && chat.mFromID.notNull()) {
+		std::string csName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(chat.mFromID.asString());
+		if (!csName.empty()) {
+			hasContactSet = TRUE;
+			contactSetColor = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(chat.mFromID.asString());
+			LLStyleSP style(new LLStyle);
+			style->mItalic = is_irc;
+			style->setColor(contactSetColor);
+			edit->appendText(" (" + csName + ")", false, prepend_newline, style, false);
+		}
+	}
 	LLStyleSP style(new LLStyle);
-	style->setColor(color);
+	style->setColor(hasContactSet ? contactSetColor: color);
 	style->mItalic = is_irc;
 	style->mBold = chat.mChatType == CHAT_TYPE_SHOUT;
 	edit->appendText(line, false, prepend_newline, style, chat.mSourceType == CHAT_SOURCE_SYSTEM);
@@ -491,6 +505,7 @@ LLColor4 get_text_color(const LLChat& chat, bool from_im)
 			break;
 		case CHAT_SOURCE_AGENT:
 			text_color = agent_chat_color(chat.mFromID, chat.mFromName, !from_im);
+			
 			break;
 		case CHAT_SOURCE_OBJECT:
 			if (chat.mChatType == CHAT_TYPE_DEBUG_MSG)

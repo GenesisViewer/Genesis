@@ -94,6 +94,11 @@ enum ACTIVITY_TYPE
 	const std::string&  getName() const { return mName; }
 	const time_t& getTime() const { return mTime; }
 
+	void setContactSet(bool contactSet) { mContactSet = contactSet; }
+
+	bool hasContactSet() const { return mContactSet; }
+   
+
 	/**
 	 * @brief Returns the ID of the avatar
 	 */
@@ -138,8 +143,10 @@ private:
 
 	LLUUID mID;
 	std::string mName;
+	
 	time_t mTime;
 	LLVector3d mPosition;
+	bool mContactSet = false;
 	bool mMarked;
 	bool mFocused;
 	bool mIsInList;

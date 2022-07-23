@@ -635,6 +635,8 @@ void LLFloaterAvatarList::updateAvatarList(const LLViewerRegion* region, bool fi
 			else if (!LLAvatarNameCache::getNSName(avid, name, radar_namesystem())) continue; //prevent (Loading...)
 			else if (anon_names) name = RlvStrings::getAnonym(name);
 
+			
+
 			LLAvatarListEntry* entry = getAvatarEntry(avid);
 			if (!entry)
 			{
@@ -645,6 +647,8 @@ void LLFloaterAvatarList::updateAvatarList(const LLViewerRegion* region, bool fi
 
 			// Announce position
 			entry->setPosition(position, (position - mypos).magVec(), avatarp, first);
+
+			
 
 			// Mark as typing if they are typing
 			if (avatarp && avatarp->isTyping()) entry->setActivity(LLAvatarListEntry::ACTIVITY_TYPING);
@@ -812,7 +816,14 @@ void LLFloaterAvatarList::refreshAvatarList()
 
 			//<edit> custom colors for certain types of avatars!
 			getCustomColorRLV(av_id, color, LLWorld::getInstance()->getRegionFromPosGlobal(entry->getPosition()), name_restricted);
-			name.color = color*0.5f + unselected_color*0.5f;
+			//Genesis : Add Contact set to name
+			std::string csName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(av_id.asString());
+			if (!csName.empty()) {
+				name.value = entry->getName()+ " (" + csName + ")";
+				name.color = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(av_id.asString());
+			} else {
+				name.color = color*0.5f + unselected_color*0.5f;
+			}
 			element.columns.add(name);
 		}
 

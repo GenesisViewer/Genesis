@@ -90,7 +90,7 @@ std::string LLTaggedAvatarsMgr::getAvatarContactSetId(std::string avatarId) {
    char *sql;
    sqlite3_stmt *stmt;
    std::string contactSetId;
-   LL_INFOS() << "Getting contact_set from Genesis DB" << LL_ENDL;
+   LL_INFOS() << "Getting contact_set ID from Genesis DB " << avatarId<< LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "SELECT csa.CONTACT_SET_ID FROM CONTACT_SET_AVATARS csa WHERE AVATAR_ID=?";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
@@ -109,7 +109,7 @@ std::string LLTaggedAvatarsMgr::getAvatarContactSetName(std::string avatarId) {
    char *sql;
    sqlite3_stmt *stmt;
    std::string contactSetId;
-   LL_INFOS() << "Getting contact_set from Genesis DB" << LL_ENDL;
+   LL_INFOS() << "Getting contact_set name from Genesis DB" << avatarId<< LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "SELECT IFNULL(cs.ALIAS,cs.ID) FROM CONTACT_SET_AVATARS csa , CONTACTS_SET cs WHERE cs.ID=csa.CONTACT_SET_ID AND AVATAR_ID=?";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
@@ -191,7 +191,7 @@ LLColor4 LLTaggedAvatarsMgr::getAvatarColorContactSet(std::string avatarId) {
    char *sql;
    sqlite3_stmt *stmt;
    LLColor4 colorContactSet;
-   LL_INFOS() << "Deleting Tagged avatars from Genesis DB" << LL_ENDL;
+   LL_INFOS() << "Getting contact set color  from Genesis DB" << avatarId<< LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "SELECT csa.AVATAR_ID,R,G,B,A FROM CONTACT_SET_AVATARS csa,CONTACTS_SET cs where csa.CONTACT_SET_ID=cs.ID and csa.AVATAR_ID=?";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);

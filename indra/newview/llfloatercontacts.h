@@ -82,23 +82,18 @@ public:
 
 protected:
 	
-	// set the text displays
-	//void setTexts();
-
-	// highlight_id is a group id to highlight
+	
 	void enableButtons();
-	void onColorChange();
-	void onSelectionEntry();
+
 	static void addContactSet(void* userdata);
-	static void renameContactSet(void* userdata);
-	bool callbackRenameContactSet(const LLSD& notification, const LLSD& response);
-	//void onGroupSortChanged();
-	//void onGroupList();
-	//static void onBtnInvite(void* userdata);
-	//void invite();
+	
+	static void editContactSet(void* userdata);
+
+	static void deleteContactSet(void* userdata);
+	
 private:
-	LLColorSwatchCtrl*	mGlobalSwatch;	
 	LLScrollListCtrl*   mContactSetList;
+	static bool handleRemove(const LLSD& notification, const LLSD& response,LLPanelContactSets* contactSetPanel);
 };
 
 

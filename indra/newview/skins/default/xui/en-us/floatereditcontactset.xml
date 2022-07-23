@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater can_close="true" can_drag_on_left="false" can_minimize="true"
+     can_resize="false" height="150 " min_height="0" min_width="0"
+     name="contactsetinfo" title="Edit Contact Set" width="420">
+	<text type="string" length="1" bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom="-45" drop_shadow_visible="true" enabled="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" height="14" left="4"
+	     mouse_opaque="false" v_pad="0" width="163">
+		Name:
+	</text>
+    <line_editor bottom_delta="0" follows="top|left" height="20" left="50" 
+	     name="contactset_name" width="350" />
+    <text type="string" length="1" bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom="-70" drop_shadow_visible="true" enabled="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" height="14" left="4"
+	     mouse_opaque="false" v_pad="0" width="163">
+		Color:
+	</text>    
+    <color_swatch border_color="0.45098 0.517647 0.607843 1" bottom_delta="-30" can_apply_immediately="true" follows="top|left" height="50" left="50" name="contactset_color" width="350"/> 
+    <button bottom="-120" font="SansSerif" halign="center" height="20" label="Apply"
+	     label_selected="Apply" left="50" mouse_opaque="true" name="Apply"
+	     width="100" />
+
+</floater>

@@ -909,6 +909,16 @@ void SHClientTagMgr::updateAvatarTag(LLVOAvatar* pAvatar)
 		pAvatar->clearNameTag();	//LLVOAvatar::idleUpdateNameTag will pick up on mNameString being cleared.
 	}
 }
+void SHClientTagMgr::resetAvatarTags() {
+	for (const auto& pAvatarEntry : gObjectList.mUUIDAvatarMap)
+    {
+        
+		LLVOAvatar* avatar = pAvatarEntry.second;
+		avatar->clearNameTag();
+
+    }
+	
+}
 const std::string SHClientTagMgr::getClientName(const LLVOAvatar* pAvatar, bool is_friend) const
 {
 	static LLCachedControl<bool> ascent_show_friends_tag("AscentShowFriendsTag", false);

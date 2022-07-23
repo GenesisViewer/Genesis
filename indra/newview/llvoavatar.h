@@ -94,6 +94,7 @@ public:
 	//Parse definitions from client_tags_sg1.xml
 	bool parseDefinitions();
 	/*virtual*/ void processProperties(void* data, EAvatarProcessorType type);
+	void resetAvatarTags();
 private:
 	//Just refreshes the tag for the agent avatar.
 	//Used for boost::bind to verify agent avatar is valid before calling updateAvatarTag

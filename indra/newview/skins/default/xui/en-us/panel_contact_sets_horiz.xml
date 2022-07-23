@@ -6,12 +6,24 @@
 	     follows="left|top|right|bottom" left="5" mouse_opaque="true"
 	     multi_select="false" name="contact set list" tab_stop="true" top="-10"
 	     width="340" menu_num="1">
-		<column dynamicwidth="true" label="Name" name="name" tool_tip="Name" />
-    <!--<column label="Active" name="is_active_group"
-		    tool_tip="Group is set as active" width="40" />-->
+		<column dynamicwidth="true" label="Name" name="contactsetname" tool_tip="Name" />
+		<column width="0" label="ID" name="contactsetid" tool_tip="ID" />
     
 	</scroll_list>
 	
-	
+
+	<button bottom_delta="-24" follows="left|bottom" font="SansSerif" height="22"
+	     label="Add" left_delta="0" name="Add"
+	     tool_tip="Add a contact set" width="80">
+         <button.commit_callback parameter="ContactSet.Add"/>
+    </button>     
+    
+	<button bottom_delta="0" follows="left|bottom" font="SansSerif" height="22"
+	     label="Edit" left_delta="82" name="Edit"
+	     tool_tip="Edit a contact set" width="80" />	 
+	<button bottom_delta="0" follows="left|bottom" font="SansSerif" height="22"
+	     label="Delete" left_delta="82" name="Delete"
+	     tool_tip="Delete a contact set" width="80" />
+
 	
 </panel>

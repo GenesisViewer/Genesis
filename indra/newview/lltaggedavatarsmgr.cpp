@@ -24,7 +24,7 @@ void LLTaggedAvatarsMgr::updateContactSet(std::string avatarId, std::string cont
    int rc;   
    char *sql;
    sqlite3_stmt *stmt;
-   LL_INFOS() << "updating Tagged avatars from Genesis DB" << LL_ENDL;
+   LL_DEBUGS() << "updating Tagged avatars from Genesis DB" << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "INSERT INTO CONTACT_SET_AVATARS(CONTACT_SET_ID,AVATAR_ID,AVATAR_NAME)"  \
          "VALUES(?,?,?)"  \
@@ -49,7 +49,7 @@ void LLTaggedAvatarsMgr::deleteContactSet(std::string csId) {
    int rc;   
    char *sql;
    sqlite3_stmt *stmt;
-   LL_INFOS() << "Deleting Contact Set from Genesis DB" << LL_ENDL;
+   LL_DEBUGS() << "Deleting Contact Set from Genesis DB" << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "DELETE FROM CONTACT_SET_AVATARS WHERE CONTACT_SET_ID=?";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
@@ -71,7 +71,7 @@ void LLTaggedAvatarsMgr::deleteAvatarContactSet(std::string avatarId) {
    int rc;   
    char *sql;
    sqlite3_stmt *stmt;
-   LL_INFOS() << "Deleting Tagged avatars from Genesis DB" << LL_ENDL;
+   LL_DEBUGS() << "Deleting Tagged avatars from Genesis DB" << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "DELETE FROM CONTACT_SET_AVATARS WHERE AVATAR_ID=?";
      
@@ -90,7 +90,7 @@ std::string LLTaggedAvatarsMgr::getAvatarContactSetId(std::string avatarId) {
    char *sql;
    sqlite3_stmt *stmt;
    std::string contactSetId;
-   LL_INFOS() << "Getting contact_set ID from Genesis DB " << avatarId<< LL_ENDL;
+   LL_DEBUGS() << "Getting contact_set ID from Genesis DB " << avatarId<< LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "SELECT csa.CONTACT_SET_ID FROM CONTACT_SET_AVATARS csa WHERE AVATAR_ID=?";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
@@ -109,7 +109,7 @@ std::string LLTaggedAvatarsMgr::getAvatarContactSetName(std::string avatarId) {
    char *sql;
    sqlite3_stmt *stmt;
    std::string contactSetId;
-   LL_INFOS() << "Getting contact_set name from Genesis DB" << avatarId<< LL_ENDL;
+   LL_DEBUGS() << "Getting contact_set name from Genesis DB" << avatarId<< LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "SELECT IFNULL(cs.ALIAS,cs.ID) FROM CONTACT_SET_AVATARS csa , CONTACTS_SET cs WHERE cs.ID=csa.CONTACT_SET_ID AND AVATAR_ID=?";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
@@ -131,7 +131,7 @@ void LLTaggedAvatarsMgr::updateColorContactSet(std::string csId, LLColor4 color)
    F32 r = rgb_color[0];
    F32 g = rgb_color[1];
    F32 b = rgb_color[2];
-   LL_INFOS() << "setting Color contact set  from Genesis DB " << csId << LL_ENDL;
+   LL_DEBUGS() << "setting Color contact set  from Genesis DB " << csId << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "UPDATE CONTACTS_SET SET R=?,G=?,B=?,A=1.0 WHERE ID = ?";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
@@ -150,7 +150,7 @@ LLColor4 LLTaggedAvatarsMgr::getColorContactSet(std::string csId) {
    char *sql;
    sqlite3_stmt *stmt;
    LLColor4 colorContactSet;
-   LL_INFOS() << "getting Color contact set  from Genesis DB " << csId << LL_ENDL;
+   LL_DEBUGS() << "getting Color contact set  from Genesis DB " << csId << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "SELECT R,G,B,A FROM CONTACTS_SET where ID=?";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
@@ -191,7 +191,7 @@ LLColor4 LLTaggedAvatarsMgr::getAvatarColorContactSet(std::string avatarId) {
    char *sql;
    sqlite3_stmt *stmt;
    LLColor4 colorContactSet;
-   LL_INFOS() << "Getting contact set color  from Genesis DB" << avatarId<< LL_ENDL;
+   LL_DEBUGS() << "Getting contact set color  from Genesis DB" << avatarId<< LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "SELECT csa.AVATAR_ID,R,G,B,A FROM CONTACT_SET_AVATARS csa,CONTACTS_SET cs where csa.CONTACT_SET_ID=cs.ID and csa.AVATAR_ID=?";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
@@ -215,7 +215,7 @@ std::map<std::string, std::string> LLTaggedAvatarsMgr::getContactSets() {
    char *errMsg = 0;     
    int rc;   
    sqlite3_stmt *result;
-   LL_INFOS() << "Loading Contact set from Genesis DB" << LL_ENDL;
+   LL_DEBUGS() << "Loading Contact set from Genesis DB" << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    rc = sqlite3_prepare_v2(db, "SELECT ID, IFNULL(ALIAS,ID) from CONTACTS_SET order by 2", -1, &result, NULL);
   
@@ -242,7 +242,7 @@ void LLTaggedAvatarsMgr::updateContactSetName(std::string csId, std::string csAl
    char *sql;
    sqlite3_stmt *stmt;
    std::string result;
-   LL_INFOS() << "updating  contact set name" << LL_ENDL;
+   LL_DEBUGS() << "updating  contact set name" << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "UPDATE CONTACTS_SET SET ALIAS = ? WHERE ID= ?";
 
@@ -266,7 +266,7 @@ std::string LLTaggedAvatarsMgr::insertContactSet(std::string csId, std::string c
    char *sql;
    sqlite3_stmt *stmt;
    std::string result;
-   LL_INFOS() << "inserting new contact set" << LL_ENDL;
+   LL_DEBUGS() << "inserting new contact set" << LL_ENDL;
    sqlite3 *db = LLSqlMgr::instance().getDB();
    sql = "INSERT INTO CONTACTS_SET(ID,ALIAS,R,G,B,A)"  \
          "VALUES(?,?,?,?,?,?)";

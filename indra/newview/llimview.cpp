@@ -61,6 +61,7 @@
 // [RLVa:KB] - Checked: 2013-05-10 (RLVa-1.4.9)
 #include "rlvactions.h"
 #include "rlvcommon.h"
+#include "lltaggedavatarsmgr.h"
 // [/RLVa:KB]
 
 class AIHTTPTimeoutPolicy;
@@ -96,7 +97,10 @@ LLColor4 agent_chat_color(const LLUUID& id, const std::string& name, bool local_
 	static const LLCachedControl<bool> color_friend_chat("ColorFriendChat");
 	if (color_friend_chat && LLAvatarTracker::instance().isBuddy(id))
 		return gSavedSettings.getColor4("AscentFriendColor");
-
+	std::string csName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(id.asString());
+	if (!csName.empty()) {
+		return LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(id.asString());
+	}
 	static const LLCachedControl<bool> color_eo_chat("ColorEstateOwnerChat");
 	if (color_eo_chat)
 	{
@@ -464,12 +468,14 @@ void LLIMMgr::addMessage(
 			return;
 
 		std::string name = (session_name.size() > 1) ? session_name : from;
-
+		//Genesis add contact set name to the name of the floater if other_participant_id has a contact set defined
+		
 		floater = createFloater(new_session_id, other_participant_id, name, dialog);
-
+		
 		// When we get a new IM, and if you are a god, display a bit
 		// of information about the source. This is to help liaisons
 		// when answering questions.
+		
 		if(gAgent.isGodlike())
 		{
 			std::ostringstream bonus_info;
@@ -1525,6 +1531,7 @@ public:
 			{
 				is_this_agent = TRUE;
 			}
+			
 			gIMMgr->addMessage(
 				session_id,
 				from_id,

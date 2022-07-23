@@ -518,6 +518,7 @@ void LLIMMgr::addMessage(
 		else 
 		{
 			// Insert linked name to front of message
+			
 			floater->addHistoryLine(msg, color, true, other_participant_id, from);
 		}
 	}

@@ -40,7 +40,7 @@
 // [RLVa:KB]
 #include "rlvhandler.h"
 // [/RLVa:KB]
-
+#include "lltaggedavatarsmgr.h"
 LLParticipantList::LLParticipantList(LLSpeakerMgr* data_source,
 									 bool show_text_chatters) :
 	mSpeakerMgr(data_source),
@@ -259,7 +259,8 @@ void LLParticipantList::refreshSpeakers()
 		if (speakerp.isNull()) continue;
 
 		++count;
-
+		//Genesis Contact Set
+		std::string csName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(speakerp->mID.asString());
 		// Color changes. Only perform for rows that are near or in the viewable area.
 		if (count > start_pos && count <= end_pos)
 		{
@@ -322,6 +323,10 @@ void LLParticipantList::refreshSpeakers()
 					{
 						static const LLCachedControl<LLColor4> sDefaultListText(gColors, "DefaultListText");
 						name_cell->setColor(sDefaultListText);
+						
+						if (!csName.empty()){
+							name_cell->setColor(LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(speakerp->mID.asString()));
+						}
 					}
 				}
 			}
@@ -332,6 +337,9 @@ void LLParticipantList::refreshSpeakers()
 			std::string speaker_name = speakerp->mDisplayName.empty() ? LLCacheName::getDefaultName() : speakerp->mDisplayName;
 			if (speakerp->mIsModerator)
 				speaker_name += ' ' + getString("moderator_label");
+			if (!csName.empty()) {
+				speaker_name+= " (" +csName +")";
+			}	
 			if (name_cell->getValue().asString() != speaker_name)
 			{
 				re_sort = true;

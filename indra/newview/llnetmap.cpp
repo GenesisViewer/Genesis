@@ -84,6 +84,7 @@
 #include "rlvhandler.h"
 // [/RLVa:KB]
 
+#include "lltaggedavatarsmgr.h"
 using namespace LLOldEvents;
 typedef LLMemberListener<LLView> view_listener_t;
 
@@ -678,7 +679,10 @@ void LLNetMap::draw()
 			{
 				color = *mark_color;
 			}
-			else
+			else if (!LLTaggedAvatarsMgr::instance().getAvatarContactSetName(uuid.asString()).empty()){
+				//Genesis Contact set
+				color = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(uuid.asString());
+			} else
 			{
 				bool getColorFor(const LLUUID & id, LLViewerRegion * parent_estate, LLColor4 & color, bool name_restricted = false);
 				getColorFor(uuid, LLWorld::getInstance()->getRegionFromPosGlobal(position), color, !show_friends);

@@ -1258,6 +1258,7 @@ void LLView::drawChildren()
 						viewp->mInDraw = true;
 						if(gDebugGL)check_blend_funcs();
 						viewp->draw();
+						
 						if(gDebugGL)check_blend_funcs();
 						viewp->mInDraw = false;
 

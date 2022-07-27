@@ -1640,6 +1640,7 @@ void LLInventoryModel::idleNotifyObservers()
 // Call this method when it's time to update everyone on a new state.
 void LLInventoryModel::notifyObservers()
 {
+	LL_INFOS() << " LLInventoryModel::notifyObservers()" << LL_ENDL;
 	if (mIsNotifyObservers)
 	{
 		// Within notifyObservers, something called notifyObservers
@@ -1654,6 +1655,8 @@ void LLInventoryModel::notifyObservers()
 		 iter != mObservers.end(); )
 	{
 		LLInventoryObserver* observer = *iter;
+		LL_INFOS() << " LLInventoryModel::observer()" << typeid(observer).name() <<LL_ENDL;
+		
 		observer->changed(mModifyMask);
 
 		// safe way to increment since changed may delete entries! (@!##%@!@&*!)

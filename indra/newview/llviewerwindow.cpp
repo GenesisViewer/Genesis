@@ -59,6 +59,8 @@
 // linden library includes
 #include "llaudioengine.h"		// mute on minimize
 #include "llassetstorage.h"
+#include "llfavoritesbar.h"
+#include "llfavoritestoolbar.h"
 #include "llfontgl.h"
 #include "llfontfreetype.h"
 #include "llmousehandler.h"
@@ -2255,7 +2257,20 @@ void LLViewerWindow::initWorldUI_postLogin()
 		LLFloaterTeleportHistory::loadFile("teleport_history.xml");
 
 		LLFloaterChatterBox::createInstance(LLSD());
+
+		// Favorites bar
+		
+		
+		LLPanel* gFavoritesBar2 = new LLPanel("favoritestoolbar");
+		LLUICtrlFactory::getInstance()->buildPanel(gFavoritesBar2,"panel_favorites_bar.xml");
+		
+		gFavoritesBar2->reshape(root_rect.getWidth(), 40, TRUE);
+		gFavoritesBar2->translate(0, root_rect.getHeight() - gFavoritesBar2->getRect().getHeight()- 1);
+		gFavoritesBar2->setVisible(TRUE);
+		getRootView()->addChild(gFavoritesBar2);
 	}
+	
+	
 	mRootView->sendChildToFront(mProgressView);
 }
 

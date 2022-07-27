@@ -414,7 +414,7 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const std::string& name, const LLRect& re
 	mBarLabel->setBackgroundColor(LLColor4::black);
 	mBarLabel->setFollows(FOLLOWS_LEFT | FOLLOWS_BOTTOM);
 	mBarLabel->setText(LLStringExplicit("Drag your landmarks here"));
-	mBarLabel->setRect(LLRect(0,0,1024,0));
+	mBarLabel->setRect(LLRect(0,0,1024,0)); // TODO: Mely, it's not a beauty (find a way to locate that label correctly)
 	mBarLabel->setVisible(TRUE);
 	addChild(mBarLabel);
 }

@@ -2228,6 +2228,17 @@ void LLViewerWindow::initWorldUI_postLogin()
 		gStatusBar->setBackgroundColor( gMenuBarView->getBackgroundColor() );
 		getRootView()->addChild(gStatusBar);
 
+		// Favorites bar
+		
+		
+		LLPanel* gFavoritesBar2 = new LLPanel("favoritestoolbar");
+		LLUICtrlFactory::getInstance()->buildPanel(gFavoritesBar2,"panel_favorites_bar.xml");
+		
+		gFavoritesBar2->reshape(root_rect.getWidth(), 20, TRUE);
+		gFavoritesBar2->translate(0, root_rect.getHeight() - gFavoritesBar2->getRect().getHeight()- status_rect.getHeight() - 1);
+		gFavoritesBar2->setVisible(TRUE);
+	
+		getRootView()->addChildInBack(gFavoritesBar2,0);
 		// Menu holder appears on top to get first pass at all mouse events
 		getRootView()->sendChildToFront(gMenuHolder);
 
@@ -2237,8 +2248,8 @@ void LLViewerWindow::initWorldUI_postLogin()
 		}
 
 		LLRect morph_view_rect = full_window;
-		morph_view_rect.stretch( -STATUS_BAR_HEIGHT );
-		morph_view_rect.mTop = full_window.mTop - 32;
+		morph_view_rect.stretch( -STATUS_BAR_HEIGHT -30);
+		morph_view_rect.mTop = full_window.mTop - 32-30;
 		gMorphView = new LLMorphView(std::string("gMorphView"), morph_view_rect );
 		mRootView->addChild(gMorphView);
 		gMorphView->setVisible(FALSE);
@@ -2258,16 +2269,7 @@ void LLViewerWindow::initWorldUI_postLogin()
 
 		LLFloaterChatterBox::createInstance(LLSD());
 
-		// Favorites bar
 		
-		
-		LLPanel* gFavoritesBar2 = new LLPanel("favoritestoolbar");
-		LLUICtrlFactory::getInstance()->buildPanel(gFavoritesBar2,"panel_favorites_bar.xml");
-		
-		gFavoritesBar2->reshape(root_rect.getWidth(), 40, TRUE);
-		gFavoritesBar2->translate(0, root_rect.getHeight() - gFavoritesBar2->getRect().getHeight()- 1);
-		gFavoritesBar2->setVisible(TRUE);
-		getRootView()->addChild(gFavoritesBar2);
 	}
 	
 	

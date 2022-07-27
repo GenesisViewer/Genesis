@@ -49,9 +49,12 @@ public:
 		Optional<LLTextBox::Params> label;
 		Params();
 	};
-
+	LLFavoritesBarCtrl(const std::string& name_and_label, const LLRect& rect);
+	static LLView* fromXML(LLXMLNodePtr node, LLView *parent, class LLUICtrlFactory *factory);
+	// LLInventoryObserver observer trigger
+	void changed(U32 mask) override;
 protected:
-	LLFavoritesBarCtrl(const Params&);
+	
 	friend class LLUICtrlFactory;
 public:
 	virtual ~LLFavoritesBarCtrl();
@@ -66,8 +69,7 @@ public:
 
 	/*virtual*/ BOOL	handleHover(S32 x, S32 y, MASK mask) override;
 	/*virtual*/ BOOL	handleRightMouseDown(S32 x, S32 y, MASK mask) override;
-	// LLInventoryObserver observer trigger
-	void changed(U32 mask) override;
+	
 	void reshape(S32 width, S32 height, BOOL called_from_parent = TRUE) override;
 	void draw() override;
 
@@ -95,7 +97,7 @@ protected:
 	void pasteFromClipboard() const;
 	
 	void showDropDownMenu();
-
+	void onMoreTextBoxClicked();
 	LLHandle<LLView> mOverflowMenuHandle;
 	LLHandle<LLView> mContextMenuHandle;
 
@@ -155,6 +157,7 @@ private:
 	LLTextBox* mMoreTextBox;
 	LLTextBox* mBarLabel;
 
+	LLUICtrl* mMoreCtrl;
 	LLUUID mDragItemId;
 	BOOL mStartDrag;
 	LLInventoryModel::item_array_t mItems;

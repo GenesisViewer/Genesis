@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel name="favoritestoolbar" bottom="0" default_tab_group="1" follows="left|top" height="25" left="0" width="395" >
+	
+	
+	<favorites_bar
+			height="20"
+			bottom="-23" follows="left|bottom"
+			
+			name="favorite"
+			tool_tip="Drag Landmarks here for quick access to your favorite places!"
+			left="100"
+			width="1024">
+				
+				
+				    	
+	</favorites_bar>
+	
+</panel>			 

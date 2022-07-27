@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+
+
+  <favorites_bar
+     follows="left|top|right"
+     top_pad="2"
+     font="SansSerifSmall"
+     height="15"
+     layout="topleft"
+     left="0"
+     name="favorite"
+     image_drag_indication="Accordion_ArrowOpened_Off"
+     tool_tip="Drag Landmarks here for quick access to your favorite places!"
+     width="1024">
+        <label
+         follows="left|top"
+         height="15"
+         layout="topleft"
+         top_pad="2"
+         left="10"
+         name="favorites_bar_label"
+         text_color="LtGray"
+         tool_tip="Drag Landmarks here for quick access to your favorite places!"
+	     valign="bottom"
+         width="102">
+          Favorites Bar
+        </label>
+        <chevron_button
+             name="more_btn"
+             image_unselected="TabIcon_Close_Off"
+             image_selected="TabIcon_Close_Off"
+             tab_stop="false"
+             follows="left|bottom"
+             tool_tip="Show more of My Favorites"
+             width="15"
+             height="15"/>
+  </favorites_bar>
+
+
+

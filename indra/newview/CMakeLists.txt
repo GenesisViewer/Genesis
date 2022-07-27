@@ -186,6 +186,7 @@ set(viewer_SOURCE_FILES
     llface.cpp
     llfasttimerview.cpp
     llfavoritesbar.cpp
+    llfavoritestoolbar.cpp
     llfeaturemanager.cpp
     llfirstuse.cpp
     llflexibleobject.cpp
@@ -737,7 +738,8 @@ set(viewer_HEADER_FILES
     llexternaleditor.h
     llface.h
     llfasttimerview.h
-    llfavoritesbar.h
+    llfavoritesbar.h  
+    llfavoritestoolbar.h 
     llfeaturemanager.h
     llfirstuse.h
     llflexibleobject.h

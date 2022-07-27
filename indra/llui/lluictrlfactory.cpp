@@ -540,7 +540,7 @@ LLView *LLUICtrlFactory::createCtrlWidget(LLPanel *parent, LLXMLNodePtr node)
 		LL_WARNS() << "Unknown control type " << ctrl_type << LL_ENDL;
 		return NULL;
 	}
-
+	
 	if (parent == NULL)
 	{
 		if (mDummyPanel == NULL)

@@ -118,12 +118,10 @@
          label="Fraud &gt; L$ or USD $"
          name="Fraud__US$"
          value="47" />
-        
         <combo_box.item
          label="Harassment &gt; Targeted behavior intended to disrupt"
          name="Harassment__Solicting_inciting_others_to_violate_ToS"
          value="51" />
-        
         <combo_box.item
          label="Indecency &gt; Broadly offensive content or conduct"
          name="Indecency__Broadly_offensive_content_or_conduct"
@@ -144,7 +142,6 @@
          label="Land &gt; Encroachment &gt; Objects or textures"
          name="Land__Encroachment__Objects_textures"
          value="63" />
-        
         <combo_box.item
          label="Skill Gaming Policy Violation"
          name="Wagering_gambling"

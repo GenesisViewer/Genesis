@@ -28,19 +28,21 @@
 #define LL_LLFAVORITESBARCTRL_H
 
 #include "llbutton.h"
+
 #include "lluictrl.h"
 #include "lltextbox.h"
-
+#include "lfidbearer.h"
 #include "llinventoryobserver.h"
 #include "llinventorymodel.h"
+#include "llmemberlistener.h"
 #include "llviewerinventory.h"
 #include "llui.h" //"llinitdestroyclass.h"
 
 class LLMenuItemCallGL;
 class LLMenuGL;
-
-class LLFavoritesBarCtrl : public LLUICtrl, public LLInventoryObserver
-{
+class LLToggleableMenu;
+class LLFavoritesBarCtrl : public LLUICtrl, public LLInventoryObserver, public LFIDBearer
+{	
 public:
 	struct Params : public LLInitParam::Block<Params, LLUICtrl::Params>
 	{
@@ -53,6 +55,7 @@ public:
 	static LLView* fromXML(LLXMLNodePtr node, LLView *parent, class LLUICtrlFactory *factory);
 	// LLInventoryObserver observer trigger
 	void changed(U32 mask) override;
+	void doToSelected(const LLSD& userdata);
 protected:
 	
 	friend class LLUICtrlFactory;
@@ -66,7 +69,7 @@ public:
 								   void* cargo_data,
 								   EAcceptance* accept,
 								   std::string& tooltip_msg) override;
-
+	
 	/*virtual*/ BOOL	handleHover(S32 x, S32 y, MASK mask) override;
 	/*virtual*/ BOOL	handleRightMouseDown(S32 x, S32 y, MASK mask) override;
 	
@@ -75,15 +78,18 @@ public:
 
 	void showDragMarker(BOOL show) { mShowDragMarker = show; }
 	void setLandingTab(LLUICtrl* tab) { mLandingTab = tab; }
+	void onButtonRightClick(LLUUID id,LLView* button,S32 x,S32 y,MASK mask);
+	LLUUID getStringUUIDSelectedItem() const override final { return mSelectedItemID; }
 
 protected:
 	void updateButtons();
 	LLButton* createButton(const LLPointer<LLViewerInventoryItem> item, const LLButton::Params& button_params, S32 x_offset );
 	const LLButton::Params& getButtonParams();
+	const LLButton::Params& getAddLandmarkParams();
 	BOOL collectFavoriteItems(LLInventoryModel::item_array_t &items);
 
 	void onButtonClick(LLUUID id);
-	void onButtonRightClick(LLUUID id,LLView* button,S32 x,S32 y,MASK mask);
+	
 	
 	void onButtonMouseDown(LLUUID id, LLUICtrl* button, S32 x, S32 y, MASK mask);
 	void onOverflowMenuItemMouseDown(LLUUID id, LLUICtrl* item, S32 x, S32 y, MASK mask);
@@ -92,7 +98,7 @@ protected:
 	void onEndDrag();
 
 	bool enableSelected(const LLSD& userdata);
-	void doToSelected(const LLSD& userdata);
+	
 	BOOL isClipboardPasteable() const;
 	void pasteFromClipboard() const;
 	
@@ -155,7 +161,7 @@ private:
 	LLUICtrl* mLandingTab;
 	LLUICtrl* mLastTab;
 	LLTextBox* mMoreTextBox;
-	LLTextBox* mBarLabel;
+	LLButton* mBarLabel;
 
 	LLUICtrl* mMoreCtrl;
 	LLUUID mDragItemId;

@@ -28,6 +28,7 @@ const std::array<const std::string, LFIDBearer::COUNT> LFIDBearer::sMenuStrings
 ,	"menu_groups_list.xml" // 1
 ,	"menu_objects_list.xml" // 2
 ,	"menu_experiences.xml" // 3
+,	"menu_favorites.xml" // 4
 };
 std::array<LLMenuGL*, LFIDBearer::COUNT> LFIDBearer::sMenus {};
 

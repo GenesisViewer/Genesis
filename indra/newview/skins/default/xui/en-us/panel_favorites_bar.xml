@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel name="favoritestoolbar" bottom="0" default_tab_group="1" follows="left|top" height="25" left="0" width="395" >
 	
-	
+	<panel
+	 name="navigation_bar_context_menu_panel"
+	 layout="topleft"
+	 left="0"
+	 top="0"
+	 follows="all"
+	 right="-1"
+	 bottom="-1" />
 	<favorites_bar
 			height="20"
 			bottom="-23" follows="left|bottom"

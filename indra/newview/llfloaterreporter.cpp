@@ -423,16 +423,7 @@ void LLFloaterReporter::requestAbuseCategoriesCoro(const LLCoroResponder& respon
         std::string label = message_data["description_localized"];
         const auto& cat = message_data["category"];
         combo->add(label, cat);
-        switch(cat.asInteger())
-        {
-            // Fraud
-            case 47: combo->add(floater->getString("Ridiculous3"), 1000); break;
-            // Harassment
-            case 51: combo->add(floater->getString("Ridiculous1"), 1000); break;
-            // Land &gt; Encroachment
-            case 63: combo->add(floater->getString("Ridiculous2"), 1000); break;
-            default: break;
-        }
+        
     }
 
     //restore selection

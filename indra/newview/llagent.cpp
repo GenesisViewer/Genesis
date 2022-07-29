@@ -4227,6 +4227,7 @@ void LLAgent::handleTeleportFinished()
 
 void LLAgent::handleTeleportFailed()
 {
+	setTeleportState(LLAgent::TELEPORT_NONE);
 	if (mTeleportRequest != NULL)
 	{
 		mTeleportRequest->setStatus(LLTeleportRequest::kFailed);

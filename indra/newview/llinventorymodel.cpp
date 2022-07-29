@@ -1655,8 +1655,7 @@ void LLInventoryModel::notifyObservers()
 		 iter != mObservers.end(); )
 	{
 		LLInventoryObserver* observer = *iter;
-		LL_INFOS() << " LLInventoryModel::observer()" << typeid(observer).name() <<LL_ENDL;
-		
+				
 		observer->changed(mModifyMask);
 
 		// safe way to increment since changed may delete entries! (@!##%@!@&*!)

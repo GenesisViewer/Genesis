@@ -50,7 +50,10 @@ enum EDragAndDropType
 	DAD_GESTURE			= 13,
 	DAD_LINK			= 14,
 	DAD_MESH            = 15,
-	DAD_COUNT			= 16,   // number of types in this enum
+	DAD_WIDGET          = 16,
+	DAD_PERSON          = 17,
+    DAD_SETTINGS        = 18,
+	DAD_COUNT			= 19,   // number of types in this enum
 };
 
 // Reasons for drags to be denied.

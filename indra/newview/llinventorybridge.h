@@ -35,7 +35,7 @@
 #include "llinventoryobserver.h"
 #include "llviewercontrol.h"
 #include "llviewerwearable.h"
-
+#include "llsettingsbase.h"
 class LLInventoryPanel;
 class LLInventoryModel;
 class LLMenuGL;
@@ -657,7 +657,29 @@ public:
 		const LLUUID& uuid,
 		U32 flags = 0x00) const;
 };
+class LLSettingsBridge : public LLItemBridge
+{
+public:
+    LLSettingsBridge(LLInventoryPanel* inventory,
+        LLFolderView* root,
+        const LLUUID& uuid,
+        LLSettingsType::type_e settings_type);
+    virtual LLUIImagePtr getIcon() const;
+    virtual void	performAction(LLInventoryModel* model, std::string action);
+    virtual void	openItem();
+    virtual BOOL	isMultiPreviewAllowed() { return FALSE; }
+    virtual void	buildContextMenu(LLMenuGL& menu, U32 flags);
+    virtual BOOL    renameItem(const std::string& new_name);
+    virtual BOOL    isItemRenameable() const;
+    virtual LLSettingsType::type_e getSettingsType() const { return mSettingsType; }
 
+protected:
+    bool            canUpdateRegion() const;
+    bool            canUpdateParcel() const;
+
+    LLSettingsType::type_e mSettingsType;
+
+};
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Marketplace Inventory Panel related classes
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

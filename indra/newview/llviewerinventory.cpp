@@ -1186,6 +1186,19 @@ void create_inventory_callingcard(const LLUUID& avatar_id, const LLUUID& parent 
 						  LLInventoryType::IT_CALLINGCARD, NOT_WEARABLE, PERM_MOVE | PERM_TRANSFER, cb);
 }
 
+void create_inventory_settings(const LLUUID& avatar_id, const LLUUID& parent /*= LLUUID::null*/, LLPointer<LLInventoryCallback> cb/*=NULL*/)
+{
+	std::string item_desc = avatar_id.asString();
+	LLAvatarName av_name;
+	LLAvatarNameCache::get(avatar_id, &av_name);
+    //create_inventory_item(agent_id, session_id, parent, transaction_id,
+    //    name, desc, LLAssetType::AT_SETTINGS, LLInventoryType::IT_SETTINGS, 
+    //    static_cast<U8>(settype), next_owner_perm, cb);
+	create_inventory_item(gAgent.getID(), gAgent.getSessionID(),
+						  parent, LLTransactionID::tnull, av_name.getLegacyName(), item_desc, LLAssetType::AT_SETTINGS,
+						  LLInventoryType::IT_SETTINGS, NOT_WEARABLE, PERM_MOVE | PERM_TRANSFER, cb);	
+}
+
 void copy_inventory_item(
 	const LLUUID& agent_id,
 	const LLUUID& current_owner,

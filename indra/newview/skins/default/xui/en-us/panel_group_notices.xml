@@ -32,7 +32,7 @@ Notice lists are limited to 200 notices per group on a daily basis.
 	     draw_border="true" draw_heading="true" enabled="true"
 	     heading_font="SansSerifSmall"
 	     heading_height="14" height="109" left="7" mouse_opaque="true"
-	     multi_select="false" name="notice_list" width="404">
+	     multi_select="false" name="notice_list" width="404" sort_column="3" sort_ascending="false">
 		<column label="" name="icon" width="16" />
 		<column label="Subject" name="subject" width="171" />
 		<column label="From" name="from" width="125" />

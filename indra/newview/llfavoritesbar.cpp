@@ -33,6 +33,7 @@
 #include "llfocusmgr.h"
 #include "llinventory.h"
 #include "lllandmarkactions.h"
+
 //#include "lltoolbarview.h"
 #include "lltrans.h"
 #include "llmenugl.h"
@@ -49,6 +50,7 @@
 #include "llfloaterworldmap.h"
 #include "lllandmarkactions.h"
 //#include "lllogininstance.h"
+#include "llmemberlistener.h"
 #include "llnotificationsutil.h"
 //#include "lltoggleablemenu.h"
 #include "llviewerinventory.h"
@@ -57,13 +59,25 @@
 #include "lltooldraganddrop.h"
 #include "llsdserialize.h"
 #include "llxuiparser.h"
-
+using namespace LLOldEvents;
+typedef LLMemberListener<LLView> view_listener_t;
 void open_landmark(LLViewerInventoryItem* inv_item, const std::string& title, BOOL show_keep_discard, const LLUUID& source_id, BOOL take_focus);
 
 static LLRegisterWidget<LLFavoritesBarCtrl> r("favorites_bar");
 
 const S32 DROP_DOWN_MENU_WIDTH = 250;
 const S32 DROP_DOWN_MENU_TOP_PAD = 13;
+
+
+
+class LLFavoriteContextMenu : public view_listener_t
+{
+public:
+	LLFavoriteContextMenu(LLFavoritesBarCtrl* favoriteCtrl);
+	/*virtual*/ bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override final;
+private:
+	LLFavoritesBarCtrl* mFavoriteCtrl;
+};
 
 /**
  * Helper for LLFavoriteLandmarkButton and LLFavoriteLandmarkMenuItem.
@@ -191,7 +205,13 @@ public:
 
 		return LLButton::handleHover(x, y, mask);
 	}
+	BOOL	handleRightMouseDown(S32 x, S32 y, MASK mask) override
+	{
+		LLFavoritesBarCtrl* fb = dynamic_cast<LLFavoritesBarCtrl*>(getParent());
 	
+		fb->onButtonRightClick( this->getLandmarkId(),this,x,y,mask);
+		return TRUE;
+	}
 	void setLandmarkID(const LLUUID& id){ mLandmarkInfoGetter.setLandmarkID(id); }
 	const LLUUID& getLandmarkId() const { return mLandmarkInfoGetter.getLandmarkId(); }
 
@@ -364,12 +384,18 @@ struct LLFavoritesSort
 	}
 };
 
-LLFavoritesBarCtrl::Params::Params()
-: image_drag_indication("image_drag_indication"),
-  more_button("more_button"),
-  label("label")
+// static
+bool LLFavoriteContextMenu::handleEvent(LLPointer<LLEvent> event, const LLSD& userdata)
 {
+	mFavoriteCtrl->doToSelected(userdata);
+	
+
+	return true;
 }
+LLFavoriteContextMenu::LLFavoriteContextMenu(LLFavoritesBarCtrl* favoriteCtrl) {
+	mFavoriteCtrl = favoriteCtrl;
+}
+
 LLFavoritesBarCtrl::LLFavoritesBarCtrl(const std::string& name, const LLRect& rect)
 :	LLUICtrl(name, rect, TRUE, NULL, FOLLOWS_LEFT | FOLLOWS_TOP ),
 	mOverflowMenuHandle(),
@@ -384,12 +410,14 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const std::string& name, const LLRect& re
 ,	mTabsHighlightEnabled(TRUE)
 {
 	
-	LL_INFOS() << "In first constructor " <<  LL_ENDL;
+	
 	mImageDragIndication = LLUI::getUIImage("Accordion_ArrowOpened_Off");
 	// Register callback for menus with current registrar (will be parent panel's registrar)
-	LLUICtrl::CommitCallbackRegistry::currentRegistrar().add("Favorites.DoToSelected",
-		boost::bind(&LLFavoritesBarCtrl::doToSelected, this, _2));
-
+	//LLUICtrl::CommitCallbackRegistry::currentRegistrar().add("Favorites.DoToSelected",
+	//	boost::bind(&LLFavoritesBarCtrl::doToSelected, this, _2));
+	//(new LLBindMemberListener(this, "Favorites.DoToSelected", boost::bind(&LLFavoritesBarCtrl::doToSelected, this, _2)));
+	(new LLFavoriteContextMenu(this))->registerListener(gMenuHolder, "Favorites.DoToSelected");
+	//new LLBindMemberListener(this, "Favorites.DoToSelected", boost::bind(&LLFavoritesBarCtrl::doToSelected, this, _2, ));
 	// Add this if we need to selectively enable items
 	LLUICtrl::EnableCallbackRegistry::currentRegistrar().add("Favorites.EnableSelected",
 		boost::bind(&LLFavoritesBarCtrl::enableSelected, this, _2));
@@ -398,7 +426,7 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const std::string& name, const LLRect& re
 
 	//make chevron button                                                                                                                               
 	mMoreTextBox = new LLTextBox(">>", "\u0032", 50);
-	mMoreTextBox->setFollows(FOLLOWS_LEFT | FOLLOWS_BOTTOM);
+	mMoreTextBox->setFollows(FOLLOWS_LEFT | FOLLOWS_TOP);
 	mMoreTextBox->setToolTip(LLStringExplicit("Show more of My Favorites"));
 	mMoreTextBox->setTabStop(false);
 	mMoreTextBox->setVisible(TRUE);
@@ -406,17 +434,30 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const std::string& name, const LLRect& re
 	addChild(mMoreTextBox);
 
 	mDropDownItemsCount = 0;
-	LL_INFOS() << "Adding BarLabel " <<  LL_ENDL;
 	
-	mBarLabel = new LLTextBox("favorite_bar_add", "favorite_bar_add");
 	
-	mBarLabel->setColor(LLColor4::white);
-	mBarLabel->setBackgroundColor(LLColor4::black);
-	mBarLabel->setFollows(FOLLOWS_LEFT | FOLLOWS_BOTTOM);
-	mBarLabel->setText(LLStringExplicit("Drag your landmarks here"));
-	mBarLabel->setRect(LLRect(0,0,1024,0)); // TODO: Mely, it's not a beauty (find a way to locate that label correctly)
-	mBarLabel->setVisible(TRUE);
+	mBarLabel = new LLButton(getAddLandmarkParams());
+	mBarLabel->setToolTip(this->getToolTip());
+	
+	mBarLabel->setEnabled(true);
+	
 	addChild(mBarLabel);
+
+	
+	// make the popup menu available
+	LLMenuGL* menu = LLUICtrlFactory::getInstance()->buildMenu("menu_favorites.xml", gMenuHolder);
+	LL_INFOS() << "menu_favorites loaded?" << (menu!=NULL) << LL_ENDL;
+	
+	if (menu) {
+		
+		menu->setBackgroundColor(gColors.getColor("MenuPopupBgColor"));
+		mContextMenuHandle = menu->getHandle();
+		
+		
+		
+	} 
+
+	
 }
 
 // static
@@ -665,7 +706,6 @@ void LLFavoritesBarCtrl::handleNewFavoriteDragAndDrop(LLInventoryItem *item, con
 //virtual
 void LLFavoritesBarCtrl::changed(U32 mask)
 {
-	LL_INFOS() << " LLFavoritesBarCtrl::changed " <<LL_ENDL;
 	if (mFavoriteFolderId.isNull())
 	{
 		mFavoriteFolderId = gInventory.findCategoryUUIDForType(LLFolderType::FT_FAVORITE);
@@ -694,7 +734,7 @@ void LLFavoritesBarCtrl::changed(U32 mask)
 //virtual
 void LLFavoritesBarCtrl::reshape(S32 width, S32 height, BOOL called_from_parent)
 {
-	LL_INFOS() << "LLFavoritesBarCtrl::reshape" << LL_ENDL;
+	
 	S32 delta_width = width - getRect().getWidth();
     S32 delta_height = height - getRect().getHeight();
 
@@ -730,6 +770,24 @@ void LLFavoritesBarCtrl::draw()
 		mShowDragMarker = FALSE;
 	}
 }
+const LLButton::Params& LLFavoritesBarCtrl::getAddLandmarkParams()
+{
+	static LLButton::Params add_landmark_params;
+	static bool add_landmark_params_initialized = false;
+
+	if (!add_landmark_params_initialized)
+	{
+		LLXMLNodePtr button_xml_node;
+		if(LLUICtrlFactory::getLayeredXMLNode("favorites_bar_add_landmark.xml", button_xml_node))
+		{
+			LLXUIParser parser;
+			parser.readXUI(button_xml_node, add_landmark_params, "favorites_bar_add_landmark.xml");
+		}
+		add_landmark_params_initialized = true;
+	}
+
+	return add_landmark_params;
+}
 
 const LLButton::Params& LLFavoritesBarCtrl::getButtonParams()
 {
@@ -752,14 +810,14 @@ const LLButton::Params& LLFavoritesBarCtrl::getButtonParams()
 
 void LLFavoritesBarCtrl::updateButtons()
 {
-	LL_INFOS() << " LLFavoritesBarCtrl::updateButtons() " <<LL_ENDL;
+	
 	mItems.clear();
 
 	if (!collectFavoriteItems(mItems))
 	{
 		return;
 	}
-	LL_INFOS() << " LLFavoritesBarCtrl::updateButtons() Items collected" << mItems.empty()<<LL_ENDL;
+	
 	const LLButton::Params& button_params = getButtonParams();
 
 	if(mItems.empty())
@@ -886,7 +944,7 @@ void LLFavoritesBarCtrl::updateButtons()
 
 LLButton* LLFavoritesBarCtrl::createButton(const LLPointer<LLViewerInventoryItem> item, const LLButton::Params& button_params, S32 x_offset)
 {
-	LL_INFOS() << " LLFavoritesBarCtrl::createButton() " << item->getName()<<LL_ENDL;
+	
 	S32 def_button_width = button_params.rect.width;
 	S32 button_x_delta = button_params.rect.left; // default value
 	S32 curr_x = x_offset;
@@ -907,16 +965,16 @@ LLButton* LLFavoritesBarCtrl::createButton(const LLPointer<LLViewerInventoryItem
 		return NULL;
 	}
 
-	LL_INFOS() << " LLFavoritesBarCtrl::createButton() " << "enough place"<<LL_ENDL;
+	
 	LLButton::Params fav_btn_params(button_params);
-	fav_btn = new LLFavoriteLandmarkButton(fav_btn_params);
+	fav_btn = LLUICtrlFactory::create<LLFavoriteLandmarkButton>(fav_btn_params);
 	if (NULL == fav_btn)
 	{
 		LL_WARNS("FavoritesBar") << "Unable to create LLFavoriteLandmarkButton widget: " << item->getName() << LL_ENDL;
 		return NULL;
 	}
 	
-	addChild(fav_btn);
+	
 
 	LLRect butt_rect (fav_btn->getRect());
 	fav_btn->setLandmarkID(item->getUUID());
@@ -929,29 +987,22 @@ LLButton* LLFavoritesBarCtrl::createButton(const LLPointer<LLViewerInventoryItem
 	fav_btn->setToolTip(item->getName());
 	fav_btn->setFollows(FOLLOWS_LEFT | FOLLOWS_BOTTOM);
 	
-	fav_btn->setTabStop(false);
 	fav_btn->setVisible(TRUE);
+	fav_btn->setIsChrome(TRUE);
+	
 	fav_btn->setCommitCallback(boost::bind(&LLFavoritesBarCtrl::onButtonClick, this, item->getUUID()));
 	fav_btn->setRightMouseDownCallback(boost::bind(&LLFavoritesBarCtrl::onButtonRightClick, this, item->getUUID(), _1, _2, _3,_4 ));
 
 	fav_btn->LLUICtrl::setMouseDownCallback(boost::bind(&LLFavoritesBarCtrl::onButtonMouseDown, this, item->getUUID(), _1, _2, _3, _4));
 	fav_btn->LLUICtrl::setMouseUpCallback(boost::bind(&LLFavoritesBarCtrl::onButtonMouseUp, this, item->getUUID(), _1, _2, _3, _4));
-
+	addChild(fav_btn);
 	return fav_btn;
 }
 
 
 BOOL LLFavoritesBarCtrl::postBuild()
 {
-	// make the popup menu available
-	LLMenuGL* menu = LLUICtrlFactory::getInstance()->buildMenu("menu_favorites.xml", gMenuHolder);
-	LL_INFOS() << " Fav bar postBuild"<<LL_ENDL;
-	if (!menu)
-	{
-		return FALSE; //menu = LLUICtrlFactory::getDefaultWidget<LLMenuGL>("inventory_menu");
-	}
-	menu->setBackgroundColor(gColors.getColor("MenuPopupBgColor"));
-	mContextMenuHandle = menu->getHandle();
+	
 
 	return TRUE;
 }
@@ -1148,8 +1199,10 @@ void LLFavoritesBarCtrl::onButtonClick(LLUUID item_id)
 void LLFavoritesBarCtrl::onButtonRightClick( LLUUID item_id,LLView* fav_button,S32 x,S32 y,MASK mask)
 {
 	mSelectedItemID = item_id;
+	LL_INFOS() << "contex menu asked " << fav_button->getName() << LL_ENDL;
 	
 	LLMenuGL* menu = (LLMenuGL*)mContextMenuHandle.get();
+	LL_INFOS() << "menu is NULL?  " << !menu << LL_ENDL;
 	if (!menu)
 	{
 		return;
@@ -1167,16 +1220,17 @@ void LLFavoritesBarCtrl::onButtonRightClick( LLUUID item_id,LLView* fav_button,S
 	// because this is happening during a mouse down.
 	gFocusMgr.setMouseCapture(NULL);
 
-	menu->updateParent(LLMenuGL::sMenuContainer);
-	LLMenuGL::showPopup(fav_button, menu, x, y);
+	
+	showMenu(fav_button, menu, x, y);
 }
 
 BOOL LLFavoritesBarCtrl::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
 	BOOL handled = childrenHandleRightMouseDown( x, y, mask) != NULL;
-	/*if(!handled && !gMenuHolder->hasVisibleMenu())
+	/**if(!handled && !gMenuHolder->hasVisibleMenu())
 	{
-		show_navbar_context_menu(this,x,y);
+		
+		LLMenuGL::showPopup(this,mContextMenuHandle.get(), x,y);
 		handled = true;
 	}*/
 
@@ -1237,19 +1291,12 @@ void LLFavoritesBarCtrl::doToSelected(const LLSD& userdata)
 	}
 	else if (action == "show_on_map")
 	{
-		LLFloaterWorldMap* worldmap_instance = gFloaterWorldMap;
-
-		LLVector3d posGlobal;
-		LLLandmarkActions::getLandmarkGlobalPos(mSelectedItemID, posGlobal);
-
-		if (!posGlobal.isExactlyZero() && worldmap_instance)
-		{
-			worldmap_instance->trackLocation(posGlobal);
+		gFloaterWorldMap->trackLandmark(mSelectedItemID);
 			LLFloaterWorldMap::show(true);
 		}
-	}
-	else if (action == "cut")
+	else if (action == "create_pick")
 	{
+		
 	}
 	else if (action == "copy")
 	{

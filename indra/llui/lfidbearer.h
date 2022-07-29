@@ -35,7 +35,7 @@ struct LFIDBearer
 		GROUP,
 		OBJECT,
 		EXPERIENCE,
-		COUNT
+		COUNT = 5
 	};
 
 	virtual ~LFIDBearer() { if (sActive == this) sActive = nullptr; }

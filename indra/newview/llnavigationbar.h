@@ -70,6 +70,7 @@ public:
 	/*virtual*/ void onMouseLeave(S32 x, S32 y, MASK mask);
 
 	boost::signals2::connection setClickDraggingCallback(const commit_signal_t::slot_type& cb);
+	
 
 protected:
 	friend class LLUICtrlFactory;

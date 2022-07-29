@@ -337,6 +337,7 @@ http://secondlife.com/support for help fixing this problem.
 	<string name="favorite">favorite</string>
 	<string name="symbolic link">link</string>
 	<string name="symbolic folder link">folder link</string>
+	<string name="settings blob">settings</string>
 	<string name="current outfit">current outfit</string>
 	<string name="outfit">outfit</string>
 	<string name="my outfits">my outfits</string>

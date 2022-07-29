@@ -1407,7 +1407,14 @@ LLInvFVBridge* LLInvFVBridge::createBridge(LLAssetType::EType asset_type,
 			break;
 
 		case LLAssetType::AT_SETTINGS:
-			break;
+			if (inv_type != LLInventoryType::IT_SETTINGS)
+            {
+                LL_WARNS() << LLAssetType::lookup(asset_type) << " asset has inventory type " << LLInventoryType::lookupHumanReadable(inv_type) << " on uuid " << uuid << LL_ENDL;
+            }
+            new_listener = new LLSettingsBridge(inventory, root, uuid, LLSettingsType::fromInventoryFlags(flags));
+
+			
+            break;
 
 		default:
 			LL_INFOS() << "Unhandled asset type (llassetstorage.h): "
@@ -6786,6 +6793,165 @@ void LLMeshBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	}
 
 	hide_context_entries(menu, items, disabled_items);
+}
+
+// +=================================================+
+// |        LLSettingsBridge                             |
+// +=================================================+
+
+LLSettingsBridge::LLSettingsBridge(LLInventoryPanel* inventory,
+        LLFolderView* root,
+        const LLUUID& uuid,
+        LLSettingsType::type_e settings_type):
+    LLItemBridge(inventory, root, uuid),
+    mSettingsType(settings_type)
+{
+}
+
+LLUIImagePtr LLSettingsBridge::getIcon() const
+{
+    return LLInventoryIcon::getIcon(LLAssetType::AT_SETTINGS, LLInventoryType::IT_SETTINGS, mSettingsType, FALSE);
+}
+
+void LLSettingsBridge::performAction(LLInventoryModel* model, std::string action)
+{
+    if ("apply_settings_local" == action)
+    {
+        // Single item only
+        LLViewerInventoryItem* item = static_cast<LLViewerInventoryItem*>(getItem());
+        if (!item) 
+            return;
+        LLUUID asset_id = item->getAssetUUID();
+        // FIRE-30701 - Allow crossfade time to apply when using EEP from inventory.
+        //LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, asset_id, LLEnvironment::TRANSITION_INSTANT);
+        //LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
+
+		//genesis comment
+        //LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, asset_id);
+        //LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+		//end genesis comment
+    }
+    else if ("apply_settings_parcel" == action)
+    {
+        // Single item only
+        LLViewerInventoryItem* item = static_cast<LLViewerInventoryItem*>(getItem());
+        if (!item)
+            return;
+        LLUUID asset_id = item->getAssetUUID();
+        std::string name = item->getName();
+
+        U32 flags(0);
+
+        if (!item->getPermissions().allowOperationBy(PERM_MODIFY, gAgent.getID()))
+            flags |= LLSettingsBase::FLAG_NOMOD;
+        if (!item->getPermissions().allowOperationBy(PERM_TRANSFER, gAgent.getID()))
+            flags |= LLSettingsBase::FLAG_NOTRANS;
+
+		//genesis comment
+        /**LLParcel *parcel = LLViewerParcelMgr::instance().getAgentOrSelectedParcel();
+        if (!parcel)
+        {
+            LL_WARNS("INVENTORY") << "could not identify parcel." << LL_ENDL;
+            return;
+        }
+        S32 parcel_id = parcel->getLocalID();
+
+        LL_DEBUGS("ENVIRONMENT") << "Applying asset ID " << asset_id << " to parcel " << parcel_id << LL_ENDL;
+        LLEnvironment::instance().updateParcel(parcel_id, asset_id, name, LLEnvironment::NO_TRACK, -1, -1, flags);
+        LLEnvironment::instance().setSharedEnvironment();**/
+    }
+    else
+        LLItemBridge::performAction(model, action);
+}
+
+void LLSettingsBridge::openItem()
+{
+    LLViewerInventoryItem* item = getItem();
+    if (item)
+    {
+        if (item->getPermissions().getOwner() != gAgent.getID())
+            LLNotificationsUtil::add("NoEditFromLibrary");
+        else
+            LLInvFVBridgeAction::doAction(item->getType(), mUUID, getInventoryModel());
+    }
+}
+
+void LLSettingsBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
+{
+    LL_DEBUGS() << "LLSettingsBridge::buildContextMenu()" << LL_ENDL;
+    menuentry_vec_t items;
+    menuentry_vec_t disabled_items;
+
+    if (isMarketplaceListingsFolder())
+    {
+        menuentry_vec_t items;
+        menuentry_vec_t disabled_items;
+        addMarketplaceContextMenuOptions(flags, items, disabled_items);
+        items.push_back(std::string("Properties"));
+        getClipboardEntries(false, items, disabled_items, flags);
+        hide_context_entries(menu, items, disabled_items);
+    }
+    else if (isItemInTrash())
+    {
+        addTrashContextMenuOptions(items, disabled_items);
+    }
+    else
+    {
+        items.push_back(std::string("Share"));
+        if (!canShare())
+        {
+            disabled_items.push_back(std::string("Share"));
+        }
+
+        addOpenRightClickMenuOption(items);
+        items.push_back(std::string("Properties"));
+
+        getClipboardEntries(true, items, disabled_items, flags);
+
+        items.push_back("Settings Separator");
+        items.push_back("Settings Apply Local");
+
+        items.push_back("Settings Apply Parcel");
+        if (!canUpdateParcel())
+            disabled_items.push_back("Settings Apply Parcel");
+        
+        items.push_back("Settings Apply Region");
+        if (!canUpdateRegion())
+            disabled_items.push_back("Settings Apply Region");
+    }
+	//genesis comment
+    //addLinkReplaceMenuOption(items, disabled_items);
+    hide_context_entries(menu, items, disabled_items);
+}
+
+BOOL LLSettingsBridge::renameItem(const std::string& new_name)
+{
+    /*TODO: change internal settings name? */
+    return LLItemBridge::renameItem(new_name);
+}
+
+BOOL LLSettingsBridge::isItemRenameable() const
+{
+    LLViewerInventoryItem* item = getItem();
+    if (item)
+    {
+        return (item->getPermissions().allowModifyBy(gAgent.getID()));
+    }
+    return FALSE;
+}
+
+bool LLSettingsBridge::canUpdateParcel() const
+{
+	//genesis comment
+    //return LLEnvironment::instance().canAgentUpdateParcelEnvironment();
+	return FALSE;
+}
+
+bool LLSettingsBridge::canUpdateRegion() const
+{
+	//genesis comment
+    //return LLEnvironment::instance().canAgentUpdateRegionEnvironment();
+	return FALSE;
 }
 
 

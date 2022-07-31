@@ -245,7 +245,7 @@ void LLPanelVoiceDeviceSettings::refresh()
 				iter != LLVoiceClient::getInstance()->getCaptureDevices().end();
 				iter++)
 			{
-				mCtrlInputDevices->add(getLocalizedDeviceName(*iter), *iter, ADD_BOTTOM);
+				mCtrlInputDevices->add(getLocalizedDeviceName(iter->display_name), iter->full_name, ADD_BOTTOM);
 			}
 
 			// Fix invalid input audio device preference.
@@ -265,7 +265,7 @@ void LLPanelVoiceDeviceSettings::refresh()
 			for(iter= LLVoiceClient::getInstance()->getRenderDevices().begin();
 				iter !=  LLVoiceClient::getInstance()->getRenderDevices().end(); iter++)
 			{
-				mCtrlOutputDevices->add(getLocalizedDeviceName(*iter), *iter, ADD_BOTTOM);
+				mCtrlOutputDevices->add(getLocalizedDeviceName(iter->display_name), iter->full_name, ADD_BOTTOM);
 			}
 
 			// Fix invalid output audio device preference.

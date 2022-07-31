@@ -39,8 +39,19 @@ class LLVOAvatar;
 #include "llcontrol.h"
 
 // devices
+class LLVoiceDevice
+{
+  public:
+    std::string display_name; // friendly value for the user
+    std::string full_name;  // internal value for selection
 
-typedef std::vector<std::string> LLVoiceDeviceList;
+    LLVoiceDevice(const std::string& display_name, const std::string& full_name)
+        :display_name(display_name)
+        ,full_name(full_name)
+    {
+    };
+};
+typedef std::vector<LLVoiceDevice> LLVoiceDeviceList;
 
 
 class LLVoiceClientParticipantObserver

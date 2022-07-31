@@ -438,9 +438,9 @@ protected:
 	//----------------------------------
 	// devices
 	void clearCaptureDevices();
-	void addCaptureDevice(const std::string& name);
+	void addCaptureDevice(const LLVoiceDevice& name);
 	void clearRenderDevices();
-	void addRenderDevice(const std::string& name);
+	void addRenderDevice(const LLVoiceDevice& name);
 	void buildSetAudioDevices(std::ostringstream &stream);
 
 	void getCaptureDevicesSendMessage();

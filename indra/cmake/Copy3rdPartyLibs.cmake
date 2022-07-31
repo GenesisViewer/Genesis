@@ -9,6 +9,14 @@ include(Linking)
 include(Variables)
 include(LLCommon)
 
+MACRO(to_staging_dirs from_dir targets)
+  foreach(staging_dir
+          "${SHARED_LIB_STAGING_DIR_RELEASE}"
+          "${SHARED_LIB_STAGING_DIR_RELWITHDEBINFO}")
+    copy_if_different("${from_dir}" "${staging_dir}" out_targets ${ARGN})
+    list(APPEND "${targets}" "${out_targets}")
+  endforeach()
+ENDMACRO(to_staging_dirs from_dir to_dir targets)
 ###################################################################
 # set up platform specific lists of files that need to be copied
 ###################################################################
@@ -19,21 +27,20 @@ if(WINDOWS)
 
     #*******************************
     # VIVOX - *NOTE: no debug version
-    set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
-    set(vivox_files
-        SLVoice.exe
-        vivoxplatform.dll
-        )
+    set(vivox_lib_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
+    
+    set(slvoice_src_dir "${ARCH_PREBUILT_BIN_RELEASE}")    
+    set(slvoice_files SLVoice.exe )
     if (ADDRESS_SIZE EQUAL 64)
-        list(APPEND vivox_files
+        list(APPEND vivox_libs
             vivoxsdk_x64.dll
             ortp_x64.dll
-            )
+        )
     else (ADDRESS_SIZE EQUAL 64)
-        list(APPEND vivox_files
+        list(APPEND vivox_libs
             vivoxsdk.dll
             ortp.dll
-            )
+        )
     endif (ADDRESS_SIZE EQUAL 64)
 
     #*******************************
@@ -198,28 +205,18 @@ endif(WINDOWS)
 ################################################################
 
 copy_if_different(
-    ${vivox_src_dir}
-    "${SHARED_LIB_STAGING_DIR_DEBUG}"
-    out_targets 
-    ${vivox_files}
-    )
-set(third_party_targets ${third_party_targets} ${out_targets})
-
-copy_if_different(
-    ${vivox_src_dir}
+    ${slvoice_src_dir}
     "${SHARED_LIB_STAGING_DIR_RELEASE}"
     out_targets
-    ${vivox_files}
+    ${slvoice_files}
     )
-set(third_party_targets ${third_party_targets} ${out_targets})
+list(APPEND third_party_targets ${out_targets})
 
-copy_if_different(
-    ${vivox_src_dir}
-    "${SHARED_LIB_STAGING_DIR_RELWITHDEBINFO}"
-    out_targets
-    ${vivox_files}
+to_staging_dirs(
+    ${vivox_lib_dir}
+    third_party_targets
+    ${vivox_libs}
     )
-set(third_party_targets ${third_party_targets} ${out_targets})
 
 
 

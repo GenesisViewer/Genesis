@@ -176,6 +176,7 @@ set(viewer_SOURCE_FILES
     lldroptarget.cpp
     lldynamictexture.cpp
     llemote.cpp
+    llenvironment.cpp
     llenvmanager.cpp
     llestateinfomodel.cpp
     lleventinfo.cpp
@@ -729,6 +730,7 @@ set(viewer_HEADER_FILES
     lldroptarget.h
     lldynamictexture.h
     llemote.h
+    llenvironment.h
     llenvmanager.h
     llestateinfomodel.h
     lleventinfo.h

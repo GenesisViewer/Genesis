@@ -126,7 +126,7 @@ public:
 	LLViewerTexture(const U32 width, const U32 height, const U8 components, BOOL usemipmaps, bool allow_compression = false) ;
 
 	void setNeedsAlphaAndPickMask(BOOL need_mask) { if(mGLTexturep)mGLTexturep->setNeedsAlphaAndPickMask(need_mask); }
-
+	LL_INLINE virtual bool isViewerMediaTexture() const		{ return false; }
 	virtual S8 getType() const;
 	virtual BOOL isMissingAsset()const ;
 	virtual void dump();	// debug info to llinfos
@@ -529,6 +529,15 @@ public:
 	static LLPointer<LLViewerFetchedTexture> sDefaultImagep; // "Default" texture for error cases, the only case of fetched texture which is generated in local.
 	static LLPointer<LLViewerFetchedTexture> sSmokeImagep; // Old "Default" translucent texture
 	static LLPointer<LLViewerFetchedTexture> sFlatNormalImagep; // Flat normal map denoting no bumpiness on a surface
+	static LLPointer<LLViewerFetchedTexture> sDefaultSunImagep ;
+	static LLPointer<LLViewerFetchedTexture> sDefaultMoonImagep;
+	static LLPointer<LLViewerFetchedTexture> sDefaultCloudsImagep;
+	static LLPointer<LLViewerFetchedTexture> sDefaultCloudNoiseImagep;
+	static LLPointer<LLViewerFetchedTexture> sBloomImagep;
+	static LLPointer<LLViewerFetchedTexture> sOpaqueWaterImagep;
+	static LLPointer<LLViewerFetchedTexture> sWaterImagep;
+	static LLPointer<LLViewerFetchedTexture> sWaterNormapMapImagep;
+
 };
 
 //

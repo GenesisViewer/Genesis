@@ -72,6 +72,7 @@ public:
 	Type operator++(int) { return apr_atomic_inc32(&mData); } // Type++
 	bool operator--() { return apr_atomic_dec32(&mData); } // Returns (--Type != 0)
 	
+	
 private:
 	apr_uint32_t mData;
 };
@@ -91,6 +92,7 @@ public:
 	void operator+=(Type x) { mData += x; }
 	Type operator++(int) { return mData++; } // Type++
 	bool operator--() { return --mData; } // Returns (--Type != 0)
+	Type operator++() { return ++mData; }
 
 private:
 	typename impl_atomic_type<Type>::type mData;

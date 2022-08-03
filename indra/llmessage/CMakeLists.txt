@@ -3,6 +3,7 @@
 project(llmessage)
 
 include(00-Common)
+include(JsonCpp)
 include(LLCommon)
 include(AIStateMachine)
 include(LLMath)
@@ -19,6 +20,7 @@ include_directories(
     ${LLMESSAGE_INCLUDE_DIRS}
     ${LLVFS_INCLUDE_DIRS}
     ${LLXML_INCLUDE_DIRS}
+    ${JSONCPP_INCLUDE_DIR}
     )
 
 set(llmessage_SOURCE_FILES
@@ -43,6 +45,27 @@ set(llmessage_SOURCE_FILES
     llchainio.cpp
     llcircuit.cpp
     llclassifiedflags.cpp
+    llcorebufferarray.cpp
+    llcorebufferstream.cpp
+    llcorehttpcommon.cpp
+    llcorehttpheaders.cpp
+    llcorehttplibcurl.cpp
+    llcorehttpopcancel.cpp
+    llcorehttpoperation.cpp
+    llcorehttpoprequest.cpp
+    llcorehttpopsetget.cpp
+    llcorehttpopsetpriority.cpp
+    llcorehttpoptions.cpp
+    llcorehttppolicy.cpp
+    llcorehttppolicyclass.cpp
+    llcorehttppolicyglobal.cpp
+    llcorehttpreplyqueue.cpp
+    llcorehttprequest.cpp
+    llcorehttprequestqueue.cpp
+    llcorehttpresponse.cpp
+    llcorehttpservice.cpp
+    llcorehttputil.cpp
+    llcorerefcounted.cpp
     lldatapacker.cpp
     lldispatcher.cpp
     llexperiencecache.cpp
@@ -133,6 +156,31 @@ set(llmessage_HEADER_FILES
     llcipher.h
     llcircuit.h
     llclassifiedflags.h
+    llcorebufferarray.h
+    llcorebufferstream.h
+    llcorehttpcommon.h
+    llcorehttphandler.h
+    llcorehttpheaders.h
+    llcorehttpinternal.h
+    llcorehttplibcurl.h
+    llcorehttpopcancel.h
+    llcorehttpoperation.h
+    llcorehttpoprequest.h
+    llcorehttpopsetget.h
+    llcorehttpopsetpriority.h
+    llcorehttpoptions.h
+    llcorehttppolicy.h
+    llcorehttppolicyclass.h
+    llcorehttppolicyglobal.h
+    llcorehttpreplyqueue.h
+    llcorehttprequest.h
+    llcorehttprequestqueue.h
+    llcorehttpresponse.h
+    llcorehttpservice.h
+    llcorehttputil.h
+    llcoremutex.h
+    llcorerefcounted.h
+    llcorethread.h
     llcororesponder.h
     llcurl.h
     lldatapacker.h

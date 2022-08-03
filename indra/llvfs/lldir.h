@@ -31,7 +31,17 @@
 #include <sys/param.h>
 #define MAX_PATH MAXPATHLEN
 #endif
-
+// This replaces advantageously gDirUtilp->getDirDelimiter() and saves us the
+// costly use of a std::string (and quite a few std::string/const char* strings
+// concatenations) for the directory delimiter, which is known at compile
+// time... HB
+#if LL_WINDOWS
+# define LL_DIR_DELIM_STR "\\"
+# define LL_DIR_DELIM_CHR '\\'
+#else
+# define LL_DIR_DELIM_STR "/"
+# define LL_DIR_DELIM_CHR '/'
+#endif
 // these numbers *may* get serialized (really??), so we need to be explicit
 typedef enum ELLPath
 {

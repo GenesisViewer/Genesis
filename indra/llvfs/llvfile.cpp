@@ -112,6 +112,7 @@ BOOL LLVFile::read(U8 *buffer, S32 bytes, BOOL async, F32 priority)
 	else
 	{
 		// We can't do a read while there are pending async writes on this file
+		
 		mBytesRead = sVFSThread->readImmediate(mVFS, mFileID, mFileType, buffer, mPosition, bytes);
 		mPosition += mBytesRead;
 		if (! mBytesRead)

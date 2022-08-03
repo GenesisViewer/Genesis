@@ -302,7 +302,19 @@ bool LLWaterParamManager::savePresetToNotecard(const std::string & name)
 
 	return true;
 }
-
+//static
+std::vector<std::string> LLWaterParamManager::getLoadedPresetsList()
+{
+	std::vector<std::string> result;
+	const paramset_map_t& presets = LLWaterParamManager::instance().mParamList;
+	for (paramset_map_t::const_iterator it = presets.begin(),
+											 end = presets.end();
+		 it != end; ++it)
+	{
+		result.emplace_back(it->first);
+	}
+	return result;
+}
 void LLWaterParamManager::propagateParameters(void)
 {
 	// bind the variables only if we're using shaders

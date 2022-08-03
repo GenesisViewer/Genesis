@@ -61,12 +61,31 @@ F64 gClockFrequencyInv = 0.0;
 F64 gClocksToMicroseconds = 0.0;
 U64 gTotalTimeClockCount = 0;
 U64 gLastTotalTimeClockCount = 0;
+static U64 sTotalTimeClockCount = 0;
+static U64 sLastTotalTimeClockCount = 0;
+static U64 sLastClockDelta = 0;
+static F64 sClocksToMicroseconds = 0.0;
 
 //
 // Forward declarations
 //
+// This is the amount of time (one bisextile year in micro seconds) we allow
+// for the system clock to be set backwards while the viewer is ruunning.
+constexpr U64 ONE_YEAR_MSEC = U64(366 * 24 * 3600) * SEC_TO_MICROSEC_U64;
 
-
+void update_clock_frequencies()
+{
+#if LL_WINDOWS
+	__int64 freq;
+	QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
+	gClockFrequency = (F64)freq;
+#else
+	// Both Linux and Mac use gettimeofday() for accurate time
+	gClockFrequency = 1000000.0; // microseconds, so 1 MHz.
+#endif
+	gClockFrequency = 1.0 / gClockFrequency;
+	gClocksToMicroseconds = gClockFrequency * SEC_TO_MICROSEC;
+}
 //---------------------------------------------------------------------------
 // Implementation
 //---------------------------------------------------------------------------
@@ -314,7 +333,49 @@ U64MicrosecondsImplicit LLTimer::getTotalTime()
 	U64MicrosecondsImplicit total_time = totalTime();
 	return total_time;
 }	
+U64 LLTimer::totalTime()
+{
+	U64 cur_clock_count = getCurrentClockCount();
+	if (!sTotalTimeClockCount)	// First call ?
+	{
+		update_clock_frequencies();
+		sLastClockDelta = cur_clock_count;
+	}
+	// Time not going backward or counter wrapping, we are all okay.
+	else if (cur_clock_count >= sLastTotalTimeClockCount)
+	{
+		sLastClockDelta = cur_clock_count - sLastTotalTimeClockCount;
+	}
+	// Allow setting the system time backwards by one year; an actual wrapping
+	// would yield a much larger delta anyway...
+	else if (cur_clock_count + ONE_YEAR_MSEC > sLastTotalTimeClockCount)
+	{
+		// It is a pretty common occurrence that we get 1 or 2 ticks backwards
+		// on some systems, so do not spam the log with this.
+		LL_DEBUGS("Timer") << "Clock count went backwards. Last clock count = "
+						   << sLastTotalTimeClockCount
+						   << " - New clock count = " << cur_clock_count
+						   << " - Using last clock delta as an estimation of ellapsed time: "
+						   << sLastClockDelta << LL_ENDL;
+		// Use previous clock delta as an estimation...
+	}
+	// We must have wrapped. Compensate accordingly.
+	else
+	{
+		llwarns << "Clock count wrapping detected. Last clock count = "
+				<< sLastTotalTimeClockCount << " - New clock count = "
+				<< cur_clock_count << llendl;
+		sLastClockDelta = (0xFFFFFFFFFFFFFFFFULL - sLastTotalTimeClockCount) +
+						  cur_clock_count;;
+	}
+	sTotalTimeClockCount += sLastClockDelta;
 
+	// Update the last clock count
+	sLastTotalTimeClockCount = cur_clock_count;
+
+	// Return the total clock tick count in microseconds.
+	return (U64)(sTotalTimeClockCount * sClocksToMicroseconds);
+}
 // static
 F64SecondsImplicit LLTimer::getTotalSeconds()
 {

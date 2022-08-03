@@ -1311,6 +1311,17 @@ void LLShaderMgr::initAttribsAndUniforms()
 
 	mReservedUniforms.push_back("origin");
 	mReservedUniforms.push_back("display_gamma");
+	mReservedUniforms.emplace_back("sun_up_factor");
+	mReservedUniforms.emplace_back("moonlight_color");
+	mReservedUniforms.emplace_back("sun_moon_glow_factor");
+
+	mReservedUniforms.emplace_back("water_edge");
+	mReservedUniforms.emplace_back("moon_brightness");
+	mReservedUniforms.emplace_back("cloud_variance");
+	mReservedUniforms.emplace_back("moisture_level");
+	mReservedUniforms.emplace_back("blend_factor");
+	mReservedUniforms.emplace_back("droplet_radius");
+	mReservedUniforms.emplace_back("ice_level");
 	llassert(mReservedUniforms.size() == END_RESERVED_UNIFORMS);
 
 	std::set<std::string> dupe_check;

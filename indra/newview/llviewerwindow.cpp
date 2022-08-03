@@ -1713,13 +1713,13 @@ LLViewerWindow::LLViewerWindow(
 		!gNoRender,
 		ignore_pixel_depth,
 		LLRenderTarget::sUseFBO ? 0 : gSavedSettings.getU32("RenderFSAASamples")); //don't use window level anti-aliasing if FBOs are enabled
-
+	
 	if (!LLViewerShaderMgr::sInitialized)
 	{ //immediately initialize shaders
 		LLViewerShaderMgr::sInitialized = TRUE;
 		LLViewerShaderMgr::instance()->setShaders();
 	}
-
+	
 	if (NULL == mWindow)
 	{
 		LLSplashScreen::update(LLTrans::getString("StartupRequireDriverUpdate"));
@@ -1789,7 +1789,7 @@ LLViewerWindow::LLViewerWindow(
 	LLVertexBuffer::initClass(gSavedSettings.getBOOL("RenderVBOEnable"), gSavedSettings.getBOOL("RenderVBOMappingDisable"));
 	LL_INFOS("RenderInit") << "LLVertexBuffer initialization done." << LL_ENDL ;
 	LLImageGL::initClass(LLViewerTexture::MAX_GL_IMAGE_CATEGORY) ;
-
+	LL_INFOS("RenderInit") << "LLImageGL::initClass done." << LL_ENDL ;
 	if (LLFeatureManager::getInstance()->isSafe()
 		|| (gSavedSettings.getS32("LastFeatureVersion") != LLFeatureManager::getInstance()->getVersion())
 		|| (gSavedSettings.getBOOL("ProbeHardwareOnStartup")))
@@ -1814,8 +1814,11 @@ LLViewerWindow::LLViewerWindow(
 	// Init the image list.  Must happen after GL is initialized and before the images that
 	// LLViewerWindow needs are requested.
 	gTextureList.init();
+	LL_INFOS("RenderInit") << "gTextureList.init() done." << LL_ENDL ;
 	LLViewerTextureManager::init() ;
+	LL_INFOS("RenderInit") << "LLViewerTextureManager::init()." << LL_ENDL ;
 	gBumpImageList.init();
+	LL_INFOS("RenderInit") << "gBumpImageList.init()." << LL_ENDL ;
 
 	// Init font system, but don't actually load the fonts yet
 	// because our window isn't onscreen and they take several

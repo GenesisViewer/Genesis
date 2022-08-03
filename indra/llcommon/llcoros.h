@@ -37,7 +37,7 @@
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/iteration/local.hpp>
 #include <stdexcept>
-
+#include <boost/function.hpp>
 /**
  * Registry of named Boost.Coroutine instances
  *
@@ -80,6 +80,7 @@ class LL_COMMON_API LLCoros: public LLSingleton<LLCoros>
 public:
     /// Canonical boost::dcoroutines::coroutine signature we use
     typedef boost::dcoroutines::coroutine<void()> coro;
+    typedef boost::function<void()> callable_t;
     /// Canonical 'self' type
     typedef coro::self self;
 
@@ -122,11 +123,7 @@ public:
      * it with the tweaked name and runs it until its first wait. At that
      * point it returns the tweaked name.
      */
-    template <typename CALLABLE>
-    std::string launch(const std::string& prefix, const CALLABLE& callable)
-    {
-        return launchImpl(prefix, new coro(callable, mStackSize));
-    }
+    std::string launch(const std::string& prefix, const callable_t& callable);  
 
     /**
      * Abort a running coroutine by name. Normally, when a coroutine either

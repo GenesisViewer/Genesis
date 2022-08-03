@@ -45,7 +45,7 @@
 #include "llatomic.h"
 #include "llmemory.h"
 #include "aithreadid.h"
-
+#include "boost/thread.hpp"
 class LLThread;
 class LLMutex;
 class LLCondition;
@@ -79,8 +79,7 @@ private:
 	~LLThreadLocalData();
 };
 
-// Print to llerrs if the current thread is not the main thread.
-LL_COMMON_API void assert_main_thread();
+
 
 class LL_COMMON_API LLThread
 {
@@ -90,6 +89,7 @@ private:
 	static LLAtomicS32	sRunning;
 
 public:
+	typedef boost::thread::id id_t;
 	typedef enum e_thread_status
 	{
 		STOPPED = 0,	// The thread is not running.  Not started, or has exited its run function
@@ -107,7 +107,10 @@ public:
 	static S32 getCount() { return sCount; }	
 	static S32 getRunning() { return sRunning; }
 	static void yield(); // Static because it can be called by the main thread, which doesn't have an LLThread data structure.
+	// Returns the ID of the current thread
+	static id_t currentID();
 
+	static U64 thisThreadIdHash();
 public:
 	// PAUSE / RESUME functionality. See source code for important usage notes.
 	// Called from MAIN THREAD.

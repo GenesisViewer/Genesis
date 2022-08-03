@@ -31,12 +31,13 @@
 #include "llsettingsbase.h"
 #include "v4coloru.h"
 
-const F32 EARTH_RADIUS  =      6.370e6f;
+//const F32 EARTH_RADIUS  =      6.370e6f;
 const F32 SUN_RADIUS    =    695.508e6f;
 const F32 SUN_DIST      = 149598.260e6f;
 const F32 MOON_RADIUS   =      1.737e6f;
 const F32 MOON_DIST     =    384.400e6f;
-
+const F32 SKY_DOME_OFFSET = 0.96f;
+const F32 SKY_DOME_RADIUS = 15000.f;
 class LLSettingsSky: public LLSettingsBase
 {
 public:
@@ -215,6 +216,11 @@ public:
 
     F32  getMoonBrightness() const;
     void setMoonBrightness(F32 brightness_factor);
+    // Color based on brightness
+	inline LLColor3 getMoonlightColor() const
+	{
+		return getSunlightColor();	// The Moon reflects the Sun light...
+	}
 
     F32 getStarBrightness() const;
     void setStarBrightness(F32 val);

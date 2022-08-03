@@ -33,6 +33,7 @@
 #include "llviewertexture.h"
 #include "llviewerobject.h"
 #include "llframetimer.h"
+#include "llsettingssky.h"
 
 
 //////////////////////////////////
@@ -65,6 +66,10 @@ constexpr F32 fsigma	= (6.f + 3.f * sigma) / (6.f-7.f*sigma);
 constexpr F64 Ndens		= 2.55e25;
 constexpr F64 Ndens2	= Ndens*Ndens;
 
+constexpr F32 NIGHTTIME_ELEVATION = -8.f; // Degrees
+// While gcc allows to compute sinf(NIGHTTIME_ELEVATION * DEG_TO_RAD) at
+// compile time, clang does not, so we cannot use constexpr here... :-(
+extern const F32 NIGHTTIME_ELEVATION_COS;
 // HACK: Allow server to change sun and moon IDs.
 // I can't figure out how to pass the appropriate
 // information into the LLVOSky constructor.  JC
@@ -199,7 +204,7 @@ protected:
 	F32				mIntensity;
 	LLVector3		mDirection;				// direction of the local heavenly body
 	LLVector3		mAngularVelocity;		// velocity of the local heavenly body
-
+	LLQuaternion	mRotation;
 	F32				mDiskRadius;
 	BOOL			mDraw;					// FALSE - do not draw.
 	F32				mHorizonVisibility;		// number [0, 1] due to how horizon
@@ -229,7 +234,7 @@ public:
 	void setDirection(const LLVector3 &direction)		{ mDirection = direction; }
 	void setAngularVelocity(const LLVector3 &ang_vel)	{ mAngularVelocity = ang_vel; }
 	const LLVector3& getAngularVelocity() const			{ return mAngularVelocity; }
-
+	void setRotation(const LLQuaternion& rot)		    { mRotation = rot; }
 	const LLVector3& getDirectionCached() const			{ return mDirectionCached; }
 	void renewDirection()								{ mDirectionCached = mDirection; }
 
@@ -424,6 +429,7 @@ public:
 public:
 	void initAtmospherics(void);
 	void calcAtmospherics(void);
+	void updateDirections(const LLSettingsSky::ptr_t& skyp);
 	LLColor3 createDiffuseFromWL(LLColor3 diffuse, LLColor3 ambient, LLColor3 sundiffuse, LLColor3 sunambient);
 	LLColor3 createAmbientFromWL(LLColor3 ambient, LLColor3 sundiffuse, LLColor3 sunambient);
 
@@ -506,6 +512,16 @@ public:
 
 	void setSunDirection(const LLVector3 &sun_dir, const LLVector3 &sun_ang_velocity);
 
+	// Directions provided should already be in CFR coord sys (+x at, +z up,
+	// +y right)
+	void setSunDirectionCFR(const LLVector3& sun_direction);
+
+	void setMoonDirectionCFR(const LLVector3& moon_dir);
+
+	void setSunAndMoonDirectionsCFR(const LLVector3& sun_dir,
+											  const LLVector3& moon_dir);
+
+
 	BOOL updateHeavenlyBodyGeometry(LLDrawable *drawable, const S32 side, const BOOL is_sun,
 									LLHeavenBody& hb, const F32 sin_max_angle,
 									const LLVector3 &up, const LLVector3 &right);
@@ -542,11 +558,17 @@ public:
 	BOOL isReflFace(const LLFace* face) const			{ return face == mFace[FACE_REFLECTION]; }
 	LLFace* getReflFace() const							{ return mFace[FACE_REFLECTION]; }
 
-	LLViewerTexture*	getSunTex() const					{ return mSunTexturep; }
-	LLViewerTexture*	getMoonTex() const					{ return mMoonTexturep; }
-	LLViewerTexture*	getBloomTex() const					{ return mBloomTexturep; }
+	LLViewerTexture*	getSunTex() const					{ return mSunTexturep[0]; }
+	LLViewerTexture*	getMoonTex() const					{ return mMoonTexturep[0]; }
+	LLViewerTexture*	getBloomTex() const					{ return mBloomTexturep[0]; }
 	void forceSkyUpdate(void)							{ mForceUpdate = TRUE; }
 
+	inline void setSunScale(F32 scale)					{ mSunScale = scale; }
+	inline void setMoonScale(F32 scale)					{ mMoonScale = scale; }
+	void setSunTextures(const LLUUID& sun_tex1, const LLUUID& sun_tex2);
+	void setMoonTextures(const LLUUID& moon_tex1, const LLUUID& moon_tex2);
+	void setCloudNoiseTextures(const LLUUID& cld_tex1, const LLUUID& cld_tex2);
+	void setBloomTextures(const LLUUID& bloom_tex1, const LLUUID& bloom_tex2);
 public:
 	LLFace	*mFace[FACE_COUNT];
 	LLVector3	mBumpSunDir;
@@ -554,9 +576,10 @@ public:
 protected:
 	~LLVOSky();
 
-	LLPointer<LLViewerFetchedTexture> mSunTexturep;
-	LLPointer<LLViewerFetchedTexture> mMoonTexturep;
-	LLPointer<LLViewerFetchedTexture> mBloomTexturep;
+	LLPointer<LLViewerFetchedTexture> mSunTexturep[2];
+	LLPointer<LLViewerFetchedTexture> mMoonTexturep[2];
+	LLPointer<LLViewerFetchedTexture> mBloomTexturep[2];
+	LLPointer<LLViewerFetchedTexture> mCloudNoiseTexturep[2];
 
 	static S32			sResolution;
 	static S32			sTileResX;
@@ -565,6 +588,8 @@ protected:
 	LLSkyTex			mShinyTex[6];
 	LLHeavenBody		mSun;
 	LLHeavenBody		mMoon;
+	F32					mSunScale;
+	F32					mMoonScale;
 	LLVector3			mSunDefaultPosition;
 	LLVector3			mSunAngVel;
 	F32					mAtmHeight;

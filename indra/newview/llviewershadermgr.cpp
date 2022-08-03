@@ -195,6 +195,8 @@ LLGLSLShader			gDeferredPostGammaCorrectProgram(LLViewerShaderMgr::SHADER_DEFERR
 LLGLSLShader			gFXAAProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredPostNoDoFProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredWLSkyProgram(LLViewerShaderMgr::SHADER_DEFERRED);
+LLGLSLShader			gDeferredWLSunProgram(LLViewerShaderMgr::SHADER_DEFERRED);
+LLGLSLShader			gDeferredWLMoonProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredWLCloudProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredStarProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredFullbrightShinyProgram(LLViewerShaderMgr::SHADER_DEFERRED);
@@ -248,18 +250,20 @@ S32 LLViewerShaderMgr::getVertexShaderLevel(S32 type)
 
 void LLViewerShaderMgr::setShaders()
 {
+	LL_INFOS() << "in LLViewerShaderMgr::setShaders()" << LL_ENDL;
 	//setShaders might be called redundantly by gSavedSettings, so return on reentrance
 	static bool reentrance = false;
-	
+	LL_INFOS()<< "gPipeline null?" << (gPipeline.mInitialized) <<LL_ENDL;
 	if (!gPipeline.mInitialized || !sInitialized || reentrance || sSkipReload)
 	{
 		return;
 	}
 
 	//Since setShaders can be reentrant, be sure to clear out stale shader objects that may be left over from parent call.
+	LL_INFOS() << "before unloadShaderObjects" << LL_ENDL;
 	unloadShaderObjects();
 	unloadShaders();
-
+	LL_INFOS() << "after unloadShaderObjects" << LL_ENDL;
 	LLGLSLShader::sIndexedTextureChannels = llmax(llmin(gGLManager.mNumTextureImageUnits, (S32) gSavedSettings.getU32("RenderMaxTextureIndex")), 1);
 	static const LLCachedControl<bool> no_texture_indexing("ShyotlUseLegacyTextureBatching",false);
 	if(no_texture_indexing)
@@ -283,8 +287,9 @@ void LLViewerShaderMgr::setShaders()
 			gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
 		}
 	}
-	
+	LL_INFOS() << "before initAttribsAndUniforms" << LL_ENDL;
 	initAttribsAndUniforms();
+	LL_INFOS() << "after initAttribsAndUniforms" << LL_ENDL;
 	gPipeline.releaseGLBuffers();
 
 	bool want_shaders = LLFeatureManager::getInstance()->isFeatureAvailable("VertexShaderEnable") &&
@@ -1742,7 +1747,28 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 		gDeferredWLSkyProgram.mShaderGroup = LLGLSLShader::SG_SKY;
 		success = gDeferredWLSkyProgram.createShader(NULL, NULL);
 	}
-
+	if (success)
+	{
+		gDeferredWLMoonProgram.mName = "Deferred Windlight Moon Shader";
+		//gWLSkyProgram.mFeatures.hasGamma = true;
+		gDeferredWLMoonProgram.mShaderFiles.clear();
+		gDeferredWLMoonProgram.mShaderFiles.push_back(make_pair("deferred/skyV.glsl", GL_VERTEX_SHADER_ARB));
+		gDeferredWLMoonProgram.mShaderFiles.push_back(make_pair("deferred/skyF.glsl", GL_FRAGMENT_SHADER_ARB));
+		gDeferredWLMoonProgram.mShaderLevel = mVertexShaderLevel[SHADER_DEFERRED];
+		gDeferredWLMoonProgram.mShaderGroup = LLGLSLShader::SG_SKY;
+		success = gDeferredWLMoonProgram.createShader(NULL, NULL);
+	}
+	if (success)
+	{
+		gDeferredWLSunProgram.mName = "Deferred Windlight Sun Shader";
+		//gWLSkyProgram.mFeatures.hasGamma = true;
+		gDeferredWLSunProgram.mShaderFiles.clear();
+		gDeferredWLMoonProgram.mShaderFiles.push_back(make_pair("deferred/skyV.glsl", GL_VERTEX_SHADER_ARB));
+		gDeferredWLSunProgram.mShaderFiles.push_back(make_pair("deferred/skyF.glsl", GL_FRAGMENT_SHADER_ARB));
+		gDeferredWLSunProgram.mShaderLevel = mVertexShaderLevel[SHADER_DEFERRED];
+		gDeferredWLSunProgram.mShaderGroup = LLGLSLShader::SG_SKY;
+		success = gDeferredWLSunProgram.createShader(NULL, NULL);
+	}
 	if (success)
 	{
 		gDeferredWLCloudProgram.mName = "Deferred Windlight Cloud Program";

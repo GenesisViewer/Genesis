@@ -178,6 +178,7 @@ BOOL	gAvatarBacklight = FALSE;
 
 BOOL	gDebugPipeline = FALSE;
 LLPipeline gPipeline;
+F32 LLPipeline::RenderDeferredDisplayGamma;	
 const LLMatrix4a* gGLLastMatrix = NULL;
 
 LLTrace::BlockTimerStatHandle FTM_RENDER_GEOMETRY("Geometry");
@@ -394,6 +395,7 @@ LLPipeline::LLPipeline() :
 
 void LLPipeline::init()
 {
+	LL_INFOS() << "in pipeline Init" <<LL_ENDL;
 	refreshCachedSettings();
 
 	mInitialized = true;
@@ -477,8 +479,9 @@ void LLPipeline::init()
 	gSavedSettings.getControl("RenderFSAASamples")->getCommitSignal()->connect(boost::bind(&LLPipeline::refreshCachedSettings));
 	//gSavedSettings.getControl("RenderAvatarVP")->getCommitSignal()->connect(boost::bind(&LLPipeline::refreshCachedSettings));	//Already registered to handleSetShaderChanged
 	//gSavedSettings.getControl("WindLightUseAtmosShaders")->getCommitSignal()->connect(boost::bind(&LLPipeline::refreshCachedSettings)); //Already registered to handleSetShaderChanged
-
+	LL_INFOS() << "before gGL.init()" <<LL_ENDL;
 	gGL.init();
+	LL_INFOS() << "after gGL.init()" <<LL_ENDL;
 }
 
 LLPipeline::~LLPipeline()

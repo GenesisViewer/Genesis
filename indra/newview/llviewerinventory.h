@@ -35,6 +35,7 @@
 #include "llinventory.h"
 #include "llframetimer.h"
 #include "llwearable.h"
+#include "llinventorysettings.h"
 #include "llui.h" //for LLDestroyClass
 
 #include <boost/signals2.hpp>	// boost::signals2::trackable
@@ -73,6 +74,8 @@ public:
     const std::string& getDescription() const override;
     const LLSaleInfo& getSaleInfo() const override;
     LLInventoryType::EType getInventoryType() const override;
+	virtual bool isSettingsType() const;
+	virtual LLSettingsType::type_e getSettingsType() const;
 	virtual bool isWearableType() const;
 	virtual LLWearableType::EType getWearableType() const;
     U32 getFlags() const override;

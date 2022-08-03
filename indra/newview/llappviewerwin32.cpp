@@ -371,6 +371,7 @@ void LLAppViewerWin32::disableWinErrorReporting()
 	{
 		LL_INFOS() << "WerAddExcludedApplication() failed for " << executable_name << LL_ENDL;
 	}
+
 }
 
 const S32 MAX_CONSOLE_LINES = 500;

@@ -48,6 +48,7 @@ include(ViewerMiscLibs)
 include(WinManifest)
 include(ZLIB)
 include(URIPARSER)
+include(JsonCpp)
 
 
 if(USE_FMODSTUDIO)
@@ -82,6 +83,7 @@ include_directories(
     ${OPENAL_LIB_INCLUDE_DIRS}
     ${LLAPPEARANCE_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${JSONCPP_INCLUDE_DIR}
     )
 
 set(viewer_SOURCE_FILES
@@ -176,6 +178,8 @@ set(viewer_SOURCE_FILES
     lldroptarget.cpp
     lldynamictexture.cpp
     llemote.cpp
+    llenvironment.cpp
+    llenvsettings.cpp
     llenvmanager.cpp
     llestateinfomodel.cpp
     lleventinfo.cpp
@@ -595,6 +599,7 @@ set(viewer_SOURCE_FILES
     llvowater.cpp
     llvowlsky.cpp
     llwatchdog.cpp
+    llwlskyparammgr.cpp	
     llwaterparammanager.cpp
     llwaterparamset.cpp
     llwearablelist.cpp
@@ -729,6 +734,8 @@ set(viewer_HEADER_FILES
     lldroptarget.h
     lldynamictexture.h
     llemote.h
+    llenvironment.h
+    llenvsettings.h
     llenvmanager.h
     llestateinfomodel.h
     lleventinfo.h
@@ -1153,6 +1160,7 @@ set(viewer_HEADER_FILES
     llvowater.h
     llvowlsky.h
     llwatchdog.h
+    llwlskyparammgr.h
     llwaterparammanager.h
     llwaterparamset.h
     llwearablelist.h

@@ -55,6 +55,10 @@ public:
 
 	static LLColor4 sWaterFogColor;
 	static F32 sWaterFogEnd;
+	void setTransparentTextures(const LLUUID& tex1_id,
+								const LLUUID& tex2_id = LLUUID::null);
+	void setNormalMaps(const LLUUID& tex1_id,
+					   const LLUUID& tex2_id = LLUUID::null);
 
 	enum
 	{

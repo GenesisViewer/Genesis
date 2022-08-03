@@ -643,7 +643,7 @@ void LLGLSLShader::mapUniform(const gl_uniform_data_t& gl_uniform, const vector<
         mUniformNameMap[location] = name;
 		mUniformMap[hashedName] = location;
 
-		LL_DEBUGS("ShaderLoading") << "Uniform " << name << " is at location " << location << LL_ENDL;
+		LL_INFOS("ShaderLoading") << "Uniform " << name << " is at location " << location << LL_ENDL;
 
 		// Indexed textures are referenced by hardcoded tex unit index. This is where that mapping happens.
 		if (gl_uniform.texunit_priority < (U32)mFeatures.mIndexedTextureChannels)
@@ -660,9 +660,12 @@ void LLGLSLShader::mapUniform(const gl_uniform_data_t& gl_uniform, const vector<
 			if ( (mUniform[i] == -1)
 				&& (LLShaderMgr::instance()->mReservedUniforms[i] == name))
 			{
+				
 				//found it
 				mUniform[i] = location;
 				mTexture[i] = mapUniformTextureChannel(location, gl_uniform.type);
+				LL_INFOS("ShaderLoading") << "Uniform " << name << " founded " << i << LL_ENDL;
+				LL_INFOS("ShaderLoading") << "Reserved Uniforms " << LLShaderMgr::instance()->mReservedUniforms.size() << " textures size " << mTexture.size() << " muniform size " << mUniform.size() << LL_ENDL;
 				return;
 			}
 		}
@@ -675,6 +678,7 @@ void LLGLSLShader::mapUniform(const gl_uniform_data_t& gl_uniform, const vector<
 				if ( (mUniform[j] == -1)
 					&& ((*uniforms)[i].String() == name))
 				{
+					
 					//found it
 					mUniform[j] = location;
 					mTexture[j] = mapUniformTextureChannel(location, gl_uniform.type);;
@@ -865,7 +869,7 @@ S32 LLGLSLShader::bindTexture(S32 uniform, LLTexture *texture, LLTexUnit::eTextu
 {
 	if (uniform < 0 || uniform >= (S32)mTexture.size())
 	{
-		UNIFORM_ERRS << "Uniform out of range: " << uniform << LL_ENDL;
+		UNIFORM_ERRS <<  "Uniform out of range: " << uniform << LL_ENDL;
 		return -1;
 	}
 	
@@ -983,4 +987,16 @@ void LLGLSLShader::vertexAttrib4f(U32 index, GLfloat x, GLfloat y, GLfloat z, GL
 void LLGLSLShader::setMinimumAlpha(F32 minimum)
 {
 	uniform1f(LLShaderMgr::MINIMUM_ALPHA, minimum);
+}
+
+
+
+//-----------------------------------------------------------------------------
+// LLShaderUniforms class
+//-----------------------------------------------------------------------------
+
+void LLShaderUniforms::apply(LLGLSLShader* shader)
+{
+	//genesis comment
+	//genesis comment
 }

@@ -820,7 +820,10 @@ protected:
 	U8						mLightMode;
 	U32						mLightMask;
 	bool					mLightingEnabled;
-		
+
+	
+
+
 	static BOOL				sRenderPhysicalBeacons;
 	static BOOL				sRenderMOAPBeacons;
 	static BOOL				sRenderScriptedTouchBeacons;
@@ -830,13 +833,80 @@ protected:
 public:
 	static BOOL				sRenderBeacons;
 	static BOOL				sRenderHighlight;
-
+	static LLColor4						PreviewAmbientColor;
+	static LLColor4						PreviewDiffuse0;
+	static LLColor4						PreviewSpecular0;
+	static LLColor4						PreviewDiffuse1;
+	static LLColor4						PreviewSpecular1;
+	static LLColor4						PreviewDiffuse2;
+	static LLColor4						PreviewSpecular2;
+	static LLVector3					PreviewDirection0;
+	static LLVector3					PreviewDirection1;
+	static LLVector3					PreviewDirection2;
+	static LLVector3					RenderGlowLumWeights;
+	static LLVector3					RenderGlowWarmthWeights;
+	static LLVector3					RenderSSAOEffect;
+	static LLVector3					RenderShadowGaussian;
+	static LLVector3					RenderShadowClipPlanes;
+	static LLVector3					RenderShadowOrthoClipPlanes;
+	static LLVector3					RenderShadowSplitExponent;
+	static U32							sRenderByOwner;
+	static F32							RenderDeferredSunWash;
+	static F32							RenderDeferredDisplayGamma;
+	static U32							RenderFSAASamples;
+	static U32							RenderResolutionDivisor;
+	static S32							RenderShadowDetail;
+	static F32							RenderShadowResolutionScale;
+	static S32							RenderLightingDetail;
+	static U32							DebugBeaconLineWidth;
+	static F32							RenderGlowMinLuminance;
+	static F32							RenderGlowMaxExtractAlpha;
+	static F32							RenderGlowWarmthAmount;
+	static U32							RenderGlowResolutionPow;
+	static U32							RenderGlowIterations;
+	static F32							RenderGlowWidth;
+	static F32							RenderGlowStrength;
+	static F32							CameraFocusTransitionTime;
+	static F32							CameraFNumber;
+	static F32							CameraFocalLength;
+	static F32							CameraFieldOfView;
+	static F32							RenderShadowNoise;
+	static F32							RenderShadowBlurSize;
+	static F32							RenderSSAOScale;
+	static U32							RenderSSAOMaxScale;
+	static F32							RenderSSAOFactor;
+	static F32							RenderShadowBiasError;
+	static F32							RenderShadowOffset;
+	static F32							RenderShadowOffsetNoSSAO;
+	static F32							RenderShadowBias;
+	static F32							RenderSpotShadowOffset;
+	static F32							RenderSpotShadowBias;
+	static F32							RenderShadowBlurDistFactor;
+	static S32							RenderReflectionDetail;
+	static F32							RenderFarClip;
+	static F32							RenderShadowErrorCutoff;
+	static F32							RenderShadowFOVCutoff;
+	static F32							CameraMaxCoF;
+	static F32							CameraDoFResScale;
+	static U32							RenderAutoHideGeometryMemoryLimit;
+	static F32							RenderAutoHideSurfaceAreaLimit;
+	static bool							WindLightUseAtmosShaders;
+	static bool							RenderDeferred;
+	static bool							RenderDeferredSSAO;
+	static bool							RenderDelayCreation;
+	static bool							RenderAnimateRes;
+	static bool							RenderSpotLightsInNondeferred;
+	static bool							RenderDepthOfField;
+	static bool							RenderDepthOfFieldInEditMode;
+	static bool							RenderDeferredAtmospheric;
+	static bool							RenderGlow;
+	static bool							RenderWaterReflections;
 	// Determines which set of UVs to use in highlight display
 	//
 	static LLRender::eTexIndex sRenderHighlightTextureChannel;
 
 	//debug use
-	static U32              sCurRenderPoolType ;
+	static U32              sCurRenderPoolType ;	
 } LL_ALIGN_POSTFIX(16);
 
 void render_bbox(const LLVector3 &min, const LLVector3 &max);

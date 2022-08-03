@@ -31,6 +31,7 @@
 
 #include "llsingleton.h"
 
+extern const std::string PUMP_EXPERIENCE;
 class LLExperienceLog final : public LLSingleton<LLExperienceLog>
 {
 	friend class LLSingleton<LLExperienceLog>;
@@ -62,8 +63,9 @@ public:
 	static std::string getFilename();
 	static std::string getPermissionString(const LLSD& message, const std::string& base);
 	bool isExpired(const std::string& date) const;
-protected:
 	void handleExperienceMessage(LLSD& message);
+protected:
+	
 
 
 	void loadEvents();

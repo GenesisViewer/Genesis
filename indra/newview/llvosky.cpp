@@ -52,10 +52,12 @@
 #include "lldrawpoolwlsky.h"
 #include "llwlparammanager.h"
 #include "llwaterparammanager.h"
+#include "llsettingssky.h"
+#include "llenvironment.h"
 
 #undef min
 #undef max
-
+const F32 NIGHTTIME_ELEVATION_COS = sinf(NIGHTTIME_ELEVATION * DEG_TO_RAD);
 static const S32 NUM_TILES_X = 8;
 static const S32 NUM_TILES_Y = 4;
 static const S32 NUM_TILES = NUM_TILES_X * NUM_TILES_Y;
@@ -384,13 +386,13 @@ LLVOSky::LLVOSky(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp)
 	mSun.setIntensity(SUN_INTENSITY);
 	mMoon.setIntensity(0.1f * SUN_INTENSITY);
 
-	mSunTexturep = LLViewerTextureManager::getFetchedTexture(gSunTextureID, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
-	mSunTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
-	mMoonTexturep = LLViewerTextureManager::getFetchedTexture(gMoonTextureID, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
-	mMoonTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
-	mBloomTexturep = LLViewerTextureManager::getFetchedTexture(IMG_BLOOM1);
-	mBloomTexturep->setNoDelete() ;
-	mBloomTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
+	mSunTexturep[0] = LLViewerTextureManager::getFetchedTexture(gSunTextureID, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
+	mSunTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
+	mMoonTexturep[0] = LLViewerTextureManager::getFetchedTexture(gMoonTextureID, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
+	mMoonTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
+	mBloomTexturep[0] = LLViewerTextureManager::getFetchedTexture(IMG_BLOOM1);
+	mBloomTexturep[0]->setNoDelete() ;
+	mBloomTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
 
 	mHeavenlyBodyUpdated = FALSE ;
 
@@ -478,13 +480,13 @@ void LLVOSky::restoreGL()
 	{
 		mSkyTex[i].restoreGL();
 	}
-	mSunTexturep = LLViewerTextureManager::getFetchedTexture(gSunTextureID, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
-	mSunTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
-	mMoonTexturep = LLViewerTextureManager::getFetchedTexture(gMoonTextureID, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
-	mMoonTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
-	mBloomTexturep = LLViewerTextureManager::getFetchedTexture(IMG_BLOOM1);
-	mBloomTexturep->setNoDelete() ;
-	mBloomTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
+	mSunTexturep[0] = LLViewerTextureManager::getFetchedTexture(gSunTextureID, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
+	mSunTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
+	mMoonTexturep[0] = LLViewerTextureManager::getFetchedTexture(gMoonTextureID, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
+	mMoonTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
+	mBloomTexturep[0] = LLViewerTextureManager::getFetchedTexture(IMG_BLOOM1);
+	mBloomTexturep[0]->setNoDelete() ;
+	mBloomTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
 
 	calcAtmospherics();	
 
@@ -1196,11 +1198,38 @@ BOOL LLVOSky::updateSky()
 
 void LLVOSky::updateTextures()
 {
-	if (mSunTexturep)
+	constexpr F32 max_area = (F32)MAX_IMAGE_AREA;
+	if (mSunTexturep[0])
 	{
-		mSunTexturep->addTextureStats( (F32)MAX_IMAGE_AREA );
-		mMoonTexturep->addTextureStats( (F32)MAX_IMAGE_AREA );
-		mBloomTexturep->addTextureStats( (F32)MAX_IMAGE_AREA );
+		mSunTexturep[0]->addTextureStats(max_area);
+	}
+	if (mMoonTexturep[0])
+	{
+		mMoonTexturep[0]->addTextureStats(max_area);
+	}
+	if (mBloomTexturep[0])
+	{
+		mBloomTexturep[0]->addTextureStats(max_area);
+	}
+	if (mCloudNoiseTexturep[0])
+	{
+		mCloudNoiseTexturep[0]->addTextureStats(max_area);
+	}
+	if (mSunTexturep[1])
+	{
+		mSunTexturep[1]->addTextureStats(max_area);
+	}
+	if (mMoonTexturep[1])
+	{
+		mMoonTexturep[1]->addTextureStats(max_area);
+	}
+	if (mBloomTexturep[1])
+	{
+		mBloomTexturep[1]->addTextureStats(max_area);
+	}
+	if (mCloudNoiseTexturep[1])
+	{
+		mCloudNoiseTexturep[1]->addTextureStats(max_area);
 	}
 }
 
@@ -1218,9 +1247,9 @@ LLDrawable *LLVOSky::createDrawable(LLPipeline *pipeline)
 		mFace[FACE_SIDE0 + i] = mDrawable->addFace(poolp, NULL);
 	}
 
-	mFace[FACE_SUN] = mDrawable->addFace(poolp, mSunTexturep);
-	mFace[FACE_MOON] = mDrawable->addFace(poolp, mMoonTexturep);
-	mFace[FACE_BLOOM] = mDrawable->addFace(poolp, mBloomTexturep);
+	mFace[FACE_SUN] = mDrawable->addFace(poolp, mSunTexturep[0]);
+	mFace[FACE_MOON] = mDrawable->addFace(poolp, mMoonTexturep[0]);
+	mFace[FACE_BLOOM] = mDrawable->addFace(poolp, mBloomTexturep[0]);
 
 	return mDrawable;
 }
@@ -2289,4 +2318,238 @@ void LLVOSky::setSunDirection(const LLVector3 &sun_dir, const LLVector3 &sun_ang
 	if (dp < 0.995f) { //the sun jumped a great deal, update immediately
 		mForceUpdate = TRUE;
 	}
+}
+void LLVOSky::setSunDirectionCFR(const LLVector3& sun_dir_cfr)
+{
+	mSun.setDirection(sun_dir_cfr);
+	mSun.setAngularVelocity(LLVector3::zero);
+
+	// Push the sun "South" as it approaches directly overhead so that we can
+	// always see bump mapping on the upward facing faces of cubes.
+		
+	// Same as dot product with the up direction + clamp.
+	F32 sun_dot = llmax(0.f, sun_dir_cfr.mV[2]);
+	sun_dot *= sun_dot;
+
+	// Create normalized vector that has the sun_dir pushed south about an hour
+	// and change.
+	LLVector3 adjusted_dir = (sun_dir_cfr +
+							  LLVector3(0.f, -0.70711f, 0.70711f)) * 0.5f;
+	
+	// Blend between normal sun dir and adjusted sun dir based on how close we
+	// are to having the sun overhead.
+	mBumpSunDir = adjusted_dir * sun_dot + sun_dir_cfr * (1.f - sun_dot);
+	mBumpSunDir.normalize();
+
+	const LLSettingsSky::ptr_t& skyp = gEnvironment.getCurrentSky();
+	if (skyp)	// Paranoia
+	{
+		updateDirections(skyp);
+	}
+}
+void LLVOSky::setSunAndMoonDirectionsCFR(const LLVector3& sun_dir,const LLVector3& moon_dir) {
+	setMoonDirectionCFR(moon_dir);
+	setSunDirectionCFR(sun_dir);	
+}
+void LLVOSky::setMoonDirectionCFR(const LLVector3& moon_dir)
+{
+	mMoon.setDirection(moon_dir);
+	const LLSettingsSky::ptr_t& skyp = gEnvironment.getCurrentSky();
+	if (skyp)	// Paranoia
+	{
+		updateDirections(skyp);
+	}
+}
+void LLVOSky::updateDirections(const LLSettingsSky::ptr_t& skyp)
+{
+	mSun.setDirection(skyp->getSunDirection());
+	mSun.setAngularVelocity(LLVector3::zero);
+	mSun.setRotation(skyp->getSunRotation());
+	mMoon.setDirection(skyp->getMoonDirection());
+	mMoon.setRotation(skyp->getMoonRotation());
+	mSun.renewDirection();
+	mMoon.renewDirection();
+}
+void LLVOSky::setSunTextures(const LLUUID& sun_tex1, const LLUUID& sun_tex2)
+{
+	if (sun_tex1.isNull())
+	{
+		if (gSunTextureID != IMG_SUN)
+		{
+			mSunTexturep[0] =
+				LLViewerTextureManager::getFetchedTexture(gSunTextureID,
+														  FTT_DEFAULT, true,
+														  LLGLTexture::BOOST_UI);
+			mSunTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
+		}
+		else
+		{
+			mSunTexturep[0] = LLViewerFetchedTexture::sDefaultSunImagep;
+		}
+	}
+	else
+	{
+		mSunTexturep[0] =
+			LLViewerTextureManager::getFetchedTexture(sun_tex1,
+													  FTT_DEFAULT, true,
+													  LLGLTexture::BOOST_UI);
+		mSunTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
+	}
+
+	if (sun_tex2.isNull())
+	{
+		mSunTexturep[1] = NULL;
+	}
+	else
+	{
+		mSunTexturep[1] =
+			LLViewerTextureManager::getFetchedTexture(sun_tex2,
+													  FTT_DEFAULT, true,
+													  LLGLTexture::BOOST_UI);
+		mSunTexturep[1]->setAddressMode(LLTexUnit::TAM_CLAMP);
+	}
+
+	LLFace* facep = mFace[FACE_SUN];
+	if (!facep)
+	{
+		return;
+	}
+
+	LLViewerTexture* tex = facep->getTexture(LLRender::DIFFUSE_MAP);
+	if (tex && tex != mSunTexturep[0] && tex->isViewerMediaTexture())
+	{
+		((LLViewerMediaTexture*)tex)->removeMediaFromFace(facep);
+	}
+
+	tex = facep->getTexture(LLRender::ALTERNATE_DIFFUSE_MAP);
+	if (tex && tex != mSunTexturep[1] && tex->isViewerMediaTexture())
+	{
+		((LLViewerMediaTexture*)tex)->removeMediaFromFace(facep);
+	}
+
+	facep->setTexture(LLRender::DIFFUSE_MAP, mSunTexturep[0]);
+	if (mSunTexturep[1] && gPipeline.canUseWindLightShaders())
+	{
+		facep->setTexture(LLRender::ALTERNATE_DIFFUSE_MAP, mSunTexturep[1]);
+	}
+}
+
+void LLVOSky::setMoonTextures(const LLUUID& moon_tex1, const LLUUID& moon_tex2)
+{
+	if (moon_tex1.isNull())
+	{
+		if (gMoonTextureID != IMG_MOON)
+		{
+			mMoonTexturep[0] =
+				LLViewerTextureManager::getFetchedTexture(gMoonTextureID,
+														  FTT_DEFAULT, true,
+														  LLGLTexture::BOOST_UI);
+			mMoonTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
+		}
+		else
+		{
+			mMoonTexturep[0] = LLViewerFetchedTexture::sDefaultMoonImagep;
+		}
+	}
+	else
+	{
+		mMoonTexturep[0] =
+			LLViewerTextureManager::getFetchedTexture(moon_tex1,
+													  FTT_DEFAULT, true,
+													  LLGLTexture::BOOST_UI);
+		mMoonTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
+	}
+
+	if (moon_tex2.isNull())
+	{
+		mMoonTexturep[1] = NULL;
+	}
+	else
+	{
+		mMoonTexturep[1] =
+			LLViewerTextureManager::getFetchedTexture(moon_tex2,
+													  FTT_DEFAULT, true,
+													  LLGLTexture::BOOST_UI);
+		mMoonTexturep[1]->setAddressMode(LLTexUnit::TAM_CLAMP);
+	}
+
+	LLFace* facep = mFace[FACE_MOON];
+	if (!facep)
+	{
+		return;
+	}
+
+	LLViewerTexture* tex = facep->getTexture(LLRender::DIFFUSE_MAP);
+	if (tex && tex != mMoonTexturep[0] && tex->isViewerMediaTexture())
+	{
+		((LLViewerMediaTexture*)tex)->removeMediaFromFace(facep);
+	}
+
+	tex = facep->getTexture(LLRender::ALTERNATE_DIFFUSE_MAP);
+	if (tex && tex != mMoonTexturep[1] && tex->isViewerMediaTexture())
+	{
+		((LLViewerMediaTexture*)tex)->removeMediaFromFace(facep);
+	}
+
+	facep->setTexture(LLRender::DIFFUSE_MAP, mMoonTexturep[0]);
+	if (mMoonTexturep[1] && gPipeline.canUseWindLightShaders())
+	{
+		facep->setTexture(LLRender::ALTERNATE_DIFFUSE_MAP, mMoonTexturep[1]);
+	}
+}
+
+void LLVOSky::setCloudNoiseTextures(const LLUUID& tex1, const LLUUID& tex2)
+{
+	if (tex1.isNull())
+	{
+		mCloudNoiseTexturep[0] =
+			LLViewerFetchedTexture::sDefaultCloudNoiseImagep;
+	}
+	else
+	{
+		mCloudNoiseTexturep[0] =
+			LLViewerTextureManager::getFetchedTexture(tex1, FTT_DEFAULT, true,
+													  LLGLTexture::BOOST_UI);
+		mCloudNoiseTexturep[0]->setAddressMode(LLTexUnit::TAM_WRAP);
+	}
+
+	if (tex2.isNull())
+	{
+		mCloudNoiseTexturep[1] = NULL;
+		return;
+	}
+
+	mCloudNoiseTexturep[1] =
+		LLViewerTextureManager::getFetchedTexture(tex2, FTT_DEFAULT, true,
+												  LLGLTexture::BOOST_UI);
+	mCloudNoiseTexturep[1]->setAddressMode(LLTexUnit::TAM_WRAP);
+}
+
+void LLVOSky::setBloomTextures(const LLUUID& tex1, const LLUUID& tex2)
+{
+	if (tex1.isNull())
+	{
+		mBloomTexturep[0] = LLViewerFetchedTexture::sBloomImagep;
+	}
+	else
+	{
+		mBloomTexturep[0] =
+			LLViewerTextureManager::getFetchedTexture(tex1, FTT_DEFAULT, true,
+													  LLGLTexture::BOOST_UI);
+		if (mBloomTexturep[0])
+		{
+			mBloomTexturep[0]->setAddressMode(LLTexUnit::TAM_CLAMP);
+		}
+	}
+
+	if (tex2.isNull())
+	{
+		mBloomTexturep[1] = mBloomTexturep[0];
+		return;
+	}
+
+	mBloomTexturep[1] =
+		LLViewerTextureManager::getFetchedTexture(tex2, FTT_DEFAULT, true,
+												  LLGLTexture::BOOST_UI);
+	mBloomTexturep[1]->setAddressMode(LLTexUnit::TAM_CLAMP);
 }

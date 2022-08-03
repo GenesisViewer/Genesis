@@ -144,6 +144,7 @@ public:
 	virtual std::map<String, LLSD>& map() { static std::map<String, LLSD> empty; return empty; }
 	LLSD::map_const_iterator beginMap() const { return map().begin(); }
 	LLSD::map_const_iterator endMap() const { return map().end(); }
+	
 	virtual const std::vector<LLSD>& array() const { static const std::vector<LLSD> empty; return empty; }
 	virtual std::vector<LLSD>& array() { static std::vector<LLSD> empty; return empty; }
 	LLSD::array_const_iterator beginArray() const { return array().begin(); }
@@ -379,7 +380,6 @@ namespace
 		LLSD::Type type() const override { return LLSD::TypeMap; }
 
 		LLSD::Boolean asBoolean() const override { return !mData.empty(); }
-
 		bool has(const LLSD::String&) const override; 
 
 		using LLSD::Impl::get; // Unhiding get(LLSD::Integer)

@@ -48,6 +48,8 @@
 #define PTR_NAMESPACE     std
 #define SETTINGS_OVERRIDE override
 
+class LLShaderUniforms;
+
 class LLSettingsBase : 
     public PTR_NAMESPACE::enable_shared_from_this<LLSettingsBase>,
     private boost::noncopyable
@@ -63,6 +65,7 @@ public:
     typedef F64Seconds Seconds;
     typedef F64        BlendFactor;
     typedef F32        TrackPosition; // 32-bit as these are stored in LLSD as such
+
     static const TrackPosition INVALID_TRACKPOS;
 
     static const std::string SETTING_ID;
@@ -353,6 +356,11 @@ protected:
 
     // Apply any settings that need special handling. 
     virtual void applySpecial(void *) { };
+
+    // Apply any settings that need special handling.
+	inline virtual void applySpecial(LLShaderUniforms* uniforms)
+	{
+	}
 
     virtual parammapping_t getParameterMap() const { return parammapping_t(); }
 

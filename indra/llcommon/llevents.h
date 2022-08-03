@@ -214,6 +214,7 @@ class LL_COMMON_API LLEventPumps: public LLSingleton<LLEventPumps>
 {
     friend class LLSingleton<LLEventPumps>;
 public:
+    
     /**
      * Find or create an LLEventPump instance with a specific name. We return
      * a reference so there's no question about ownership. obtain() @em finds
@@ -358,6 +359,7 @@ typedef boost::signals2::trackable LLEventTrackable;
 class LL_COMMON_API LLEventPump: public LLEventTrackable
 {
 public:
+    static const std::string ANONYMOUS; // constant for anonymous listeners.
     /**
      * Exception thrown by LLEventPump(). You are trying to instantiate an
      * LLEventPump (subclass) using the same name as some other instance, and

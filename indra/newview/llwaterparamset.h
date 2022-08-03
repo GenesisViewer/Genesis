@@ -129,7 +129,7 @@ public:
 	/// \param weight		The amount to interpolate
 	void mix(LLWaterParamSet& src, LLWaterParamSet& dest, 
 		F32 weight);
-
+	
 };
 
 inline void LLWaterParamSet::setAll(const LLSD& val)

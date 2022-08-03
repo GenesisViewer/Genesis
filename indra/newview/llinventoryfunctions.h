@@ -107,7 +107,23 @@ public:
 
 	static bool itemTransferCommonlyAllowed(const LLInventoryItem* item);
 };
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Class LLEnvSettingsCollector
+//
+// Collects environment settings items.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+class LLEnvSettingsCollector final : public LLInventoryCollectFunctor
+{
+public:
+	LLEnvSettingsCollector() = default;
+
+	inline bool operator()(LLInventoryCategory*,
+							  LLInventoryItem* item) override
+	{
+		return item && item->getType() == LLAssetType::AT_SETTINGS;
+	}
+};
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Class LLAssetIDMatches
 //

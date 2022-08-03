@@ -86,6 +86,13 @@ const S32 HTTP_SERVICE_UNAVAILABLE = 503;
 const S32 HTTP_GATEWAY_TIME_OUT = 504;
 const S32 HTTP_VERSION_NOT_SUPPORTED = 505;
 
+
+const std::string HTTP_IN_HEADER_CONTENT_TYPE("content-type");
+const std::string HTTP_CONTENT_LLSD_XML("application/llsd+xml");
+const std::string HTTP_OUT_HEADER_DESTINATION("Destination");
+const std::string HTTP_OUT_HEADER_ACCEPT("Accept");
+const std::string HTTP_OUT_HEADER_CONTENT_TYPE("Content-Type");
+
 // We combine internal process errors with status codes
 // These status codes should not be sent over the wire
 //   and indicate something went wrong internally.

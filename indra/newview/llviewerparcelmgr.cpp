@@ -679,7 +679,26 @@ bool LLViewerParcelMgr::allowAgentBuild() const
 		return gAgent.isGodlike();
 	}
 }
+LLParcel* LLViewerParcelMgr::getSelectedOrAgentParcel() const
+{
+	LLParcel* parcel = mAgentParcel;
 
+	LLParcelSelectionHandle handle = mFloatingParcelSelection;
+	if (handle)
+	{
+		LLParcelSelection* selection = handle.get();
+		if (selection)
+		{
+			parcel = selection->getParcel();
+			if (!parcel || parcel->getLocalID() == INVALID_PARCEL_ID)
+			{
+				parcel = mAgentParcel;
+			}
+		}
+	}
+
+	return parcel;
+}
 // Return whether anyone can build on the given parcel
 bool LLViewerParcelMgr::allowAgentBuild(const LLParcel* parcel) const
 {

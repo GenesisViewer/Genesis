@@ -50,6 +50,7 @@ set(cmake_SOURCE_FILES
     GooglePerfTools.cmake
     Hunspell.cmake
     JPEG.cmake
+    JsonCpp.cmake
     LLAddBuildTest.cmake
     LLAppearance.cmake
     LLAudio.cmake

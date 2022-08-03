@@ -311,6 +311,8 @@ extern LLGLSLShader			gDeferredFullbrightAlphaMaskWaterProgram;
 extern LLGLSLShader			gDeferredEmissiveProgram;
 extern LLGLSLShader			gDeferredAvatarAlphaProgram;
 extern LLGLSLShader			gDeferredWLSkyProgram;
+extern LLGLSLShader			gDeferredWLSunProgram;
+extern LLGLSLShader			gDeferredWLMoonProgram;
 extern LLGLSLShader			gDeferredWLCloudProgram;
 extern LLGLSLShader			gDeferredStarProgram;
 extern LLGLSLShader			gDeferredFullbrightShinyProgram;

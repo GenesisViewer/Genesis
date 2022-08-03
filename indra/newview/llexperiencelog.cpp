@@ -35,7 +35,8 @@
 #include "llerror.h"
 #include "lldate.h"
 
-
+// Global
+const std::string PUMP_EXPERIENCE = "experience_permission";
 class LLExperienceLogDispatchHandler final : public LLDispatchHandler
 {
 public:

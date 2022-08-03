@@ -2253,7 +2253,21 @@ U32 LLViewerInventoryItem::getFlags() const
 	}
 	return LLInventoryItem::getFlags();
 }
+//virtual
+bool LLViewerInventoryItem::isSettingsType() const
+{
+	return getType() == LLInventoryType::IT_SETTINGS;
+}
 
+//virtual
+LLSettingsType::type_e LLViewerInventoryItem::getSettingsType() const
+{
+	if (!isSettingsType())
+	{
+		return LLSettingsType::ST_NONE;
+	}
+	return LLSettingsType::fromInventoryFlags(getFlags());
+}
 bool LLViewerInventoryItem::isWearableType() const
 {
 	return (getInventoryType() == LLInventoryType::IT_WEARABLE);

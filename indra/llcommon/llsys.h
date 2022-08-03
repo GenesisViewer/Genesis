@@ -80,7 +80,14 @@ public:
 	bool hasSSE() const;
 	bool hasSSE2() const;
 	F64 getMHz() const;
-
+	// Emits its own set of llinfos and llwarns, so no need for a returned
+	// success boolean.
+	static void setMainThreadCPUAffinifty(U32 cpu_mask);
+	// Returns 1 when successful, 0 when failed, -1 when waiting for main
+	// thread affinity to be set (i.e. when it should be retried). When a
+	// name is passed, the method warns whenever it could not set the thread
+	// affinity.
+	static S32 setThreadCPUAffinity(const char* name = NULL);
 	// Family is "AMD Duron" or "Intel Pentium Pro"
 	const std::string& getFamily() const { return mFamily; }
 

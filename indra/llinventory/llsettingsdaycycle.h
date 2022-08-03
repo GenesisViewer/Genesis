@@ -70,10 +70,14 @@ public:
 
     typedef std::map<LLSettingsBase::TrackPosition, LLSettingsBase::ptr_t>  CycleTrack_t;
     typedef std::vector<CycleTrack_t>                                       CycleList_t;
+    typedef CycleTrack_t::iterator                                          cycle_track_it_t;
+    typedef std::map<F32, LLSettingsBase::ptr_t> cycle_track_t;
+	typedef cycle_track_t::iterator cycle_track_it_t;
     typedef PTR_NAMESPACE::shared_ptr<LLSettingsDay>                        ptr_t;
     typedef PTR_NAMESPACE::weak_ptr<LLSettingsDay>                          wptr_t;
     typedef std::vector<LLSettingsBase::TrackPosition>                      KeyframeList_t;
     typedef std::pair<CycleTrack_t::iterator, CycleTrack_t::iterator>       TrackBound_t;
+    typedef std::pair<cycle_track_it_t, cycle_track_it_t> track_bound_t;
 
     //---------------------------------------------------------------------
     LLSettingsDay(const LLSD &data);
@@ -114,9 +118,10 @@ public:
     virtual LLSettingsSkyPtr_t  getDefaultSky() const = 0;
     virtual LLSettingsWaterPtr_t getDefaultWater() const = 0;
 
-    virtual LLSettingsSkyPtr_t  buildSky(LLSD) const = 0;
-    virtual LLSettingsWaterPtr_t buildWater(LLSD) const = 0;
-
+    //virtual LLSettingsSkyPtr_t  buildSky(LLSD) const = 0;
+    //virtual LLSettingsWaterPtr_t buildWater(LLSD) const = 0;
+    virtual LLSettingsSkyPtr_t   buildSky(const LLSD& settings) const = 0;
+	virtual LLSettingsWaterPtr_t buildWater(const LLSD& settings) const = 0;
     void                        setInitialized(bool value = true) { mInitialized = value; }
     CycleTrack_t &              getCycleTrack(size_t track);
     const CycleTrack_t &        getCycleTrackConst(size_t track) const;

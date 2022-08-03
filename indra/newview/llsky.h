@@ -93,6 +93,21 @@ public:
 	F32 getSunPhase() const;
 	void setSunPhase(const F32 phase);
 
+	void setSunScale(F32 sun_scale);
+	void setMoonScale(F32 moon_scale);
+	void setSunAndMoonDirectionsCFR(const LLVector3& sun_direction,
+									const LLVector3& moon_direction);
+	void setSunDirectionCFR(const LLVector3& sun_direction);
+	void setMoonDirectionCFR(const LLVector3& moon_direction);
+	void setSunTextures(const LLUUID& sun_tex1,
+						const LLUUID& sun_tex2 = LLUUID::null);
+	void setMoonTextures(const LLUUID& moon_tex1,
+						 const LLUUID& moon_tex2 = LLUUID::null);
+
+	void setCloudNoiseTextures(const LLUUID& cld_tex1,
+							   const LLUUID& cld_tex2 = LLUUID::null);
+	void setBloomTextures(const LLUUID& bloom_tex1,
+						  const LLUUID& bloom_tex2 = LLUUID::null);
 	void destroyGL();
 	void restoreGL();
 	void resetVertexBuffers();

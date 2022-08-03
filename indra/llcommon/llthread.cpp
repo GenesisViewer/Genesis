@@ -115,6 +115,8 @@ void *APR_THREAD_FUNC LLThread::staticRun(apr_thread_t *apr_threadp, void *datap
 	return NULL;
 }
 
+// Caching the current thread Id in a thread_local variable for speed... HB
+static thread_local LLThread::id_t tThreadId = boost::this_thread::get_id();
 
 LLThread::LLThread(std::string const& name) :
 	mPaused(false),
@@ -265,7 +267,18 @@ void LLThread::setQuitting()
 	mRunCondition->unlock();
 	wake();
 }
-
+//static
+LLThread::id_t LLThread::currentID()
+{
+	return tThreadId;
+}
+//static
+U64 LLThread::thisThreadIdHash()
+{
+	// Caching the hash in a thread_local static variable for speed. HB
+	thread_local U64 id_hash = boost::hash<id_t>()(tThreadId);
+	return id_hash;
+}
 // static
 void LLThread::yield()
 {

@@ -289,6 +289,8 @@ public:
 	/// @return all named water presets.
 	const preset_map_t& getPresets() const { return mParamList; }
 
+	static std::vector<std::string> getLoadedPresetsList();
+
 	/// @return user and system preset names as a single list
 	void getPresetNames(preset_name_list_t& presets) const;
 
@@ -342,6 +344,10 @@ public:
 	
 	F32 mDensitySliderValue;
 
+	// List of all the parameters, listed by name
+	typedef std::map<std::string, LLWaterParamSet> paramset_map_t;
+	paramset_map_t			mParamList;
+
 private:
 	friend class LLSingleton<LLWaterParamManager>;
 	/*virtual*/ void initSingleton();
@@ -359,8 +365,7 @@ private:
 	F32 mWaterFogKS;
 	std::vector<LLGLSLShader *> mShaderList;
 
-	// list of all the parameters, listed by name
-	preset_map_t mParamList;
+	
 
 	preset_list_signal_t mPresetListChangeSignal;
 

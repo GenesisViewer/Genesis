@@ -63,6 +63,7 @@ public:
 	~LLTimer();
 
 	static void initClass();
+
 	static void cleanupClass();
 
 	// Return a high precision number of seconds since the start of
@@ -109,6 +110,10 @@ public:
 
 
 	static U64 getCurrentClockCount();		// Returns the raw clockticks
+
+	// Returns a high precision micro-seconds time (usually since computer boot
+	// up time).
+	static U64 totalTime();
 };
 
 //

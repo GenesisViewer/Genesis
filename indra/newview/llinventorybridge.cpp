@@ -6825,8 +6825,10 @@ void LLSettingsBridge::performAction(LLInventoryModel* model, std::string action
         LLUUID asset_id = item->getAssetUUID();
         
 		
-        LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, asset_id);
-        LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+        gEnvironment.setEnvironment(LLEnvironment::ENV_LOCAL, asset_id,
+										LLEnvironment::TRANSITION_INSTANT);
+			gEnvironment.setSelectedEnvironment(LLEnvironment::ENV_LOCAL,
+												LLEnvironment::TRANSITION_INSTANT);
 		
     }
     else if ("apply_settings_parcel" == action)

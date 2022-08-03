@@ -350,6 +350,7 @@ void LLApp::runErrorHandler()
 {
 	if (LLApp::sErrorHandler)
 	{
+		
 		LLApp::sErrorHandler();
 	}
 
@@ -474,21 +475,36 @@ int LLApp::getPid()
 }
 
 #if LL_WINDOWS
-LONG WINAPI default_windows_exception_handler(struct _EXCEPTION_POINTERS *exception_infop)
+LONG WINAPI default_windows_exception_handler(struct _EXCEPTION_POINTERS *info)
 {
 	// Translate the signals/exceptions into cross-platform stuff
 	// Windows implementation
 
 	// Make sure the user sees something to indicate that the app crashed.
 	LONG retval;
-
+	
 	if (LLApp::isError())
 	{
 		LL_WARNS() << "Got another fatal signal while in the error handler, die now!" << LL_ENDL;
 		retval = EXCEPTION_EXECUTE_HANDLER;
 		return retval;
 	}
+	int code = info->ExceptionRecord->ExceptionCode;
+    int flags = info->ExceptionRecord->ExceptionFlags;
+    void *address = info->ExceptionRecord->ExceptionAddress;
+    const char *faultName = "";
+    switch(info->ExceptionRecord->ExceptionCode) {
+        case EXCEPTION_ACCESS_VIOLATION:      faultName = "ACCESS VIOLATION"     ; break;
+        case EXCEPTION_DATATYPE_MISALIGNMENT: faultName = "DATATYPE MISALIGNMENT"; break;
+        case EXCEPTION_FLT_DIVIDE_BY_ZERO:    faultName = "FLT DIVIDE BY ZERO"   ; break;
+        default:                              faultName = "(N/A)"                ; break;
+    }
 
+    LL_INFOS() << "=== CRASH OCCURRED ===" <<LL_ENDL;
+    LL_INFOS() << "An unhandled exception occurred:"<<LL_ENDL;
+    LL_INFOS() << "Code:" << code << "-" << faultName <<LL_ENDL;
+    LL_INFOS() << "Flags:" << flags <<LL_ENDL;
+    LL_INFOS() << "Address" << address <<LL_ENDL;
 	// Flag status to error, so thread_error starts its work
 	LLApp::setError();
 

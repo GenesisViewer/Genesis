@@ -99,6 +99,8 @@ struct RegisterFlush : public LLEventTrackable
 };
 static RegisterFlush registerFlush;
 
+const std::string LLEventPump::ANONYMOUS = std::string();
+
 /*****************************************************************************
 *   LLEventPumps
 *****************************************************************************/

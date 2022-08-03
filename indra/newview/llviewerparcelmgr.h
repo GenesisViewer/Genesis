@@ -167,7 +167,7 @@ public:
 
 	typedef boost::signals2::signal<void (const LLViewerRegion*)> collision_update_signal_t;
 	boost::signals2::connection setCollisionUpdateCallback(const collision_update_signal_t::slot_type & cb);
-
+	LLParcel* getSelectedOrAgentParcel() const;
 	// Can this agent build on the parcel he is on?
 	// Used for parcel property icons in nav bar.
 	bool	allowAgentBuild() const;
@@ -293,7 +293,10 @@ public:
 
 	static BOOL isParcelOwnedByAgent(const LLParcel* parcelp, U64 group_proxy_power);
 	static BOOL isParcelModifiableByAgent(const LLParcel* parcelp, U64 group_proxy_power);
-
+	LL_INLINE bool waitingForParcelInfo() const
+	{
+		return mTeleportInProgress;
+	}
 private:
 	static void sendParcelAccessListUpdate(U32 flags, const std::map<LLUUID, class LLAccessEntry>& entries, LLViewerRegion* region, S32 parcel_local_id);
 	static void sendParcelExperienceUpdate( const U32 flags, uuid_vec_t experience_ids, LLViewerRegion* region, S32 parcel_local_id );

@@ -129,6 +129,25 @@ std::string LLCoros::getNameByID(const void* self_id) const
     }
     return "";
 }
+std::string LLCoros::launch(const std::string& prefix, const callable_t& callable)
+{
+    std::string name(generateDistinctName(prefix));
+    // 'dispatch' means: enter the new fiber immediately, returning here only
+    // when the fiber yields for whatever reason.
+    // std::allocator_arg is a flag to indicate that the following argument is
+    // a StackAllocator.
+    // protected_fixedsize_stack sets a guard page past the end of the new
+    // stack so that stack underflow will result in an access violation
+    // instead of weird, subtle, possibly undiagnosed memory stomps.
+
+   
+        //genesis comment
+        LL_INFOS () << "Not implemented LLCoros::launch " << prefix << LL_ENDL;
+        //genesis comment
+   
+
+    return name;
+}
 
 void LLCoros::setStackSize(S32 stacksize)
 {

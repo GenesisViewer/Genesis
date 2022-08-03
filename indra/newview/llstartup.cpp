@@ -473,19 +473,19 @@ void init_audio()
 				// if the audio engine hasn't set up its own preferred handler for streaming audio then set up the generic streaming audio implementation which uses media plugins
 				if (NULL == gAudiop->getStreamingAudioImpl())
 				{
-					LL_INFOS("AppInit") << "Using media plugins to render streaming audio" << LL_ENDL;
+					LL_DEBUGS("AppInit") << "Using media plugins to render streaming audio" << LL_ENDL;
 					gAudiop->setStreamingAudioImpl(new LLStreamingAudio_MediaPlugins());
 				}
 				// Unmute audio if desired and setup volumes.
 				// This is a not-uncommon crash site, so surround it with
 				// llinfos output to aid diagnosis.
-				LL_INFOS("AppInit") << "Doing first audio_update_volume..." << LL_ENDL;
+				LL_DEBUGS("AppInit") << "Doing first audio_update_volume..." << LL_ENDL;
 				audio_update_volume(false);
-				LL_INFOS("AppInit") << "Done first audio_update_volume." << LL_ENDL;
+				LL_DEBUGS("AppInit") << "Done first audio_update_volume." << LL_ENDL;
 			}
 		}
 	}
-	LL_INFOS("AppInit") << "Audio Engine Initialized." << LL_ENDL;
+	LL_DEBUGS("AppInit") << "Audio Engine Initialized." << LL_ENDL;
 }
 
 // Returns false to skip other idle processing. Should only return
@@ -780,7 +780,7 @@ bool idle_startup()
 			}
 		}
 
-		LL_INFOS("AppInit") << "Message System Initialized." << LL_ENDL;
+		LL_DEBUGS("AppInit") << "Message System Initialized." << LL_ENDL;
 		
 		//-------------------------------------------------
 		// Load file- and dirpicker {context, default path} map.
@@ -1018,7 +1018,7 @@ bool idle_startup()
 			gSavedSettings.setString("FirstName", firstname);
 			gSavedSettings.setString("LastName", lastname);
 
-			LL_INFOS("AppInit") << "Attempting login as: " << firstname << " " << lastname << LL_ENDL;
+			LL_DEBUGS("AppInit") << "Attempting login as: " << firstname << " " << lastname << LL_ENDL;
 			gDebugInfo["LoginName"] = firstname + " " + lastname;	
 		}
 		else
@@ -1201,7 +1201,7 @@ bool idle_startup()
 
 	if (STATE_LOGIN_VOICE_LICENSE == LLStartUp::getStartupState())
 	{
-		LL_DEBUGS("AppInitStartupState") << "STATE_LOGIN_VOICE_LICENSE" << LL_ENDL;
+		LL_INFOS("AppInitStartupState") << "STATE_LOGIN_VOICE_LICENSE" << LL_ENDL;
 		// prompt the user to agree to the voice license before enabling voice.
 		// only send users here on first login, otherwise continue
 		// on to STATE_LOGIN_AUTH_INIT
@@ -1268,7 +1268,7 @@ bool idle_startup()
 
 	if (STATE_XMLRPC_LEGACY_LOGIN == LLStartUp::getStartupState())
 	{
-		LL_DEBUGS() << "STATE_XMLRPC_LEGACY_LOGIN" << LL_ENDL;
+		LL_INFOS() << "STATE_XMLRPC_LEGACY_LOGIN" << LL_ENDL;
 		progress += 0.02f;
 		display_startup();
 		
@@ -1704,7 +1704,7 @@ bool idle_startup()
 		display_startup();
 
 		LLViewerRegion *regionp = LLWorld::getInstance()->getRegionFromHandle(gFirstSimHandle);
-		LL_INFOS("AppInit") << "Adding initial simulator " << regionp->getOriginGlobal() << LL_ENDL;
+		LL_DEBUGS("AppInit") << "Adding initial simulator " << regionp->getOriginGlobal() << LL_ENDL;
 		
 		regionp->setSeedCapability(gFirstSimSeedCap);
 		LL_DEBUGS("AppInit") << "Waiting for seed grant ...." << LL_ENDL;
@@ -1819,7 +1819,7 @@ bool idle_startup()
 		//
 		// Set message handlers
 		//
-		LL_INFOS("AppInit") << "Initializing communications..." << LL_ENDL;
+		LL_DEBUGS("AppInit") << "Initializing communications..." << LL_ENDL;
 
 		// register callbacks for messages. . . do this after initial handshake to make sure that we don't catch any unwanted
 		register_viewer_callbacks(gMessageSystem);
@@ -1954,7 +1954,7 @@ bool idle_startup()
 
 		msg->enableCircuit(gFirstSim, TRUE);
 		// now, use the circuit info to tell simulator about us!
-		LL_INFOS("AppInit") << "viewer: UserLoginLocationReply() Enabling " << gFirstSim << " with code " << msg->mOurCircuitCode << LL_ENDL;
+		LL_DEBUGS("AppInit") << "viewer: UserLoginLocationReply() Enabling " << gFirstSim << " with code " << msg->mOurCircuitCode << LL_ENDL;
 		msg->newMessageFast(_PREHASH_UseCircuitCode);
 		msg->nextBlockFast(_PREHASH_CircuitCode);
 		msg->addU32Fast(_PREHASH_Code, msg->mOurCircuitCode);
@@ -2652,7 +2652,7 @@ bool idle_startup()
 			if (isAgentAvatarValid()
 				&& gAgentAvatarp->isFullyLoaded())
 			{
-				LL_DEBUGS("Avatar") << "avatar fully loaded" << LL_ENDL;
+				LL_INFOS("Avatar") << "avatar fully loaded" << LL_ENDL;
 				LLStartUp::setStartupState( STATE_CLEANUP );
 				return TRUE;
 			}
@@ -2663,7 +2663,7 @@ bool idle_startup()
 			if ( gAgentWearables.areWearablesLoaded() )
 			{
 				// We have our clothing, proceed.
-				LL_DEBUGS("Avatar") << "wearables loaded" << LL_ENDL;
+				LL_INFOS("Avatar") << "wearables loaded" << LL_ENDL;
 				LLStartUp::setStartupState( STATE_CLEANUP );
 				return TRUE;
 			}
@@ -2784,7 +2784,7 @@ bool idle_startup()
 
 void login_show()
 {
-	LL_INFOS("AppInit") << "Initializing Login Screen" << LL_ENDL;
+	LL_DEBUGS("AppInit") << "Initializing Login Screen" << LL_ENDL;
 
 
 	// This creates the LLPanelLogin instance.
@@ -3248,7 +3248,7 @@ bool callback_choose_gender(const LLSD& notification, const LLSD& response)
 void LLStartUp::loadInitialOutfit( const std::string& outfit_folder_name,
 								   const std::string& gender_name )
 {
-	LL_DEBUGS() << "starting" << LL_ENDL;
+	LL_INFOS() << "starting" << LL_ENDL;
 
 	// Not going through the processAgentInitialWearables path, so need to set this here.
 	LLAppearanceMgr::instance().setAttachmentInvLinkEnable(true);
@@ -3258,12 +3258,12 @@ void LLStartUp::loadInitialOutfit( const std::string& outfit_folder_name,
 	ESex gender;
 	if (gender_name == "male")
 	{
-		LL_DEBUGS() << "male" << LL_ENDL;
+		LL_INFOS() << "male" << LL_ENDL;
 		gender = SEX_MALE;
 	}
 	else
 	{
-		LL_DEBUGS() << "female" << LL_ENDL;
+		LL_INFOS() << "female" << LL_ENDL;
 		gender = SEX_FEMALE;
 	}
 
@@ -3282,7 +3282,7 @@ void LLStartUp::loadInitialOutfit( const std::string& outfit_folder_name,
 		outfit_folder_name);
 	if (cat_id.isNull())
 	{
-		LL_DEBUGS() << "standard wearables" << LL_ENDL;
+		LL_INFOS() << "standard wearables" << LL_ENDL;
 		gAgentWearables.createStandardWearables();
 	}
 	else
@@ -3298,7 +3298,7 @@ void LLStartUp::loadInitialOutfit( const std::string& outfit_folder_name,
 		// Need to fetch cof contents before we can wear.
 		callAfterCategoryFetch(LLAppearanceMgr::instance().getCOF(),
 							   boost::bind(&LLAppearanceMgr::wearInventoryCategory, LLAppearanceMgr::getInstance(), cat, do_copy, do_append));
-		LL_DEBUGS() << "initial outfit category id: " << cat_id << LL_ENDL;
+		LL_INFOS() << "initial outfit category id: " << cat_id << LL_ENDL;
 	}
 
 	gAgent.setOutfitChosen(TRUE);
@@ -3309,16 +3309,16 @@ void LLStartUp::loadInitialOutfit( const std::string& outfit_folder_name,
 void LLStartUp::saveInitialOutfit()
 {
 	if (sInitialOutfit.empty()) {
-		LL_DEBUGS() << "sInitialOutfit is empty" << LL_ENDL;
+		LL_INFOS() << "sInitialOutfit is empty" << LL_ENDL;
 		return;
 	}
 	
 	if (sWearablesLoadedCon.connected())
 	{
-		LL_DEBUGS("Avatar") << "sWearablesLoadedCon is connected, disconnecting" << LL_ENDL;
+		LL_INFOS("Avatar") << "sWearablesLoadedCon is connected, disconnecting" << LL_ENDL;
 		sWearablesLoadedCon.disconnect();
 	}
-	LL_DEBUGS("Avatar") << "calling makeNewOutfitLinks( \"" << sInitialOutfit << "\" )" << LL_ENDL;
+	LL_INFOS("Avatar") << "calling makeNewOutfitLinks( \"" << sInitialOutfit << "\" )" << LL_ENDL;
 	LLAppearanceMgr::getInstance()->makeNewOutfitLinks(sInitialOutfit,false);
 }
 
@@ -3335,7 +3335,7 @@ void init_start_screen(S32 location_id)
 	if (gStartTexture.notNull())
 	{
 		gStartTexture = NULL;
-		LL_INFOS("AppInit") << "re-initializing start screen" << LL_ENDL;
+		LL_DEBUGS("AppInit") << "re-initializing start screen" << LL_ENDL;
 	}
 
 	LL_DEBUGS("AppInit") << "Loading startup bitmap..." << LL_ENDL;
@@ -3357,7 +3357,7 @@ void init_start_screen(S32 location_id)
 	// driver bug
 	if(!gSavedSettings.getBOOL("UseStartScreen"))
 	{
-		LL_INFOS("AppInit")  << "Bitmap load disabled" << LL_ENDL;
+		LL_DEBUGS("AppInit")  << "Bitmap load disabled" << LL_ENDL;
 		return;
 	}
 	else if(!start_image_bmp->load(temp_str) )
@@ -3441,7 +3441,7 @@ std::string LLStartUp::startupStateToString(EStartupState state)
 // static
 void LLStartUp::setStartupState( EStartupState state )
 {
-	LL_INFOS("AppInit") << "Startup state changing from " <<  
+	LL_DEBUGS("AppInit") << "Startup state changing from " <<  
 		getStartupStateString() << " to " <<  
 		startupStateToString(state) << LL_ENDL;
 
@@ -3588,12 +3588,12 @@ bool LLStartUp::dispatchURL()
 
 void LLStartUp::setStartSLURL(const LLSLURL& slurl) 
 {
-	LL_DEBUGS("AppInit")<<slurl.asString()<<LL_ENDL;
+	LL_INFOS("AppInit")<<slurl.asString()<<LL_ENDL;
 
 	if ( slurl.isSpatial() )
 	{
 		std::string new_start = slurl.getSLURLString();
-		LL_DEBUGS("AppInit")<<new_start<<LL_ENDL;
+		LL_INFOS("AppInit")<<new_start<<LL_ENDL;
 		sStartSLURL = slurl;
 		LLPanelLogin::onUpdateStartSLURL(slurl); // updates grid if needed
 
@@ -3887,7 +3887,7 @@ void apply_udp_blacklist(const std::string& csv)
 		}
 		std::string item(csv, start, comma-start);
 
-		LL_DEBUGS() << "udp_blacklist " << item << LL_ENDL;
+		LL_INFOS() << "udp_blacklist " << item << LL_ENDL;
 		gMessageSystem->banUdpMessage(item);
 		
 		start = comma + 1;
@@ -3915,7 +3915,7 @@ bool init_benefits(LLSD& response)
 	}
 	else
 	{
-		LL_DEBUGS("Benefits") << "Initialized current benefits, level " << package_name << " from " << benefits_sd << LL_ENDL;
+		LL_INFOS("Benefits") << "Initialized current benefits, level " << package_name << " from " << benefits_sd << LL_ENDL;
 	}
 	const LLSD& packages_sd = response["premium_packages"];
 	for(LLSD::map_const_iterator package_iter = packages_sd.beginMap();
@@ -3926,7 +3926,7 @@ bool init_benefits(LLSD& response)
 		const LLSD& benefits_sd = package_iter->second["benefits"];
 		if (LLAgentBenefitsMgr::init(package_name, benefits_sd))
 		{
-			LL_DEBUGS("Benefits") << "Initialized benefits for package " << package_name << " from " << benefits_sd << LL_ENDL;
+			LL_INFOS("Benefits") << "Initialized benefits for package " << package_name << " from " << benefits_sd << LL_ENDL;
 		}
 		else
 		{

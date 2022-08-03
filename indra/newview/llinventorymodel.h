@@ -52,6 +52,7 @@ class LLInventoryCategory;
 class LLMessageSystem;
 class LLInventoryCollectFunctor;
 
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // LLInventoryModel
 //

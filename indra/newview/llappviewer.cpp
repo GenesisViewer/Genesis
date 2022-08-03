@@ -811,7 +811,6 @@ bool LLAppViewer::init()
 #ifdef USE_CRASHPAD
 	initCrashReporting();
 #endif
-
 	writeDebugInfo();
 
 	setupErrorHandling();
@@ -2530,7 +2529,7 @@ bool LLAppViewer::initConfiguration()
 	{
 		initConsole();
 	}
-
+	
 	if(clp.hasOption("help"))
 	{
 		std::ostringstream msg;
@@ -2735,11 +2734,12 @@ bool LLAppViewer::initWindow()
 
 	// always start windowed
 	BOOL ignorePixelDepth = gSavedSettings.getBOOL("IgnorePixelDepth");
+	LL_INFOS("AppInit") << "before gViewerWindow" << LL_ENDL;
 	gViewerWindow = new LLViewerWindow(gWindowTitle, "Second Life",
 		gSavedSettings.getS32("WindowX"), gSavedSettings.getS32("WindowY"),
 		gSavedSettings.getS32("WindowWidth"), gSavedSettings.getS32("WindowHeight"),
 		FALSE, ignorePixelDepth);
-		
+	LL_INFOS("AppInit") << "after gViewerWindow" << LL_ENDL;	
 	if (gSavedSettings.getBOOL("FullScreen"))
 	{
 		gViewerWindow->toggleFullscreen(FALSE);
@@ -2751,7 +2751,7 @@ bool LLAppViewer::initWindow()
 		gViewerWindow->getWindow()->maximize();
 		gViewerWindow->getWindow()->setNativeAspectRatio(gSavedSettings.getF32("FullScreenAspectRatio"));
 	}
-
+	
 	if (!gNoRender)
 	{
 		//
@@ -2761,7 +2761,7 @@ bool LLAppViewer::initWindow()
 		// Set this flag in case we crash while initializing GL
 		gSavedSettings.setBOOL("RenderInitError", TRUE);
 		gSavedSettings.saveToFile( gSavedSettings.getString("ClientSettingsFile"), TRUE );
-
+		LL_INFOS("AppInit") << "gPipeline Initializing" << LL_ENDL;
 		gPipeline.init();
 		LL_INFOS("AppInit") << "gPipeline Initialized" << LL_ENDL;
 		stop_glerror();

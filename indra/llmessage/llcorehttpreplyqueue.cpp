@@ -1,0 +1,94 @@
+/**
+ * @file llcorehttpreplyqueue.cpp
+ * @brief Internal definitions for the operation reply queue
+ *
+ * $LicenseInfo:firstyear=2012&license=viewerlgpl$
+ * Second Life Viewer Source Code
+ * Copyright (C) 2012, Linden Research, Inc.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation;
+ * version 2.1 of the License only.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
+ * $/LicenseInfo$
+ */
+
+#include "linden_common.h"
+
+#include "llcorehttpreplyqueue.h"
+
+#include "llcorehttpoperation.h"
+#include "llcoremutex.h"
+
+using namespace LLCoreInt;
+
+namespace LLCore
+{
+
+HttpReplyQueue::HttpReplyQueue()
+{
+}
+
+HttpReplyQueue::~HttpReplyQueue()
+{
+	HttpScopedLock lock(mQueueMutex);
+	if (!mQueue.empty())
+	{
+		llwarns << "Queue not empty on destruction. Emptying now..." << llendl;
+		mQueue.clear();
+	}
+}
+
+void HttpReplyQueue::addOp(const HttpReplyQueue::opPtr_t& op)
+{
+	HttpScopedLock lock(mQueueMutex);
+	mQueue.push_back(op);
+}
+
+HttpReplyQueue::opPtr_t HttpReplyQueue::fetchOp()
+{
+	HttpOperation::ptr_t result;
+
+	{
+		HttpScopedLock lock(mQueueMutex);
+
+		if (mQueue.empty())
+		{
+			return opPtr_t();
+		}
+
+		result = mQueue.front();
+		mQueue.erase(mQueue.begin());
+	}
+
+	// Caller also acquires the reference count
+	return result;
+}
+
+void HttpReplyQueue::fetchAll(OpContainer& ops)
+{
+	// It is not allowed to put something back into the queue...
+	llassert_always(ops.empty());
+
+	{
+		HttpScopedLock lock(mQueueMutex);
+
+		if (!mQueue.empty())
+		{
+			mQueue.swap(ops);
+		}
+	}
+}
+
+}  // End namespace LLCore

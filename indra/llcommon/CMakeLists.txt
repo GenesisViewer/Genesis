@@ -6,6 +6,7 @@ include(Cwdebug)
 include(00-Common)
 include(Linking)
 include(LLCommon)
+include(JsonCpp)
 include(EXPAT)
 include(APR)
 include(Linking)
@@ -19,6 +20,7 @@ include(URIPARSER)
 include_directories(
     ${EXPAT_INCLUDE_DIRS}
     ${LLCOMMON_INCLUDE_DIRS}
+    ${JSONCPP_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIRS}
     ${JSON_INCLUDE_DIR}
     ${ZLIB_INCLUDE_DIRS}
@@ -171,6 +173,8 @@ set(llcommon_HEADER_FILES
     llevents.h
     lleventtimer.h
     llextendedstatus.h
+    llfastmap.h
+    llfastset.h
     llfasttimer.h
     llfasttimer_class.h
     llfile.h
@@ -196,6 +200,7 @@ set(llcommon_HEADER_FILES
     llmemory.h
     llmemorystream.h
     llmetrics.h
+    llmutex.h
     llmortician.h
     llnametable.h
     lloptioninterface.h

@@ -58,6 +58,8 @@
 #define LL_FORCE_INLINE __forceinline
 #endif
 
+
+
 // Mark-up expressions with branch prediction hints.  Do NOT use
 // this with reckless abandon - it's an obfuscating micro-optimization
 // outside of inner loops or other places where you are OVERWHELMINGLY
@@ -137,6 +139,17 @@
 #define XML_STATIC
 #endif
 #endif	//	LL_WINDOWS
+
+// No force-inlining for debug builds (letting the compiler options decide)
+#if LL_DEBUG || LL_NO_FORCE_INLINE
+# define LL_INLINE inline
+#elif LL_GNUC || LL_CLANG
+# define LL_INLINE inline __attribute__((always_inline))
+#elif LL_MSVC
+# define LL_INLINE __forceinline
+#else
+# define LL_INLINE inline
+#endif
 
 // Deal with VC6 problems
 #if LL_MSVC

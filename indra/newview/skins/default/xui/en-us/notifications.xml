@@ -11938,4 +11938,13 @@ Please be sure that your report won't be a duplicate of an existing one.
      notext="Cancel"
      yestext="Go to page"/>
   </notification>
+
+
+  <notification
+   icon="alertmodal.tga"
+   name="FailedToFindSettings"
+   type="alertmodal">
+  Could not load the environment settings from the database.
+  [DESC]
+  </notification>
 </notifications>

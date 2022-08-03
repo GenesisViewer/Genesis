@@ -640,7 +640,17 @@ F64 LLCPUInfo::getMHz() const
 {
 	return mCPUMHz;
 }
+//static
+void LLCPUInfo::setMainThreadCPUAffinifty(U32 cpu_mask)
+{
+	
+}
 
+//static
+S32 LLCPUInfo::setThreadCPUAffinity(const char* name)
+{
+return 1;
+}
 std::string LLCPUInfo::getCPUString() const
 {
 	return mCPUString;

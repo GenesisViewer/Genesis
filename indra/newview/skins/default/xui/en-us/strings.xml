@@ -4866,5 +4866,5 @@ Try enclosing path to the editor with double quotes.
   <string name="AIXMLImportWearableTypeMismatch">Import warning: the file "[FILE]" does not contain a wearable of type [TYPE]. It contains an archetype of type [ARCHETYPENAME]. Please select the correct type before importing.</string>
   <string name="AIXMLImportError">Failed to import the [TYPE] wearable:</string>
   <string name="AIXMLImportNoArchetypeError">No archetype found in wearable import file "[FILE]".</string>
-
+  <string name="asset_id">Asset Id</string>
 </strings>

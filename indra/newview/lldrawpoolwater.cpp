@@ -96,6 +96,19 @@ LLDrawPoolWater::LLDrawPoolWater() :
 LLDrawPoolWater::~LLDrawPoolWater()
 {
 }
+void LLDrawPoolWater::setTransparentTextures(const LLUUID& tex1_id,
+											 const LLUUID& tex2_id)
+{
+	//genesis comment
+	//TODO!
+}
+
+void LLDrawPoolWater::setNormalMaps(const LLUUID& tex1_id,
+									const LLUUID& tex2_id)
+{
+	//genesis comment
+	//TODO!
+}
 
 //static
 void LLDrawPoolWater::restoreGL()

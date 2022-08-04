@@ -118,6 +118,7 @@ class ViewerManifest(LLManifest):
                 self.path("DroidSans*.ttf")
                 self.path("NotoSansDisplay*.ttf")
                 self.path("SourceHanSans*.otf")
+                self.path("Roboto*.ttf")
 
             # Include our font licenses
             with self.prefix(src_dst="fonts"):
@@ -128,8 +129,7 @@ class ViewerManifest(LLManifest):
                 self.path("paths.xml")
                 self.path("default/xui/*/*.xml")
                 self.package_skin("Default.xml", "default")
-                self.package_skin("dark.xml", "dark")
-                self.package_skin("Gemini.xml", "gemini")
+                self.package_skin("Genx.xml", "Genx")
 
                 # Local HTML files (e.g. loading screen)
                 with self.prefix(src_dst="*/html"):

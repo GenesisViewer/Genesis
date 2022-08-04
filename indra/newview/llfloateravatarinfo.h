@@ -54,10 +54,16 @@ public:
 	/*virtual*/ ~LLFloaterAvatarInfo();
 	/*virtual*/ BOOL canClose();
 	void resetGroupList();
-
+	void handleReshape(const LLRect& new_rect, bool by_user = false);
+	void setOpenedPosition();
+	
 private:
 	LLUUID			mAvatarID;			// for which avatar is this window?
 	LLPanelAvatar*	mPanelAvatarp;
+	typedef std::map<LLUUID, LLRect> floater_positions_t;
+	
+	static floater_positions_t floater_positions;
+	static LLUUID lastMoved;
 };
 
 #endif

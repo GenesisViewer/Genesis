@@ -37,7 +37,8 @@
 #include "llfloateravatarinfo.h"
 #include "llpanelavatar.h"
 #include "lluictrlfactory.h"
-
+LLFloaterAvatarInfo::floater_positions_t LLFloaterAvatarInfo::floater_positions;
+LLUUID LLFloaterAvatarInfo::lastMoved;
 void*	LLFloaterAvatarInfo::createPanelAvatar(void*	data)
 {
 	LLFloaterAvatarInfo* self = (LLFloaterAvatarInfo*)data;
@@ -56,6 +57,62 @@ LLFloaterAvatarInfo::LLFloaterAvatarInfo(const std::string& name, const LLUUID &
 	factory_map["Panel Avatar"] = LLCallbackMap(createPanelAvatar, this);
 	LLUICtrlFactory::getInstance()->buildFloater(this, "floater_profile.xml", &factory_map);
 	setTitle(name);
+}
+void LLFloaterAvatarInfo::handleReshape(const LLRect& new_rect, bool by_user) {
+
+	if (by_user) {
+		LLFloaterAvatarInfo::floater_positions[this->mAvatarID]=new_rect;
+		LLFloaterAvatarInfo::lastMoved=this->mAvatarID;
+	}
+	LLFloater::handleReshape(new_rect, by_user);
+}
+void LLFloaterAvatarInfo::setOpenedPosition() {
+	if (LLFloaterAvatarInfo::lastMoved.isNull()) {
+		
+		this->center();
+		LLFloaterAvatarInfo::floater_positions[this->mAvatarID]=this->getRect();
+		LLFloaterAvatarInfo::lastMoved=this->mAvatarID;
+	} else {
+		
+		//LLRect lastFloaterPosition = LLFloaterAvatarInfo::floater_positions[this->mAvatarID.asString()];
+		floater_positions_t::iterator it = floater_positions.find(this->mAvatarID);
+		if(it == floater_positions.end())
+		{
+			
+			floater_positions_t::iterator lasFloaterMovedPosition = floater_positions.find(LLFloaterAvatarInfo::lastMoved);
+			this->setRect(lasFloaterMovedPosition->second);
+			LLFloaterAvatarInfo::floater_positions[this->mAvatarID]=this->getRect();
+			LLFloaterAvatarInfo::lastMoved=this->mAvatarID;
+			
+		} else {
+			
+			this->setRect(it->second);
+		}
+		
+	}
+
+	BOOL overlapse=TRUE;
+	while (overlapse) {
+		//if I am on an existing floater
+		overlapse=FALSE;
+		for(floater_positions_t::iterator it = floater_positions.begin(); it != floater_positions.end();++it )
+		{
+			if((*it).second == getRect() && (*it).first != this->mAvatarID)
+			{
+				
+				this->translate(10,-10);
+				LLFloaterAvatarInfo::floater_positions[this->mAvatarID]=this->getRect();
+				LLFloaterAvatarInfo::lastMoved=this->mAvatarID;
+				
+				overlapse=TRUE;
+			}
+			
+			
+			
+		}
+		
+	}
+	
 }
 
 // virtual

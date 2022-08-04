@@ -968,6 +968,7 @@ LLButton* LLFavoritesBarCtrl::createButton(const LLPointer<LLViewerInventoryItem
 	
 	LLButton::Params fav_btn_params(button_params);
 	fav_btn = LLUICtrlFactory::create<LLFavoriteLandmarkButton>(fav_btn_params);
+	fav_btn->setImageColor(LLUI::sColorsGroup->getColor("ButtonUnselectedBgColor") );
 	if (NULL == fav_btn)
 	{
 		LL_WARNS("FavoritesBar") << "Unable to create LLFavoriteLandmarkButton widget: " << item->getName() << LL_ENDL;

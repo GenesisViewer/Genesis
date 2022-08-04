@@ -42,6 +42,8 @@ LLFlyoutButton::LLFlyoutButton(const std::string& name, const LLRect& rect, cons
 	// Text label button
 	mActionButton = new LLButton(label, LLRect(), LLStringUtil::null, boost::bind(&LLFlyoutButton::onActionButtonClick, this, _2));
 	mActionButton->setScaleImage(true);
+	mActionButton->setDisabledImageColor(LLButton::Params::Params().image_overlay_disabled_color.getValue() );
+	mActionButton->setImageColor(LLUI::sColorsGroup->getColor("ButtonUnselectedBgColor") );
 	mActionButton->setFollowsAll();
 	mActionButton->setHAlign(LLFontGL::HCENTER);
 	mActionButton->setLabel(label);
@@ -57,6 +59,7 @@ LLFlyoutButton::LLFlyoutButton(const std::string& name, const LLRect& rect, cons
 	mButton->setImageDisabled(LLUI::getUIImage("flyout_btn_right_disabled.tga"));
 	mButton->setImageDisabledSelected(LLPointer<LLUIImage>(NULL));
 	mButton->setRightHPad(6);
+	mButton->setImageColor(LLUI::sColorsGroup->getColor("ButtonUnselectedBgColor") );
 
 	updateLayout();
 }

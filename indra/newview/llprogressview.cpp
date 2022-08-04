@@ -46,6 +46,7 @@
 
 #include "llagent.h"
 #include "llbutton.h"
+#include "lliconctrl.h"
 #include "llcallbacklist.h"
 #include "llfocusmgr.h"
 #include "llprogressbar.h"
@@ -87,8 +88,8 @@ BOOL LLProgressView::postBuild()
 	mCancelBtn = getChild<LLButton>("cancel_btn");
 	mCancelBtn->setClickedCallback( boost::bind(&LLProgressView::onCancelButtonClicked) );
 
-	getChild<LLTextBox>("title_text")->setText(LLStringExplicit(LLAppViewer::instance()->getSecondLifeTitle()));
-
+	//getChild<LLTextBox>("title_text")->setText(LLStringExplicit(LLAppViewer::instance()->getSecondLifeTitle()));
+	
 	getChild<LLTextBox>("message_text")->setClickedCallback(boost::bind(&LLProgressView::onClickMessage, this));
 
 	// hidden initially, until we need it

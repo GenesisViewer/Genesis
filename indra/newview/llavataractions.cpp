@@ -343,7 +343,9 @@ static void on_avatar_name_show_profile(const LLUUID& agent_id, const LLAvatarNa
 		if(!floater)
 		{
 			floater = new LLFloaterAvatarInfo(av_name.getCompleteName()+" - "+LLTrans::getString("Command_Profile_Label"), agent_id);
-			floater->center();
+			floater->setOpenedPosition();
+			
+		
 		}
 
 		// ...bring that window to front

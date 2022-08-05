@@ -364,13 +364,13 @@ bool LLGroupNotifyBox::onNewNotification(const LLSD& notify)
 		const LLSD& payload = notification->getPayload();
 		// Get the group data
 		LLGroupData group_data;
+
 		if (!gAgent.getGroupData(payload["group_id"].asUUID(),group_data))
 		{
 			LL_WARNS() << "Group notice for unkown group: " << payload["group_id"].asUUID() << LL_ENDL;
 			return false;
 		}
-
-		gNotifyBoxView->addChild(new LLGroupNotifyBox(payload["subject"].asString(),
+		LLGroupNotifyBox* notifyBox = new LLGroupNotifyBox(payload["subject"].asString(),
 									payload["message"].asString(),
 									payload.has("sender_id") ? LLAvatarActions::getSLURL(payload["sender_id"]) : payload["sender_name"].asString(), 
 									payload["group_id"].asUUID(), 
@@ -379,7 +379,12 @@ bool LLGroupNotifyBox::onNewNotification(const LLSD& notify)
 									notification->getDate(),
 									payload["inventory_offer"].isDefined(),
 									payload["inventory_name"].asString(),
-									payload["inventory_offer"]));
+									payload["inventory_offer"]);
+
+		gNotifyBoxView->addChild(notifyBox);
+		if (gAgent.isInGroup(payload["group_id"].asUUID())) {
+			notifyBox->close();
+		}
 	}
 	return false;
 }

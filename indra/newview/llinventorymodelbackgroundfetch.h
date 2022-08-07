@@ -67,6 +67,10 @@ public:
 	void addRequestAtFront(const LLUUID & id, BOOL recursive, bool is_category);
 	void addRequestAtBack(const LLUUID & id, BOOL recursive, bool is_category);
 
+	//genesis - toRemove one day
+	//workaround for previous bug in Genesis when Settings folde can be bad looked up
+	void fixBadLookupSetting();
+
 protected:
 	void bulkFetch();
 

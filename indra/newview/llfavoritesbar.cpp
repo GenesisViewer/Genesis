@@ -412,12 +412,9 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const std::string& name, const LLRect& re
 	
 	
 	mImageDragIndication = LLUI::getUIImage("Accordion_ArrowOpened_Off");
-	// Register callback for menus with current registrar (will be parent panel's registrar)
-	//LLUICtrl::CommitCallbackRegistry::currentRegistrar().add("Favorites.DoToSelected",
-	//	boost::bind(&LLFavoritesBarCtrl::doToSelected, this, _2));
-	//(new LLBindMemberListener(this, "Favorites.DoToSelected", boost::bind(&LLFavoritesBarCtrl::doToSelected, this, _2)));
+	
 	(new LLFavoriteContextMenu(this))->registerListener(gMenuHolder, "Favorites.DoToSelected");
-	//new LLBindMemberListener(this, "Favorites.DoToSelected", boost::bind(&LLFavoritesBarCtrl::doToSelected, this, _2, ));
+	
 	// Add this if we need to selectively enable items
 	LLUICtrl::EnableCallbackRegistry::currentRegistrar().add("Favorites.EnableSelected",
 		boost::bind(&LLFavoritesBarCtrl::enableSelected, this, _2));
@@ -746,7 +743,16 @@ void LLFavoritesBarCtrl::reshape(S32 width, S32 height, BOOL called_from_parent)
 
 void LLFavoritesBarCtrl::draw()
 {
+	S32 actual_right = LLUI::getRootView()->getChild<LLPanel>("status")->getRect().mRight;
+	if (actual_right!= getRect().mRight) {
 	
+		LLRect rect = getRect();
+		
+		rect.mRight=actual_right;
+		setRect(rect);
+		
+		updateButtons();
+	}
 	LLUICtrl::draw();
 
 	if (mShowDragMarker)
@@ -944,7 +950,6 @@ void LLFavoritesBarCtrl::updateButtons()
 
 LLButton* LLFavoritesBarCtrl::createButton(const LLPointer<LLViewerInventoryItem> item, const LLButton::Params& button_params, S32 x_offset)
 {
-	
 	S32 def_button_width = button_params.rect.width;
 	S32 button_x_delta = button_params.rect.left; // default value
 	S32 curr_x = x_offset;

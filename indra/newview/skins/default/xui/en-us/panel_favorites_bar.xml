@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<panel name="favoritestoolbar" bottom="0" default_tab_group="1" follows="left|top" height="25" left="0" width="395" >
+<panel name="favoritestoolbar" bottom="0" default_tab_group="1" follows="top|left|right" height="25" left="0" width="395" >
 	
 	<panel
 	 name="navigation_bar_context_menu_panel"

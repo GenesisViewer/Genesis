@@ -382,9 +382,7 @@ bool LLGroupNotifyBox::onNewNotification(const LLSD& notify)
 									payload["inventory_offer"]);
 
 		gNotifyBoxView->addChild(notifyBox);
-		if (gAgent.isInGroup(payload["group_id"].asUUID())) {
-			notifyBox->close();
-		}
+		
 	}
 	return false;
 }

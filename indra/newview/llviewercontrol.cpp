@@ -651,6 +651,12 @@ static bool handlePhoenixNameSystemChanged(const LLSD& newvalue)
 	LLVOAvatar::invalidateNameTags();
 	return true;
 }
+static bool handleShowResidentChanged(const LLSD& newvalue)
+{
+	
+	LLVOAvatar::invalidateNameTags();
+	return true;
+}
 // [/Ansariel: Display name support]
 
 bool handleUpdateFriends() { LLAvatarTracker::instance().updateFriends(); return true; }
@@ -876,7 +882,7 @@ void settings_setup_listeners()
     // [Ansariel: Display name support]
 	gSavedSettings.getControl("PhoenixNameSystem")->getSignal()->connect(boost::bind(&handlePhoenixNameSystemChanged, _2));
     // [/Ansariel: Display name support]
-	gSavedSettings.getControl("GenesisShowLastNameResident")->getSignal()->connect(boost::bind(handlePhoenixNameSystemChanged, _2));
+	gSavedSettings.getControl("GenesisShowLastNameResident")->getSignal()->connect(boost::bind(handleShowResidentChanged, _2));
 	gSavedSettings.getControl("FriendNameSystem")->getSignal()->connect(boost::bind(handleUpdateFriends));
 
 	gSavedSettings.getControl("AllowLargeSounds")->getSignal()->connect(boost::bind(&handleAllowLargeSounds, _2));

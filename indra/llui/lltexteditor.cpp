@@ -1511,7 +1511,7 @@ BOOL LLTextEditor::handleMiddleMouseDown(S32 x, S32 y, MASK mask)
 
 bool always_underline_links()
 {
-	static const LLUICachedControl<bool> always_underline("SinguAlwaysUnderlineLinks");
+	static const LLUICachedControl<bool> always_underline("GenesisAlwaysUnderlineLinks");
 	return always_underline;
 }
 

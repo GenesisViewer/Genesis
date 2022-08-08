@@ -82,7 +82,7 @@ LLColor4 get_text_color(const LLChat& chat, bool from_im = false);
 void show_log_browser(const std::string&, const LLUUID&);
 void show_genesis_group_invite(const LLUUID&);
 void show_genesis_group_support(const LLUUID&);
-BOOL group_invite_sent = FALSE;
+
 LLUUID genesis_group = LLUUID("19cdbd96-8581-b2b2-1f5a-626ae275d54f");
 //
 // Member Functions
@@ -173,11 +173,7 @@ void LLFloaterChat::onFocusReceived()
 		getChild<LLButton>("join_genesis_group")->setVisible(!is_in_genesis_goup);
 		getChild<LLButton>("genesis_support")->setVisible(is_in_genesis_goup);
 	}
-	if (!group_invite_sent) {
-		LLChat chat = LLChat("Please join Genesis Group for support : secondlife:///app/group/"+genesis_group.asString()+"/about");
-		addChatHistory(chat,FALSE);
-		group_invite_sent=TRUE;
-	}
+	
 	LLFloater::onFocusReceived();
 }
 

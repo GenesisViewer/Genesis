@@ -160,10 +160,10 @@ private:
 	BOOL mShowDragMarker;
 	LLUICtrl* mLandingTab;
 	LLUICtrl* mLastTab;
-	LLTextBox* mMoreTextBox;
+	//LLTextBox* mMoreTextBox;
 	LLButton* mBarLabel;
 
-	LLUICtrl* mMoreCtrl;
+	LLButton* mMoreCtrl;
 	LLUUID mDragItemId;
 	BOOL mStartDrag;
 	LLInventoryModel::item_array_t mItems;

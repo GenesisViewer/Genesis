@@ -1587,7 +1587,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>U32</string>
       <key>Value</key>
-      <real>0</real>
+      <real>2</real>
     </map>
     <key>DisablePointAtAndBeam</key>
     <map>

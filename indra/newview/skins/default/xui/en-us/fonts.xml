@@ -66,7 +66,6 @@
   <font name="SansSerif"
 	comment="Name of italic sans-serif font"
 	font_style="ITALIC">
-    <file>Roboto-BoldItalic.ttf</file>
     <file>Roboto-Italic.ttf</file>
     <file>DejaVuSansCondensed-Oblique.ttf</file>
     <file>NotoSansDisplay-Italic.ttf</file>

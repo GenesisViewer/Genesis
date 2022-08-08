@@ -421,14 +421,20 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const std::string& name, const LLRect& re
 	
 	gInventory.addObserver(this);
 
-	//make chevron button                                                                                                                               
-	mMoreTextBox = new LLTextBox(">>", "\u0032", 50);
-	mMoreTextBox->setFollows(FOLLOWS_LEFT | FOLLOWS_TOP);
-	mMoreTextBox->setToolTip(LLStringExplicit("Show more of My Favorites"));
-	mMoreTextBox->setTabStop(false);
-	mMoreTextBox->setVisible(TRUE);
-	mMoreTextBox->setClickedCallback(boost::bind(&LLFavoritesBarCtrl::showDropDownMenu, this));
-	addChild(mMoreTextBox);
+	//make chevron button   
+	LLButton::Params morectrl_btn_params(getButtonParams());
+	mMoreCtrl = new LLButton(morectrl_btn_params);
+	mMoreCtrl->setName(">>");
+	mMoreCtrl->setLabel(LLStringExplicit("Show More"));
+	mMoreCtrl->setFollows(FOLLOWS_LEFT | FOLLOWS_TOP);
+	mMoreCtrl->setToolTip(LLStringExplicit("Show more of My Favorites"));
+	mMoreCtrl->setImageColor(LLUI::sColorsGroup->getColor("ButtonUnselectedBgColor") );
+	mMoreCtrl->setTabStop(false);
+	mMoreCtrl->setVisible(TRUE);
+	mMoreCtrl->setClickedCallback(boost::bind(&LLFavoritesBarCtrl::showDropDownMenu, this));
+	addChild(mMoreCtrl);
+
+	
 
 	mDropDownItemsCount = 0;
 	
@@ -837,7 +843,7 @@ void LLFavoritesBarCtrl::updateButtons()
 	const child_list_t* childs = getChildList();
 	child_list_const_iter_t child_it = childs->begin();
 	size_t first_changed_item_index = 0;
-	int rightest_point = getRect().mRight - mMoreTextBox->getRect().getWidth();
+	int rightest_point = getRect().mRight - mMoreCtrl->getRect().getWidth();
 	//lets find first changed button
 	while (child_it != childs->end() && first_changed_item_index < mItems.size())
 	{
@@ -880,9 +886,9 @@ void LLFavoritesBarCtrl::updateButtons()
 		}
 		// we have to remove ChevronButton to make sure that the last item will be LandmarkButton to get the right aligning
 		// keep in mind that we are cutting all buttons in space between the last visible child of favbar and ChevronButton
-		if (mMoreTextBox->getParent() == this)
+		if (mMoreCtrl->getParent() == this)
 		{
-			removeChild(mMoreTextBox);
+			removeChild(mMoreCtrl);
 		}
 		int last_right_edge = 0;
 		//calculate new buttons offset
@@ -922,13 +928,13 @@ void LLFavoritesBarCtrl::updateButtons()
 			S32 buttonHGap = button_params.rect.left; // default value
 			LLRect rect;
 			// Chevron button should stay right aligned
-			rect.setOriginAndSize(getRect().mRight - mMoreTextBox->getRect().getWidth() - buttonHGap, 0,
-					mMoreTextBox->getRect().getWidth(),
-					mMoreTextBox->getRect().getHeight());
+			rect.setOriginAndSize(getRect().mRight - mMoreCtrl->getRect().getWidth() - buttonHGap -100, 0,
+					mMoreCtrl->getRect().getWidth(),
+					mMoreCtrl->getRect().getHeight());
 
-			addChild(mMoreTextBox);
-			mMoreTextBox->setRect(rect);
-			mMoreTextBox->setVisible(TRUE);
+			addChild(mMoreCtrl);
+			mMoreCtrl->setRect(rect);
+			mMoreCtrl->setVisible(TRUE);
 		}
 		// Update overflow menu
 		LLMenuGL* overflow_menu = static_cast <LLMenuGL*> (mOverflowMenuHandle.get());
@@ -964,8 +970,9 @@ LLButton* LLFavoritesBarCtrl::createButton(const LLPointer<LLViewerInventoryItem
 	int width = required_width > def_button_width? def_button_width : required_width;
 	LLFavoriteLandmarkButton* fav_btn = NULL;
 
-	// do we have a place for next button + double buttonHGap + mMoreTextBox ?
-	if(curr_x + width + 2*button_x_delta +  mMoreTextBox->getRect().getWidth() > getRect().mRight )
+	
+	//we remove 100 to mRight cause of the space we have on the left
+	if(curr_x + width + 2*button_x_delta +  mMoreCtrl->getRect().getWidth() > getRect().mRight -100 )
 	{
 		return NULL;
 	}
@@ -1065,7 +1072,7 @@ void LLFavoritesBarCtrl::showDropDownMenu()
 
 		menu->buildDrawLabels();
 		menu->updateParent(LLMenuGL::sMenuContainer);
-		//menu->setButtonRect(mMoreTextBox->getRect(), this);
+		//menu->setButtonRect(mMoreCtrl->getRect(), this);
 		positionAndShowMenu(menu);
 		mDropDownItemsCount = menu->getItemCount();
 	}

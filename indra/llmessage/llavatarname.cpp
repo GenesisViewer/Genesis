@@ -171,6 +171,7 @@ void LLAvatarName::setExpires(F64 expires)
 std::string LLAvatarName::getCompleteName(bool linefeed) const
 {
 	std::string name;
+	static const LLCachedControl<bool> show_resident("GenesisShowLastNameResident", false);
 	if (sUseDisplayNames)
 	{
 		if (mUsername.empty() || mIsDisplayNameDefault)
@@ -184,7 +185,11 @@ std::string LLAvatarName::getCompleteName(bool linefeed) const
 			name = mDisplayName;
 			if (sUseUsernames)
 			{
-				name += (linefeed ? "\n(" : " (") + mUsername + ')';
+				if (show_resident) {
+					name += (linefeed ? "\n(" : " (") + getLegacyName() + ')';
+				} else {
+					name += (linefeed ? "\n(" : " (") + mUsername + ')';
+				}
 			}
 		}
 	}

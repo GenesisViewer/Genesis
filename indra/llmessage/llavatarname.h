@@ -74,7 +74,7 @@ public:
 	// *TODO: Eliminate this in favor of username only
 	std::string getLegacyName() const;
 
-	// "José Sanchez" or "James Linden", UTF-8 encoded Unicode
+	// "Josï¿½ Sanchez" or "James Linden", UTF-8 encoded Unicode
 	// Takes the display name preference into account. This is truly the name that should 
 	// be used for all UI where an avatar name has to be used unless we truly want something else (rare)
 	std::string getDisplayName() const;
@@ -116,7 +116,7 @@ private:
 	// "bobsmith123" or "james.linden", US-ASCII only
 	std::string mUsername;
 
-	// "José Sanchez" or "James Linden", UTF-8 encoded Unicode
+	// "Josï¿½ Sanchez" or "James Linden", UTF-8 encoded Unicode
 	// Contains data whether or not user has explicitly set
 	// a display name; may duplicate their username.
 	std::string mDisplayName;

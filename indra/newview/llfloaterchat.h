@@ -57,6 +57,7 @@ public:
 	virtual void onFocusReceived();
 	virtual void handleVisibilityChange(BOOL cur_visibility);
 	virtual void setMinimized(BOOL);
+	void reshape(S32 width, S32 height, BOOL called_from_parent  = TRUE) override;
 	void updateConsoleVisibility();
 
 	static void setHistoryCursorAndScrollToEnd();

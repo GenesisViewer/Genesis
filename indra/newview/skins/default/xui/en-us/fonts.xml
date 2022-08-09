@@ -2,6 +2,7 @@
 <fonts>
 
   <font name="default" comment="default font files (global fallbacks)">
+    <file>Roboto-Regular.ttf</file>
     <file>DejaVuSansCondensed.ttf</file>
     <file>NotoSansDisplay-Regular.ttf</file>
     <file>SourceHanSansJP-Regular.otf</file>
@@ -32,7 +33,8 @@
   <font name="SansSerifBold" 
 	comment="Name of bold sans-serif font" 
 	font_style="Bold">
-	<file>DroidSans-Bold.ttf</file>
+    <file>Roboto-Bold.ttf</file>
+	  <file>DroidSans-Bold.ttf</file>
     <file>DejaVuSansCondensed-Bold.ttf</file>
     <file>NotoSansDisplay-Bold.ttf</file>
     <file>SourceHanSansJP-Bold.otf</file>
@@ -43,13 +45,15 @@
   </font>
   
   <font name="SansSerif" comment="Name of san-serif font (Truetype file name)">
+    <file>Roboto-Regular.ttf</file>
     <file>DroidSans.ttf</file>
   </font>
 
   <font name="SansSerif"
 	comment="Name of bold sans-serif font" 
 	font_style="BOLD">
-	<file>DroidSans-Bold.ttf</file>
+    <file>Roboto-Bold.ttf</file>
+	  <file>DroidSans-Bold.ttf</file>
     <file>DejaVuSansCondensed-Bold.ttf</file>
     <file>NotoSansDisplay-Bold.ttf</file>
     <file>SourceHanSansJP-Bold.otf</file>
@@ -62,6 +66,7 @@
   <font name="SansSerif"
 	comment="Name of italic sans-serif font"
 	font_style="ITALIC">
+    <file>Roboto-Italic.ttf</file>
     <file>DejaVuSansCondensed-Oblique.ttf</file>
     <file>NotoSansDisplay-Italic.ttf</file>
   </font>
@@ -69,12 +74,14 @@
   <font name="SansSerif"
 	comment="Name of bold italic sans-serif font"
 	font_style="BOLD|ITALIC">
+    <file>Roboto-BoldItalic.ttf</file>
     <file>DejaVuSansCondensed-BoldOblique.ttf</file>
     <file>NotoSansDisplay-BoldItalic.ttf</file>
   </font>
 
   <font name="Monospace"
 	comment="Name of monospace font">
+    <file>Roboto-Regular.ttf</file>
     <file>DejaVuSansMono.ttf</file>
   </font>
 

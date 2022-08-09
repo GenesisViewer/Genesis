@@ -2233,13 +2233,13 @@ void LLViewerWindow::initWorldUI_postLogin()
 		
 		LLPanel* gFavoritesBar2 = new LLPanel("favoritestoolbar");
 		LLUICtrlFactory::getInstance()->buildPanel(gFavoritesBar2,"panel_favorites_bar.xml");
-		
+		gFavoritesBar2->setFollows(FOLLOWS_LEFT | FOLLOWS_RIGHT | FOLLOWS_TOP);
 		gFavoritesBar2->reshape(root_rect.getWidth(), 20, TRUE);
 		gFavoritesBar2->translate(0, root_rect.getHeight() - gFavoritesBar2->getRect().getHeight()- status_rect.getHeight() - 1);
 		gFavoritesBar2->setVisible(TRUE);
 	
 		getRootView()->addChildInBack(gFavoritesBar2,0);
-		//getRootView()->addChild(gFavoritesBar2);
+		
 		// Menu holder appears on top to get first pass at all mouse events
 		getRootView()->sendChildToFront(gMenuHolder);
 

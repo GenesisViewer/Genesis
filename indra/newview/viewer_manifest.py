@@ -118,6 +118,7 @@ class ViewerManifest(LLManifest):
                 self.path("DroidSans*.ttf")
                 self.path("NotoSansDisplay*.ttf")
                 self.path("SourceHanSans*.otf")
+                self.path("Roboto*.ttf")
 
             # Include our font licenses
             with self.prefix(src_dst="fonts"):
@@ -128,8 +129,7 @@ class ViewerManifest(LLManifest):
                 self.path("paths.xml")
                 self.path("default/xui/*/*.xml")
                 self.package_skin("Default.xml", "default")
-                self.package_skin("dark.xml", "dark")
-                self.package_skin("Gemini.xml", "gemini")
+                self.package_skin("Genx.xml", "Genx")
 
                 # Local HTML files (e.g. loading screen)
                 with self.prefix(src_dst="*/html"):
@@ -502,8 +502,11 @@ class WindowsManifest(ViewerManifest):
             if self.path("alut.dll","OpenAL32.dll") == 0:
                 print ("Skipping OpenAL audio library (assuming other audio engine)")
 
-            # Vivox runtimes
-            self.path("SLVoice.exe")
+            # SLVoice executable
+            with self.prefix(src=os.path.join(pkgdir, 'bin', 'release')):
+                self.path("SLVoice.exe")
+
+            # Vivox libraries
             if (self.address_size == 64):
                 self.path("vivoxsdk_x64.dll")
                 self.path("ortp_x64.dll")
@@ -574,6 +577,7 @@ class WindowsManifest(ViewerManifest):
                 self.path("libEGL.dll")
                 self.path("libGLESv2.dll")
                 self.path("dullahan_host.exe")
+                
                 self.path("natives_blob.bin")
                 self.path("snapshot_blob.bin")
                 self.path("v8_context_snapshot.bin")

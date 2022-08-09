@@ -80,7 +80,10 @@
 LLColor4 agent_chat_color(const LLUUID& id, const std::string&, bool local_chat = true);
 LLColor4 get_text_color(const LLChat& chat, bool from_im = false);
 void show_log_browser(const std::string&, const LLUUID&);
+void show_genesis_group_invite(const LLUUID&);
+void show_genesis_group_support(const LLUUID&);
 
+LLUUID genesis_group = LLUUID("19cdbd96-8581-b2b2-1f5a-626ae275d54f");
 //
 // Member Functions
 //
@@ -97,6 +100,12 @@ LLFloaterChat::LLFloaterChat(const LLSD& seed)
 	LLTextEditor* history_editor_with_mute = getChild<LLTextEditor>("Chat History Editor with mute");
 	getChild<LLUICtrl>("show mutes")->setCommitCallback(boost::bind(&LLFloaterChat::onClickToggleShowMute, this, _2, getChild<LLTextEditor>("Chat History Editor"), history_editor_with_mute));
 	getChild<LLUICtrl>("chat_history_open")->setCommitCallback(boost::bind(show_log_browser, "chat", LLUUID::null));
+	getChild<LLUICtrl>("join_genesis_group")->setCommitCallback(boost::bind(show_genesis_group_invite, genesis_group));
+	getChild<LLUICtrl>("genesis_support")->setCommitCallback(boost::bind(show_genesis_group_support, genesis_group));
+	
+	
+		
+	
 }
 
 LLFloaterChat::~LLFloaterChat()
@@ -158,7 +167,13 @@ void LLFloaterChat::onFocusReceived()
 		gFocusMgr.setKeyboardFocus(chat_editor);
 		chat_editor->setFocus(true);
 	}
-
+	BOOL is_in_genesis_goup = gAgent.isInGroup(genesis_group);
+	if (hasChild("join_genesis_group",TRUE)) {
+		
+		getChild<LLButton>("join_genesis_group")->setVisible(!is_in_genesis_goup);
+		getChild<LLButton>("genesis_support")->setVisible(is_in_genesis_goup);
+	}
+	
 	LLFloater::onFocusReceived();
 }
 
@@ -309,6 +324,7 @@ void LLFloaterChat::addChatHistory(LLChat& chat, bool log_to_file)
 	
 	// could flash the chat button in the status bar here. JC
 	LLFloaterChat* chat_floater = LLFloaterChat::getInstance(LLSD());
+	
 	LLViewerTextEditor* history_editor = chat_floater->getChild<LLViewerTextEditor>("Chat History Editor");
 	LLViewerTextEditor* history_editor_with_mute = chat_floater->getChild<LLViewerTextEditor>("Chat History Editor with mute");
 
@@ -366,6 +382,7 @@ void LLFloaterChat::addChat(const std::string& str, BOOL from_im, BOOL local_age
 	LLChat chat(str);
 	chat.mSourceType = CHAT_SOURCE_SYSTEM;
 	addChat(chat, from_im, local_agent);
+	
 }
 
 // Put a line of chat in all the right places
@@ -435,6 +452,8 @@ void LLFloaterChat::addChat(LLChat& chat,
 
 	if(!from_instant_message)
 		addChatHistory(chat);
+
+	
 }
 
 // Moved from lltextparser.cpp to break llui/llaudio library dependency.

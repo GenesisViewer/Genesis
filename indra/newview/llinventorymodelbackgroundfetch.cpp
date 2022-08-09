@@ -715,9 +715,21 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 	{
 		LL_INFOS() << "Inventory fetch completed" << LL_ENDL;
 		setAllFoldersFetched();
+		//Genesis Fix a previous bug in Genesis -- Settings can have have been bad looked up
+		fixBadLookupSetting();
 	}
 }
-
+void LLInventoryModelBackgroundFetch::fixBadLookupSetting() {
+	LLUUID settingsCatUUID = gInventory.findCategoryUUIDForType(LLFolderType::FT_SETTINGS);
+	if (!settingsCatUUID.isNull()) {
+		LLViewerInventoryCategory* settingsCat =  gInventory.getCategory(settingsCatUUID);
+		if (settingsCat->getName() == LLFolderType::badLookup()) {
+			//ok we had the bug
+			settingsCat->rename("Settings");
+			gInventory.updateCategory(settingsCat);
+		}
+	}
+}
 bool LLInventoryModelBackgroundFetch::fetchQueueContainsNoDescendentsOf(const LLUUID& cat_id) const
 {
 	for (fetch_queue_t::const_iterator it = mFetchQueue.begin();

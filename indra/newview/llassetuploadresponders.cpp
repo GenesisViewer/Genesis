@@ -250,6 +250,7 @@ void LLAssetUploadResponder::httpFailure()
 	LL_INFOS() << "LLAssetUploadResponder::error " << mStatus 
 			<< " reason: " << mReason << LL_ENDL;
 	LLSD args;
+	const LLSD& content = getContent();
 	switch(mStatus)
 	{
 		case 400:
@@ -259,6 +260,9 @@ void LLAssetUploadResponder::httpFailure()
 			LLNotificationsUtil::add("CannotUploadReason", args);
 			break;
 		case 500:
+			
+			LL_INFOS() << "Reason " << content <<LL_ENDL;
+			break;
 		default:
 			args["FILE"] = (mFileName.empty() ? mVFileID.asString() : mFileName);
 			args["REASON"] = "The server is experiencing unexpected "

@@ -66,7 +66,7 @@
 #include "llviewerstats.h"
 #include "llviewerwindow.h"
 #include "llvoicechannel.h"
-
+#include "llurlaction.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lambda/lambda.hpp>
 
@@ -1182,6 +1182,15 @@ void LLFloaterIMPanel::onFlyoutCommit(LLComboBox* flyout, const LLSD& value)
 			flyout->add(focus, -3);
 	}
 	}
+}
+
+void show_genesis_group_invite(const LLUUID& id)
+{
+	LLUrlAction::clickAction("secondlife:///app/group/"+id.asString()+"/about", true);
+}
+void show_genesis_group_support(const LLUUID& id)
+{
+	LLGroupActions::startIM(id);
 }
 
 void show_log_browser(const std::string& name, const LLUUID& id)

@@ -2157,11 +2157,10 @@ void LLVivoxVoiceClient::clearCaptureDevices()
 	mCaptureDevices.clear();
 }
 
-void LLVivoxVoiceClient::addCaptureDevice(const std::string& name)
+void LLVivoxVoiceClient::addCaptureDevice(const LLVoiceDevice& device)
 {
-	LL_DEBUGS("Voice") << name << LL_ENDL;
-
-	mCaptureDevices.push_back(name);
+	LL_DEBUGS("Voice") << "display: '" << device.display_name << "' device: '" << device.full_name << "'" << LL_ENDL;
+    mCaptureDevices.push_back(device);
 }
 
 LLVoiceDeviceList& LLVivoxVoiceClient::getCaptureDevices()
@@ -2195,10 +2194,10 @@ void LLVivoxVoiceClient::clearRenderDevices()
 	mRenderDevices.clear();
 }
 
-void LLVivoxVoiceClient::addRenderDevice(const std::string& name)
+void LLVivoxVoiceClient::addRenderDevice(const LLVoiceDevice& device)
 {
-	LL_DEBUGS("Voice") << name << LL_ENDL;
-	mRenderDevices.push_back(name);
+	LL_DEBUGS("Voice") << "display: '" << device.display_name << "' device: '" << device.full_name << "'" << LL_ENDL;
+    mRenderDevices.push_back(device);
 }
 
 LLVoiceDeviceList& LLVivoxVoiceClient::getRenderDevices()
@@ -6663,11 +6662,11 @@ void LLVivoxProtocolParser::EndTag(const char *tag)
 			statusString = string;
 		else if (!stricmp("CaptureDevice", tag))
 		{
-			LLVivoxVoiceClient::getInstance()->addCaptureDevice(deviceString);
+			LLVivoxVoiceClient::getInstance()->addCaptureDevice(LLVoiceDevice(displayNameString, deviceString));
 		}
 		else if (!stricmp("RenderDevice", tag))
 		{
-			LLVivoxVoiceClient::getInstance()->addRenderDevice(deviceString);
+			LLVivoxVoiceClient::getInstance()->addRenderDevice(LLVoiceDevice(displayNameString, deviceString));
 		}
 		else if (!stricmp("BlockMask", tag))
 			blockMask = string;

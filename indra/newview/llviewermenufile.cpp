@@ -1241,13 +1241,28 @@ bool upload_new_resource(
 		body["everyone_mask"] = LLSD::Integer(everyone_perms);
 		body["expected_upload_cost"] = LLSD::Integer(expected_upload_cost);
 		
-		LLHTTPClient::post(
+		/**LLHTTPClient::post(
 			url,
 			body,
 			new LLNewAgentInventoryResponder(
 				body,
 				uuid,
-				asset_type));
+				asset_type));**/
+		LL_INFOS() << "Posting resource to LL server :" << name << LL_ENDL;
+		LLNewAgentInventoryResponder* responder = new LLNewAgentInventoryResponder(
+				body,
+				uuid,
+				asset_type);
+		LLSD response = LLHTTPClient::blockingPost(url,body);
+		int status = response["status"];
+		if (status >=200 && status < 300) {
+			//upload ok
+			LL_INFOS() << "Posting resource to LL server :" << name << " succedeed" <<LL_ENDL;
+			responder->uploadComplete(response);
+		} else {
+			LL_INFOS() << "Posting resource to LL server :" << name << " failed" <<LL_ENDL;
+			responder->uploadFailure(response);
+		}
 	}
 	else
 	{

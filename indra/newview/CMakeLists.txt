@@ -138,6 +138,7 @@ set(viewer_SOURCE_FILES
     llavatarpropertiesprocessor.cpp
     llavatarrenderinfoaccountant.cpp
     llbox.cpp
+    llbulkuploadmgr.cpp
     llcallbacklist.cpp
     llcallingcard.cpp
     llcapabilitylistener.cpp
@@ -692,6 +693,7 @@ set(viewer_HEADER_FILES
     llavatarpropertiesprocessor.h
     llavatarrenderinfoaccountant.h
     llbox.h
+    llbulkuploadmgr.h
     llcallingcard.h
     llcapabilitylistener.h
     llcaphttpsender.h

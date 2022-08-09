@@ -37,6 +37,7 @@
 #include "llagent.h"
 #include "llagentbenefits.h"
 #include "llagentcamera.h"
+#include "llbulkuploadmgr.h"
 #include "statemachine/aifilepicker.h"
 #include "llfloaterbvhpreview.h"
 #include "llfloaterimagepreview.h"
@@ -434,8 +435,10 @@ class LLFileUploadBulk : public view_listener_t
 
 	static void onConfirmBulkUploadTemp_continued(bool enabled, AIFilePicker* filepicker)
 	{
+		
 		if (filepicker->hasFilename())
 		{
+			LLBulkUploadMgr* bulkUploadMgr = new LLBulkUploadMgr();
 			std::vector<std::string> const& file_names(filepicker->getFilenames());
 			for (std::vector<std::string>::const_iterator iter = file_names.begin(); iter != file_names.end(); ++iter)
 			{
@@ -467,9 +470,11 @@ class LLFileUploadBulk : public view_listener_t
 					display_name,
 					callback,
 					0,
+					bulkUploadMgr,
 					userdata);
 
 			}
+			bulkUploadMgr->start();
 		}
 		else
 		{
@@ -674,6 +679,7 @@ void upload_new_resource(const std::string& src_filename, std::string name,
 			 const std::string& display_name,
 			 LLAssetStorage::LLStoreAssetCallback callback,
 			 S32 expected_upload_cost,
+			 LLBulkUploadMgr* bulkUploadMgr,
 			 void *userdata)
 {
 	// Generate the temporary UUID.
@@ -973,7 +979,7 @@ void upload_new_resource(const std::string& src_filename, std::string name,
 		// </edit>
 		upload_new_resource(tid, asset_type, name, desc, compression_info, // tid
 				    destination_folder_type, inv_type, next_owner_perms, group_perms, everyone_perms,
-				    display_name, callback, expected_upload_cost, userdata);
+				    display_name, callback, expected_upload_cost, bulkUploadMgr,userdata);
 	}
 	else
 	{
@@ -1195,6 +1201,7 @@ bool upload_new_resource(
 	const std::string& display_name,
 	LLAssetStorage::LLStoreAssetCallback callback,
 	S32 expected_upload_cost,
+	LLBulkUploadMgr* bulkUploadMgr,
 	void *userdata)
 {
 	if(gDisconnected)
@@ -1240,29 +1247,18 @@ bool upload_new_resource(
 		body["group_mask"] = LLSD::Integer(group_perms);
 		body["everyone_mask"] = LLSD::Integer(everyone_perms);
 		body["expected_upload_cost"] = LLSD::Integer(expected_upload_cost);
-		
-		/**LLHTTPClient::post(
-			url,
-			body,
-			new LLNewAgentInventoryResponder(
-				body,
-				uuid,
-				asset_type));**/
-		LL_INFOS() << "Posting resource to LL server :" << name << LL_ENDL;
-		LLNewAgentInventoryResponder* responder = new LLNewAgentInventoryResponder(
-				body,
-				uuid,
-				asset_type);
-		LLSD response = LLHTTPClient::blockingPost(url,body);
-		int status = response["status"];
-		if (status >=200 && status < 300) {
-			//upload ok
-			LL_INFOS() << "Posting resource to LL server :" << name << " succedeed" <<LL_ENDL;
-			responder->uploadComplete(response);
+		if (bulkUploadMgr) {
+			bulkUploadMgr->addAssetToBulkUpload(uuid,body,asset_type);
+			bulkUploadMgr->setURL(url);
 		} else {
-			LL_INFOS() << "Posting resource to LL server :" << name << " failed" <<LL_ENDL;
-			responder->uploadFailure(response);
-		}
+			LLHTTPClient::post(
+				url,
+				body,
+				new LLNewAgentInventoryResponder(
+					body,
+					uuid,
+					asset_type));
+		}		
 	}
 	else
 	{

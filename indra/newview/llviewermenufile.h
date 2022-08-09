@@ -34,6 +34,7 @@
 #define LLVIEWERMENUFILE_H
 
 #include "llassettype.h"
+#include "llbulkuploadmgr.h"
 #include "llinventorytype.h"
 // <edit>
 #include "llviewerinventory.h"
@@ -62,6 +63,7 @@ void upload_new_resource(const std::string& src_filename,
 						 const std::string& display_name,
 						 LLAssetStorage::LLStoreAssetCallback callback,
 						 S32 expected_upload_cost,
+						 LLBulkUploadMgr* bulkUploadMgr,
 						 void *userdata);
 
 // Return false if no upload attempt was done (and the callback will not be called).
@@ -78,6 +80,7 @@ bool upload_new_resource(const LLTransactionID &tid,
 						 const std::string& display_name,
 						 LLAssetStorage::LLStoreAssetCallback callback,
 						 S32 expected_upload_cost,
+						 LLBulkUploadMgr* bulkUploadMgr,
 						 void *userdata);
 
 // The default callback functions, called when 'callback' == NULL (for normal and temporary uploads).

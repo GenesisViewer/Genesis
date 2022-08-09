@@ -1272,7 +1272,7 @@ void LLFloaterBvhPreview::onBtnOK(void* userdata)
 						    LLFloaterPerms::getGroupPerms("Uploads"),
 						    LLFloaterPerms::getEveryonePerms("Uploads"),
 						    name,
-						    callback, expected_upload_cost, userdata);
+						    callback, expected_upload_cost, NULL,userdata);
 				}
 			}
 			else

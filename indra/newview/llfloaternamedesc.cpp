@@ -209,7 +209,7 @@ void LLFloaterNameDesc::onBtnOK()
 			    LLFloaterPerms::getNextOwnerPerms("Uploads"),
 			    LLFloaterPerms::getGroupPerms("Uploads"),
 			    LLFloaterPerms::getEveryonePerms("Uploads"),
-			    display_name, callback, expected_upload_cost, nruserdata);
+			    display_name, callback, expected_upload_cost, NULL,nruserdata);
 	close(false);
 }
 

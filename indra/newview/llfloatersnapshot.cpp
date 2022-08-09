@@ -1427,7 +1427,7 @@ void LLSnapshotLivePreview::saveTexture()
 				LLFloaterPerms::getGroupPerms("Uploads"), // that is more permissive than other uploads
 				LLFloaterPerms::getEveryonePerms("Uploads"),
 				"Snapshot : " + pos_string,
-				callback, expected_upload_cost, user_data))
+				callback, expected_upload_cost, NULL,user_data))
 	{
 		saveTextureDone2(true, user_data);
 	}

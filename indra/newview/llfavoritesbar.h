@@ -217,7 +217,7 @@ public:
 	 * @see cleanup()
 	 */
 	static void destroyClass();
-
+	void save();
 	const static S32 NO_INDEX;
 private:
 	/**
@@ -225,12 +225,10 @@ private:
 	 */
 	void cleanup();
 
-	const static std::string SORTING_DATA_FILE_NAME;
-    std::string getSavedOrderFileName();
     static std::string getStoredFavoritesFilename();
     
 	void load();
-	void save();
+	
 
 	void saveFavoritesSLURLs();
 

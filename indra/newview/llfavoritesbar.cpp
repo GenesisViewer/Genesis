@@ -59,6 +59,7 @@
 #include "lltooldraganddrop.h"
 #include "llsdserialize.h"
 #include "llxuiparser.h"
+#include "llsqlmgr.h"
 using namespace LLOldEvents;
 typedef LLMemberListener<LLView> view_listener_t;
 void open_landmark(LLViewerInventoryItem* inv_item, const std::string& title, BOOL show_keep_discard, const LLUUID& source_id, BOOL take_focus);
@@ -355,34 +356,18 @@ public:
 private:
 	S32 mSortField;
 };
-
-// updateButtons's helper
-struct LLFavoritesSort
+// See also LLInventorySort where landmarks in the Favorites folder are sorted.
+class LLViewerInventoryItemSort
 {
-	// Sorting by creation date and name
-	// TODO - made it customizible using gSavedSettings
-	bool operator()(const LLViewerInventoryItem* const& a, const LLViewerInventoryItem* const& b) const
+public:
+	bool operator()(const LLPointer<LLViewerInventoryItem>& a, const LLPointer<LLViewerInventoryItem>& b) const
 	{
-		S32 sortField1 = LLFavoritesOrderStorage::instance().getSortIndex(a->getUUID());
-		S32 sortField2 = LLFavoritesOrderStorage::instance().getSortIndex(b->getUUID());
-
-		if (!(sortField1 < 0 && sortField2 < 0))
-		{
-			return sortField2 > sortField1;
-		}
-
-		time_t first_create = a->getCreationDate();
-		time_t second_create = b->getCreationDate();
-		if (first_create == second_create)
-		{
-			return (LLStringUtil::compareDict(a->getName(), b->getName()) < 0);
-		}
-		else
-		{
-			return (first_create > second_create);
-		}
+		
+		return LLFavoritesOrderStorage::instance().getSortIndex(a->getUUID())
+			< LLFavoritesOrderStorage::instance().getSortIndex(b->getUUID());
 	}
 };
+
 
 // static
 bool LLFavoriteContextMenu::handleEvent(LLPointer<LLEvent> event, const LLSD& userdata)
@@ -572,7 +557,7 @@ BOOL LLFavoritesBarCtrl::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 	default:
 		break;
 	}
-
+	updateButtons();
 	return TRUE;
 }
 
@@ -596,6 +581,7 @@ void LLFavoritesBarCtrl::handleExistingFavoriteDragAndDrop(S32 x, S32 y)
 	// Insert the dragged item in the right place
 	if (dest)
 	{
+
 		LLInventoryModel::updateItemsOrder(mItems, mDragItemId, dest->getLandmarkId(), insert_before);
 	}
 	else
@@ -670,10 +656,7 @@ void LLFavoritesBarCtrl::handleNewFavoriteDragAndDrop(LLInventoryItem *item, con
 		{
 			LLFavoritesOrderStorage::instance().setSortIndex(currItem, ++sortField);
 
-			currItem->setComplete(TRUE);
-			currItem->updateServer(FALSE);	
-
-			gInventory.updateItem(currItem);
+			
 		}
 	}
 
@@ -847,7 +830,9 @@ void LLFavoritesBarCtrl::updateButtons()
 	//lets find first changed button
 	while (child_it != childs->end() && first_changed_item_index < mItems.size())
 	{
+		
 		LLFavoriteLandmarkButton* button = dynamic_cast<LLFavoriteLandmarkButton*> (*child_it);
+		
 		if (button)
 		{
 			const LLViewerInventoryItem *item = mItems[first_changed_item_index].get();
@@ -1034,10 +1019,9 @@ BOOL collectFavoriteItems(LLInventoryModel::item_array_t& items)
 	LLIsType is_type(LLAssetType::AT_LANDMARK);
 	gInventory.collectDescendentsIf(mFavoriteFolderId, cats, items, LLInventoryModel::EXCLUDE_TRASH, is_type);
 	
-	std::sort(items.begin(), items.end(), LLFavoritesSort());
-
+	std::sort(items.begin(), items.end(), LLViewerInventoryItemSort());
 	BOOL needToSaveItemsOrder(const LLInventoryModel::item_array_t& items);
-	//if (needToSaveItemsOrder(items))
+	if (needToSaveItemsOrder(items))
 	{
 		S32 sortField = 0;
 		for (LLInventoryModel::item_array_t::iterator i = items.begin(); i != items.end(); ++i)
@@ -1045,6 +1029,7 @@ BOOL collectFavoriteItems(LLInventoryModel::item_array_t& items)
 			LLFavoritesOrderStorage::instance().setSortIndex((*i), ++sortField);
 		}
 	}
+	
 
 	return TRUE;
 }
@@ -1517,7 +1502,7 @@ void LLFavoritesBarCtrl::insertItem(LLInventoryModel::item_array_t& items, const
 	}
 }
 
-const std::string LLFavoritesOrderStorage::SORTING_DATA_FILE_NAME = "landmarks_sorting.xml";
+
 const S32 LLFavoritesOrderStorage::NO_INDEX = -1;
 
 void LLFavoritesOrderStorage::setSortIndex(const LLViewerInventoryItem* inv_item, S32 sort_index)
@@ -1525,6 +1510,7 @@ void LLFavoritesOrderStorage::setSortIndex(const LLViewerInventoryItem* inv_item
 	mSortIndexes[inv_item->getUUID()] = sort_index;
 	mIsDirty = true;
 	getSLURL(inv_item->getAssetUUID());
+	
 }
 
 S32 LLFavoritesOrderStorage::getSortIndex(const LLUUID& inv_item_id)
@@ -1574,7 +1560,7 @@ std::string LLFavoritesOrderStorage::getStoredFavoritesFilename()
 void LLFavoritesOrderStorage::destroyClass()
 {
 	LLFavoritesOrderStorage::instance().cleanup();
-
+	LLFavoritesOrderStorage::instance().save();
 
 	std::string old_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "stored_favorites.xml");
 	llifstream file;
@@ -1599,40 +1585,30 @@ void LLFavoritesOrderStorage::destroyClass()
 	}
 }
 
-std::string LLFavoritesOrderStorage::getSavedOrderFileName()
-{
-	// If we quit from the login screen we will not have an SL account
-	// name.  Don't try to save, otherwise we'll dump a file in
-	// C:\Program Files\SecondLife\ or similar. JC
-	std::string user_dir = gDirUtilp->getLindenUserDir();
-    return (user_dir.empty() ? "" : gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, SORTING_DATA_FILE_NAME));
-}
+
 
 void LLFavoritesOrderStorage::load()
 {
-	// load per-resident sorting information
-	std::string filename = getSavedOrderFileName();
-	LLSD settings_llsd;
-	llifstream file;
-	file.open(filename.c_str());
-	if (file.is_open())
-	{
-		LLSDSerialize::fromXML(settings_llsd, file);
-        LL_INFOS("FavoritesBar") << "loaded favorites order from '" << filename << "' "
-                                 << (settings_llsd.isMap() ? "" : "un") << "successfully"
-                                 << LL_ENDL;
-        file.close();
-	}
-    else
-    {
-        LL_WARNS("FavoritesBar") << "unable to open favorites order file at '" << filename << "'" << LL_ENDL;
+
+	LL_INFOS() << "Loading fav bar order" << LL_ENDL;
+	 
+	char *sql;
+	sqlite3_stmt *stmt;
+	sqlite3 *db = LLSqlMgr::instance().getDB();
+    sql = "SELECT FAV_UUID, FAV_ORDER FROM FAV_BAR_ORDER";
+	sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+	while ( sqlite3_step(stmt) == SQLITE_ROW) {
+      const unsigned char *id = sqlite3_column_text(stmt, 0);
+      int order = sqlite3_column_int(stmt, 1);
+      mSortIndexes.insert(std::make_pair(LLUUID(std::string(reinterpret_cast<const char*>(id))), (S32)order));
+	
+      
+      
     }
 
-	for (LLSD::map_const_iterator iter = settings_llsd.beginMap();
-		iter != settings_llsd.endMap(); ++iter)
-	{
-		mSortIndexes.insert(std::make_pair(LLUUID(iter->first), (S32)iter->second.asInteger()));
-	}
+	sqlite3_finalize(stmt);
+
+		
 }
 
 void LLFavoritesOrderStorage::saveFavoritesSLURLs()
@@ -1782,36 +1758,27 @@ void LLFavoritesOrderStorage::storeFavoriteSLURL(const LLUUID& asset_id, std::st
 
 void LLFavoritesOrderStorage::save()
 {
-	if (mIsDirty)
-    {
-        // something changed, so save it
-        std::string filename = LLFavoritesOrderStorage::getInstance()->getSavedOrderFileName();
-        if (!filename.empty())
-        {
-            LLSD settings_llsd;
+	
+	char *sql;
+	sqlite3_stmt *stmt;
+	sqlite3 *db = LLSqlMgr::instance().getDB();
+	sql = "DELETE FROM FAV_BAR_ORDER";
+	sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+	sqlite3_step(stmt);
+	sqlite3_finalize(stmt);
+	sql = "INSERT INTO FAV_BAR_ORDER (FAV_UUID,FAV_ORDER) VALUES (?,?)";
+	sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+		for(sort_index_map_t::const_iterator iter = mSortIndexes.begin(); iter != mSortIndexes.end(); ++iter)
+		{
+			
+			sqlite3_bind_text(stmt, 1,  iter->first.asString().c_str(), strlen(iter->first.asString().c_str()), 0);
+			sqlite3_bind_int(stmt,2, iter->second);
+			sqlite3_step(stmt);
+			sqlite3_reset(stmt);
+		}
+	sqlite3_finalize(stmt);
+            
 
-            for(sort_index_map_t::const_iterator iter = mSortIndexes.begin(); iter != mSortIndexes.end(); ++iter)
-            {
-                settings_llsd[iter->first.asString()] = iter->second;
-            }
-
-            llofstream file;
-            file.open(filename.c_str());
-            if ( file.is_open() )
-            {
-                LLSDSerialize::toPrettyXML(settings_llsd, file);
-                LL_INFOS("FavoritesBar") << "saved favorites order to '" << filename << "' " << LL_ENDL;
-            }
-            else
-            {
-                LL_WARNS("FavoritesBar") << "failed to open favorites order file '" << filename << "' " << LL_ENDL;
-            }
-        }
-        else
-        {
-            LL_DEBUGS("FavoritesBar") << "no user directory available to store favorites order file" << LL_ENDL;
-        }
-    }
 }
 
 
@@ -1837,16 +1804,7 @@ void LLFavoritesOrderStorage::cleanup()
 	mSortIndexes.swap(aTempMap);
 }
 
-// See also LLInventorySort where landmarks in the Favorites folder are sorted.
-class LLViewerInventoryItemSort
-{
-public:
-	bool operator()(const LLPointer<LLViewerInventoryItem>& a, const LLPointer<LLViewerInventoryItem>& b) const
-	{
-		return LLFavoritesOrderStorage::instance().getSortIndex(a->getUUID())
-			< LLFavoritesOrderStorage::instance().getSortIndex(b->getUUID());
-	}
-};
+
 
 void LLFavoritesOrderStorage::saveOrder()
 {
@@ -1870,16 +1828,10 @@ void LLFavoritesOrderStorage::saveItemsOrder( const LLInventoryModel::item_array
 
 		setSortIndex(item, ++sortField);
 
-		item->setComplete(TRUE);
-		item->updateServer(FALSE);
 
-		gInventory.updateItem(item);
-
-		// Tell the parent folder to refresh its sort order.
-		gInventory.addChangedMask(LLInventoryObserver::SORT, item->getParentUUID());
 	}
 
-	gInventory.notifyObservers();
+	
 }
 
 

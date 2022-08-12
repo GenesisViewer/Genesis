@@ -53,6 +53,16 @@ char LLSqlMgr::init(std::string db_path) {
         LL_WARNS() << "Can't initialise Genesis Tagged avatars table " << zErrMsg << LL_ENDL;
         return rc;
     }
+
+    //Favorites toolbar order
+    sql = "CREATE TABLE IF NOT EXISTS FAV_BAR_ORDER(" \
+        "FAV_UUID TEXT NOT NULL," \
+        "FAV_ORDER INTEGER);";
+    rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);  
+    if( rc ) {
+        LL_WARNS() << "Can't initialise Genesis fav bar order table " << zErrMsg << LL_ENDL;
+        return rc;
+    }    
 }
 void LLSqlMgr::close() {
 

@@ -36,7 +36,7 @@
 
 #include "llfeaturemanager.h"
 #include "llviewershadermgr.h"
-
+#include "llenvironment.h"
 #include "llfile.h"
 #include "llviewerwindow.h"
 #include "llviewercontrol.h"
@@ -82,6 +82,8 @@ LLVector4			gShinyOrigin;
  // Make sure WL Sky is the first program
 LLGLSLShader		gWLSkyProgram(LLViewerShaderMgr::SHADER_WINDLIGHT);
 LLGLSLShader		gWLCloudProgram(LLViewerShaderMgr::SHADER_WINDLIGHT);
+LLGLSLShader		gWLSunProgram(LLViewerShaderMgr::SHADER_WINDLIGHT);
+LLGLSLShader		gWLMoonProgram(LLViewerShaderMgr::SHADER_WINDLIGHT);
 //transform shaders
 LLGLSLShader			gTransformPositionProgram(LLViewerShaderMgr::SHADER_TRANSFORM);
 LLGLSLShader			gTransformTexCoordProgram(LLViewerShaderMgr::SHADER_TRANSFORM);
@@ -196,6 +198,8 @@ LLGLSLShader			gFXAAProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredPostNoDoFProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredWLSkyProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredWLCloudProgram(LLViewerShaderMgr::SHADER_DEFERRED);
+LLGLSLShader 			gDeferredWLSunProgram(LLViewerShaderMgr::SHADER_DEFERRED);
+LLGLSLShader 			gDeferredWLMoonProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredStarProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredFullbrightShinyProgram(LLViewerShaderMgr::SHADER_DEFERRED);
 LLGLSLShader			gDeferredSkinnedFullbrightShinyProgram(LLViewerShaderMgr::SHADER_DEFERRED);
@@ -379,7 +383,7 @@ void LLViewerShaderMgr::setShaders()
 		mVertexShaderLevel[SHADER_TRANSFORM] = transform_class;
 
 		BOOL loaded = loadBasicShaders();
-
+		gPipeline.mVertexShadersLoaded = loaded;
 		if (loaded)
 		{
 			// Load all shaders to set max levels
@@ -1753,7 +1757,44 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 		gDeferredWLCloudProgram.mShaderGroup = LLGLSLShader::SG_SKY;
 		success = gDeferredWLCloudProgram.createShader(NULL, NULL);
 	}
+	if (success)
+	{
+		gDeferredWLSunProgram.mName = "Deferred Windlight Sun program";
+		gDeferredWLSunProgram.mShaderLevel = mVertexShaderLevel[SHADER_DEFERRED];
+		gDeferredWLSunProgram.mShaderFiles.push_back(make_pair("deferred/sunDiscV.glsl", GL_VERTEX_SHADER_ARB));
+		gDeferredWLSunProgram.mShaderFiles.push_back(make_pair("deferred/sunDiscF.glsl", GL_FRAGMENT_SHADER_ARB));									
+		gDeferredWLSunProgram.mFeatures.calculatesAtmospherics = true;
+		gDeferredWLSunProgram.mFeatures.hasTransport = true;
+		gDeferredWLSunProgram.mFeatures.hasGamma = true;
+		gDeferredWLSunProgram.mFeatures.hasAtmospherics = true;
+		gDeferredWLSunProgram.mFeatures.isFullbright = true;
+		gDeferredWLSunProgram.mFeatures.disableTextureIndex = true;
+		//gDeferredWLSunProgram.mFeatures.hasSrgb = true;
+		gDeferredWLSunProgram.mShaderGroup = LLGLSLShader::SG_SKY;
+		success = gDeferredWLSunProgram.createShader(NULL, NULL);
+		LL_INFOS() << "Deferred Windlight Sun program " << success << LL_ENDL;
+	}
 
+	if (success)
+	{
+		gDeferredWLMoonProgram.mName ="Deferred Windlight Moon program";
+		
+		gDeferredWLMoonProgram.mShaderFiles.clear();
+		gDeferredWLMoonProgram.mShaderFiles.push_back(make_pair("deferred/moonV.glsl", GL_VERTEX_SHADER_ARB));
+		gDeferredWLMoonProgram.mShaderFiles.push_back(make_pair("deferred/moonF.glsl", GL_FRAGMENT_SHADER_ARB));									 
+		gDeferredWLMoonProgram.mShaderLevel = mVertexShaderLevel[SHADER_DEFERRED];							 
+		gDeferredWLMoonProgram.mFeatures.calculatesAtmospherics = true;
+		gDeferredWLMoonProgram.mFeatures.hasTransport = true;
+		gDeferredWLMoonProgram.mFeatures.hasGamma = true;
+		gDeferredWLMoonProgram.mFeatures.hasAtmospherics = true;
+		//gDeferredWLMoonProgram.mFeatures.hasSrgb = true;
+		gDeferredWLMoonProgram.mFeatures.isFullbright = true;
+		gDeferredWLMoonProgram.mFeatures.disableTextureIndex = true;
+		gDeferredWLMoonProgram.mShaderGroup = LLGLSLShader::SG_SKY;
+		gDeferredWLMoonProgram.addConstant(LLGLSLShader::CONST_CLOUD_MOON_DEPTH);
+		success = gDeferredWLMoonProgram.createShader(NULL, NULL);
+		LL_INFOS() << "Deferred Windlight Moon program " << success << LL_ENDL;
+	}
 	if (success)
 	{
 		gDeferredStarProgram.mName = "Deferred Star Program";
@@ -2425,7 +2466,38 @@ BOOL LLViewerShaderMgr::loadShadersWindLight()
 		gWLCloudProgram.mShaderGroup = LLGLSLShader::SG_SKY;
 		success = gWLCloudProgram.createShader(NULL, NULL);
 	}
+	if (success)
+	{
+		gWLSunProgram.mName="Windlight Sun program";
+		gWLSunProgram.mShaderFiles.push_back(make_pair("windlight/sunDiscV.glsl", GL_VERTEX_SHADER_ARB));
+		gWLSunProgram.mShaderFiles.push_back(make_pair("windlight/sunDiscF.glsl", GL_FRAGMENT_SHADER_ARB));		
+		gWLSunProgram.mShaderLevel = mVertexShaderLevel[SHADER_WINDLIGHT];	
+		gWLSunProgram.mFeatures.calculatesAtmospherics = true;
+		gWLSunProgram.mFeatures.hasTransport = true;
+		gWLSunProgram.mFeatures.hasGamma = true;
+		gWLSunProgram.mFeatures.hasAtmospherics = true;
+		gWLSunProgram.mFeatures.isFullbright = true;
+		gWLSunProgram.mFeatures.disableTextureIndex = true;
+		gWLSunProgram.mShaderGroup = LLGLSLShader::SG_SKY;
+		success = gWLSunProgram.createShader(NULL, NULL);
+	}
 
+	if (success)
+	{
+		gWLMoonProgram.mName="Windlight Moon program";
+		gWLMoonProgram.mShaderFiles.push_back(make_pair("windlight/moonV.glsl", GL_VERTEX_SHADER_ARB));
+		gWLMoonProgram.mShaderFiles.push_back(make_pair("windlight/moonF.glsl", GL_FRAGMENT_SHADER_ARB));		
+		gWLMoonProgram.mShaderLevel = mVertexShaderLevel[SHADER_WINDLIGHT];								 
+		gWLMoonProgram.mFeatures.calculatesAtmospherics = true;
+		gWLMoonProgram.mFeatures.hasTransport = true;
+		gWLMoonProgram.mFeatures.hasGamma = true;
+		gWLMoonProgram.mFeatures.hasAtmospherics = true;
+		gWLMoonProgram.mFeatures.isFullbright = true;
+		gWLMoonProgram.mFeatures.disableTextureIndex = true;
+		gWLMoonProgram.mShaderGroup = LLGLSLShader::SG_SKY;
+		gWLMoonProgram.addConstant(LLGLSLShader::CONST_CLOUD_MOON_DEPTH);
+		success = gWLMoonProgram.createShader(NULL, NULL);
+	}
 	if (!success)
 	{
 		mVertexShaderLevel[SHADER_WINDLIGHT] = 0;

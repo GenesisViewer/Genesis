@@ -76,7 +76,16 @@ LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sWhiteImagep = NULL;
 LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sDefaultImagep = NULL;
 LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sSmokeImagep = NULL;
 LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sFlatNormalImagep = NULL;
+LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sDefaultSunImagep = NULL;
+LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sDefaultMoonImagep = NULL;
+LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sDefaultCloudsImagep = NULL;
+LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sDefaultCloudNoiseImagep = NULL;
+LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sBloomImagep = NULL;
+LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sOpaqueWaterImagep = NULL;
+LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sWaterImagep = NULL;
+LLPointer<LLViewerFetchedTexture> LLViewerFetchedTexture::sWaterNormapMapImagep = NULL;
 LLViewerMediaTexture::media_map_t LLViewerMediaTexture::sMediaMap;
+
 #if 0
 LLTexturePipelineTester* LLViewerTextureManager::sTesterp = NULL;
 #endif
@@ -435,6 +444,14 @@ void LLViewerTextureManager::cleanup()
 	LLViewerFetchedTexture::sMissingAssetImagep = NULL;
 	LLViewerFetchedTexture::sWhiteImagep = NULL;
 	LLViewerFetchedTexture::sFlatNormalImagep = NULL;
+	LLViewerFetchedTexture::sDefaultSunImagep = NULL;
+	LLViewerFetchedTexture::sDefaultMoonImagep = NULL;
+	LLViewerFetchedTexture::sDefaultCloudsImagep = NULL;
+	LLViewerFetchedTexture::sDefaultCloudNoiseImagep = NULL;
+	LLViewerFetchedTexture::sBloomImagep = NULL;
+	LLViewerFetchedTexture::sOpaqueWaterImagep = NULL;
+	LLViewerFetchedTexture::sWaterImagep = NULL;
+	LLViewerFetchedTexture::sWaterNormapMapImagep = NULL;
 
 	LLViewerMediaTexture::cleanUpClass();	
 }

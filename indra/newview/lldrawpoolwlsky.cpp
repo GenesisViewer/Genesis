@@ -33,7 +33,7 @@
 #include "llviewerprecompiledheaders.h"
 
 #include "lldrawpoolwlsky.h"
-
+#include "llenvironment.h"
 #include "llerror.h"
 #include "llgl.h"
 #include "pipeline.h"
@@ -53,10 +53,12 @@ LLPointer<LLViewerTexture> LLDrawPoolWLSky::sCloudNoiseTexture = NULL;
 
 LLPointer<LLImageRaw> LLDrawPoolWLSky::sCloudNoiseRawImage = NULL;
 
+LLSettingsSky::ptr_t				mCurrentSky;
 static LLGLSLShader* cloud_shader = NULL;
 static LLGLSLShader* sky_shader = NULL;
 static LLGLSLShader* star_shader = NULL;
-
+static LLGLSLShader* sSunShader = NULL;
+static LLGLSLShader*  sMoonShader = NULL;
 LLDrawPoolWLSky::LLDrawPoolWLSky(void) :
 	LLDrawPool(POOL_WL_SKY)
 {
@@ -120,6 +122,10 @@ void LLDrawPoolWLSky::beginRenderPass( S32 pass )
 				&gWLCloudProgram;
 
 	star_shader = &gCustomAlphaProgram;
+	
+	sSunShader = &gWLSunProgram;
+	sMoonShader = &gWLMoonProgram;
+	mCurrentSky = gEnvironment.getCurrentSky();
 }
 
 void LLDrawPoolWLSky::endRenderPass( S32 pass )
@@ -131,6 +137,9 @@ void LLDrawPoolWLSky::beginDeferredPass(S32 pass)
 	sky_shader = &gDeferredWLSkyProgram;
 	cloud_shader = &gDeferredWLCloudProgram;
 	star_shader = &gDeferredStarProgram;
+	sSunShader = &gDeferredWLSunProgram;
+	sMoonShader = &gDeferredWLMoonProgram;
+	mCurrentSky = gEnvironment.getCurrentSky();
 }
 
 void LLDrawPoolWLSky::endDeferredPass(S32 pass)
@@ -177,6 +186,7 @@ void LLDrawPoolWLSky::renderDome(F32 camHeightLocal, LLGLSLShader * shader) cons
 
 void LLDrawPoolWLSky::renderSkyHaze(F32 camHeightLocal) const
 {
+	
 	if (gPipeline.canUseWindLightShaders() && gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_SKY))
 	{
 		LLGLDisable<GL_BLEND> blend;

@@ -47,6 +47,7 @@
 #include "llagent.h"
 #include "llagentcamera.h"
 #include "llagentwearables.h"
+#include "llenvironment.h"
 #include "llimprocessing.h"
 #include "llwindow.h"
 #include "llviewerstats.h"
@@ -2751,7 +2752,10 @@ bool LLAppViewer::initWindow()
 		gViewerWindow->getWindow()->maximize();
 		gViewerWindow->getWindow()->setNativeAspectRatio(gSavedSettings.getF32("FullScreenAspectRatio"));
 	}
-
+	// Initialize the environment classes
+	llinfos << "Initializing environment classes..." << llendl;
+	
+	gEnvironment.initClass();
 	if (!gNoRender)
 	{
 		//

@@ -153,7 +153,7 @@ public:
 
 	//LLParcel *getParcelSelection() const;
 	LLParcel *getAgentParcel() const;
-
+	LLParcel* getSelectedOrAgentParcel() const;
 	BOOL	inAgentParcel(const LLVector3d &pos_global) const;
 
 	// Returns a pointer only when it has valid data.
@@ -268,7 +268,10 @@ public:
 
 	// accessors for mAgentParcel
 	const std::string& getAgentParcelName() const;
-
+	inline bool waitingForParcelInfo() const
+	{
+		return mTeleportInProgress;
+	}
 	// Create a landmark at the "appropriate" location for the
 	// currently selected parcel.
 	// *NOTE: Taken out 2005-03-21. Phoenix.

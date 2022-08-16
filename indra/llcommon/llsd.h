@@ -326,7 +326,8 @@ public:
 		map_iterator		endMap();
 		map_const_iterator	beginMap() const;
 		map_const_iterator	endMap() const;
-		
+		map_const_iterator find(const String& k) const;
+	map_const_iterator find(const char* k) const;
 		typedef std::vector<LLSD>::iterator			array_iterator;
 		typedef std::vector<LLSD>::const_iterator	array_const_iterator;
 		typedef std::vector<LLSD>::reverse_iterator reverse_array_iterator;

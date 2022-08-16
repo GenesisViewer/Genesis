@@ -74,6 +74,11 @@ public:
     typedef PTR_NAMESPACE::weak_ptr<LLSettingsDay>                          wptr_t;
     typedef std::vector<LLSettingsBase::TrackPosition>                      KeyframeList_t;
     typedef std::pair<CycleTrack_t::iterator, CycleTrack_t::iterator>       TrackBound_t;
+    typedef std::map<F32, LLSettingsBase::ptr_t> cycle_track_t;
+	typedef cycle_track_t::iterator cycle_track_it_t;
+	typedef cycle_track_t::reverse_iterator cycle_track_rit_t;
+	typedef std::vector<cycle_track_t> cycle_list_t;
+	typedef std::pair<cycle_track_it_t, cycle_track_it_t> track_bound_t;
 
     //---------------------------------------------------------------------
     LLSettingsDay(const LLSD &data);

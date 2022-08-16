@@ -8872,7 +8872,7 @@ class LLWorldEnableEnvSettings final : public view_listener_t
 			}
 			else
 			{
-				LL_WARNS() << "Unknown item" << LL_ENDL;
+				LL_WARNS() << "Unknown item" << tod << LL_ENDL;
 			}
 		}
 		return result;

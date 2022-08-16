@@ -406,9 +406,14 @@ std::ostream& operator<<(std::ostream& s, const LLUUID &uuid)
 
 std::istream& operator>>(std::istream &s, LLUUID &uuid)
 {
-	std::string uuid_str;
-	s >> uuid_str;
-	uuid.set(uuid_str);
+	U32 i;
+	char uuid_str[UUID_STR_LENGTH];		/* Flawfinder: ignore */
+	for (i = 0; i < UUID_STR_LENGTH-1; i++)
+	{
+		s >> uuid_str[i];
+	}
+	uuid_str[i] = '\0';
+	uuid.set(std::string(uuid_str));
 	return s;
 }
 

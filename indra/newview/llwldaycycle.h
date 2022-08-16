@@ -129,6 +129,14 @@ public:
 	/// removes all references to the sky (paramkey)
 	/// does nothing if the sky doesn't exist in the day
 	void removeReferencesTo(const LLWLParamKey& keyframe);
+	static std::string getSysDir(const std::string& subdir);
+	static std::string getUserDir(const std::string& subdir);
+	static std::string makeFileName(const std::string& name,
+									bool escape_dash = true);
+	static bool findPresetFile(const std::string& name,
+							   const std::string& subdir,
+							   const std::string& base_path,
+							   std::string& filename, std::string& path);
 };
 
 

@@ -60,6 +60,18 @@ U32 LLGLSLShader::sTotalTrianglesDrawn = 0;
 U64 LLGLSLShader::sTotalSamplesDrawn = 0;
 U32 LLGLSLShader::sTotalDrawCalls = 0;
 
+// Shader constants: keep in sync with LLGLSLShader::EShaderConsts !
+static const std::string sShaderConstsKey[LLGLSLShader::NUM_SHADER_CONSTS] =
+{
+	"LL_SHADER_CONST_CLOUD_MOON_DEPTH",
+	"LL_SHADER_CONST_STAR_DEPTH"
+};
+static const std::string sShaderConstsVal[LLGLSLShader::NUM_SHADER_CONSTS] =
+{
+	"0.99998",	// SHADER_CONST_CLOUD_MOON_DEPTH
+	"0.99999"	// SHADER_CONST_STAR_DEPTH
+};
+
 //UI shader -- declared here so llui_libtest will link properly
 //Singu note: Not using llui_libtest... and LLViewerShaderMgr is a part of newview. So, 
 // these are declared in newview/llviewershadermanager.cpp just like every other shader.
@@ -375,6 +387,7 @@ BOOL LLGLSLShader::createShader(std::vector<LLStaticHashedString> * attributes,
 								U32 varying_count,
 								const char** varyings)
 {
+	LL_INFOS () << " creating Shader " << mName <<LL_ENDL;
     sInstances.insert(this);
 
     //reloading, reset matrix hash values
@@ -469,7 +482,11 @@ BOOL LLGLSLShader::createShader(std::vector<LLStaticHashedString> * attributes,
     {
         LL_WARNS("ShaderLoading") << "Attempting to create shader program with duplicate name: " << mName << LL_ENDL;
     }
-
+	if (success) {
+		LL_INFOS () << "Shader " << mName << " Compiled and linked" <<LL_ENDL;
+	} else {
+		LL_INFOS () << "Shader " << mName << " error" <<LL_ENDL;
+	}
     return success;
 }
 
@@ -557,7 +574,7 @@ BOOL LLGLSLShader::mapAttributes(const std::vector<LLStaticHashedString> * attri
 			{
 				mAttribute[i] = index;
 				mAttributeMask |= 1 << i;
-				LL_DEBUGS("ShaderLoading") << "Attribute " << name << " assigned to channel " << index << LL_ENDL;
+				LL_DEBUGS("ShaderLoading") << mName << "Attribute " << name << " assigned to channel " << index << LL_ENDL;
 			}
 		}
 		if (attributes != NULL)
@@ -579,7 +596,10 @@ BOOL LLGLSLShader::mapAttributes(const std::vector<LLStaticHashedString> * attri
 	
 	return FALSE;
 }
-
+void LLGLSLShader::addConstant(EShaderConsts shader_const)
+{
+	mDefines[sShaderConstsKey[shader_const]] = sShaderConstsVal[shader_const];
+}
 void LLGLSLShader::mapUniform(const gl_uniform_data_t& gl_uniform, const vector<LLStaticHashedString> * uniforms)
 {
 	GLint size = gl_uniform.size;
@@ -983,4 +1003,35 @@ void LLGLSLShader::vertexAttrib4f(U32 index, GLfloat x, GLfloat y, GLfloat z, GL
 void LLGLSLShader::setMinimumAlpha(F32 minimum)
 {
 	uniform1f(LLShaderMgr::MINIMUM_ALPHA, minimum);
+}
+//-----------------------------------------------------------------------------
+// LLShaderUniforms class
+//-----------------------------------------------------------------------------
+
+void LLShaderUniforms::apply(LLGLSLShader* shader)
+{
+	if (!mActive)
+	{
+		return;
+	}
+	for (U32 i = 0, count = mIntegers.size(); i < count; ++i)
+	{
+		const IntSetting& uniform = mIntegers[i];
+		shader->uniform1i(uniform.mUniform, uniform.mValue);
+	}
+	for (U32 i = 0, count = mFloats.size(); i < count; ++i)
+	{
+		const FloatSetting& uniform = mFloats[i];
+		shader->uniform1f(uniform.mUniform, uniform.mValue);
+	}
+	for (U32 i = 0, count = mVectors.size(); i < count; ++i)
+	{
+		const VectorSetting& uniform = mVectors[i];
+		shader->uniform4fv(uniform.mUniform, 1, uniform.mValue.mV);
+	}
+	for (U32 i = 0, count = mVector3s.size(); i < count; ++i)
+	{
+		const Vector3Setting& uniform = mVector3s[i];
+		shader->uniform3fv(uniform.mUniform, 1, uniform.mValue.mV);
+	}
 }

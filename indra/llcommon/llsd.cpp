@@ -144,6 +144,15 @@ public:
 	virtual std::map<String, LLSD>& map() { static std::map<String, LLSD> empty; return empty; }
 	LLSD::map_const_iterator beginMap() const { return map().begin(); }
 	LLSD::map_const_iterator endMap() const { return map().end(); }
+	inline virtual LLSD::map_const_iterator find(const String&) const
+	{
+		return map().end();
+	}
+
+	inline virtual LLSD::map_const_iterator find(const char*) const
+	{
+		return map().end();
+	}
 	virtual const std::vector<LLSD>& array() const { static const std::vector<LLSD> empty; return empty; }
 	virtual std::vector<LLSD>& array() { static std::vector<LLSD> empty; return empty; }
 	LLSD::array_const_iterator beginArray() const { return array().begin(); }
@@ -387,6 +396,15 @@ namespace
 		using LLSD::Impl::ref; // Unhiding ref(LLSD::Integer)
 		LLSD get(const LLSD::String&) const override; 
 		LLSD getKeys() const override; 
+		inline LLSD::map_const_iterator find(const LLSD::String& k) const override
+		{
+			return mData.find(k);
+		}
+
+		inline LLSD::map_const_iterator find(const char* k) const override
+		{
+			return mData.find(k);
+		}
 		void insert(const LLSD::String& k, const LLSD& v);
 		void erase(const LLSD::String&) override;
 		              LLSD& ref(const LLSD::String&);
@@ -964,7 +982,15 @@ LLSD::map_iterator          LLSD::beginMap()        { return map().begin(); }
 LLSD::map_iterator          LLSD::endMap()          { return map().end(); }
 LLSD::map_const_iterator    LLSD::beginMap() const  { return map().cbegin(); }
 LLSD::map_const_iterator    LLSD::endMap() const    { return map().cend(); }
+LLSD::map_const_iterator LLSD::find(const String& k) const
+{
+	return safe(impl).find(k);
+}
 
+LLSD::map_const_iterator LLSD::find(const char* k) const
+{
+	return safe(impl).find(k);
+}
 std::vector<LLSD>&          LLSD::array()           { return makeArray(impl).array(); }
 const std::vector<LLSD>&    LLSD::array() const     { return safe(impl).array(); }
 

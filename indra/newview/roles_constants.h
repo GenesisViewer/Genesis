@@ -103,7 +103,7 @@ const U64 GP_LAND_ALLOW_CREATE	= 0x1 << 25;	// Bypass Create/Edit Objects Restri
 const U64 GP_LAND_ALLOW_LANDMARK	= 0x1 << 26;	// Bypass Landmark Restriction
 const U64 GP_LAND_ALLOW_SET_HOME	= 0x1 << 28;	// Bypass Set Home Point Restriction
 const U64 GP_LAND_ALLOW_HOLD_EVENT	= 0x1LL << 41;	// Allowed to hold events on group-owned land
-
+const U64 GP_LAND_ALLOW_ENVIRONMENT	= 0x1LL << 46;	// Allowed to change the environment (EEP)
 
 // Parcel Access
 const U64 GP_LAND_MANAGE_ALLOWED	= 0x1 << 29;	// Manage Allowed List
@@ -167,6 +167,7 @@ const U64 GP_DEFAULT_OFFICER = GP_DEFAULT_MEMBER // Superset of GP_DEFAULT_MEMBE
 								| GP_LAND_ALLOW_EDIT_LAND
 								| GP_LAND_ALLOW_FLY
 								| GP_LAND_ALLOW_CREATE
+								| GP_LAND_ALLOW_ENVIRONMENT
 								| GP_LAND_ALLOW_LANDMARK
 								| GP_LAND_CHANGE_IDENTITY
 								| GP_LAND_CHANGE_MEDIA

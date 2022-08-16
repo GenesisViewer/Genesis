@@ -286,7 +286,26 @@ void LLViewerParcelMgr::getDisplayInfo(S32* area_out, S32* claim_out,
 	*for_sale_out = for_sale;
 	*dwell_out = dwell;
 }
+LLParcel* LLViewerParcelMgr::getSelectedOrAgentParcel() const
+{
+	LLParcel* parcel = mAgentParcel;
 
+	LLParcelSelectionHandle handle = mFloatingParcelSelection;
+	if (handle)
+	{
+		LLParcelSelection* selection = handle.get();
+		if (selection)
+		{
+			parcel = selection->getParcel();
+			if (!parcel || parcel->getLocalID() == INVALID_PARCEL_ID)
+			{
+				parcel = mAgentParcel;
+			}
+		}
+	}
+
+	return parcel;
+}
 S32 LLViewerParcelMgr::getSelectedArea() const
 {
 	S32 rv = 0;

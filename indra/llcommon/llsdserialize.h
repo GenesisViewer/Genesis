@@ -7,7 +7,7 @@
  * $LicenseInfo:firstyear=2006&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
- *
+ * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
@@ -77,7 +77,7 @@ public:
 	 * @return Returns the number of LLSD objects parsed into
 	 * data. Returns PARSE_FAILURE (-1) on parse failure.
 	 */
-	S32 parse(std::istream& istr, LLSD& data, S32 max_bytes);
+	S32 parse(std::istream& istr, LLSD& data, S32 max_bytes, S32 max_depth = -1);
 
 	/** Like parse(), but uses a different call (istream.getline()) to read by lines
 	 *  This API is better suited for XML, where the parse cannot tell
@@ -103,10 +103,12 @@ protected:
 	 * caller.
 	 * @param istr The input stream.
 	 * @param data[out] The newly parse structured data.
+	 * @param max_depth Max depth parser will check before exiting
+	 *  with parse error, -1 - unlimited.
 	 * @return Returns the number of LLSD objects parsed into
 	 * data. Returns PARSE_FAILURE (-1) on parse failure.
 	 */
-	virtual S32 doParse(std::istream& istr, LLSD& data) const = 0;
+	virtual S32 doParse(std::istream& istr, LLSD& data, S32 max_depth = -1) const = 0;
 
 	/** 
 	 * @brief Virtual default function for resetting the parser
@@ -241,10 +243,12 @@ protected:
 	 * caller.
 	 * @param istr The input stream.
 	 * @param data[out] The newly parse structured data. Undefined on failure.
+	 * @param max_depth Max depth parser will check before exiting
+	 *  with parse error, -1 - unlimited.
 	 * @return Returns the number of LLSD objects parsed into
 	 * data. Returns PARSE_FAILURE (-1) on parse failure.
 	 */
-	virtual S32 doParse(std::istream& istr, LLSD& data) const;
+	virtual S32 doParse(std::istream& istr, LLSD& data, S32 max_depth = -1) const;
 
 private:
 	/** 
@@ -252,18 +256,20 @@ private:
 	 *
 	 * @param istr The input stream.
 	 * @param map The map to add the parsed data.
+	 * @param max_depth Allowed parsing depth.
 	 * @return Returns The number of LLSD objects parsed into data.
 	 */
-	S32 parseMap(std::istream& istr, LLSD& map) const;
+	S32 parseMap(std::istream& istr, LLSD& map, S32 max_depth) const;
 
 	/** 
 	 * @brief Parse an array from the istream.
 	 *
 	 * @param istr The input stream.
 	 * @param array The array to append the parsed data.
+	 * @param max_depth Allowed parsing depth.
 	 * @return Returns The number of LLSD objects parsed into data.
 	 */
-	S32 parseArray(std::istream& istr, LLSD& array) const;
+	S32 parseArray(std::istream& istr, LLSD& array, S32 max_depth) const;
 
 	/** 
 	 * @brief Parse a string from the istream and assign it to data.
@@ -314,10 +320,12 @@ protected:
 	 * caller.
 	 * @param istr The input stream.
 	 * @param data[out] The newly parse structured data.
+	 * @param max_depth Max depth parser will check before exiting
+	 *  with parse error, -1 - unlimited.
 	 * @return Returns the number of LLSD objects parsed into
 	 * data. Returns PARSE_FAILURE (-1) on parse failure.
 	 */
-	virtual S32 doParse(std::istream& istr, LLSD& data) const;
+	virtual S32 doParse(std::istream& istr, LLSD& data, S32 max_depth = -1) const;
 
 	/** 
 	 * @brief Virtual default function for resetting the parser
@@ -362,10 +370,12 @@ protected:
 	 * caller.
 	 * @param istr The input stream.
 	 * @param data[out] The newly parse structured data.
+	 * @param max_depth Max depth parser will check before exiting
+	 *  with parse error, -1 - unlimited.
 	 * @return Returns the number of LLSD objects parsed into
 	 * data. Returns -1 on parse failure.
 	 */
-	virtual S32 doParse(std::istream& istr, LLSD& data) const;
+	virtual S32 doParse(std::istream& istr, LLSD& data, S32 max_depth = -1) const;
 
 private:
 	/** 
@@ -373,18 +383,20 @@ private:
 	 *
 	 * @param istr The input stream.
 	 * @param map The map to add the parsed data.
+	 * @param max_depth Allowed parsing depth.
 	 * @return Returns The number of LLSD objects parsed into data.
 	 */
-	S32 parseMap(std::istream& istr, LLSD& map) const;
+	S32 parseMap(std::istream& istr, LLSD& map, S32 max_depth) const;
 
 	/** 
 	 * @brief Parse an array from the istream.
 	 *
 	 * @param istr The input stream.
 	 * @param array The array to append the parsed data.
+	 * @param max_depth Allowed parsing depth.
 	 * @return Returns The number of LLSD objects parsed into data.
 	 */
-	S32 parseArray(std::istream& istr, LLSD& array) const;
+	S32 parseArray(std::istream& istr, LLSD& array, S32 max_depth) const;
 
 	/** 
 	 * @brief Parse a string from the istream and assign it to data.
@@ -423,7 +435,8 @@ public:
 	/** 
 	 * @brief Constructor
 	 */
-	LLSDFormatter();
+	LLSDFormatter(bool boolAlpha=false, const std::string& realFormat="",
+				  EFormatterOptions options=OPTIONS_PRETTY_BINARY);
 
 	/** 
 	 * @brief Set the boolean serialization format.
@@ -447,15 +460,37 @@ public:
 	void realFormat(const std::string& format);
 
 	/** 
-	 * @brief Call this method to format an LLSD to a stream.
+	 * @brief Call this method to format an LLSD to a stream with options as
+	 * set by the constructor.
 	 *
 	 * @param data The data to write.
 	 * @param ostr The destination stream for the data.
-	 * @return Returns The number of LLSD objects fomatted out
+	 * @return Returns The number of LLSD objects formatted out
 	 */
-	virtual S32 format(const LLSD& data, std::ostream& ostr, U32 options = LLSDFormatter::OPTIONS_NONE) const = 0;
+	S32 format(const LLSD& data, std::ostream& ostr) const;
+
+	/** 
+	 * @brief Call this method to format an LLSD to a stream, passing options
+	 * explicitly.
+	 *
+	 * @param data The data to write.
+	 * @param ostr The destination stream for the data.
+	 * @param options OPTIONS_NONE to emit LLSD::Binary as raw bytes
+	 * @return Returns The number of LLSD objects formatted out
+	 */
+	virtual S32 format(const LLSD& data, std::ostream& ostr, EFormatterOptions options) const;
 
 protected:
+	/** 
+	 * @brief Implementation to format the data. This is called recursively.
+	 *
+	 * @param data The data to write.
+	 * @param ostr The destination stream for the data.
+	 * @return Returns The number of LLSD objects formatted out
+	 */
+	virtual S32 format_impl(const LLSD& data, std::ostream& ostr, EFormatterOptions options,
+							U32 level) const = 0;
+
 	/** 
 	 * @brief Helper method which appropriately obeys the real format.
 	 *
@@ -464,9 +499,9 @@ protected:
 	 */
 	void formatReal(LLSD::Real real, std::ostream& ostr) const;
 
-protected:
 	bool mBoolAlpha;
 	std::string mRealFormat;
+	EFormatterOptions mOptions;
 };
 
 
@@ -486,7 +521,8 @@ public:
 	/** 
 	 * @brief Constructor
 	 */
-	LLSDNotationFormatter();
+	LLSDNotationFormatter(bool boolAlpha=false, const std::string& realFormat="",
+						  EFormatterOptions options=OPTIONS_PRETTY_BINARY);
 
 	/** 
 	 * @brief Helper static method to return a notation escaped string
@@ -500,25 +536,16 @@ public:
 	 */
 	static std::string escapeString(const std::string& in);
 
-	/** 
-	 * @brief Call this method to format an LLSD to a stream.
-	 *
-	 * @param data The data to write.
-	 * @param ostr The destination stream for the data.
-	 * @return Returns The number of LLSD objects fomatted out
-	 */
-	virtual S32 format(const LLSD& data, std::ostream& ostr, U32 options = LLSDFormatter::OPTIONS_NONE) const;
-
 protected:
-
 	/** 
 	 * @brief Implementation to format the data. This is called recursively.
 	 *
 	 * @param data The data to write.
 	 * @param ostr The destination stream for the data.
-	 * @return Returns The number of LLSD objects fomatted out
+	 * @return Returns The number of LLSD objects formatted out
 	 */
-	S32 format_impl(const LLSD& data, std::ostream& ostr, U32 options, U32 level) const;
+	S32 format_impl(const LLSD& data, std::ostream& ostr, EFormatterOptions options,
+					U32 level) const override;
 };
 
 
@@ -538,7 +565,8 @@ public:
 	/** 
 	 * @brief Constructor
 	 */
-	LLSDXMLFormatter();
+	LLSDXMLFormatter(bool boolAlpha=false, const std::string& realFormat="",
+					 EFormatterOptions options=OPTIONS_PRETTY_BINARY);
 
 	/** 
 	 * @brief Helper static method to return an xml escaped string
@@ -553,20 +581,23 @@ public:
 	 *
 	 * @param data The data to write.
 	 * @param ostr The destination stream for the data.
-	 * @return Returns The number of LLSD objects fomatted out
+	 * @return Returns The number of LLSD objects formatted out
 	 */
-	virtual S32 format(const LLSD& data, std::ostream& ostr, U32 options = LLSDFormatter::OPTIONS_NONE) const;
+	S32 format(const LLSD& data, std::ostream& ostr, EFormatterOptions options) const override;
+
+	// also pull down base-class format() method that isn't overridden
+	using LLSDFormatter::format;
 
 protected:
-
 	/** 
 	 * @brief Implementation to format the data. This is called recursively.
 	 *
 	 * @param data The data to write.
 	 * @param ostr The destination stream for the data.
-	 * @return Returns The number of LLSD objects fomatted out
+	 * @return Returns The number of LLSD objects formatted out
 	 */
-	S32 format_impl(const LLSD& data, std::ostream& ostr, U32 options, U32 level) const;
+	S32 format_impl(const LLSD& data, std::ostream& ostr, EFormatterOptions options,
+					U32 level) const override;
 };
 
 
@@ -606,18 +637,20 @@ public:
 	/** 
 	 * @brief Constructor
 	 */
-	LLSDBinaryFormatter();
+	LLSDBinaryFormatter(bool boolAlpha=false, const std::string& realFormat="",
+						EFormatterOptions options=OPTIONS_PRETTY_BINARY);
 
+protected:
 	/** 
-	 * @brief Call this method to format an LLSD to a stream.
+	 * @brief Implementation to format the data. This is called recursively.
 	 *
 	 * @param data The data to write.
 	 * @param ostr The destination stream for the data.
-	 * @return Returns The number of LLSD objects fomatted out
+	 * @return Returns The number of LLSD objects formatted out
 	 */
-	virtual S32 format(const LLSD& data, std::ostream& ostr, U32 options = LLSDFormatter::OPTIONS_NONE) const;
+	S32 format_impl(const LLSD& data, std::ostream& ostr, EFormatterOptions options,
+					U32 level) const override;
 
-protected:
 	/** 
 	 * @brief Helper method to serialize strings
 	 *
@@ -657,7 +690,8 @@ public:
 	/** 
 	 * @brief Constructor
 	 */
-	LLSDOStreamer(const LLSD& data, U32 options = LLSDFormatter::OPTIONS_NONE) :
+	LLSDOStreamer(const LLSD& data,
+				  LLSDFormatter::EFormatterOptions options=LLSDFormatter::OPTIONS_PRETTY_BINARY) :
 		mSD(data), mOptions(options) {}
 
 	/**
@@ -669,17 +703,17 @@ public:
 	 * @return Returns the stream passed in after streaming mSD.
 	 */
 	friend std::ostream& operator<<(
-		std::ostream& str,
-		const LLSDOStreamer<Formatter>& formatter)
+		std::ostream& out,
+		const LLSDOStreamer<Formatter>& streamer)
 	{
 		LLPointer<Formatter> f = new Formatter;
-		f->format(formatter.mSD, str, formatter.mOptions);
-		return str;
+		f->format(streamer.mSD, out, streamer.mOptions);
+		return out;
 	}
 
 protected:
 	LLSD mSD;
-	U32 mOptions;
+	LLSDFormatter::EFormatterOptions mOptions;
 };
 
 typedef LLSDOStreamer<LLSDNotationFormatter>	LLSDNotationStreamer;
@@ -712,7 +746,7 @@ public:
 	 * Generic in/outs
 	 */
 	static void serialize(const LLSD& sd, std::ostream& str, ELLSD_Serialize,
-		U32 options = LLSDFormatter::OPTIONS_NONE);
+						  LLSDFormatter::EFormatterOptions options=LLSDFormatter::OPTIONS_PRETTY_BINARY);
 
 	/**
 	 * @brief Examine a stream, and parse 1 sd object out based on contents.
@@ -740,9 +774,9 @@ public:
 	static S32 toPrettyBinaryNotation(const LLSD& sd, std::ostream& str)
 	{
 		LLPointer<LLSDNotationFormatter> f = new LLSDNotationFormatter;
-		return f->format(sd, str, 
-				LLSDFormatter::OPTIONS_PRETTY | 
-				LLSDFormatter::OPTIONS_PRETTY_BINARY);
+		return f->format(sd, str,
+						 LLSDFormatter::EFormatterOptions(LLSDFormatter::OPTIONS_PRETTY | 
+														  LLSDFormatter::OPTIONS_PRETTY_BINARY));
 	}
 	static S32 fromNotation(LLSD& sd, std::istream& str, S32 max_bytes)
 	{
@@ -800,22 +834,31 @@ public:
 		LLPointer<LLSDBinaryFormatter> f = new LLSDBinaryFormatter;
 		return f->format(sd, str, LLSDFormatter::OPTIONS_NONE);
 	}
-	static S32 fromBinary(LLSD& sd, std::istream& str, S32 max_bytes)
+	static S32 fromBinary(LLSD& sd, std::istream& str, S32 max_bytes, S32 max_depth = -1)
 	{
 		LLPointer<LLSDBinaryParser> p = new LLSDBinaryParser;
-		return p->parse(str, sd, max_bytes);
+		return p->parse(str, sd, max_bytes, max_depth);
 	}
-	static LLSD fromBinary(std::istream& str, S32 max_bytes)
+	static LLSD fromBinary(std::istream& str, S32 max_bytes, S32 max_depth = -1)
 	{
 		LLPointer<LLSDBinaryParser> p = new LLSDBinaryParser;
 		LLSD sd;
-		(void)p->parse(str, sd, max_bytes);
+		(void)p->parse(str, sd, max_bytes, max_depth);
 		return sd;
 	}
 };
 
+
+
 //dirty little zip functions -- yell at davep
 LL_COMMON_API std::string zip_llsd(LLSD& data);
 LL_COMMON_API bool unzip_llsd(LLSD& data, std::istream& is, S32 size);
+
 LL_COMMON_API U8* unzip_llsdNavMesh( bool& valid, unsigned int& outsize,std::istream& is, S32 size);
+// <FS:Beq pp Rye> Add non-allocating variants of unzip_llsd	
+LL_COMMON_API U8* unzip_llsdNavMesh(bool& valid, unsigned int& outsize, const U8* in, S32 size);
+
+// returns a pointer to the array or past the array if the deprecated header exists
+LL_COMMON_API char* strip_deprecated_header(char* in, U32& cur_size, U32* header_size = nullptr);
+// </FS:Beq>
 #endif // LL_LLSDSERIALIZE_H

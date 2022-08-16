@@ -317,6 +317,19 @@
 	     name="Sound Play" width="128">
 		<on_click filter="" function="Inventory.DoToSelected" userdata="sound_play" />
 	</menu_item_call>
+	<menu_item_call name="Settings Open" label="Edit">
+		<on_click filter="" function="Inventory.DoToSelected" userdata="open" />
+	</menu_item_call>
+	<menu_item_call name="Settings Apply Local" label="Apply to myself">
+		<on_click filter="" function="Inventory.DoToSelected" userdata="apply_settings_local" />
+	</menu_item_call>
+	<menu_item_call name="Settings Apply Parcel" label="Apply to current parcel">
+		<on_click filter="" function="Inventory.DoToSelected" userdata="apply_settings_parcel" />
+	</menu_item_call>
+	<menu_item_call name="Settings Apply Region" label="Apply to current region">
+		<on_click filter="" function="Inventory.DoToSelected" userdata="apply_settings_region" />
+	</menu_item_call>
+	<menu_item_separator name="Settings Separator" />
 	<menu_item_separator name="Landmark Separator" />
 	<menu_item_call bottom_delta="-18" height="18" label="About Landmark" left="0"
 	     mouse_opaque="true" name="Teleport To Landmark" width="128">

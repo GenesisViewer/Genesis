@@ -177,6 +177,8 @@ set(viewer_SOURCE_FILES
     lldroptarget.cpp
     lldynamictexture.cpp
     llemote.cpp
+    llenvironment.cpp
+    llenvsettings.cpp
     llenvmanager.cpp
     llestateinfomodel.cpp
     lleventinfo.cpp
@@ -607,6 +609,8 @@ set(viewer_SOURCE_FILES
     llwlhandlers.cpp
     llwlparammanager.cpp
     llwlparamset.cpp
+    llwlskyparammgr.cpp
+    llwlwaterparammgr.cpp
     llworld.cpp
     llworldmap.cpp
     llworldmapmessage.cpp
@@ -731,6 +735,8 @@ set(viewer_HEADER_FILES
     lldroptarget.h
     lldynamictexture.h
     llemote.h
+    llenvironment.h
+    llenvsettings.h
     llenvmanager.h
     llestateinfomodel.h
     lleventinfo.h
@@ -1167,6 +1173,8 @@ set(viewer_HEADER_FILES
     llwlhandlers.h
     llwlparammanager.h
     llwlparamset.h
+    llwlskyparammgr.h
+    llwlwaterparammgr.h
     llworld.h
     llworldmap.h
     llworldmapmessage.h

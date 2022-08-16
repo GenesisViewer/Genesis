@@ -35,6 +35,7 @@
 
 #include "llsd.h"
 #include "llsdutil.h"
+
 #include "v2math.h"
 #include "v3math.h"
 #include "v4math.h"
@@ -44,6 +45,9 @@
 #include "llunits.h"
 
 #include "llinventorysettings.h"
+
+
+class LLShaderUniforms;
 
 #define PTR_NAMESPACE     std
 #define SETTINGS_OVERRIDE override
@@ -352,8 +356,13 @@ protected:
     virtual validation_list_t getValidationList() const = 0;
 
     // Apply any settings that need special handling. 
-    virtual void applySpecial(void *) { };
+    //virtual void applySpecial(void *) { };
+    // Apply any settings that need special handling.
+	inline virtual void applySpecial(LLShaderUniforms* uniforms)
+	{
+	}
 
+	
     virtual parammapping_t getParameterMap() const { return parammapping_t(); }
 
     LLSD        mSettings;

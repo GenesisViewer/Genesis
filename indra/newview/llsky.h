@@ -80,7 +80,13 @@ public:
 	void setFogRatio(const F32 fog_ratio);		// Fog distance as fraction of cull distance.
 	F32 getFogRatio() const;
 	LLColor4U getFadeColor() const;
+		// Extended environment specific methods
 
+	void setSunScale(F32 sun_scale);
+	void setMoonScale(F32 moon_scale);
+	// These directions should be in CFR coord sys (+x at, +z up, +y right)
+	void setSunAndMoonDirectionsCFR(const LLVector3& sun_direction,
+									const LLVector3& moon_direction);
 	LLVector3 getSunDirection() const;
 	LLVector3 getMoonDirection() const;
 	LLColor4 getSunDiffuseColor() const;
@@ -88,6 +94,14 @@ public:
 	LLColor4 getSunAmbientColor() const;
 	LLColor4 getMoonAmbientColor() const;
 	LLColor4 getTotalAmbientColor() const;
+	void setSunTextures(const LLUUID& sun_tex1,
+						const LLUUID& sun_tex2 = LLUUID::null);
+	void setMoonTextures(const LLUUID& moon_tex1,
+						 const LLUUID& moon_tex2 = LLUUID::null);
+	void setCloudNoiseTextures(const LLUUID& cld_tex1,
+							   const LLUUID& cld_tex2 = LLUUID::null);
+	void setBloomTextures(const LLUUID& bloom_tex1,
+						  const LLUUID& bloom_tex2 = LLUUID::null);
 	BOOL sunUp() const;
 
 	F32 getSunPhase() const;

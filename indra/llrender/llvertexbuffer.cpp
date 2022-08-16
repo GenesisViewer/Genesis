@@ -2400,7 +2400,7 @@ void LLVertexBuffer::setBuffer(U32 data_mask)
 
 			if ((data_mask & required_mask) != required_mask)
 			{
-				LL_ERRS() << "Shader consumption mismatches data provision." << LL_ENDL;
+				LL_ERRS() << "Shader consumption mismatches data provision." << shader->mName <<LL_ENDL;
 			}
 		}
 	}

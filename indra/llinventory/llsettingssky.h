@@ -30,7 +30,14 @@
 
 #include "llsettingsbase.h"
 #include "v4coloru.h"
+// Change this to 1 whenever LL implements cariable sky domes for extended
+// environment... For now (and this was the case with Windlight as well), the
+// sky dome is of fixed size and the SKY_DOME_OFFSET and SKY_DOME_RADIUS below
+// are used.
+#define LL_VARIABLE_SKY_DOME_SIZE 0
 
+constexpr F32 SKY_DOME_OFFSET = 0.96f;
+constexpr F32 SKY_DOME_RADIUS = 15000.f;
 const F32 EARTH_RADIUS  =      6.370e6f;
 const F32 SUN_RADIUS    =    695.508e6f;
 const F32 SUN_DIST      = 149598.260e6f;
@@ -209,7 +216,11 @@ public:
 
     F32 getMoonScale() const;
     void setMoonScale(F32 val);
-
+    // Color based on brightness
+	inline LLColor3 getMoonlightColor() const
+	{
+		return getSunlightColor();	// The Moon reflects the Sun light...
+	}
     LLUUID getMoonTextureId() const;
     void setMoonTextureId(LLUUID id);
 

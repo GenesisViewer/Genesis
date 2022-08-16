@@ -1088,7 +1088,6 @@ BOOL LLShaderMgr::validateProgramObject(GLhandleARB obj)
 	return success;
 }
 
-//virtual
 void LLShaderMgr::initAttribsAndUniforms()
 {
 	//MUST match order of enum in LLVertexBuffer.h
@@ -1151,8 +1150,10 @@ void LLShaderMgr::initAttribsAndUniforms()
 	mReservedUniforms.push_back("color");
 		
 	mReservedUniforms.push_back("diffuseMap");
+	mReservedUniforms.push_back("altDiffuseMap");
 	mReservedUniforms.push_back("specularMap");
 	mReservedUniforms.push_back("bumpMap");
+	mReservedUniforms.push_back("bumpMap2");
 	mReservedUniforms.push_back("environmentMap");
 	mReservedUniforms.push_back("cloud_noise_texture");
 	mReservedUniforms.push_back("fullbright");
@@ -1219,6 +1220,7 @@ void LLShaderMgr::initAttribsAndUniforms()
 	mReservedUniforms.push_back("spot_shadow_bias");
 	mReservedUniforms.push_back("spot_shadow_offset");
 	mReservedUniforms.push_back("sun_dir");
+	mReservedUniforms.push_back("moon_dir");
 	mReservedUniforms.push_back("shadow_res");
 	mReservedUniforms.push_back("proj_shadow_res");
 	mReservedUniforms.push_back("depth_cutoff");
@@ -1311,6 +1313,17 @@ void LLShaderMgr::initAttribsAndUniforms()
 
 	mReservedUniforms.push_back("origin");
 	mReservedUniforms.push_back("display_gamma");
+	mReservedUniforms.push_back("sun_up_factor");
+	mReservedUniforms.push_back("moonlight_color");
+	mReservedUniforms.push_back("sun_moon_glow_factor");
+
+	mReservedUniforms.push_back("water_edge");
+	mReservedUniforms.push_back("moon_brightness");
+	mReservedUniforms.push_back("cloud_variance");
+	mReservedUniforms.push_back("moisture_level");
+	mReservedUniforms.push_back("blend_factor");
+	mReservedUniforms.push_back("droplet_radius");
+	mReservedUniforms.push_back("ice_level");
 	llassert(mReservedUniforms.size() == END_RESERVED_UNIFORMS);
 
 	std::set<std::string> dupe_check;

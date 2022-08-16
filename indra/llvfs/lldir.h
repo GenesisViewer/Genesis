@@ -31,7 +31,13 @@
 #include <sys/param.h>
 #define MAX_PATH MAXPATHLEN
 #endif
-
+#if LL_WINDOWS
+# define LL_DIR_DELIM_STR "\\"
+# define LL_DIR_DELIM_CHR '\\'
+#else
+# define LL_DIR_DELIM_STR "/"
+# define LL_DIR_DELIM_CHR '/'
+#endif
 // these numbers *may* get serialized (really??), so we need to be explicit
 typedef enum ELLPath
 {

@@ -258,6 +258,9 @@ extern LLGLSLShader			gImpostorProgram;
 extern LLGLSLShader			gWLSkyProgram;
 extern LLGLSLShader			gWLCloudProgram;
 
+extern LLGLSLShader gWLSunProgram;
+extern LLGLSLShader gWLMoonProgram;
+
 // Post Process Shaders
 extern LLGLSLShader			gPostColorFilterProgram;
 extern LLGLSLShader			gPostNightVisionProgram;
@@ -312,6 +315,8 @@ extern LLGLSLShader			gDeferredEmissiveProgram;
 extern LLGLSLShader			gDeferredAvatarAlphaProgram;
 extern LLGLSLShader			gDeferredWLSkyProgram;
 extern LLGLSLShader			gDeferredWLCloudProgram;
+extern LLGLSLShader 		gDeferredWLSunProgram;
+extern LLGLSLShader 		gDeferredWLMoonProgram;
 extern LLGLSLShader			gDeferredStarProgram;
 extern LLGLSLShader			gDeferredFullbrightShinyProgram;
 extern LLGLSLShader			gDeferredSkinnedFullbrightShinyProgram;

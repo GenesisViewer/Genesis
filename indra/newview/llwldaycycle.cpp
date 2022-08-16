@@ -40,10 +40,6 @@ LLWLDayCycle::LLWLDayCycle() : mDayRate(120)
 }
 
 
-LLWLDayCycle::~LLWLDayCycle()
-{
-}
-
 void LLWLDayCycle::loadDayCycle(const LLSD& day_data, LLWLParamKey::EScope scope)
 {
 	LL_DEBUGS() << "Loading day cycle (day_data.size() = " << day_data.size() << ", scope = " << scope << ")" << LL_ENDL;
@@ -361,4 +357,114 @@ void LLWLDayCycle::removeReferencesTo(const LLWLParamKey& keyframe)
 		might_exist = removeKeyframe(keytime);
 
 	} while(might_exist); // might be another one
+}
+//static
+std::string LLWLDayCycle::getSysDir(const std::string& subdir)
+{
+	return gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, "windlight",
+										  subdir, "");
+}
+//static
+std::string LLWLDayCycle::getUserDir(const std::string& subdir)
+{
+	return gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "windlight",
+										  subdir, "");
+}
+//static
+std::string LLWLDayCycle::makeFileName(const std::string& name,
+									   bool escape_dash)
+{
+	std::string filename = name;
+	LLStringUtil::toLower(filename);
+	size_t pos = filename.rfind(".xml");
+	if (pos != std::string::npos && pos == filename.length() - 4)
+	{
+		filename = LLURI::escape(name.substr(0, pos));
+	}
+	else
+	{
+		filename = LLURI::escape(name);
+	}
+	if (escape_dash)
+	{
+		LLStringUtil::replaceString(filename, "-", "%2D");
+		LLStringUtil::replaceString(filename, ".", "%2E");
+	}
+	return filename + ".xml";
+}
+//static
+bool LLWLDayCycle::findPresetFile(const std::string& name,
+								  const std::string& subdir,
+								  const std::string& base_path,
+								  std::string& filename, std::string& path)
+{
+	// Search for file names with (filename) or without (filename2) dash
+	// conversion...
+	filename = makeFileName(name);
+	std::string filename2 = makeFileName(name, false);
+
+	if (!base_path.empty())
+	{
+		path = gDirUtilp->getDirName(base_path) + LL_DIR_DELIM_STR;
+		// Loading a sky or water settings file from a days cycle base path ?
+		if (subdir != "days")
+		{
+			size_t i = path.rfind(LL_DIR_DELIM_STR "days" LL_DIR_DELIM_STR);
+			if (i != std::string::npos)
+			{
+				// Remove the "days/" subdir from the path
+				path = path.substr(0, i + 1);
+			}
+		}
+		if (LLFile::isfile(path + filename))
+		{
+			return true;
+		}
+		if (LLFile::isfile(path + filename2))
+		{
+			filename = filename2;
+			return true;
+		}
+		// If the subdir was not part of the base path, add it now and check
+		size_t i = path.rfind(LL_DIR_DELIM_STR + subdir + LL_DIR_DELIM_STR);
+		if (i == std::string::npos && !subdir.empty())
+		{
+			path += subdir + LL_DIR_DELIM_STR;
+			if (LLFile::isfile(path + filename))
+			{
+				return true;
+			}
+			if (LLFile::isfile(path + filename2))
+			{
+				filename = filename2;
+				return true;
+			}
+		}
+	}
+
+	path = getUserDir(subdir);
+	if (LLFile::isfile(path + filename))
+	{
+		return true;
+	}
+	if (LLFile::isfile(path + filename2))
+	{
+		filename = filename2;
+		return true;
+	}
+
+	path = getSysDir(subdir);
+	if (LLFile::isfile(path + filename))
+	{
+		return true;
+	}
+	if (LLFile::isfile(path + filename2))
+	{
+		filename = filename2;
+		return true;
+	}
+
+	path = base_path;
+
+	return false;
 }

@@ -10,5 +10,5 @@ jobs:
   get-revision:
     runs-on: ubuntu-latest
     steps:
-      - name: gitRevision:
+      - name: gitRevision
         run: git rev-list --count HEAD

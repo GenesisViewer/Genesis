@@ -10,5 +10,10 @@ jobs:
   get-revision:
     runs-on: ubuntu-latest
     steps:
+      - id: code-checkout
+        uses: actions/checkout@v3
+        with:
+           ref: ${{env.GITHUB_REF}}
+           fetch-depth: 0
       - name: gitRevision
         run: git rev-list --count HEAD

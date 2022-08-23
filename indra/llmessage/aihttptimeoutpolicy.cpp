@@ -915,6 +915,7 @@ P(classifiedStatsResponder);
 P(emeraldDicDownloader);
 P(environmentApplyResponder);
 P(environmentRequestResponder);
+P(environmentEepRequestResponder);
 P2(eventPollResponder,							reply_60s);
 P(FetchItemHttpHandler);
 P(fetchScriptLimitsAttachmentInfoResponder);

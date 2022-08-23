@@ -1538,3 +1538,64 @@ void LLDrawPoolBump::pushBatch(LLDrawInfo& params, U32 mask, BOOL texture, BOOL 
 		gGL.matrixMode(LLRender::MM_MODELVIEW);
 	}
 }
+void LLDrawPoolInvisible::render(S32 pass)
+{ //render invisiprims
+	
+  
+	if (gPipeline.canUseVertexShaders())
+	{
+		gOcclusionProgram.bind();
+	}
+
+	U32 invisi_mask = LLVertexBuffer::MAP_VERTEX;
+	glStencilMask(0);
+	gGL.setColorMask(false, false);
+	pushBatches(LLRenderPass::PASS_INVISIBLE, invisi_mask, FALSE);
+	gGL.setColorMask(true, false);
+	glStencilMask(0xFFFFFFFF);
+
+	if (gPipeline.canUseVertexShaders())
+	{
+		gOcclusionProgram.unbind();
+	}
+
+	if (gPipeline.hasRenderBatches(LLRenderPass::PASS_INVISI_SHINY))
+	{
+		beginShiny();
+		renderShiny();
+		endShiny();
+	}
+}
+
+void LLDrawPoolInvisible::beginDeferredPass(S32 pass)
+{
+	beginRenderPass(pass);
+}
+
+void LLDrawPoolInvisible::endDeferredPass( S32 pass )
+{
+	endRenderPass(pass);
+}
+
+void LLDrawPoolInvisible::renderDeferred( S32 pass )
+{ //render invisiprims; this doesn't work becaue it also blocks all the post-deferred stuff
+#if 0 
+	LL_RECORD_BLOCK_TIME(FTM_RENDER_INVISIBLE);
+  
+	U32 invisi_mask = LLVertexBuffer::MAP_VERTEX;
+	glStencilMask(0);
+	glStencilOp(GL_ZERO, GL_KEEP, GL_REPLACE);
+	gGL.setColorMask(false, false);
+	pushBatches(LLRenderPass::PASS_INVISIBLE, invisi_mask, FALSE);
+	gGL.setColorMask(true, true);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glStencilMask(0xFFFFFFFF);
+	
+	if (gPipeline.hasRenderBatches(LLRenderPass::PASS_INVISI_SHINY))
+	{
+		beginShiny(true);
+		renderShiny(true);
+		endShiny(true);
+	}
+#endif
+}

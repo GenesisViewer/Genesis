@@ -1263,6 +1263,10 @@ LLColor4 LLSettingsSky::getTotalAmbient() const
     update();
     return mTotalAmbient;
 }
+LLColor3 LLSettingsSky::getMoonlightColor() const
+{
+    return getSunlightColor(); //moon and sun share light color
+}
 
 void LLSettingsSky::calculateLightSettings() const
 {

@@ -37,6 +37,7 @@
 #include "llagent.h"
 #include "llviewerregion.h"
 #include "llenvmanager.h"
+#include "llenvironment.h"
 #include "llnotificationsutil.h"
 
 /****
@@ -62,7 +63,26 @@ bool LLEnvironmentRequest::initiate()
 
 	return doRequest();
 }
+// static
+bool LLEnvironmentRequest::initiate(LLEnvironment::environment_apply_fn cb)
+{
+	LLViewerRegion* cur_region = gAgent.getRegion();
 
+	if (!cur_region)
+	{
+		LL_WARNS("WindlightCaps") << "Viewer region not set yet, skipping env. settings request" << LL_ENDL;
+		return false;
+	}
+
+	if (!cur_region->capabilitiesReceived())
+	{
+		LL_INFOS("WindlightCaps") << "Deferring windlight settings request until we've got region caps" << LL_ENDL;
+        cur_region->setCapabilitiesReceivedCallback([cb](const LLUUID &region_id) { LLEnvironmentRequest::onRegionCapsReceived(region_id, cb); });
+		return false;
+	}
+
+	return doRequest(cb);
+}
 // static
 void LLEnvironmentRequest::onRegionCapsReceived(const LLUUID& region_id)
 {
@@ -89,6 +109,34 @@ bool LLEnvironmentRequest::doRequest()
 
 	LL_INFOS("WindlightCaps") << "Requesting region windlight settings via " << url << LL_ENDL;
 	LLHTTPClient::get(url, new LLEnvironmentRequestResponder());
+	return true;
+}
+// static
+void LLEnvironmentRequest::onRegionCapsReceived(const LLUUID& region_id, LLEnvironment::environment_apply_fn cb)
+{
+	if (region_id != gAgent.getRegion()->getRegionID())
+	{
+		LL_INFOS("WindlightCaps") << "Got caps for a non-current region" << LL_ENDL;
+		return;
+	}
+
+	LL_DEBUGS("WindlightCaps") << "Received region capabilities" << LL_ENDL;
+	doRequest(cb);
+}
+
+// static
+bool LLEnvironmentRequest::doRequest(LLEnvironment::environment_apply_fn cb)
+{
+	std::string url = gAgent.getRegion()->getCapability("EnvironmentSettings");
+	if (url.empty())
+	{
+		LL_INFOS("WindlightCaps") << "Skipping windlight setting request - we don't have this capability" << LL_ENDL;
+		// region is apparently not capable of this; don't respond at all
+		return false;
+	}
+
+	LL_INFOS("WindlightCaps") << "Requesting region windlight settings via " << url << LL_ENDL;
+	LLHTTPClient::get(url, new LLEnvironmentRequestResponder(cb));
 	return true;
 }
 
@@ -126,6 +174,11 @@ LLEnvironmentRequestResponder::LLEnvironmentRequestResponder()
 	else
 	{
 		LLEnvManagerNew::getInstance()->onRegionSettingsResponse(mContent);
+		
+		if (mCB) {
+			LLEnvironment::EnvironmentInfo::ptr_t pinfo = LLEnvironment::EnvironmentInfo::extractLegacy(mContent);
+			mCB(-1, pinfo);
+		}
 	}
 }
 /*virtual*/ void LLEnvironmentRequestResponder::httpFailure(void)

@@ -234,6 +234,7 @@ std::string gPoolNames[] =
 	"POOL_SKY",
 	"POOL_WL_SKY",
 	"POOL_GRASS",
+	"POOL_INVISIBLE",
 	"POOL_AVATAR",
 	"POOL_VOIDWATER",
 	"POOL_WATER",
@@ -329,7 +330,7 @@ BOOL    LLPipeline::sMemAllocationThrottled = FALSE;
 S32		LLPipeline::sVisibleLightCount = 0;
 F32		LLPipeline::sMinRenderSize = 0.f;
 BOOL	LLPipeline::sRenderingHUDs = FALSE;
-
+bool	LLPipeline::sDisableShaders = false;
 
 static LLCullResult* sCull = NULL;
 
@@ -1264,9 +1265,24 @@ void LLPipeline::restoreGL()
 
 	updateLocalLightingEnabled(); //Default all gl light parameters. Fixes light brightness problems on fullscren toggle
 }
+bool LLPipeline::canUseVertexShaders()
+{
+	if (sDisableShaders ||
+		!gGLManager.mHasVertexShader ||
+		!gGLManager.mHasFragmentShader ||
+		(assertInitialized() && mVertexShadersLoaded != 1) )
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
 
 BOOL LLPipeline::canUseWindLightShaders() const
 {
+	
 	return (gWLSkyProgram.mProgramObject != 0 &&
 			LLViewerShaderMgr::instance()->getVertexShaderLevel(LLViewerShaderMgr::SHADER_WINDLIGHT) > 1);
 }
@@ -4150,11 +4166,14 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 
 	for (pool_set_t::iterator iter = mPools.begin(); iter != mPools.end(); ++iter)
 	{
+		
 		LLDrawPool *poolp = *iter;
+		//LL_INFOS() << "prerender of pool " << typeid(poolp).name() << LL_ENDL;
 		if (hasRenderType(poolp->getType()))
 		{
 			poolp->prerender();
 		}
+		//LL_INFOS() << "prerender of pool end " << typeid(poolp).name() << LL_ENDL;
 	}
 
 	{
@@ -4204,7 +4223,9 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 					LLVertexBuffer::unbind();
 					if(gDebugGL)check_blend_funcs();
 					mInRenderPass = true;
+					//LL_INFOS() << "beginRenderPass of pool " << typeid(poolp).name() << LL_ENDL;
 					poolp->beginRenderPass(i);
+					//LL_INFOS() << "beginRenderPass of pool end " << typeid(poolp).name() << LL_ENDL;
 					for (iter2 = iter1; iter2 != mPools.end(); iter2++)
 					{
 						LLDrawPool *p = *iter2;
@@ -4212,23 +4233,31 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 						{
 							break;
 						}
+						//LL_INFOS() << "render of pool " << typeid(p).name() << LL_ENDL;
 						p->render(i);
+						//LL_INFOS() << "render of pool end " << typeid(p).name() << LL_ENDL;
 					}
+					//LL_INFOS() << "endRenderPass of pool " << typeid(poolp).name() << LL_ENDL;
 					poolp->endRenderPass(i);
+					//LL_INFOS() << "endRenderPass of pool end" << typeid(poolp).name() << LL_ENDL;
 					clearRenderPassStates();
+					//LL_INFOS() << "clearRenderPassStates" << poolp->getType() << LL_ENDL;
 					if(gDebugGL)check_blend_funcs();
 					LLVertexBuffer::unbind();
 					if (gDebugGL)
 					{
+						//LL_INFOS() << "gDebugGL" << poolp->getType() << LL_ENDL;
 						std::string msg = llformat("%s pass %d", gPoolNames[cur_type].c_str(), i);
 						LLGLStateValidator::checkStates(msg);
 						//LLGLStateValidator::checkTextureChannels(msg);
 						//LLGLStateValidator::checkClientArrays(msg);
+						//LL_INFOS() << "gDebugGL end" << poolp->getType() << LL_ENDL;
 					}
 				}
 			}
 			else
 			{
+				//LL_INFOS() << "ici" << poolp->getType() << LL_ENDL;
 				// Skip all pools of this type
 				for (iter2 = iter1; iter2 != mPools.end(); iter2++)
 				{
@@ -4238,11 +4267,12 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 						break;
 					}
 				}
+				//LL_INFOS() << "la" << poolp->getType() << LL_ENDL;
 			}
 			iter1 = iter2;
 			stop_glerror();
 		}
-	
+	//LL_INFOS() << "LLPipeline:renderGeom" << LL_ENDL;
 	LLAppViewer::instance()->pingMainloopTimeout("Pipeline:RenderDrawPoolsEnd");
 
 	LLVertexBuffer::unbind();
@@ -4259,7 +4289,7 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 			doOcclusion(camera);
 		}
 	}
-
+	//LL_INFOS() << "LLPipeline:renderGeom 1" << LL_ENDL;
 	LLVertexBuffer::unbind();
 	LLGLStateValidator::checkStates();
 	//LLGLStateValidator::checkTextureChannels();
@@ -4272,44 +4302,51 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 	//LLGLStateValidator::checkStates();
 	//LLGLStateValidator::checkTextureChannels();
 	//LLGLStateValidator::checkClientArrays();
+	//LL_INFOS() << "LLPipeline:renderGeom 2" << LL_ENDL;
 	if (!LLPipeline::sImpostorRender)
 	{
 	
 		LLAppViewer::instance()->pingMainloopTimeout("Pipeline:RenderHighlights");
-
+		//LL_INFOS() << "LLPipeline:renderGeom 3" << LL_ENDL;
 		if (!sReflectionRender)
 		{
 			renderHighlights();
 		}
-
+		//LL_INFOS() << "LLPipeline:renderGeom 4" << LL_ENDL;
 		// Contains a list of the faces of objects that are physical or
 		// have touch-handlers.
 		mHighlightFaces.clear();
-
+		//LL_INFOS() << "LLPipeline:renderGeom 5" << LL_ENDL;
 		LLAppViewer::instance()->pingMainloopTimeout("Pipeline:RenderDebug");
-	
+		//LL_INFOS() << "LLPipeline:renderGeom 6" << LL_ENDL;
 		renderDebug();
-
+		//LL_INFOS() << "LLPipeline:renderGeom 7" << LL_ENDL;
 		LLVertexBuffer::unbind();
 	
 		if (!LLPipeline::sReflectionRender && !LLPipeline::sRenderDeferred)
 		{
 			if (gPipeline.hasRenderDebugFeatureMask(LLPipeline::RENDER_DEBUG_FEATURE_UI))
 			{
+				//LL_INFOS() << "LLPipeline:renderGeom 8" << LL_ENDL;
 				// Render debugging beacons.
 				gObjectList.renderObjectBeacons();
 				gObjectList.resetObjectBeacons();
+				//LL_INFOS() << "LLPipeline:renderGeom 9" << LL_ENDL;
 			}
 			else
 			{
+				//LL_INFOS() << "LLPipeline:renderGeom 10" << LL_ENDL;
 				// Make sure particle effects disappear
 				LLHUDObject::renderAllForTimer();
+				//LL_INFOS() << "LLPipeline:renderGeom 11" << LL_ENDL;
 			}
 		}
 		else
 		{
+			//LL_INFOS() << "LLPipeline:renderGeom 12" << LL_ENDL;
 			// Make sure particle effects disappear
 			LLHUDObject::renderAllForTimer();
+			//LL_INFOS() << "LLPipeline:renderGeom 13" << LL_ENDL;
 		}
 
 		LLAppViewer::instance()->pingMainloopTimeout("Pipeline:RenderGeomEnd");
@@ -4325,12 +4362,14 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 	LLVertexBuffer::unbind();
 
 	LLGLStateValidator::checkStates();
+	//LL_INFOS() << "LLPipeline:renderGeom end" << LL_ENDL;
 	//LLGLStateValidator::checkTextureChannels();
 	//LLGLStateValidator::checkClientArrays();
 }
 
 void LLPipeline::renderGeomDeferred(LLCamera& camera)
 {
+	//LL_INFOS() << "LLPipeline::renderGeomDeferred" << LL_ENDL;
 	LLAppViewer::instance()->pingMainloopTimeout("Pipeline:RenderGeomDeferred");
 	LL_RECORD_BLOCK_TIME(FTM_RENDER_GEOMETRY);
 
@@ -4349,7 +4388,9 @@ void LLPipeline::renderGeomDeferred(LLCamera& camera)
 		LLDrawPool *poolp = *iter;
 		if (hasRenderType(poolp->getType()))
 		{
+			//LL_INFOS() << "poolp->prerender();"<< poolp->getType() << LL_ENDL;
 			poolp->prerender();
+			//LL_INFOS() << "poolp->prerender(); end"<< poolp->getType() << LL_ENDL;
 		}
 	}
 
@@ -4386,7 +4427,9 @@ void LLPipeline::renderGeomDeferred(LLCamera& camera)
 			{
 				LLVertexBuffer::unbind();
 				mInRenderPass = true;
+				//LL_INFOS() << "poolp->beginDeferredPass();"<< poolp->getType() << LL_ENDL;
 				poolp->beginDeferredPass(i);
+				//LL_INFOS() << "poolp->beginDeferredPass(); end"<< poolp->getType() << LL_ENDL;
 				for (iter2 = iter1; iter2 != mPools.end(); iter2++)
 				{
 					LLDrawPool *p = *iter2;
@@ -4394,8 +4437,9 @@ void LLPipeline::renderGeomDeferred(LLCamera& camera)
 					{
 						break;
 					}
-										
+					//LL_INFOS() << "poolp->renderDeferred();"<< poolp->getType() << LL_ENDL;					
 					p->renderDeferred(i);
+					//LL_INFOS() << "poolp->renderDeferred(); end"<< poolp->getType() << LL_ENDL;	
 				}
 				poolp->endDeferredPass(i);
 				clearRenderPassStates();
@@ -5931,28 +5975,28 @@ void LLPipeline::findReferences(LLDrawable *drawablep)
 	assertInitialized();
 	if (mLights.find(drawablep) != mLights.end())
 	{
-		LL_INFOS() << "In mLights" << LL_ENDL;
+		//LL_INFOS() << "In mLights" << LL_ENDL;
 	}
 	if (std::find(mMovedList.begin(), mMovedList.end(), drawablep) != mMovedList.end())
 	{
-		LL_INFOS() << "In mMovedList" << LL_ENDL;
+		//LL_INFOS() << "In mMovedList" << LL_ENDL;
 	}
 	if (std::find(mShiftList.begin(), mShiftList.end(), drawablep) != mShiftList.end())
 	{
-		LL_INFOS() << "In mShiftList" << LL_ENDL;
+		//LL_INFOS() << "In mShiftList" << LL_ENDL;
 	}
 	if (mRetexturedList.find(drawablep) != mRetexturedList.end())
 	{
-		LL_INFOS() << "In mRetexturedList" << LL_ENDL;
+		//LL_INFOS() << "In mRetexturedList" << LL_ENDL;
 	}
 	
 	if (std::find(mBuildQ1.begin(), mBuildQ1.end(), drawablep) != mBuildQ1.end())
 	{
-		LL_INFOS() << "In mBuildQ1" << LL_ENDL;
+		//LL_INFOS() << "In mBuildQ1" << LL_ENDL;
 	}
 	if (std::find(mBuildQ2.begin(), mBuildQ2.end(), drawablep) != mBuildQ2.end())
 	{
-		LL_INFOS() << "In mBuildQ2" << LL_ENDL;
+		//LL_INFOS() << "In mBuildQ2" << LL_ENDL;
 	}
 
 	S32 count;
@@ -5960,7 +6004,7 @@ void LLPipeline::findReferences(LLDrawable *drawablep)
 	count = gObjectList.findReferences(drawablep);
 	if (count)
 	{
-		LL_INFOS() << "In other drawables: " << count << " references" << LL_ENDL;
+		//LL_INFOS() << "In other drawables: " << count << " references" << LL_ENDL;
 	}
 }
 
@@ -6101,7 +6145,11 @@ void LLPipeline::setLight(LLDrawable *drawablep, BOOL is_light)
 		}
 	}
 }
-
+//static
+bool LLPipeline::hasRenderTypeControl(U32 type)
+{
+	return gPipeline.hasRenderType(type);
+}
 //static
 void LLPipeline::toggleRenderType(U32 type)
 {
@@ -6111,6 +6159,20 @@ void LLPipeline::toggleRenderType(U32 type)
 		gPipeline.mRenderTypeEnabled[LLPipeline::RENDER_TYPE_VOIDWATER] = !gPipeline.mRenderTypeEnabled[LLPipeline::RENDER_TYPE_VOIDWATER];
 	}
 }
+//static
+void LLPipeline::toggleRenderTypeControl(U32 type)
+{
+	U32 bit = (1<<type);
+	if (gPipeline.hasRenderType(type))
+	{
+		//LL_INFOS() << "Toggling render type mask " << std::hex << bit << " off" << std::dec << LL_ENDL;
+	}
+	else
+	{
+		//LL_INFOS() << "Toggling render type mask " << std::hex << bit << " on" << std::dec << LL_ENDL;
+	}
+	gPipeline.toggleRenderType(type);
+}
 
 //static
 void LLPipeline::toggleRenderTypeControl(void* data)
@@ -6119,11 +6181,11 @@ void LLPipeline::toggleRenderTypeControl(void* data)
 	U32 bit = (1<<type);
 	if (gPipeline.hasRenderType(type))
 	{
-		LL_INFOS() << "Toggling render type mask " << std::hex << bit << " off" << std::dec << LL_ENDL;
+		//LL_INFOS() << "Toggling render type mask " << std::hex << bit << " off" << std::dec << LL_ENDL;
 	}
 	else
 	{
-		LL_INFOS() << "Toggling render type mask " << std::hex << bit << " on" << std::dec << LL_ENDL;
+		//LL_INFOS() << "Toggling render type mask " << std::hex << bit << " on" << std::dec << LL_ENDL;
 	}
 	gPipeline.toggleRenderType(type);
 }
@@ -6167,7 +6229,7 @@ void LLPipeline::toggleRenderPairedTypeControl(void *data)
 	{
 		if( typeflags & (1ULL<<i))
 		{
-			LL_INFOS() << "Toggling render type mask " << std::hex << (1ULL<<i) << (on ? " off" : " on") << std::dec << LL_ENDL;
+			//LL_INFOS() << "Toggling render type mask " << std::hex << (1ULL<<i) << (on ? " off" : " on") << std::dec << LL_ENDL;
 			gPipeline.mRenderTypeEnabled[i]=!on;
 		}
 	}	
@@ -6179,11 +6241,11 @@ void LLPipeline::toggleRenderDebug(void* data)
 	U32 bit = (U32)(intptr_t)data;
 	if (gPipeline.hasRenderDebugMask(bit))
 	{
-		LL_INFOS() << "Toggling render debug mask " << std::hex << bit << " off" << std::dec << LL_ENDL;
+		//LL_INFOS() << "Toggling render debug mask " << std::hex << bit << " off" << std::dec << LL_ENDL;
 	}
 	else
 	{
-		LL_INFOS() << "Toggling render debug mask " << std::hex << bit << " on" << std::dec << LL_ENDL;
+		//LL_INFOS() << "Toggling render debug mask " << std::hex << bit << " on" << std::dec << LL_ENDL;
 	}
 	gPipeline.mRenderDebugMask ^= bit;
 }
@@ -7663,6 +7725,7 @@ static LLTrace::BlockTimerStatHandle FTM_POST("Post");
 
 void LLPipeline::renderDeferredLighting()
 {
+	
 	if (!sCull)
 	{
 		return;
@@ -8250,6 +8313,7 @@ void LLPipeline::renderDeferredLighting()
 
 void LLPipeline::renderDeferredLightingToRT(LLRenderTarget* target)
 {
+	//LL_INFOS() << "LLPipeline::renderDeferredLightingToRT" << LL_ENDL;
 	if (!sCull)
 	{
 		return;
@@ -8779,6 +8843,7 @@ void LLPipeline::renderDeferredLightingToRT(LLRenderTarget* target)
 
 void LLPipeline::setupSpotLight(LLGLSLShader& shader, LLDrawable* drawablep)
 {
+	//LL_INFOS() << "LLPipeline::setupSpotLight" << LL_ENDL;
 	//construct frustum
 	LLVOVolume* volume = drawablep->getVOVolume();
 	LLVector3 params = volume->getSpotLightParams();
@@ -8918,6 +8983,7 @@ void LLPipeline::setupSpotLight(LLGLSLShader& shader, LLDrawable* drawablep)
 
 void LLPipeline::unbindDeferredShader(LLGLSLShader &shader, LLRenderTarget* diffuse_source, LLRenderTarget* light_source)
 {
+	//LL_INFOS() << "LLPipeline::unbindDeferredShader" << LL_ENDL;
 	if (shader.mShaderClass != LLViewerShaderMgr::SHADER_DEFERRED && shader.mShaderClass != LLViewerShaderMgr::SHADER_INTERFACE)
 	{
 		shader.unbind();
@@ -8978,6 +9044,7 @@ inline float sgn(float a)
 
 void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 {
+	//LL_INFOS() << "LLPipeline::generateWaterReflection" <<LL_ENDL;
 	static const LLCachedControl<bool> render_transparent_water("RenderTransparentWater",false);
 	if ((render_transparent_water || LLPipeline::sRenderDeferred) && LLPipeline::sWaterReflections && assertInitialized() && LLDrawPoolWater::sNeedsReflectionUpdate)
 	{
@@ -9117,7 +9184,7 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 
 					gPipeline.popRenderTypeMask();
 				}
-
+				//LL_INFOS() << "LLPipeline::generateWaterReflection 1" <<LL_ENDL;
 				gGL.setColorMask(true, false);
 				
 				static const LLCachedControl<S32> detail("RenderReflectionDetail",0);
@@ -9140,7 +9207,7 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 							}
 						}
 					}
-
+					//LL_INFOS() << "LLPipeline::generateWaterReflection 1.1" <<LL_ENDL;
 					clearRenderTypeMask(LLPipeline::RENDER_TYPE_WATER,
 									LLPipeline::RENDER_TYPE_VOIDWATER,
 									LLPipeline::RENDER_TYPE_GROUND,
@@ -9153,7 +9220,7 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 					LLGLDisable<GL_CULL_FACE> cull;
 					updateCull(camera, ref_result, -water_clip, &plane);
 					stateSort(camera, ref_result);
-
+					//LL_INFOS() << "LLPipeline::generateWaterReflection 1.2" <<LL_ENDL;
 					if (LLDrawPoolWater::sNeedsDistortionUpdate)
 					{
 						if (detail > 0)
@@ -9162,16 +9229,20 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 							LLGLUserClipPlane clip_plane(plane, mat, projection);
 
 							if (LLPipeline::sRenderDeferred && materials_in_water)
-							{							
+							{				
+								//LL_INFOS() << "LLPipeline::generateWaterReflection 1.3" <<LL_ENDL;			
 								renderGeomDeferred(camera);
+								//LL_INFOS() << "LLPipeline::generateWaterReflection 1.4" <<LL_ENDL;		
 							}
 							else
 							{
+								//LL_INFOS() << "LLPipeline::generateWaterReflection 1.5" <<LL_ENDL;
 								renderGeom(camera);
+								//LL_INFOS() << "LLPipeline::generateWaterReflection 1.6" <<LL_ENDL;
 							}
 						}
 					}
-					
+					//LL_INFOS() << "LLPipeline::generateWaterReflection 2" <<LL_ENDL;
 					if (LLPipeline::sRenderDeferred && materials_in_water)
 					{
 						gPipeline.mDeferredScreen.flush();
@@ -9182,6 +9253,7 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 					gPipeline.popRenderTypeMask();
 				}
 			}
+			//LL_INFOS() << "LLPipeline::generateWaterReflection 3" <<LL_ENDL;
 			glCullFace(GL_BACK);
 			gGL.popMatrix();
 			mWaterRef.flush();
@@ -9261,7 +9333,7 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 					renderDeferredLightingToRT(&mWaterDis);
 				}
 			}
-
+			//LL_INFOS() << "LLPipeline::generateWaterReflection 4" <<LL_ENDL;
 			mWaterDis.flush();
 			LLPipeline::sUnderWaterRender = FALSE;
 			
@@ -9292,6 +9364,7 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 
 		LLViewerCamera::sCurCameraID = LLViewerCamera::CAMERA_WORLD;
 	}
+	//LL_INFOS() << "LLPipeline::generateWaterReflection end" <<LL_ENDL;
 }
 
 static LLTrace::BlockTimerStatHandle FTM_SHADOW_RENDER("Render Shadows");
@@ -9300,6 +9373,7 @@ static LLTrace::BlockTimerStatHandle FTM_SHADOW_SIMPLE("Simple Shadow");
 
 void LLPipeline::renderShadow(const LLMatrix4a& view, const LLMatrix4a& proj, LLCamera& shadow_cam, LLCullResult &result, BOOL use_shader, BOOL use_occlusion, U32 target_width)
 {
+	//LL_INFOS() << "LLPipeline::renderShadow" << LL_ENDL;
 	LL_RECORD_BLOCK_TIME(FTM_SHADOW_RENDER);
 
 	//clip out geometry on the same side of water as the camera
@@ -9449,6 +9523,7 @@ void LLPipeline::renderShadow(const LLMatrix4a& view, const LLMatrix4a& proj, LL
 static LLTrace::BlockTimerStatHandle FTM_VISIBLE_CLOUD("Visible Cloud");
 BOOL LLPipeline::getVisiblePointCloud(LLCamera& camera, LLVector3& min, LLVector3& max, std::vector<LLVector3>& fp, LLVector3 light_dir)
 {
+	//LL_INFOS() << "LLPipeline::getVisiblePointCloud" << LL_ENDL;
 	LL_RECORD_BLOCK_TIME(FTM_VISIBLE_CLOUD);
 	//get point cloud of intersection of frust and min, max
 
@@ -9623,6 +9698,7 @@ static LLTrace::BlockTimerStatHandle FTM_GEN_SUN_SHADOW("Gen Sun Shadow");
 
 void LLPipeline::generateSunShadow(LLCamera& camera)
 {
+	//LL_INFOS() << "LLPipeline::generateSunShadow" << LL_ENDL;
 	static const LLCachedControl<S32> RenderShadowDetail("RenderShadowDetail",0);
 	static const LLCachedControl<LLVector3> RenderShadowClipPlanes("RenderShadowClipPlanes",LLVector3(1.f,12.f,32.f));
 	static const LLCachedControl<LLVector3> RenderShadowOrthoClipPlanes("RenderShadowOrthoClipPlanes",LLVector3(4.f,8.f,24.f));
@@ -10365,6 +10441,7 @@ void LLPipeline::generateSunShadow(LLCamera& camera)
 
 void LLPipeline::renderGroups(LLRenderPass* pass, U32 type, U32 mask, BOOL texture)
 {
+	//LL_INFOS() << "LLPipeline::renderGroups" << LL_ENDL;
 	for (LLCullResult::sg_iterator i = sCull->beginVisibleGroups(); i != sCull->endVisibleGroups(); ++i)
 	{
 		LLSpatialGroup* group = *i;
@@ -10386,6 +10463,7 @@ static LLTrace::BlockTimerStatHandle FTM_IMPOSTOR_RESIZE("Impostor Resize");
 
 void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 {
+	//LL_INFOS() << "LLPipeline::generateImpostor" << LL_ENDL;
 	LLGLStateValidator::checkStates();
 	LLGLStateValidator::checkTextureChannels();
 	LLGLStateValidator::checkClientArrays();

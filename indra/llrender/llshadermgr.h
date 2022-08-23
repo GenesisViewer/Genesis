@@ -71,11 +71,13 @@ public:
 		PROJECTOR_LOD,
 		PROJECTOR_AMBIENT_LOD,
 		DIFFUSE_COLOR,
-		DIFFUSE_MAP,
+		DIFFUSE_MAP,	
 		SPECULAR_MAP,
 		BUMP_MAP,
 		ENVIRONMENT_MAP,
+        ALTERNATE_DIFFUSE_MAP,              //  "altDiffuseMap"			
 		CLOUD_NOISE_MAP,
+		CLOUD_NOISE_MAP_NEXT,               //  "cloud_noise_texture_next"
 		FULLBRIGHT,
 		LIGHTNORM,
 		SUNLIGHT_COLOR,
@@ -132,6 +134,7 @@ public:
 		DEFERRED_SPOT_SHADOW_BIAS,
 		DEFERRED_SPOT_SHADOW_OFFSET,
 		DEFERRED_SUN_DIR,
+        DEFERRED_MOON_DIR,                  //  "moon_dir"		
 		DEFERRED_SHADOW_RES,
 		DEFERRED_PROJ_SHADOW_RES,
 		DEFERRED_DEPTH_CUTOFF,
@@ -216,9 +219,38 @@ public:
 		TERRAIN_DETAIL2,
 		TERRAIN_DETAIL3,
 		TERRAIN_ALPHARAMP,
-		
 		SHINY_ORIGIN,
-DISPLAY_GAMMA,
+		DISPLAY_GAMMA,
+		INSCATTER_RT,                       //  "inscatter"
+        SUN_SIZE,                           //  "sun_size"
+        FOG_COLOR,                          //  "fog_color"
+
+        // precomputed textures
+        TRANSMITTANCE_TEX,                  //  "transmittance_texture"
+        SCATTER_TEX,                        //  "scattering_texture"
+        SINGLE_MIE_SCATTER_TEX,             //  "single_mie_scattering_texture"
+        ILLUMINANCE_TEX,                    //  "irradiance_texture"
+        BLEND_FACTOR,                       //  "blend_factor"
+
+        NO_ATMO,                            //  "no_atmo"
+        MOISTURE_LEVEL,                     //  "moisture_level"
+        DROPLET_RADIUS,                     //  "droplet_radius"
+        ICE_LEVEL,                          //  "ice_level"
+        RAINBOW_MAP,                        //  "rainbow_map"
+        HALO_MAP,                           //  "halo_map"
+
+        MOON_BRIGHTNESS,                    //  "moon_brightness"
+
+        CLOUD_VARIANCE,                     //  "cloud_variance"
+
+        SH_INPUT_L1R,                       //  "sh_input_r"
+        SH_INPUT_L1G,                       //  "sh_input_g"
+        SH_INPUT_L1B,                       //  "sh_input_b"
+
+        SUN_MOON_GLOW_FACTOR,               //  "sun_moon_glow_factor"
+        WATER_EDGE_FACTOR,                  //  "water_edge"
+        SUN_UP_FACTOR,                      //  "sun_up_factor"
+        MOONLIGHT_COLOR,                    //  "moonlight_color"
 		END_RESERVED_UNIFORMS
 	} eGLSLReservedUniforms;
 

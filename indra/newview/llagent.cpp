@@ -1131,6 +1131,12 @@ void LLAgent::setPositionAgent(const LLVector3 &pos_agent)
 		pos_agent_d.setVec(pos_agent);
 		mPositionGlobal = pos_agent_d + mAgentOriginGlobal;
 	}
+	if (((mLastTestGlobal - mPositionGlobal).lengthSquared() > 1.0) && !mOnPositionChanged.empty())
+    {   // If the position has changed my more than 1 meter since the last time we triggered.
+        // filters out some noise. 
+        mLastTestGlobal = mPositionGlobal;
+        mOnPositionChanged(mFrameAgent.getOrigin(), mPositionGlobal);
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -1162,7 +1168,10 @@ const LLVector3 &LLAgent::getPositionAgent()
 
 	return mFrameAgent.getOrigin();
 }
-
+boost::signals2::connection LLAgent::whenPositionChanged(position_signal_t::slot_type fn)
+{
+    return mOnPositionChanged.connect(fn);
+}
 //-----------------------------------------------------------------------------
 // getRegionsVisited()
 //-----------------------------------------------------------------------------

@@ -170,7 +170,7 @@ public:
 
 	/// update information camera dependent parameters
 	void update(LLViewerCamera * cam);
-
+	void updateCloudScrolling();
 	/// apply specified day cycle, setting time to noon by default
 	bool applyDayCycleParams(const LLSD& params, LLEnvKey::EScope scope, F32 time = 0.5);
 

@@ -34,7 +34,7 @@
 #define LL_LLWLHANDLERS_H
 
 #include "llhttpclient.h"
-
+#include "llenvironment.h"
 class AIHTTPTimeoutPolicy;
 extern AIHTTPTimeoutPolicy environmentRequestResponder_timeout;
 extern AIHTTPTimeoutPolicy environmentApplyResponder_timeout;
@@ -45,10 +45,15 @@ class LLEnvironmentRequest
 public:
 	/// @return true if request was successfully sent
 	static bool initiate();
+	/// @return true if request was successfully sent
+    static bool initiate(LLEnvironment::environment_apply_fn cb);
 
 private:
 	static void onRegionCapsReceived(const LLUUID& region_id);
+	static void onRegionCapsReceived(const LLUUID& region_id, LLEnvironment::environment_apply_fn cb);
 	static bool doRequest();
+	static bool doRequest(LLEnvironment::environment_apply_fn cb);
+
 };
 
 class LLEnvironmentRequestResponder: public LLHTTPClient::ResponderWithResult
@@ -64,8 +69,11 @@ private:
 	friend class LLEnvironmentRequest;
 
 	LLEnvironmentRequestResponder();
+	LLEnvironmentRequestResponder(LLEnvironment::environment_apply_fn cb){mCB=cb;};
 	static int sCount;
 	int mID;
+	LLEnvironment::environment_apply_fn mCB;
+	
 };
 
 class LLEnvironmentApply

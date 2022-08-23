@@ -94,6 +94,19 @@ public:
 	 */
 	static bool autoAcceptTeleportRequest(const LLUUID& idRequester);
 
+	// =========
+	// WindLight
+	// =========
+public:
+	/*
+	 * Returns true if the user can make changes to their WindLight environment
+	 */
+	static bool canChangeEnvironment(const LLUUID& idRlvObject = LLUUID::null);
+
+	/*
+	 * Returns true if a postprocessing shader is currently active
+	 */
+	static bool hasPostProcess();
 	// =================
 	// World interaction
 	// =================

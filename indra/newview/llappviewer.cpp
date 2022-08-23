@@ -84,6 +84,7 @@
 #include "llprogressview.h"
 #include "llvocache.h"
 #include "llvopartgroup.h"
+#include "llenvironment.h"
 // [SL:KB] - Patch: Appearance-Misc | Checked: 2013-02-12 (Catznip-3.4)
 #include "llappearancemgr.h"
 // [/SL:KB]
@@ -2754,6 +2755,7 @@ bool LLAppViewer::initWindow()
 
 	if (!gNoRender)
 	{
+		
 		//
 		// Initialize GL stuff
 		//
@@ -2771,6 +2773,7 @@ bool LLAppViewer::initWindow()
 
 		gSavedSettings.setBOOL("RenderInitError", FALSE);
 		gSavedSettings.saveToFile( gSavedSettings.getString("ClientSettingsFile"), TRUE );
+		
 	}
 
 	//If we have a startup crash, it's usually near GL initialization, so simulate that.

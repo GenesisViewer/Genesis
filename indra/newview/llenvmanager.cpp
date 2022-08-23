@@ -119,7 +119,7 @@ LLEnvManagerNew::LLEnvManagerNew():
 	mUserPrefs.mDayCycleName = "Default";
 
 	LL_DEBUGS("Windlight")<<LL_ENDL;
-	gAgent.addRegionChangedCallback(boost::bind(&LLEnvManagerNew::onRegionChange, this));
+	//gAgent.addRegionChangedCallback(boost::bind(&LLEnvManagerNew::onRegionChange, this));
 }
 
 bool LLEnvManagerNew::getUseRegionSettings() const
@@ -423,6 +423,7 @@ void LLEnvManagerNew::requestRegionSettings()
 {
 	LL_DEBUGS("Windlight") << LL_ENDL;
 	LLEnvironmentRequest::initiate();
+	
 }
 
 bool LLEnvManagerNew::sendRegionSettings(const LLEnvironmentSettings& new_settings)
@@ -576,6 +577,7 @@ void LLEnvManagerNew::updateWaterFromPrefs(bool interpolate)
 	{
 		// *TODO: make sure whether region settings belong to the current region?
 		const LLSD& region_water_params = getRegionSettings().getWaterParams();
+		
 		if (region_water_params.size() != 0) // region has no water settings
 		{
 			LL_DEBUGS("Windlight") << "Applying region water" << LL_ENDL;

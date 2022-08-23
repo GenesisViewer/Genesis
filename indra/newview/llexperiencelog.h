@@ -62,8 +62,9 @@ public:
 	static std::string getFilename();
 	static std::string getPermissionString(const LLSD& message, const std::string& base);
 	bool isExpired(const std::string& date) const;
-protected:
 	void handleExperienceMessage(LLSD& message);
+protected:
+	
 
 
 	void loadEvents();

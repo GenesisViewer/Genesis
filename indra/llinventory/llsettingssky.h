@@ -31,7 +31,6 @@
 #include "llsettingsbase.h"
 #include "v4coloru.h"
 
-const F32 EARTH_RADIUS  =      6.370e6f;
 const F32 SUN_RADIUS    =    695.508e6f;
 const F32 SUN_DIST      = 149598.260e6f;
 const F32 MOON_RADIUS   =      1.737e6f;
@@ -158,7 +157,7 @@ public:
     void setSkyMoistureLevel(F32 moisture_level);
     void setSkyDropletRadius(F32 radius);
     void setSkyIceLevel(F32 ice_level);
-
+    
     //---------------------------------------------------------------------
     LLColor3 getAmbientColor() const;
     void setAmbientColor(const LLColor3 &val);
@@ -280,7 +279,9 @@ public:
 
     LLVector3 getSunDirection() const;
     LLVector3 getMoonDirection() const;
-
+    
+    // color based on brightness
+    LLColor3  getMoonlightColor() const;
     LLColor4  getMoonAmbient() const;
     LLColor3  getMoonDiffuse() const;
     LLColor4  getSunAmbient() const;

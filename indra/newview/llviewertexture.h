@@ -130,7 +130,7 @@ public:
 	virtual S8 getType() const;
 	virtual BOOL isMissingAsset()const ;
 	virtual void dump();	// debug info to llinfos
-	
+	virtual bool isViewerMediaTexture() const { return false; }
 	/*virtual*/ bool bindDefaultImage(const S32 stage = 0) ;
 	/*virtual*/ void forceImmediateUpdate() ;
 	/*virtual*/ bool isActiveFetching();

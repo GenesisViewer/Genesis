@@ -29,6 +29,7 @@
 
 #include "stdtypes.h"
 #include "v3color.h"
+#include "v3colorutil.h"
 #include "v4coloru.h"
 #include "llviewertexture.h"
 #include "llviewerobject.h"
@@ -85,26 +86,7 @@ BOOL clip_quad_to_horizon(F32& t_left, F32& t_right, LLVector3 v_clipped[4],
 						  const LLVector3 v_corner[4], const F32 cos_max_angle);
 F32 clip_side_to_horizon(const LLVector3& v0, const LLVector3& v1, const F32 cos_max_angle);
 
-inline F32 color_intens ( const LLColor3 &col )
-{
-	return col.mV[0] + col.mV[1] + col.mV[2];
-}
 
-inline F32 color_max(const LLColor3 &col)
-{
-	return llmax(col.mV[0], col.mV[1], col.mV[2]);
-}
-
-inline F32 color_max(const LLColor4 &col)
-{
-	return llmax(col.mV[0], col.mV[1], col.mV[2]);
-}
-
-
-inline F32 color_min(const LLColor3 &col)
-{
-	return llmin(col.mV[0], col.mV[1], col.mV[2]);
-}
 
 class LLFace;
 class LLHaze;
@@ -198,6 +180,7 @@ protected:
 	LLColor3		mColorCached;
 	F32				mIntensity;
 	LLVector3		mDirection;				// direction of the local heavenly body
+	LLQuaternion    mRotation;
 	LLVector3		mAngularVelocity;		// velocity of the local heavenly body
 
 	F32				mDiskRadius;
@@ -224,7 +207,8 @@ public:
 		mColorCached.setToBlack();
 	}
 	~LLHeavenBody() {}
-
+	const LLQuaternion& getRotation() const;
+    void                setRotation(const LLQuaternion& rot);
 	const LLVector3& getDirection()	const				{ return mDirection; }
 	void setDirection(const LLVector3 &direction)		{ mDirection = direction; }
 	void setAngularVelocity(const LLVector3 &ang_vel)	{ mAngularVelocity = ang_vel; }
@@ -505,6 +489,10 @@ public:
 	void initSunDirection(const LLVector3 &sun_dir, const LLVector3 &sun_ang_velocity);
 
 	void setSunDirection(const LLVector3 &sun_dir, const LLVector3 &sun_ang_velocity);
+	// directions provided should already be in CFR coord sys (+x at, +z up, +y right)
+    void setSunAndMoonDirectionsCFR(const LLVector3 &sun_dir, const LLVector3 &moon_dir);
+    void setSunDirectionCFR(const LLVector3 &sun_direction);
+    void setMoonDirectionCFR(const LLVector3 &moon_direction);
 
 	BOOL updateHeavenlyBodyGeometry(LLDrawable *drawable, const S32 side, const BOOL is_sun,
 									LLHeavenBody& hb, const F32 sin_max_angle,
@@ -542,9 +530,25 @@ public:
 	BOOL isReflFace(const LLFace* face) const			{ return face == mFace[FACE_REFLECTION]; }
 	LLFace* getReflFace() const							{ return mFace[FACE_REFLECTION]; }
 
-	LLViewerTexture*	getSunTex() const					{ return mSunTexturep; }
-	LLViewerTexture*	getMoonTex() const					{ return mMoonTexturep; }
-	LLViewerTexture*	getBloomTex() const					{ return mBloomTexturep; }
+	LLViewerTexture*	getSunTex() const					{ return mSunTexturep[0]; }
+	LLViewerTexture*	getMoonTex() const					{ return mMoonTexturep[0]; }
+	LLViewerTexture*	getBloomTex() const					{ return mBloomTexturep[0]; }
+	LLViewerTexture*	getCloudNoiseTex() const		{ return mCloudNoiseTexturep[0];}
+
+	LLViewerTexture*	getSunTexNext() const			{ return mSunTexturep[1]; }
+	LLViewerTexture*	getMoonTexNext() const			{ return mMoonTexturep[1]; }
+	LLViewerTexture*	getBloomTexNext() const			{ return mBloomTexturep[1]; }
+    LLViewerTexture*	getCloudNoiseTexNext() const	{ return mCloudNoiseTexturep[1]; }
+	 LLViewerTexture*	getRainbowTex() const			{ return mRainbowMap; }
+    LLViewerTexture*	getHaloTex() const			{ return mHaloMap;  }
+	void setSunTextures(const LLUUID& sun_texture, const LLUUID& sun_texture_next);
+    void setMoonTextures(const LLUUID& moon_texture, const LLUUID& moon_texture_next);
+    void setCloudNoiseTextures(const LLUUID& cloud_noise_texture, const LLUUID& cloud_noise_texture_next);
+    void setBloomTextures(const LLUUID& bloom_texture, const LLUUID& bloom_texture_next);
+
+    void setSunScale(F32 sun_scale);
+    void setMoonScale(F32 sun_scale);
+
 	void forceSkyUpdate(void)							{ mForceUpdate = TRUE; }
 
 public:
@@ -553,11 +557,13 @@ public:
 
 protected:
 	~LLVOSky();
-
-	LLPointer<LLViewerFetchedTexture> mSunTexturep;
-	LLPointer<LLViewerFetchedTexture> mMoonTexturep;
-	LLPointer<LLViewerFetchedTexture> mBloomTexturep;
-
+	void updateDirections(void);
+	LLPointer<LLViewerFetchedTexture> mSunTexturep[2];
+	LLPointer<LLViewerFetchedTexture> mMoonTexturep[2];
+	LLPointer<LLViewerFetchedTexture> mBloomTexturep[2];
+	LLPointer<LLViewerFetchedTexture> mCloudNoiseTexturep[2];
+	LLPointer<LLViewerFetchedTexture> mRainbowMap;
+    LLPointer<LLViewerFetchedTexture> mHaloMap;
 	static S32			sResolution;
 	static S32			sTileResX;
 	static S32			sTileResY;
@@ -602,7 +608,8 @@ protected:
 	LLColor3			mSunDiffuse;
 	LLColor3			mMoonDiffuse;
 	LLColor4U			mFadeColor;					// Color to fade in from	
-
+	F32 mSunScale  = 1.0f;
+    F32 mMoonScale = 1.0f;
 	LLPointer<LLCubeMap>	mCubeMap;					// Cube map for the environment
 	S32					mDrawRefl;
 

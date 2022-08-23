@@ -396,11 +396,11 @@ void LLWLParamSet::updateCloudScrolling(void)
 
 	if(getEnableCloudScrollX())
 	{
-		mCloudScrollXOffset += F32(delta_t * (getCloudScrollX() - 10.f) / 100.f);
+		mCloudScrollXOffset += F32(delta_t * (getCloudScrollX()) / 100.f);
 	}
 	if(getEnableCloudScrollY())
 	{
-		mCloudScrollYOffset += F32(delta_t * (getCloudScrollY() - 10.f) / 100.f);
+		mCloudScrollYOffset += F32(delta_t * (getCloudScrollY()) / 100.f);
 	}
 }
 
@@ -410,6 +410,7 @@ void LLWLParamSet::updateHashedNames()
 	// Iterate through values
 	for(LLSD::map_iterator iter = mParamValues.beginMap(); iter != mParamValues.endMap(); ++iter)
 	{
+		
 		LLStaticHashedString param(iter->first);
 		mParamHashedNames.push_back(param);
 		if (iter->second.isArray() && (param == sCloudScale || param == sCloudShadow ||

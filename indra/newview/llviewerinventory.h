@@ -356,7 +356,7 @@ void create_inventory_item(const LLUUID& agent_id, const LLUUID& session_id,
 						   LLPointer<LLInventoryCallback> cb);
 
 void create_inventory_callingcard(const LLUUID& avatar_id, const LLUUID& parent = LLUUID::null, LLPointer<LLInventoryCallback> cb=NULL);
-
+void create_inventory_settings(const LLUUID& avatar_id, const LLUUID& parent, const LLTransactionID& transaction_id, LLPointer<LLInventoryCallback> cb);
 /**
  * @brief Securely create a new inventory item by copying from another.
  */

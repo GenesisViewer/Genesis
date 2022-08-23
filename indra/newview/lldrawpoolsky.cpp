@@ -63,25 +63,30 @@ LLDrawPool *LLDrawPoolSky::instancePool()
 
 void LLDrawPoolSky::prerender()
 {
+	//LL_INFOS() << " LLDrawPoolSky::prerender()" << LL_ENDL;
 	mVertexShaderLevel = LLViewerShaderMgr::instance()->getVertexShaderLevel(LLViewerShaderMgr::SHADER_ENVIRONMENT); 
 	gSky.mVOSkyp->updateGeometry(gSky.mVOSkyp->mDrawable);
+	//LL_INFOS() << " LLDrawPoolSky::prerender() end" << LL_ENDL;
 }
 
 void LLDrawPoolSky::render(S32 pass)
 {
+	//LL_INFOS() << " LLDrawPoolSky::render()" << LL_ENDL;
 	gGL.flush();
 
 	if (mDrawFace.empty())
 	{
 		return;
 	}
-
+	//LL_INFOS() << " LLDrawPoolSky::render() 1" << LL_ENDL;
 	// Don't draw the sky box if we can and are rendering the WL sky dome.
+	
 	if (gPipeline.canUseWindLightShaders())
 	{
+		//LL_INFOS() << " LLDrawPoolSky::render() 1.1" << LL_ENDL;
 		return;
 	}
-	
+	//LL_INFOS() << " LLDrawPoolSky::render() 2" << LL_ENDL;
 	// use a shader only underwater
 	if(mVertexShaderLevel > 0 && LLPipeline::sUnderWaterRender)
 	{
@@ -89,7 +94,7 @@ void LLDrawPoolSky::render(S32 pass)
 		//mShader = &gObjectFullbrightWaterProgram;
 		//mShader->bind();
 	}
-
+	//LL_INFOS() << " LLDrawPoolSky::render() 3" << LL_ENDL;
 	if (LLGLSLShader::sNoFixedFunction)
 	{ //just use the UI shader (generic single texture no lighting)
 		gOneTextureNoColorProgram.bind();
@@ -106,7 +111,7 @@ void LLDrawPoolSky::render(S32 pass)
 		mShader = NULL;
 	}
 	
-
+	//LL_INFOS() << " LLDrawPoolSky::render() 4" << LL_ENDL;
 	LLGLSPipelineSkyBox gls_skybox;
 
 	LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
@@ -116,7 +121,7 @@ void LLDrawPoolSky::render(S32 pass)
 	LLGLEnable<GL_FOG> fog_enable(mVertexShaderLevel < 1 && LLViewerCamera::getInstance()->cameraUnderWater());
 	
 	LLGLDisable<GL_CLIP_PLANE0> clip;
-
+	//LL_INFOS() << " LLDrawPoolSky::render() 5" << LL_ENDL;
 	gGL.pushMatrix();
 	LLVector3 origin = LLViewerCamera::getInstance()->getOrigin();
 	gGL.translatef(origin.mV[0], origin.mV[1], origin.mV[2]);
@@ -125,13 +130,14 @@ void LLDrawPoolSky::render(S32 pass)
 
 	LLVertexBuffer::unbind();
 	gGL.diffuseColor4f(1,1,1,1);
-
+	//LL_INFOS() << " LLDrawPoolSky::render() 6" << LL_ENDL;
 	for (S32 i = 0; i < llmin(6, face_count); ++i)
 	{
 		renderSkyCubeFace(i);
 	}
-
+	//LL_INFOS() << " LLDrawPoolSky::render() 7" << LL_ENDL;
 	gGL.popMatrix();
+	//LL_INFOS() << " LLDrawPoolSky::render() end" << LL_ENDL;
 }
 
 void LLDrawPoolSky::renderSkyCubeFace(U8 side)

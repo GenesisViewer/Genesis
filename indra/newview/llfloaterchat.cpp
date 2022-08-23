@@ -258,7 +258,7 @@ void add_timestamped_line(LLViewerTextEditor* edit, LLChat chat, const LLColor4&
 		}
 	}
 	LLStyleSP style(new LLStyle);
-	style->setColor(hasContactSet ? contactSetColor: color);
+	style->setColor(color);
 	style->mItalic = is_irc;
 	style->mBold = chat.mChatType == CHAT_TYPE_SHOUT;
 	edit->appendText(line, false, prepend_newline, style, chat.mSourceType == CHAT_SOURCE_SYSTEM);

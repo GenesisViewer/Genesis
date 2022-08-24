@@ -86,7 +86,8 @@ namespace
 		if (gRlvHandler.hasBehaviour(RLV_BHVR_SHOWNAMETAGS)) return; // RLVa:LF Don't announce people are around when blind, that cheats the system.
 		static LLCachedControl<bool> radar_alert_flood(gSavedSettings, "RadarAlertFlood");
 		if (flood && !radar_alert_flood) return;
-		static LLCachedControl<bool> radar_alert_sim(gSavedSettings, "RadarAlertSim");
+		static LLCachedControl<bool> radar_alert_sim_entering(gSavedSettings, "RadarAlertSimEntering");
+		static LLCachedControl<bool> radar_alert_sim_exiting(gSavedSettings, "RadarAlertSimExiting");
 		static LLCachedControl<bool> radar_alert_draw(gSavedSettings, "RadarAlertDraw");
 		static LLCachedControl<bool> radar_alert_shout_range(gSavedSettings, "RadarAlertShoutRange");
 		static LLCachedControl<bool> radar_alert_chat_range(gSavedSettings, "RadarAlertChatRange");
@@ -96,7 +97,7 @@ namespace
 		LLChat chat;
 		switch(type)
 		{
-			case STAT_TYPE_SIM:			if (radar_alert_sim)			args["[RANGE]"] = LLTrans::getString("the_sim");											break;
+			case STAT_TYPE_SIM:			if (radar_alert_sim_entering || radar_alert_sim_exiting)			args["[RANGE]"] = LLTrans::getString("the_sim");		break;
 			case STAT_TYPE_DRAW:		if (radar_alert_draw)			args["[RANGE]"] = LLTrans::getString("draw_distance");										break;
 			case STAT_TYPE_SHOUTRANGE:	if (radar_alert_shout_range)	args["[RANGE]"] = LLTrans::getString("shout_range");										break;
 			case STAT_TYPE_CHATRANGE:	if (radar_alert_chat_range)		args["[RANGE]"] = LLTrans::getString("chat_range");										break;
@@ -118,7 +119,9 @@ namespace
 		if (!gRlvHandler.hasBehaviour(RLV_BHVR_SHOWNAMES)) // RLVa:LF - No way!
 			chat.mURL = LLAvatarActions::getSLURL(key);
 		chat.mSourceType = CHAT_SOURCE_SYSTEM;
-		LLFloaterChat::addChat(chat);
+		if ((entering && radar_alert_sim_entering) || (!entering && radar_alert_sim_exiting ) || type!=STAT_TYPE_SIM) {
+			LLFloaterChat::addChat(chat);
+		}
 	}
 
 	void send_keys_message(const int transact_num, const int num_ids, const std::string& ids)

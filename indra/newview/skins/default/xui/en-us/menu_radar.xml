@@ -130,9 +130,13 @@
       <on_click function="ToggleControl" userdata="RadarChatAlerts"/>
       <on_check control="RadarChatAlerts"/>
     </menu_item_check>
-    <menu_item_check label="enters/leaves the sim" name="sim alerts">
-      <on_click function="ToggleControl" userdata="RadarAlertSim"/>
-      <on_check control="RadarAlertSim"/>
+    <menu_item_check label="enters the sim" name="sim entering alerts">
+      <on_click function="ToggleControl" userdata="RadarAlertSimEntering"/>
+      <on_check control="RadarAlertSimEntering"/>
+    </menu_item_check>
+    <menu_item_check label="exits the sim" name="sim exiting alerts">
+      <on_click function="ToggleControl" userdata="RadarAlertSimExiting"/>
+      <on_check control="RadarAlertSimExiting"/>
     </menu_item_check>
     <menu_item_check label="enters/leaves draw distance" name="draw distance alerts">
       <on_click function="ToggleControl" userdata="RadarAlertDraw"/>

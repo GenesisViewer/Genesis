@@ -179,13 +179,20 @@
 				   control_name="RadarChatAlerts"
 				   tool_tip="Announce alerts about incoming and outgoing avatars in chat" />
 
-			<check_box height="16" label="Avatars entering/exiting the sim"
+			<check_box height="16" label="Avatars entering the sim"
 				   left="20" bottom_delta="-18" name="alerts_sim"
 				   width="200" follows="bottom|left"
 				   hidden="false" mouse_opaque="true" font="SansSerifSmall"
 				   initial_value="true" enabled="true" radio_style="false"
-				   control_name="RadarAlertSim"
-				   tool_tip="Report avatars entering or exiting the sim" />
+				   control_name="RadarAlertSimEntering"
+				   tool_tip="Report avatars entering the sim" />
+			<check_box height="16" label="Avatars exiting the sim"
+				   left_delta="200" bottom_delta="0" name="alerts_sim"
+				   width="200" follows="bottom|left"
+				   hidden="false" mouse_opaque="true" font="SansSerifSmall"
+				   initial_value="true" enabled="true" radio_style="false"
+				   control_name="RadarAlertSimExiting"
+				   tool_tip="Report avatars exiting the sim" />
 
 			<check_box height="16" label="Avatars within/beyond the draw distance"
 				   left="20" bottom_delta="-18" name="alerts_draw"

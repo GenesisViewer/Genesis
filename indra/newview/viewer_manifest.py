@@ -130,8 +130,8 @@ class ViewerManifest(LLManifest):
                 self.path("default/xui/*/*.xml")
                 self.package_skin("Default.xml", "default")
                 self.package_skin("Genx.xml", "Genx")
-				self.package_skin("dark.xml", "dark")
-				self.package_skin("Gemini.xml", "gemini")
+                self.package_skin("dark.xml", "dark")
+                self.package_skin("Gemini.xml", "gemini")
                 # Local HTML files (e.g. loading screen)
                 with self.prefix(src_dst="*/html"):
                     self.path("*.png")

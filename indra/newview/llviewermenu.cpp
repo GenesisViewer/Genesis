@@ -5933,7 +5933,24 @@ class LLWorldSitOnGround final : public view_listener_t
 		return true;
 	}
 };
-
+class LLWorldMoveLock final : public view_listener_t
+{
+	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
+	{
+		
+		gAgent.movelock();
+		return true;
+	}
+};
+//class LLWorldEnableEnvSettings final : public view_listener_t
+class LLWorldMoveLockEnabled final : public view_listener_t
+{
+	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
+	{
+		LL_INFOS() << "Is Agent locked " << gAgent.isMovelocked() << LL_ENDL;
+		return gAgent.isMovelocked();
+	}
+};
 class LLWorldFakeAway final : public view_listener_t
 {
 	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
@@ -10131,6 +10148,8 @@ void initialize_menus()
 
 	// World menu
 	addMenu(new LLWorldSitOnGround(), "World.SitOnGround");
+	addMenu(new LLWorldMoveLock(), "World.MoveLock");
+	(new LLWorldMoveLockEnabled())->registerListener(gMenuHolder, "World.IsMovelocked");
 	addMenu(new LLWorldEnableSitOnGround(), "World.EnableSitOnGround");
 	addMenu(new LLWorldFly(), "World.Fly");
 	addMenu(new LLWorldEnableFly(), "World.EnableFly");

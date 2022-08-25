@@ -419,7 +419,7 @@ LLAgent::LLAgent() :
 
 	mIsAwaySitting(false),
 	mIsDoNotDisturb(false),
-
+	mMovelock(FALSE),
 	mControlFlags(0x00000000),
 	mbFlagsDirty(FALSE),
 	mbFlagsNeedReset(FALSE),
@@ -1106,11 +1106,12 @@ LLVector3 LLAgent::getVelocity() const
 //-----------------------------------------------------------------------------
 void LLAgent::setPositionAgent(const LLVector3 &pos_agent)
 {
+	LL_INFOS() << "LLAgent::setPositionAgent " << LL_ENDL;
 	if (!pos_agent.isFinite())
 	{
 		LL_ERRS() << "setPositionAgent is not a number" << LL_ENDL;
 	}
-
+	
 	if (isAgentAvatarValid() && gAgentAvatarp->getParent())
 	{
 		LLVector3 pos_agent_sitting;
@@ -1130,6 +1131,19 @@ void LLAgent::setPositionAgent(const LLVector3 &pos_agent)
 		LLVector3d pos_agent_d;
 		pos_agent_d.setVec(pos_agent);
 		mPositionGlobal = pos_agent_d + mAgentOriginGlobal;
+	}
+	if (mMovelock && lockPosition != getPositionGlobal()) {
+		mAutoPilotTargetDist=0.1f;
+		mAutoPilotUseRotation = TRUE;
+		mAutoPilotTargetFacing = LLVector3::x_axis * lockRotation;
+		mAutoPilotTargetFacing.mV[VZ] = 0.f;
+		mAutoPilotTargetFacing.normalize();
+		mAutoPilot = TRUE;
+		setAutoPilotTargetGlobal(lockPosition);
+
+		
+			
+		
 	}
 }
 
@@ -4176,6 +4190,8 @@ bool LLAgent::hasPendingTeleportRequest()
 
 void LLAgent::startTeleportRequest()
 {
+	//unlock the movelock when teleporting
+	moveunlock();
 	if (hasPendingTeleportRequest())
 	{
 		if  (!isMaturityPreferenceSyncedWithServer())

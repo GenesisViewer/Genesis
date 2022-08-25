@@ -506,6 +506,11 @@
 			<on_click function="World.SitOnGround" userdata="" />
 			<on_enable function="World.EnableSitOnGround" userdata="" />
 		</menu_item_call>
+		<menu_item_call bottom="-67" enabled="true" height="19" label="MoveLock" left="0"
+		     mouse_opaque="true" name="MoveLock" width="185">
+			<on_click function="World.MoveLock" userdata="" />
+			<on_check function="World.IsMovelocked" userdata="" />
+		</menu_item_call>
 		<menu_item_check bottom="-86" enabled="true" height="19" label="Fly" left="0"
 		     mouse_opaque="true" name="Fly" shortcut="Home" width="185">
 			<on_click function="ShowFloater" userdata="fly"/>

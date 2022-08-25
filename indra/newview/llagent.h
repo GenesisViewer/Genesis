@@ -471,6 +471,22 @@ private:
 	bool			mIsAwaySitting;
 
 	//--------------------------------------------------------------------
+	// MoveLock
+	//--------------------------------------------------------------------
+public:
+	void			movelock() {
+		lockRotation = getQuat();
+		lockPosition = getPositionGlobal();
+		mMovelock = !mMovelock;
+	}
+	void			moveunlock() {mMovelock = FALSE;}
+	bool			isMovelocked() const { return mMovelock; }
+
+private:
+	bool			mMovelock;
+	LLVector3d      lockPosition;
+	LLQuaternion	lockRotation;
+	//--------------------------------------------------------------------
 	// Do Not Disturb
 	//--------------------------------------------------------------------
 public:

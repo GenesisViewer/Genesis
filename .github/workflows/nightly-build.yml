@@ -22,6 +22,15 @@ jobs:
          dep_user: ${{secrets.DEP_USER}}
         run: mkdir -p /tmp/deps/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2 --output /tmp/deps/fmodstudio-2.00.03-windows64-192401637.tar.bz2
         
+      - name: downloading-public-deps
+        env:
+         dep_pass: ${{ secrets.DEP_PASS}}
+         dep_user: ${{secrets.DEP_USER}}
+        run: mkdir -p /tmp/publicdeps/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 https://londoncitysl.com/genesis/dependencies/public/public_depencies.zip --output /tmp/publicdeps/public_depencies.zip
+        
+      - name: decompressing-public-deps
+        run: unzip /tmp/publicdeps/public_depencies.zip -d /tmp/deps/
+        
       - name: downloading-inetc
         env:
          dep_pass: ${{ secrets.DEP_PASS}}

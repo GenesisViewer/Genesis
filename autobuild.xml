@@ -776,7 +776,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///C:/temp/windows64/lib-vc142/libxml2-2.9.7-windows64-201712260755.tar.bz2</string>
+              <string>file:///C:/temp/libxml2-2.9.7-windows64-201712260755.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>

@@ -1106,7 +1106,7 @@ LLVector3 LLAgent::getVelocity() const
 //-----------------------------------------------------------------------------
 void LLAgent::setPositionAgent(const LLVector3 &pos_agent)
 {
-	LL_INFOS() << "LLAgent::setPositionAgent " << LL_ENDL;
+	
 	if (!pos_agent.isFinite())
 	{
 		LL_ERRS() << "setPositionAgent is not a number" << LL_ENDL;
@@ -1132,12 +1132,14 @@ void LLAgent::setPositionAgent(const LLVector3 &pos_agent)
 		pos_agent_d.setVec(pos_agent);
 		mPositionGlobal = pos_agent_d + mAgentOriginGlobal;
 	}
-	if (mMovelock && lockPosition != getPositionGlobal()) {
+	if (mMovelock && lockPosition != mPositionGlobal) {
+		//LL_INFOS() << "movelock, I want to come back to  " << lockPosition<<  " and I am here "<< mPositionGlobal<< LL_ENDL;
 		mAutoPilotTargetDist=0.1f;
 		mAutoPilotUseRotation = TRUE;
 		mAutoPilotTargetFacing = LLVector3::x_axis * lockRotation;
 		mAutoPilotTargetFacing.mV[VZ] = 0.f;
 		mAutoPilotTargetFacing.normalize();
+		mAutoPilotRotationThreshold=0.1f;
 		mAutoPilot = TRUE;
 		setAutoPilotTargetGlobal(lockPosition);
 

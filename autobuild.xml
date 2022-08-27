@@ -1100,7 +1100,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///C:/temp/lib-vc142/zlib-1.2.11-windows64-201712260711.tar.bz2</string>
+              <string>file:///C:/temp/zlib-1.2.11-windows64-201712260711.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>

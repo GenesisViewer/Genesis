@@ -168,19 +168,18 @@ void LLFloaterChat::onFocusReceived()
 		chat_editor->setFocus(true);
 	}
 	BOOL is_in_genesis_goup = gAgent.isInGroup(genesis_group);
+	
+	
+	bool overflowsupport = getChild<LLButton>("toggle_active_speakers_btn")->getRect().mLeft<= getChild<LLButton>("genesis_support")->getRect().mRight;
+	bool overflowjoin = getChild<LLButton>("toggle_active_speakers_btn")->getRect().mLeft<= getChild<LLButton>("join_genesis_group")->getRect().mRight;
+	
+	bool overflow = getChild<LLButton>("toggle_active_speakers_btn")->getRect().mLeft<= getChild<LLButton>("chat_history_open")->getRect().mRight;
+	getChild<LLButton>("chat_history_open")->setVisible(!overflow);
 	if (hasChild("join_genesis_group",TRUE)) {
 		
-		getChild<LLButton>("join_genesis_group")->setVisible(!is_in_genesis_goup);
-		getChild<LLButton>("genesis_support")->setVisible(is_in_genesis_goup);
+		getChild<LLButton>("join_genesis_group")->setVisible(!is_in_genesis_goup && !overflowjoin);
+		getChild<LLButton>("genesis_support")->setVisible(is_in_genesis_goup && !overflowsupport);
 	}
-	
-	bool overflow = getChild<LLButton>("toggle_active_speakers_btn")->getRect().mLeft<= getChild<LLButton>("genesis_support")->getRect().mRight;
-	
-	getChild<LLButton>("join_genesis_group")->setVisible(!overflow);
-	getChild<LLButton>("genesis_support")->setVisible(!overflow);
-	overflow = getChild<LLButton>("toggle_active_speakers_btn")->getRect().mLeft<= getChild<LLButton>("chat_history_open")->getRect().mRight;
-	getChild<LLButton>("chat_history_open")->setVisible(!overflow);
-	
 	LLFloater::onFocusReceived();
 }
 
@@ -574,14 +573,19 @@ LLColor4 get_text_color(const LLChat& chat, bool from_im)
 }
 void LLFloaterChat::reshape(S32 width, S32 height, BOOL called_from_parent /* = TRUE */)
 {
-	//overflow management
-	bool overflow = getChild<LLButton>("toggle_active_speakers_btn")->getRect().mLeft<= getChild<LLButton>("genesis_support")->getRect().mRight;
+	BOOL is_in_genesis_goup = gAgent.isInGroup(genesis_group);
 	
-	getChild<LLButton>("join_genesis_group")->setVisible(!overflow);
-	getChild<LLButton>("genesis_support")->setVisible(!overflow);
-
-	overflow = getChild<LLButton>("toggle_active_speakers_btn")->getRect().mLeft<= getChild<LLButton>("chat_history_open")->getRect().mRight;
+	
+	bool overflowsupport = getChild<LLButton>("toggle_active_speakers_btn")->getRect().mLeft<= getChild<LLButton>("genesis_support")->getRect().mRight;
+	bool overflowjoin = getChild<LLButton>("toggle_active_speakers_btn")->getRect().mLeft<= getChild<LLButton>("join_genesis_group")->getRect().mRight;
+	
+	bool overflow = getChild<LLButton>("toggle_active_speakers_btn")->getRect().mLeft<= getChild<LLButton>("chat_history_open")->getRect().mRight;
 	getChild<LLButton>("chat_history_open")->setVisible(!overflow);
+	if (hasChild("join_genesis_group",TRUE)) {
+		
+		getChild<LLButton>("join_genesis_group")->setVisible(!is_in_genesis_goup && !overflowjoin);
+		getChild<LLButton>("genesis_support")->setVisible(is_in_genesis_goup && !overflowsupport);
+	}
 	
 	LLFloater::reshape(width,height,called_from_parent);
 }

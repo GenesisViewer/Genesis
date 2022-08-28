@@ -63,6 +63,8 @@ char LLSqlMgr::init(std::string db_path) {
         LL_WARNS() << "Can't initialise Genesis fav bar order table " << zErrMsg << LL_ENDL;
         return rc;
     }    
+    
+    
 }
 void LLSqlMgr::close() {
 

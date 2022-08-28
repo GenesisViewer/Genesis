@@ -63,13 +63,19 @@ void LLFloaterAvatarInfo::handleReshape(const LLRect& new_rect, bool by_user) {
 	if (by_user) {
 		LLFloaterAvatarInfo::floater_positions[this->mAvatarID]=new_rect;
 		LLFloaterAvatarInfo::lastMoved=this->mAvatarID;
+		gSavedSettings.setRect("FloaterProfileRect",new_rect);
 	}
 	LLFloater::handleReshape(new_rect, by_user);
 }
 void LLFloaterAvatarInfo::setOpenedPosition() {
 	if (LLFloaterAvatarInfo::lastMoved.isNull()) {
-		
-		this->center();
+		LLRect lastfloaterProfilePosition = gSavedSettings.getRect("FloaterProfileRect");
+		if (lastfloaterProfilePosition.mLeft==0 && lastfloaterProfilePosition.mTop==0) {
+			this->center();
+		}
+		else {
+			this->setRect(lastfloaterProfilePosition);
+		}
 		LLFloaterAvatarInfo::floater_positions[this->mAvatarID]=this->getRect();
 		LLFloaterAvatarInfo::lastMoved=this->mAvatarID;
 	} else {
@@ -100,7 +106,7 @@ void LLFloaterAvatarInfo::setOpenedPosition() {
 			if((*it).second == getRect() && (*it).first != this->mAvatarID)
 			{
 				
-				this->translate(10,-10);
+				this->translate(20,-20);
 				LLFloaterAvatarInfo::floater_positions[this->mAvatarID]=this->getRect();
 				LLFloaterAvatarInfo::lastMoved=this->mAvatarID;
 				

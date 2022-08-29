@@ -46,7 +46,7 @@
 
 // static variable
 HBFloaterGroupTitles* HBFloaterGroupTitles::sInstance = NULL;
-
+LLScrollListCtrl::sort_order_t HBFloaterGroupTitles::mSortOrder;
 // helper function
 void update_titles_list(HBFloaterGroupTitles* self);
 
@@ -107,16 +107,20 @@ void HBFloaterGroupTitles::toggle()
 		sInstance = new HBFloaterGroupTitles();
 		sInstance->setFocus(TRUE);
 		sInstance->open();
+		sInstance->mTitlesList->setSortOrder(mSortOrder);
 	}
 	else
 	{
+
 		if (sInstance->getVisible())
 		{
+			
 			sInstance->close();
 		}
 		else
 		{
 			sInstance->open();
+			sInstance->mTitlesList->setSortOrder(mSortOrder);
 		}
 	}
 }
@@ -234,7 +238,13 @@ void update_titles_list(HBFloaterGroupTitles* self)
 
 		title_list->addElement(element, ADD_TOP);
 	}
-
+	
 	title_list->selectByValue(highlight_id);
 	self->mFirstUse = false;
+}
+	
+void HBFloaterGroupTitles::onClose(bool app_quitting)
+{
+	mSortOrder = sInstance->mTitlesList->getSortOrder();
+	LLFloater::onClose(app_quitting);
 }

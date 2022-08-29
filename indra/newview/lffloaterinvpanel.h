@@ -43,4 +43,7 @@ public:
 	BOOL handleKeyHere(KEY key, MASK mask) override;
 	void handleReshape(const LLRect& new_rect, bool by_user = false);
 	void cascadeMe();
+private:
+	bool secondary;	
+	std::string rect_control;
 };

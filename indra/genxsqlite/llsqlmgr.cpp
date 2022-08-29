@@ -1,4 +1,3 @@
-#include "llviewerprecompiledheaders.h"
 #include "llsqlmgr.h"
 #include <stdio.h>
 #include "sqlite3.h"
@@ -63,7 +62,20 @@ char LLSqlMgr::init(std::string db_path) {
         LL_WARNS() << "Can't initialise Genesis fav bar order table " << zErrMsg << LL_ENDL;
         return rc;
     }    
-    
+
+    //Colors from skin that can be updated
+    sql = "CREATE TABLE IF NOT EXISTS COLOR_SETTINGS(" \
+        "ID TEXT PRIMARY KEY     NOT NULL," \
+        "R               REAL    NOT NULL," \
+        "G               REAL    NOT NULL," \
+        "B               REAL    NOT NULL," \
+        "A               REAL    NOT NULL);";
+    rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);  
+    if( rc ) {
+        LL_WARNS() << "Can't initialise Genesis COLOR_SETTINGS table " << zErrMsg << LL_ENDL;
+        return rc;
+    }
+    ready = TRUE;
     
 }
 void LLSqlMgr::close() {

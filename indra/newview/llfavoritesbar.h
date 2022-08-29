@@ -37,7 +37,8 @@
 #include "llmemberlistener.h"
 #include "llviewerinventory.h"
 #include "llui.h" //"llinitdestroyclass.h"
-
+#include "sqlite3.h"
+#include "llsqlmgr.h"
 class LLMenuItemCallGL;
 class LLMenuGL;
 class LLToggleableMenu;

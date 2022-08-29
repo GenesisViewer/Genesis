@@ -35,6 +35,7 @@ include(LLRender)
 include(LLUI)
 include(LLVFS)
 include(LLWindow)
+include (GenxSqlite)
 include(LLXML)
 include(NDOF)
 include(NVAPI)
@@ -77,13 +78,14 @@ include_directories(
     ${LLUI_INCLUDE_DIRS}
     ${LLVFS_INCLUDE_DIRS}
     ${LLWINDOW_INCLUDE_DIRS}
+    ${GENXSQLITE_INCLUDE_DIRS}
     ${LLXML_INCLUDE_DIRS}
     ${HUNSPELL_INCLUDE_DIR}
     ${OPENAL_LIB_INCLUDE_DIRS}
     ${LLAPPEARANCE_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
-    )
 
+    )
 set(viewer_SOURCE_FILES
     NACLantispam.cpp
     aihttpview.cpp
@@ -477,7 +479,6 @@ set(viewer_SOURCE_FILES
     llspatialpartition.cpp
     llspeakers.cpp
     llsprite.cpp
-    llsqlmgr.cpp
     llstartup.cpp
     llstatusbar.cpp
     llstylemap.cpp
@@ -630,7 +631,6 @@ set(viewer_SOURCE_FILES
     shcommandhandler.cpp
     shupdatechecker.cpp
     shfloatermediaticker.cpp
-    sqlite3.c
     wlfPanel_AdvSettings.cpp
     )
 
@@ -1033,7 +1033,6 @@ set(viewer_HEADER_FILES
     llspatialpartition.h
     llspeakers.h
     llsprite.h
-    llsqlmgr.h
     llstartup.h
     llstatusbar.h
     llstylemap.h
@@ -1193,7 +1192,6 @@ set(viewer_HEADER_FILES
     shcommandhandler.h
     shfloatermediaticker.h
     shupdatechecker.h
-    sqlite3.h
     wlfPanel_AdvSettings.h
     )
 
@@ -1690,6 +1688,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLUI_LIBRARIES}
     ${LLVFS_LIBRARIES}
     ${LLWINDOW_LIBRARIES}
+    ${GENXSQLITE_LIBRARIES}
     ${LLXML_LIBRARIES}
     ${LLMATH_LIBRARIES}
     ${LLCOMMON_LIBRARIES}

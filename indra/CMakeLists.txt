@@ -45,7 +45,9 @@ add_subdirectory(${LIBS_OPEN_PREFIX}llprimitive)
 add_subdirectory(${LIBS_OPEN_PREFIX}llrender)
 add_subdirectory(${LIBS_OPEN_PREFIX}llvfs)
 add_subdirectory(${LIBS_OPEN_PREFIX}llwindow)
+add_subdirectory(${LIBS_OPEN_PREFIX}genxsqlite)
 add_subdirectory(${LIBS_OPEN_PREFIX}llxml)
+
 
 if (WINDOWS AND EXISTS ${LIBS_CLOSED_DIR}copy_win_scripts)
   add_subdirectory(${LIBS_CLOSED_PREFIX}copy_win_scripts)

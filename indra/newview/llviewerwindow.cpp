@@ -2199,7 +2199,33 @@ void LLViewerWindow::initWorldUI_postLogin()
 		//Genesis - initializing sqlite db
 		std::string db_path = gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT,
 				llformat("settings_%s.db",  LLVersionInfo::getChannel().c_str()));
-		LLSqlMgr::instance().init(db_path);		
+		LLSqlMgr::instance().init(db_path);	
+		//loading user defined color settings
+		char *sql;
+		sqlite3_stmt *stmt;
+		sqlite3 *db = LLSqlMgr::instance().getDB();
+		sql = "SELECT ID,R,G,B,A FROM COLOR_SETTINGS";
+		sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+		while ( sqlite3_step(stmt) == SQLITE_ROW) {
+			const unsigned char *id = sqlite3_column_text(stmt, 0);
+			double r = sqlite3_column_double(stmt, 1);
+			double g = sqlite3_column_double(stmt, 2);
+			double b = sqlite3_column_double(stmt, 3);
+			double a = sqlite3_column_double(stmt, 4);
+			
+			std::string controlName = std::string(reinterpret_cast<const char*>(id));
+			LLColor4 controlValue = LLColor4(F32(r),F32(g),F32(b),F32(a));
+			if (gColors.controlExists(controlName)) {
+				gColors.getControl(controlName)->set(controlValue.getValue());
+			}
+			
+		
+		
+		}
+
+		sqlite3_finalize(stmt);
+
+			
 	}
 	//End LLViewerWindow::initWorlUI
 	//============================================

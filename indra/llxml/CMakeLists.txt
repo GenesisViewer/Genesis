@@ -5,13 +5,14 @@ project(llxml)
 include(00-Common)
 include(LLCommon)
 include(LLMath)
+include(GenxSqlite)
 include(LLXML)
 
 include_directories(
     ${LLCOMMON_INCLUDE_DIRS}
     ${LLMATH_INCLUDE_DIRS}
     )
-
+include_directories(${LIBS_OPEN_DIR}/genxsqlite)
 set(llxml_SOURCE_FILES
     aixml.cpp
     llcontrol.cpp

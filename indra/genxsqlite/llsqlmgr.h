@@ -1,6 +1,6 @@
 
 #include <stdio.h>
-
+#include "llsingleton.h"
 #include "sqlite3.h"
 
 
@@ -17,8 +17,10 @@ public:
 	char init(std::string db_path);
     sqlite3 *getDB();
     void close();
+    bool isInit() {return ready;}
 private:
     sqlite3 *db;
+    bool ready = FALSE;
 };
 
 #endif /* LLSQLMGR_H */

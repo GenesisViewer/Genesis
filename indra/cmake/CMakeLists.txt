@@ -69,6 +69,7 @@ set(cmake_SOURCE_FILES
     LLUI.cmake
     LLVFS.cmake
     LLWindow.cmake
+    GenxSqlite.cmake
     LLXML.cmake
     LScript.cmake
     Linking.cmake

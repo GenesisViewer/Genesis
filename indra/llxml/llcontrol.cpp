@@ -853,6 +853,8 @@ U32 LLControlGroup::loadFromFileLegacy(const std::string& filename, BOOL require
 				
 					child_nodep->getAttributeColor4U("value", color);
 					control->set(LLColor4(color).getValue());
+					control->setDefaultValue(LLColor4(color).getValue());
+					control->setPersistInDB(TRUE);
 				}
 				else
 				{
@@ -860,6 +862,8 @@ U32 LLControlGroup::loadFromFileLegacy(const std::string& filename, BOOL require
 				
 					child_nodep->getAttributeColor4("value", color);
 					control->set(color.getValue());
+					control->setDefaultValue(color.getValue());
+					control->setPersistInDB(TRUE);
 				}
 				validitems++;
 			}
@@ -878,7 +882,7 @@ U32 LLControlGroup::loadFromFileLegacy(const std::string& filename, BOOL require
 		  break;
 
 		}
-	
+		
 		child_nodep = rootp->getNextChild();
 	}
 
@@ -913,6 +917,7 @@ U32 LLControlGroup::saveToFile(const std::string& filename, BOOL nondefault_only
 				// LL_INFOS() << "Skipping " << control->getName() << LL_ENDL;
 			}
 		}
+		
 	}
 	llofstream file;
 	file.open(filename);

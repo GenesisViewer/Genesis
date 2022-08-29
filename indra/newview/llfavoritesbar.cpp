@@ -60,6 +60,7 @@
 #include "llsdserialize.h"
 #include "llxuiparser.h"
 #include "llsqlmgr.h"
+#include "sqlite3.h"
 using namespace LLOldEvents;
 typedef LLMemberListener<LLView> view_listener_t;
 void open_landmark(LLViewerInventoryItem* inv_item, const std::string& title, BOOL show_keep_discard, const LLUUID& source_id, BOOL take_focus);

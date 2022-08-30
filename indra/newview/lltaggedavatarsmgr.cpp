@@ -6,11 +6,9 @@
 
 LLTaggedAvatarsMgr::LLTaggedAvatarsMgr() 
 {
-	
 }
 LLTaggedAvatarsMgr::~LLTaggedAvatarsMgr()
 {
-	
 }
 
 

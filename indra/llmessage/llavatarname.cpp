@@ -178,7 +178,11 @@ std::string LLAvatarName::getCompleteName(bool linefeed) const
 		{
 			// If this particular display name is defaulted (i.e. based on user name),
 			// then display only the easier to read instance of the person's name.
-			name = mDisplayName;
+			if (show_resident) {
+				name = getLegacyName();
+			} else {
+				name = mDisplayName;
+			}
 		}
 		else
 		{

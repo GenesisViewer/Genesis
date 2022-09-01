@@ -415,6 +415,7 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const std::string& name, const LLRect& re
 	mMoreCtrl->setFollows(FOLLOWS_LEFT | FOLLOWS_TOP);
 	mMoreCtrl->setToolTip(LLStringExplicit("Show more of My Favorites"));
 	mMoreCtrl->setImageColor(LLUI::sColorsGroup->getColor("ButtonUnselectedBgColor") );
+	mMoreCtrl->setColor(LLUI::sColorsGroup->getColor("ButtonUnselectedFgColor"));
 	mMoreCtrl->setTabStop(false);
 	mMoreCtrl->setVisible(TRUE);
 	mMoreCtrl->setClickedCallback(boost::bind(&LLFavoritesBarCtrl::showDropDownMenu, this));
@@ -967,6 +968,7 @@ LLButton* LLFavoritesBarCtrl::createButton(const LLPointer<LLViewerInventoryItem
 	LLButton::Params fav_btn_params(button_params);
 	fav_btn = LLUICtrlFactory::create<LLFavoriteLandmarkButton>(fav_btn_params);
 	fav_btn->setImageColor(LLUI::sColorsGroup->getColor("ButtonUnselectedBgColor") );
+	fav_btn->setColor(LLUI::sColorsGroup->getColor("ButtonUnselectedFgColor"));
 	if (NULL == fav_btn)
 	{
 		LL_WARNS("FavoritesBar") << "Unable to create LLFavoriteLandmarkButton widget: " << item->getName() << LL_ENDL;

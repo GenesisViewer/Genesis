@@ -12,10 +12,14 @@
     <panel border="false" label="Credits" height="386" name="credits_panel">
       <!--Note to Translators: Please do not translate the following text_editor-->
       <text_editor enabled="false" follows="left|top" bg_readonly_color="transparent" left="3" max_length="65536" name="credits_editor" top="-1" bottom="0" width="443" word_wrap="true">
-Genesis Viewer is based upon Snowglobe 1.23 and developed and maintained by MelanieCosti and Torric Rodas.
-With help from our QA testing team: Coffeequeen68, Bailey Saxmundham, Wolfgang Krautrauch, LadyDeeFul, Shep
+Genesis Viewer is forked from Singularity which is based upon Snowglobe 1.23 
 
-Acknowledgements in making this project possible:  
+Genesis is developed and maintained by MelanieCosti and Torric Rodas.
+With help from our QA testing team: Coffeequeen68, Bailey Saxmundham, Wolfgang Krautrauch, LadyDeeFul, Shep62
+
+Acknowledgements in making this project possible:
+
+Singularity and Alchemy Viewer teams:  
 
 Siana Gearz, Shyotl Kuhr, Inusaito Kanya, Router Gray and the Alchemy Viewer Team (specifically Sovereign Engineer),
 with contributions by Bittenbythedark, Cinder Roxley, Damian Zhaoying, Fractured Crystal, Franxisco Romano, Fritigern Gothly, Henri Beauchamp, Kadah Coba, Kitty Barnett, Knolan Falconer, Latif Khalifa, McCabe Maxsted, Mika Pyon, Narv Czervik, nhede Core, Nomade Zhao, Revolution Smythe, Selvone Franizzi, Sim Federal, Testicular Slingshot, Thickbrick Sleaford, Tigh MacFanatic, Torric Rodas, Wolfspirit Magic, Zauber Parecelsus and others.

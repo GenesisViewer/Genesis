@@ -3,7 +3,6 @@
 #include "llsingleton.h"
 #include "sqlite3.h"
 
-
 #ifndef LLSQLMGR_H
 #define LLSQLMGR_H
 

@@ -49,6 +49,7 @@ public:
 protected:
 	void onCommitClientTag(LLUICtrl* ctrl);
 	static void onManualClientUpdate();
+	void onAvatarNameColor(LLUICtrl* ctrl);
 
 private:
 	//Main
@@ -92,6 +93,7 @@ private:
 	LLColor4 mMHasNotesColor;
 	LLColor4 mMapAvatarColor;
 	LLColor4 mCustomColor;
+	LLColor4 mAvatarNameColor;
 	bool mColorFriendChat;
 	bool mColorEOChat;
 	bool mColorLindenChat;

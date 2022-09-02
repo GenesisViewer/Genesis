@@ -66,7 +66,7 @@ LLPrefsAscentVan::LLPrefsAscentVan()
 	getChild<LLUICtrl>("UISndRestart")->setCommitCallback(lineEditorControl);
 
 	getChild<LLUICtrl>("update_clientdefs")->setCommitCallback(boost::bind(LLPrefsAscentVan::onManualClientUpdate));
-
+    getChild<LLUICtrl>("custom_avatar_name_color")->setCommitCallback(boost::bind(&LLPrefsAscentVan::onAvatarNameColor, this, _1));
     refreshValues();
     refresh();
 }
@@ -99,6 +99,13 @@ void LLPrefsAscentVan::onCommitClientTag(LLUICtrl* ctrl)
 	}
 }
 
+void LLPrefsAscentVan::onAvatarNameColor(LLUICtrl* ctrl)
+{
+    LLColorSwatchCtrl* colorSwatch = static_cast<LLColorSwatchCtrl*>(ctrl);
+    gColors.setColor4("AvatarNameColor",colorSwatch->get());
+    SHClientTagMgr::instance().resetAvatarTags();
+    
+}
 //static
 void LLPrefsAscentVan::onManualClientUpdate()
 {
@@ -169,6 +176,7 @@ void LLPrefsAscentVan::refreshValues()
     mAvatarXModifier        = gSavedSettings.getF32("AscentAvatarXModifier");
     mAvatarYModifier        = gSavedSettings.getF32("AscentAvatarYModifier");
     mAvatarZModifier        = gSavedSettings.getF32("AscentAvatarZModifier");
+    mAvatarNameColor        = gColors.getColor4("AvatarNameColor");
 }
 
 // Update controls based on current settings
@@ -188,6 +196,9 @@ void LLPrefsAscentVan::refresh()
     childSetValue("custom_tag_label_box", gSavedSettings.getString("AscentCustomTagLabel"));
     childSetEnabled("custom_tag_color_text",   mCustomTagOn);
     childSetEnabled("custom_tag_color_swatch", mCustomTagOn);
+
+    LLColorSwatchCtrl* avatarNameColor = getChild<LLColorSwatchCtrl>("custom_avatar_name_color");
+    avatarNameColor->set(mAvatarNameColor);
 }
 
 // Reset settings to local copy
@@ -245,11 +256,18 @@ void LLPrefsAscentVan::cancel()
     gSavedSettings.setF32("AscentAvatarXModifier",       mAvatarXModifier);
     gSavedSettings.setF32("AscentAvatarYModifier",       mAvatarYModifier);
     gSavedSettings.setF32("AscentAvatarZModifier",       mAvatarZModifier);
+    if (mAvatarNameColor != gColors.getColor4("AvatarNameColor")) {
+        gColors.setColor4("AvatarNameColor",                 mAvatarNameColor);
+        SHClientTagMgr::instance().resetAvatarTags();
+    }
+    
 }
 
 // Update local copy so cancel has no effect
 void LLPrefsAscentVan::apply()
 {
+    gColors.saveColorSettings("AvatarNameColor", gColors.getColor4("AvatarNameColor"));
+    SHClientTagMgr::instance().resetAvatarTags();
     refreshValues();
     refresh();
 }

@@ -274,23 +274,7 @@ void LLFloaterSettingsDebug::onCommitSettings()
 		
 			LLColor4 color(controlp->getSaveValue());
 			
-			char *sql;
-			sqlite3_stmt *stmt;
-			sqlite3 *db = LLSqlMgr::instance().getDB();
-			sql = "DELETE FROM COLOR_SETTINGS WHERE ID=?";
-			sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-			sqlite3_bind_text(stmt, 1,  controlp->getName().c_str(), strlen(controlp->getName().c_str()), 0);
-			sqlite3_step(stmt);
-			sqlite3_finalize(stmt);
-			sql = "INSERT INTO COLOR_SETTINGS (ID,R,G,B,A) VALUES (?,?,?,?,?)";
-			sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-			sqlite3_bind_text(stmt, 1,  controlp->getName().c_str(), strlen(controlp->getName().c_str()), 0);
-			sqlite3_bind_double(stmt, 2, color.mV[VRED]);
-			sqlite3_bind_double(stmt, 3,color.mV[VGREEN] );
-			sqlite3_bind_double(stmt, 4,color.mV[VBLUE] );
-			sqlite3_bind_double(stmt, 5,color.mV[VALPHA] );
-			sqlite3_step(stmt);
-			sqlite3_finalize(stmt);
+			gColors.saveColorSettings(controlp->getName(),color);
 		
 	}
 }

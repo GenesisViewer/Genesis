@@ -43,7 +43,7 @@
 #include "llrect.h"
 #include "llxmltree.h"
 #include "llsdserialize.h"
-
+#include "llsqlmgr.h"
 #if LL_RELEASE_WITH_DEBUG_INFO || LL_DEBUG
 #define CONTROL_ERRS LL_ERRS("ControlErrors")
 #else
@@ -677,7 +677,25 @@ void LLControlGroup::setUntypedValue(const std::string& name, const LLSD& val)
 		CONTROL_ERRS << "Invalid control " << name << LL_ENDL;
 	}
 }
-
+void LLControlGroup::saveColorSettings (std::string setting_name,LLColor4 setting_color) {
+    char *sql;
+    sqlite3_stmt *stmt;
+    sqlite3 *db = LLSqlMgr::instance().getDB();
+    sql = "DELETE FROM COLOR_SETTINGS WHERE ID=?";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1,  setting_name.c_str(), strlen(setting_name.c_str()), 0);
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    sql = "INSERT INTO COLOR_SETTINGS (ID,R,G,B,A) VALUES (?,?,?,?,?)";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1,  setting_name.c_str(), strlen(setting_name.c_str()), 0);
+    sqlite3_bind_double(stmt, 2, setting_color.mV[VRED]);
+    sqlite3_bind_double(stmt, 3,setting_color.mV[VGREEN] );
+    sqlite3_bind_double(stmt, 4,setting_color.mV[VBLUE] );
+    sqlite3_bind_double(stmt, 5,setting_color.mV[VALPHA] );
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+}
 
 //---------------------------------------------------------------
 // Load and save

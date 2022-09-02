@@ -340,6 +340,7 @@ public:
 	// as the given type.
 	U32	loadFromFileLegacy(const std::string& filename, BOOL require_declaration = TRUE, eControlType declare_as = TYPE_STRING);
  	U32 saveToFile(const std::string& filename, BOOL nondefault_only);
+	void saveColorSettings(std::string setting_name,LLColor4 setting_value);
  	U32	loadFromFile(const std::string& filename, bool default_values = false, bool save_values = true);
 	void	resetToDefaults();
 

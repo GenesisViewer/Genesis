@@ -30,6 +30,7 @@
 
 LFFloaterInvPanel::LFFloaterInvPanel(const LLSD& cat, const std::string& name, LLInventoryModel* model)
 : LLInstanceTracker<LFFloaterInvPanel, LLSD>(cat)
+
 {
 	// Setup the floater first
 	auto mPanel = new LLInventoryPanel("inv_panel", LLInventoryPanel::DEFAULT_SORT_ORDER, cat, LLRect(), model ? model : &gInventory, true);
@@ -40,20 +41,44 @@ LFFloaterInvPanel::LFFloaterInvPanel(const LLSD& cat, const std::string& name, L
 
 	// Now set the title
 	const auto& title = name.empty() ? gInventory.getCategory(mPanel->getRootFolderID())->getName() : name;
+	secondary = !name.empty();
 	setTitle(title);
 
 	// Figure out a unique name for our rect control
-	const auto rect_control = llformat("FloaterInv%sRect", boost::algorithm::erase_all_copy(title, " ").data());
-	if (!gSavedSettings.controlExists(rect_control)) // If we haven't existed before, create it
-	{
-		S32 left, top;
-		gFloaterView->getNewFloaterPosition(&left, &top);
-		LLRect rect = getRect();
-		rect.translate(left - rect.mLeft, top - rect.mTop);
-		gSavedSettings.declareRect(rect_control, rect, "Rectangle for " + title + " window");
-	}
-	setRectControl(rect_control);
-	applyRectControl(); // Set our initial rect to the stored (or just created) control
+	//const auto rect_control = llformat("FloaterInv%sRect", boost::algorithm::erase_all_copy(title, " ").data());
+	// if (!gSavedSettings.controlExists(rect_control)) // If we haven't existed before, create it
+	// {
+	// 	S32 left, top;
+	// 	gFloaterView->getNewFloaterPosition(&left, &top);
+	// 	LLRect rect = getRect();
+	// 	rect.translate(left - rect.mLeft, top - rect.mTop);
+	// 	gSavedSettings.declareRect(rect_control, rect, "Rectangle for " + title + " window");
+	// }
+	LLRect lastSecondaryInventoryPosition = gSavedSettings.getRect("FloaterSecondaryInventoryRect");
+	
+	if (secondary) {
+		if (lastSecondaryInventoryPosition.mLeft == 0 && lastSecondaryInventoryPosition.mTop==0) {
+			this->center();
+		} else {
+			//setRect(lastSecondaryInventoryPosition);
+			this->handleReshape(lastSecondaryInventoryPosition,FALSE);
+		}
+		cascadeMe();
+	} else {
+		rect_control = llformat("FloaterInv%sRect", boost::algorithm::erase_all_copy(title, " ").data());
+		if (!gSavedSettings.controlExists(rect_control)) // If we haven't existed before, create it
+		{
+			S32 left, top;
+			gFloaterView->getNewFloaterPosition(&left, &top);
+			LLRect rect = getRect();
+			rect.translate(left - rect.mLeft, top - rect.mTop);
+			gSavedSettings.declareRect(rect_control, rect, "Rectangle for " + title + " window");
+		}
+
+		this->handleReshape(gSavedSettings.getRect(rect_control),FALSE);
+	}	
+	// setRectControl(rect_control);
+	// applyRectControl(); // Set our initial rect to the stored (or just created) control
 
 	// Now take care of the children
 	LLPanel* panel = getChild<LLPanel>("placeholder_panel");
@@ -105,4 +130,34 @@ BOOL LFFloaterInvPanel::handleKeyHere(KEY key, MASK mask)
 	}
 
 	return LLFloater::handleKeyHere(key, mask);
+}
+void LFFloaterInvPanel::handleReshape(const LLRect& new_rect, bool by_user) {
+
+	if (by_user && !isMinimized()) {
+		if (secondary)
+			gSavedSettings.setRect("FloaterSecondaryInventoryRect",new_rect);
+		else {
+			gSavedSettings.setRect(rect_control,new_rect);
+		}	
+	}
+	LLFloater::handleReshape(new_rect, by_user);
+}
+void LFFloaterInvPanel::cascadeMe() {
+	BOOL overlapse=TRUE;
+	while (overlapse) {
+		overlapse=FALSE;
+		std::vector<LFFloaterInvPanel*> cache;
+		for (instance_iter i = beginInstances(), end(endInstances()); i != end; ++i)
+		{
+			cache.push_back(&*i);	
+		}
+		for (auto& floater : cache)
+		{
+			if (floater->getTitle() != this->getTitle() && floater->getRect().mLeft == this->getRect().mLeft && floater->getRect().mTop == this->getRect().mTop) {
+				this->translate(20,-20);
+				overlapse=TRUE;
+			}
+
+		}
+	}
 }

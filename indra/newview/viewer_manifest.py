@@ -130,7 +130,9 @@ class ViewerManifest(LLManifest):
                 self.path("default/xui/*/*.xml")
                 self.package_skin("Default.xml", "default")
                 self.package_skin("Genx.xml", "Genx")
-
+                self.package_skin("dark.xml", "dark")
+                self.package_skin("Gemini.xml", "gemini")
+                self.package_skin("Dazzle.xml", "Dazzle_MC")
                 # Local HTML files (e.g. loading screen)
                 with self.prefix(src_dst="*/html"):
                     self.path("*.png")
@@ -147,7 +149,7 @@ class ViewerManifest(LLManifest):
                             "Channel":self.channel_with_pkg_suffix(),
                             "Platform":self.build_data_json_platform,
                             "Address Size":self.address_size,
-                            "Update Service":"https://app.alchemyviewer.org/update",
+                            "Update Service":"https://genesisviewer.org/update",
                             }
             build_data_dict = self.finish_build_data_dict(build_data_dict)
             with open(os.path.join(os.pardir,'build_data.json'), 'w') as build_data_handle:

@@ -8018,6 +8018,28 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <integer>0</integer>
     </map>
+    <key>RadarAlertSimEntering</key>
+    <map>
+      <key>Comment</key>
+      <string>Whether the radar emits chat alerts for avatars entering/exiting sim</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>RadarAlertSimExiting</key>
+    <map>
+      <key>Comment</key>
+      <string>Whether the radar emits chat alerts for avatars entering/exiting sim</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>RadarAlertDraw</key>
     <map>
       <key>Comment</key>
@@ -8665,6 +8687,38 @@ This should be as low as possible, but too low may break functionality</string>
     <map>
       <key>Comment</key>
       <string>Rectangle for sounds log floater.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Rect</string>
+      <key>Value</key>
+      <array>
+        <integer>0</integer>
+        <integer>0</integer>
+        <integer>0</integer>
+        <integer>0</integer>
+      </array>
+    </map>
+    <key>FloaterProfileRect</key>
+    <map>
+      <key>Comment</key>
+      <string>Rectangle for last profile floater dragged by the user</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Rect</string>
+      <key>Value</key>
+      <array>
+        <integer>0</integer>
+        <integer>0</integer>
+        <integer>0</integer>
+        <integer>0</integer>
+      </array>
+    </map>
+    <key>FloaterSecondaryInventoryRect</key>
+    <map>
+      <key>Comment</key>
+      <string>Rectangle for last secondary inventory floater dragged by the user</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>

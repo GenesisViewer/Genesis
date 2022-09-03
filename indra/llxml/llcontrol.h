@@ -79,6 +79,7 @@ class LLColor3;
 
 const BOOL NO_PERSIST = FALSE;
 
+
 // Saved at end of session
 class LLControlGroup; //Defined further down
 extern LLControlGroup gSavedSettings;		//Default control group used in LLCachedControl
@@ -116,6 +117,7 @@ private:
 	std::string		mComment;
 	eControlType	mType;
 	bool			mPersist;
+	bool			mPersistInDB;
 	bool			mHideFromSettingsEditor;
 	std::vector<LLSD> mValues;
 	
@@ -148,6 +150,7 @@ public:
 	bool isDefault() { return (mValues.size() == 1); }
 	bool isSaveValueDefault();
 	bool isPersisted() { return mPersist; }
+	bool isPersistedInDB() { return mPersistInDB; }
 	bool isHiddenFromSettingsEditor() { return mHideFromSettingsEditor; }
 	LLSD get()			const	{ return getValue(); }
 	LLSD getValue()		const	{ return mValues.back(); }
@@ -158,6 +161,7 @@ public:
 	void setValue(const LLSD& value, bool saved_value = TRUE);
 	void setDefaultValue(const LLSD& value);
 	void setPersist(bool state);
+	void setPersistInDB(bool state){mPersistInDB=state;}
 	void setHiddenFromSettingsEditor(bool hide);
 	void setComment(const std::string& comment);
 
@@ -336,6 +340,7 @@ public:
 	// as the given type.
 	U32	loadFromFileLegacy(const std::string& filename, BOOL require_declaration = TRUE, eControlType declare_as = TYPE_STRING);
  	U32 saveToFile(const std::string& filename, BOOL nondefault_only);
+	void saveColorSettings(std::string setting_name,LLColor4 setting_value);
  	U32	loadFromFile(const std::string& filename, bool default_values = false, bool save_values = true);
 	void	resetToDefaults();
 

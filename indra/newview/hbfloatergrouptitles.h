@@ -54,6 +54,7 @@ public:
 	/* virtual */ ~HBFloaterGroupTitlesObserver();
 
 	/* virtual */ void changed(LLGroupChange gc);
+	
 
 private:
 	HBFloaterGroupTitles* mFloaterInstance;
@@ -72,11 +73,16 @@ public:
 	bool mFirstUse;
 	LLScrollListCtrl* mTitlesList;
 	std::vector<HBFloaterGroupTitlesObserver*> mObservers;
+	
+protected:
+	/*virtual*/ void onClose(bool app_quitting);	
 
 private:
 	static void onActivate(void* data);
-
+	
 	static HBFloaterGroupTitles* sInstance;
+	static LLScrollListCtrl::sort_order_t mSortOrder;
+	
 };
 
 #endif

@@ -44,7 +44,7 @@
 #include "lluictrlfactory.h"
 #include "llviewercontrol.h"
 #include "llwindow.h"
-
+#include "llsqlmgr.h"
 LLFloaterSettingsDebug::LLFloaterSettingsDebug()
 :	LLFloater(std::string("Configuration Editor"))
 ,	mOldSearchTerm("---")
@@ -269,6 +269,13 @@ void LLFloaterSettingsDebug::onCommitSettings()
 	  }
 	  default:
 		break;
+	}
+	if (controlp->isPersistedInDB() && LLSqlMgr::instance().isInit()) {
+		
+			LLColor4 color(controlp->getSaveValue());
+			
+			gColors.saveColorSettings(controlp->getName(),color);
+		
 	}
 }
 

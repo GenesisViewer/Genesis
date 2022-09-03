@@ -101,6 +101,7 @@
         "resumable": "cpp",
         "filesystem": "cpp",
         "span": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "__nullptr": "cpp"
     }
 }

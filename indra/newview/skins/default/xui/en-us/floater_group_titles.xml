@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<floater name="goup titles" title="Group Titles" rect_control="BeauchampFloaterGroupTitlesRect"
+<floater name="group titles" title="Group Titles" rect_control="BeauchampFloaterGroupTitlesRect"
 	can_close="true" can_drag_on_left="false" can_minimize="true" can_resize="true"
 	min_width="300" min_height="150" width="400" height="500">
 	<scroll_list name="titles_list" can_resize="true" multi_select="false"

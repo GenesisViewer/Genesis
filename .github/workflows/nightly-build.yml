@@ -10,24 +10,9 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  check_date:
-    runs-on: ubuntu-latest
-    name: Check latest commit
-    outputs:
-      should_run: ${{ steps.should_run.outputs.should_run }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: print latest_commit
-        run: echo ${{ github.sha }}
-
-      - id: should_run
-        continue-on-error: true
-        name: check latest commit is less than a day
-        if: ${{ github.event_name == 'schedule' }}
-        run: test -z $(git rev-list  --after="24 hours"  ${{ github.sha }}) && echo "::set-output name=should_run::false"
+  
 
   download-artefacts :
-    needs: check_date
     runs-on: ubuntu-latest
     steps:
       
@@ -35,7 +20,16 @@ jobs:
         env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-        run: mkdir -p /tmp/deps/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2 --output /tmp/deps/fmodstudio-2.00.03-windows64-192401637.tar.bz2
+        run: mkdir -p /tmp/deps/ && curl --connect-timeout 5   --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.00.03-windows64-192401637.tar.bz2 --output /tmp/deps/fmodstudio-2.00.03-windows64-192401637.tar.bz2
+        
+      - name: downloading-public-deps
+        env:
+         dep_pass: ${{ secrets.DEP_PASS}}
+         dep_user: ${{secrets.DEP_USER}}
+        run: mkdir -p /tmp/publicdeps/ && curl --connect-timeout 5  --retry 5 --retry-delay 0 --retry-max-time 40 https://londoncitysl.com/genesis/dependencies/public/public_depencies.zip --output /tmp/publicdeps/public_depencies.zip
+        
+      - name: decompressing-public-deps
+        run: unzip /tmp/publicdeps/public_depencies.zip -d /tmp/deps/
         
       - name: downloading-inetc
         env:
@@ -116,7 +110,7 @@ jobs:
        run : autobuild build --no-configure -cRelease -A64
      
      - name: find and rename
-       run : Get-ChildItem .\build-vc-64\newview\Release\*Setup.exe | Rename-Item -NewName "Genesis-eve_nightly_build_$(get-date -f yyyy-MM-dd).exe" && mv ".\build-vc-64\newview\Release\Genesis-eve_nightly_build_$(get-date -f yyyy-MM-dd).exe" c:/temp/
+       run : Get-ChildItem .\build-vc-64\newview\Release\*Setup.exe | Rename-Item -NewName "Genesis-eve_nightly_build_$(git rev-list --count HEAD).exe" && mv ".\build-vc-64\newview\Release\Genesis-eve_nightly_build_$(git rev-list --count HEAD).exe" c:/temp/
      - name: ls
        run : ls -l c:/temp/
      - name: store artefact

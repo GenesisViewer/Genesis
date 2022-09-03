@@ -43,7 +43,7 @@
 #include "llrect.h"
 #include "llxmltree.h"
 #include "llsdserialize.h"
-
+#include "llsqlmgr.h"
 #if LL_RELEASE_WITH_DEBUG_INFO || LL_DEBUG
 #define CONTROL_ERRS LL_ERRS("ControlErrors")
 #else
@@ -677,7 +677,25 @@ void LLControlGroup::setUntypedValue(const std::string& name, const LLSD& val)
 		CONTROL_ERRS << "Invalid control " << name << LL_ENDL;
 	}
 }
-
+void LLControlGroup::saveColorSettings (std::string setting_name,LLColor4 setting_color) {
+    char *sql;
+    sqlite3_stmt *stmt;
+    sqlite3 *db = LLSqlMgr::instance().getDB();
+    sql = "DELETE FROM COLOR_SETTINGS WHERE ID=?";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1,  setting_name.c_str(), strlen(setting_name.c_str()), 0);
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    sql = "INSERT INTO COLOR_SETTINGS (ID,R,G,B,A) VALUES (?,?,?,?,?)";
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_text(stmt, 1,  setting_name.c_str(), strlen(setting_name.c_str()), 0);
+    sqlite3_bind_double(stmt, 2, setting_color.mV[VRED]);
+    sqlite3_bind_double(stmt, 3,setting_color.mV[VGREEN] );
+    sqlite3_bind_double(stmt, 4,setting_color.mV[VBLUE] );
+    sqlite3_bind_double(stmt, 5,setting_color.mV[VALPHA] );
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+}
 
 //---------------------------------------------------------------
 // Load and save
@@ -853,6 +871,8 @@ U32 LLControlGroup::loadFromFileLegacy(const std::string& filename, BOOL require
 				
 					child_nodep->getAttributeColor4U("value", color);
 					control->set(LLColor4(color).getValue());
+					control->setDefaultValue(LLColor4(color).getValue());
+					control->setPersistInDB(TRUE);
 				}
 				else
 				{
@@ -860,6 +880,8 @@ U32 LLControlGroup::loadFromFileLegacy(const std::string& filename, BOOL require
 				
 					child_nodep->getAttributeColor4("value", color);
 					control->set(color.getValue());
+					control->setDefaultValue(color.getValue());
+					control->setPersistInDB(TRUE);
 				}
 				validitems++;
 			}
@@ -878,7 +900,7 @@ U32 LLControlGroup::loadFromFileLegacy(const std::string& filename, BOOL require
 		  break;
 
 		}
-	
+		
 		child_nodep = rootp->getNextChild();
 	}
 
@@ -913,6 +935,7 @@ U32 LLControlGroup::saveToFile(const std::string& filename, BOOL nondefault_only
 				// LL_INFOS() << "Skipping " << control->getName() << LL_ENDL;
 			}
 		}
+		
 	}
 	llofstream file;
 	file.open(filename);

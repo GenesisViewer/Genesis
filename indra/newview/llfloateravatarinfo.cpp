@@ -60,7 +60,7 @@ LLFloaterAvatarInfo::LLFloaterAvatarInfo(const std::string& name, const LLUUID &
 }
 void LLFloaterAvatarInfo::handleReshape(const LLRect& new_rect, bool by_user) {
 
-	if (by_user) {
+	if (by_user && !isMinimized()) {
 		LLFloaterAvatarInfo::floater_positions[this->mAvatarID]=new_rect;
 		LLFloaterAvatarInfo::lastMoved=this->mAvatarID;
 		gSavedSettings.setRect("FloaterProfileRect",new_rect);

@@ -133,7 +133,7 @@ BOOL LFFloaterInvPanel::handleKeyHere(KEY key, MASK mask)
 }
 void LFFloaterInvPanel::handleReshape(const LLRect& new_rect, bool by_user) {
 
-	if (by_user) {
+	if (by_user && !isMinimized()) {
 		if (secondary)
 			gSavedSettings.setRect("FloaterSecondaryInventoryRect",new_rect);
 		else {

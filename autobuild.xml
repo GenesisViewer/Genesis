@@ -1113,7 +1113,7 @@
     <key>package_description</key>
     <map>
       <key>copyright</key>
-      <string>Copyright (c) 2010-2016, Genesis Viewer Team</string>
+      <string>Distributed by Genesis Viewer Team</string>
       <key>description</key>
       <string>Genesis Viewer</string>
       <key>license</key>

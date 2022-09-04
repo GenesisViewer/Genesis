@@ -87,7 +87,7 @@
 #include "llworldmap.h"
 #include "llwearable.h"
 #include "llwearablelist.h"
-#include "llenvironment.h"
+#include "llenvmanager.h"
 #include "hippogridmanager.h"
 
 // [RLVa:KB] - Checked: 2011-05-22 (RLVa-1.3.1)
@@ -6822,13 +6822,14 @@ void LLSettingsBridge::performAction(LLInventoryModel* model, std::string action
         if (!item) 
             return;
         LLUUID asset_id = item->getAssetUUID();
+		LLEnvManagerNew::instance().loadFromEEPSettings(asset_id,item->getUUID());
         // FIRE-30701 - Allow crossfade time to apply when using EEP from inventory.
         //LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, asset_id, LLEnvironment::TRANSITION_INSTANT);
         //LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
 
 		
-        LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, asset_id);
-        LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+        // LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, asset_id);
+        // LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
 		
     }
     else if ("apply_settings_parcel" == action)

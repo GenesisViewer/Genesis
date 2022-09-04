@@ -46,7 +46,8 @@
 #include <boost/algorithm/string.hpp>
 #include "rlvhandler.h"
 // [/RLVa:KB]
-
+#include "llsettingsbase.h"
+#include "llsettingsvo.h"
 #include "hippogridmanager.h"
 
 std::string LLEnvPrefs::getWaterPresetName() const
@@ -119,7 +120,7 @@ LLEnvManagerNew::LLEnvManagerNew():
 	mUserPrefs.mDayCycleName = "Default";
 
 	LL_DEBUGS("Windlight")<<LL_ENDL;
-	//gAgent.addRegionChangedCallback(boost::bind(&LLEnvManagerNew::onRegionChange, this));
+	gAgent.addRegionChangedCallback(boost::bind(&LLEnvManagerNew::onRegionChange, this));
 }
 
 bool LLEnvManagerNew::getUseRegionSettings() const
@@ -309,6 +310,76 @@ void LLEnvManagerNew::setUseDayCycle(const std::string& name, bool interpolate /
 	updateManagersFromPrefs(interpolate);
 }
 
+void LLEnvManagerNew::loadFromEEPSettings(const LLUUID& asset_id, const LLUUID& inv_id)
+{
+	gAssetStorage->getInvItemAsset(LLHost::invalid,
+								   gAgent.getID(),
+								   gAgent.getSessionID(),
+								   gAgent.getID(),
+								   LLUUID::null,
+								   inv_id,
+								   asset_id,
+								   LLAssetType::AT_SETTINGS,
+								   &loadEEP,
+								   (void*)&inv_id);
+}
+//static
+void LLEnvManagerNew::loadEEP(LLVFS *vfs, const LLUUID& asset_id, LLAssetType::EType asset_type, void *user_data, S32 status, LLExtStat ext_status) 
+{
+	LLUUID inventory_id(*((LLUUID*)user_data));
+	std::string name = "WindLight Setting.wl";
+	LLViewerInventoryItem *item = gInventory.getItem(inventory_id);
+	if(item)
+	{
+		inventory_id = item->getUUID();
+		name = item->getName();
+	}
+	if(LL_ERR_NOERR == status)
+	{
+		LLVFile file(vfs, asset_id, asset_type);
+		S32 file_length = file.getSize();
+
+        std::string buffer(file_length + 1, '\0');
+		
+		file.read((U8*)buffer.data(), file_length);
+		LL_INFOS() << "Loading AT_SETTINGS " << buffer << LL_ENDL;
+
+        std::stringstream llsdstream(buffer);
+		LLSD llsdsettings;
+		
+		if (LLSDSerialize::deserialize(llsdsettings, llsdstream, -1))
+		{
+			LL_INFOS() << "LLSDSerialize::deserialize" << llsdsettings <<LL_ENDL;
+			LLSettingsBase::ptr_t settings = LLSettingsVOBase::createFromLLSD(llsdsettings);
+			LL_INFOS() << "LLSettingsVOBase::createFromLLSD"  <<LL_ENDL;
+			
+			LLSD legacysettings;
+			if (settings->getSettingsType()=="sky") {
+				
+				LLSettingsVOSky::ptr_t sky = LLSettingsVOSky::buildSky(llsdsettings);
+				LLEnvManagerNew::instance().setCurrentSky(sky);
+				legacysettings = LLSettingsVOSky::convertToLegacy(sky,TRUE);
+				
+				LLWLParamKey settingkey("eep-"+asset_id.asString(), LLEnvKey::EScope::SCOPE_LOCAL);
+				LLWLParamManager::instance().addParamSet(settingkey,legacysettings);
+				
+				
+				LLEnvManagerNew::instance().setUseSkyPreset(settingkey.name);
+				
+				
+			}
+			if (settings->getSettingsType()=="water") {
+				legacysettings = LLSettingsVOWater::convertToLegacy(LLSettingsVOWater::buildWater(llsdsettings));
+				
+			}
+			if (settings->getSettingsType()=="daycycle") {
+				legacysettings = LLSettingsVODay::convertToLegacy(LLSettingsVODay::buildDay(llsdsettings));
+				
+			}
+		}
+	}	
+		
+}
 void LLEnvManagerNew::loadUserPrefs()
 {
 	// operate on members directly to avoid side effects

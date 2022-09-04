@@ -86,7 +86,7 @@
 #include "llwaterparammanager.h"
 #include "llpostprocess.h"
 #include "sgmemstat.h"
-#include "llenvironment.h"
+//#include "llenvironment.h"
 // [RLVa:KB]
 #include "rlvhandler.h"
 #include "rlvlocks.h"
@@ -206,7 +206,7 @@ void display_update_camera(bool tiling=false)
 	gViewerWindow->setup3DRender();
 	
 	// update all the sky/atmospheric/water settings
-	LLEnvironment::instance().update(LLViewerCamera::getInstance());	
+	//LLEnvironment::instance().update(LLViewerCamera::getInstance());	
 	LLWLParamManager::getInstance()->update(LLViewerCamera::getInstance());
 	LLWaterParamManager::getInstance()->update(LLViewerCamera::getInstance());
 	

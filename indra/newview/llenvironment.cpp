@@ -2150,6 +2150,7 @@ void LLEepEnvironmentRequestResponder::httpSuccess(void)
     {
         return;
     }
+    
     if (environment.isDefined() && mApply)
     {
         envinfo = LLEnvironment::EnvironmentInfo::extract(environment);
@@ -3377,7 +3378,7 @@ namespace
         mWater = mInjectedWater;
 
         mEnvChangeConnection = LLEnvironment::instance().setEnvironmentChanged([this](LLEnvironment::EnvSelection_t env, S32) { onEnvironmentChanged(env); });
-        mParcelChangeConnection = gAgent.addParcelChangedCallback([this]() { onParcelChange(); });
+        //mParcelChangeConnection = gAgent.addParcelChangedCallback([this]() { onParcelChange(); });
     }
 
     DayInjection::~DayInjection()

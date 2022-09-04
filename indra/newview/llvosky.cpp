@@ -54,7 +54,7 @@
 #include "llwlparammanager.h"
 #include "llwaterparammanager.h"
 #include "llsettingssky.h"
-#include "llenvironment.h"
+//#include "llenvironment.h"
 #include "pipeline.h"
 #undef min
 #undef max
@@ -489,7 +489,7 @@ void LLVOSky::restoreGL()
 	{
 		mSkyTex[i].restoreGL();
 	}
-	LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
+	LLSettingsSky::ptr_t psky = LLEnvManagerNew::instance().getCurrentSky();
 
     if (psky)
 	{
@@ -2268,7 +2268,7 @@ void LLVOSky::setSunDirection(const LLVector3 &sun_dir, const LLVector3 &sun_ang
 }
 void LLVOSky::updateDirections(void)
 {
-    LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
+    LLSettingsSky::ptr_t psky = LLEnvManagerNew::instance().getCurrentSky();
 
     mSun.setDirection(psky->getSunDirection());
 	mMoon.setDirection(psky->getMoonDirection());
@@ -2387,7 +2387,7 @@ void LLVOSky::setSunTextures(const LLUUID& sun_texture, const LLUUID& sun_textur
 
 void LLVOSky::setMoonTextures(const LLUUID& moon_texture, const LLUUID& moon_texture_next)
 {
-    LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
+    LLSettingsSky::ptr_t psky = LLEnvManagerNew::instance().getCurrentSky();
 			
     bool can_use_wl = gPipeline.canUseWindLightShaders();
 
@@ -2412,7 +2412,7 @@ void LLVOSky::setMoonTextures(const LLUUID& moon_texture, const LLUUID& moon_tex
 
 void LLVOSky::setCloudNoiseTextures(const LLUUID& cloud_noise_texture, const LLUUID& cloud_noise_texture_next)
 {
-    LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
+    LLSettingsSky::ptr_t psky = LLEnvManagerNew::instance().getCurrentSky();
 
     mCloudNoiseTexturep[0] = cloud_noise_texture.isNull() ? nullptr : LLViewerTextureManager::getFetchedTexture(cloud_noise_texture, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
     mCloudNoiseTexturep[1] = cloud_noise_texture_next.isNull() ? nullptr : LLViewerTextureManager::getFetchedTexture(cloud_noise_texture_next, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
@@ -2430,7 +2430,7 @@ void LLVOSky::setCloudNoiseTextures(const LLUUID& cloud_noise_texture, const LLU
 
 void LLVOSky::setBloomTextures(const LLUUID& bloom_texture, const LLUUID& bloom_texture_next)
 {
-    LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
+    LLSettingsSky::ptr_t psky = LLEnvManagerNew::instance().getCurrentSky();
 
     LLUUID bloom_tex = bloom_texture.isNull() ? psky->GetDefaultBloomTextureId() : bloom_texture;
     LLUUID bloom_tex_next = bloom_texture_next.isNull() ? (bloom_texture.isNull() ? psky->GetDefaultBloomTextureId() : bloom_texture) : bloom_texture_next;

@@ -607,6 +607,9 @@ LLSD LLSettingsVOSky::convertToLegacy(const LLSettingsSky::ptr_t &psky, bool isA
     legacy[SETTING_CLOUD_POS_DENSITY2] = ensure_array_4(settings[SETTING_CLOUD_POS_DENSITY2], 1.0);
     legacy[SETTING_CLOUD_SCALE] = LLSDArray(settings[SETTING_CLOUD_SCALE])(LLSD::Real(0.0))(LLSD::Real(0.0))(LLSD::Real(1.0));       
     legacy[SETTING_CLOUD_SCROLL_RATE] = settings[SETTING_CLOUD_SCROLL_RATE];
+    //fix cloud scroll rate
+    legacy[SETTING_CLOUD_SCROLL_RATE][0] = legacy[SETTING_CLOUD_SCROLL_RATE][0].asReal() +10.0f;
+    legacy[SETTING_CLOUD_SCROLL_RATE][1] = legacy[SETTING_CLOUD_SCROLL_RATE][1].asReal() +10.0f;
     legacy[SETTING_LEGACY_ENABLE_CLOUD_SCROLL] = LLSDArray(LLSD::Boolean(!is_approx_zero(settings[SETTING_CLOUD_SCROLL_RATE][0].asReal())))
         (LLSD::Boolean(!is_approx_zero(settings[SETTING_CLOUD_SCROLL_RATE][1].asReal())));     
     legacy[SETTING_CLOUD_SHADOW] = LLSDArray(settings[SETTING_CLOUD_SHADOW].asReal())(0.0f)(0.0f)(1.0f);    
@@ -616,7 +619,8 @@ LLSD LLSettingsVOSky::convertToLegacy(const LLSettingsSky::ptr_t &psky, bool isA
     legacy[SETTING_MAX_Y] = LLSDArray(settings[SETTING_MAX_Y])(0.0f)(0.0f)(1.0f);
     legacy[SETTING_STAR_BRIGHTNESS] = settings[SETTING_STAR_BRIGHTNESS].asReal() / 250.0f; // convert from 0-500 -> 0-2 ala pre-FS-compat changes
     legacy[SETTING_SUNLIGHT_COLOR] = ensure_array_4(settings[SETTING_SUNLIGHT_COLOR], 1.0f);
-    
+    legacy[SETTING_SUN_ROTATION] = ensure_array_4(settings[SETTING_SUN_ROTATION], 1.0f);
+    legacy[SETTING_MOON_ROTATION] = ensure_array_4(settings[SETTING_MOON_ROTATION], 1.0f);
     LLVector3 dir = psky->getLightDirection();
 
     F32 phi     = asin(dir.mV[2]);
@@ -657,6 +661,7 @@ LLSD LLSettingsVOSky::convertToLegacy(const LLSettingsSky::ptr_t &psky, bool isA
 void LLSettingsVOSky::updateSettings()
 {
     LLSettingsSky::updateSettings();
+    LLVector3 sun_direction  = getSunDirection();
     LLVector3 moon_direction = getMoonDirection();
 
     // Want the dot prod of sun w/ high noon vector (0,0,1), which is just the z component

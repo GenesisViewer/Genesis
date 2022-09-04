@@ -84,7 +84,7 @@
 #include "llprogressview.h"
 #include "llvocache.h"
 #include "llvopartgroup.h"
-#include "llenvironment.h"
+//#include "llenvironment.h"
 // [SL:KB] - Patch: Appearance-Misc | Checked: 2013-02-12 (Catznip-3.4)
 #include "llappearancemgr.h"
 // [/SL:KB]

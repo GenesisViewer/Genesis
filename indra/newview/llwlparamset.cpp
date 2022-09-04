@@ -396,11 +396,11 @@ void LLWLParamSet::updateCloudScrolling(void)
 
 	if(getEnableCloudScrollX())
 	{
-		mCloudScrollXOffset += F32(delta_t * (getCloudScrollX()) / 100.f);
+		mCloudScrollXOffset += F32(delta_t * (getCloudScrollX() -10.0f) / 100.f);
 	}
 	if(getEnableCloudScrollY())
 	{
-		mCloudScrollYOffset += F32(delta_t * (getCloudScrollY()) / 100.f);
+		mCloudScrollYOffset += F32(delta_t * (getCloudScrollY() -10.0f) / 100.f);
 	}
 }
 

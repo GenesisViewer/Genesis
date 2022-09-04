@@ -64,7 +64,7 @@
 #include "lllandmark.h"
 #include "llcachename.h"
 #include "lldir.h"
-#include "llenvironment.h"
+//#include "llenvironment.h"
 #include "llerrorcontrol.h"
 #include "llfiltersd2xmlrpc.h"
 #include "llfocusmgr.h"
@@ -2017,7 +2017,7 @@ bool idle_startup()
 		if(regionp)
 		{
 			// Load stored local environment if needed.
-        	LLEnvironment::instance().initOnLogin();
+        	//LLEnvironment::instance().initOnLogin();
 			send_complete_agent_movement(regionp->getHost());
 			gAssetStorage->setUpstream(regionp->getHost());
 			gCacheName->setUpstream(regionp->getHost());

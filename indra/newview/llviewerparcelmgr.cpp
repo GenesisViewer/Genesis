@@ -70,7 +70,7 @@
 #include "roles_constants.h"
 #include "llweb.h"
 #include "rlvactions.h"
-#include "llenvironment.h"
+//#include "llenvironment.h"
 const F32 PARCEL_COLLISION_DRAW_SECS = 1.f;
 
 
@@ -1673,14 +1673,13 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
             parcel->setParcelEnvironmentVersion(parcel_environment_version);
             // updated agent parcel
             parcel_mgr.mAgentParcel->unpackMessage(msg);
-			LL_INFOS() << "LLViewerParcelMgr::processParcelProperties isExtendedEnvironmentEnabled " << LLEnvironment::instance().isExtendedEnvironmentEnabled() <<LL_ENDL;
-			LL_INFOS() << "LLViewerParcelMgr::processParcelProperties environment_changed " << environment_changed <<LL_ENDL;
 			
-            if ((LLEnvironment::instance().isExtendedEnvironmentEnabled() && environment_changed))
-            {
-                LL_DEBUGS("ENVIRONMENT") << "Parcel environment version is " << parcel->getParcelEnvironmentVersion() << LL_ENDL;
-                LLEnvironment::instance().requestParcel(local_id);
-            }
+			
+            // if ((LLEnvironment::instance().isExtendedEnvironmentEnabled() && environment_changed))
+            // {
+            //     LL_DEBUGS("ENVIRONMENT") << "Parcel environment version is " << parcel->getParcelEnvironmentVersion() << LL_ENDL;
+            //     LLEnvironment::instance().requestParcel(local_id);
+            // }
         }
 	}
 	// Add any pending entry to the TP history now that we got the *new* parcel name.

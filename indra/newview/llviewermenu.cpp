@@ -8818,35 +8818,35 @@ class LLWorldEnvSettings final : public view_listener_t
 
 		if (tod == "sunrise")
 		{
-			//LLEnvManagerNew::instance().setUseSkyPreset("Sunrise", gSavedSettings.getBOOL("PhoenixInterpolateSky"));
-			LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_SUNRISE);
-            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+			LLEnvManagerNew::instance().setUseSkyPreset("Sunrise", gSavedSettings.getBOOL("PhoenixInterpolateSky"));
+			// LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_SUNRISE);
+            // LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
 		}
 		else if (tod == "noon")
 		{
-			//LLEnvManagerNew::instance().setUseSkyPreset("Midday", gSavedSettings.getBOOL("PhoenixInterpolateSky"));
-			LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_MIDDAY);
-            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+			LLEnvManagerNew::instance().setUseSkyPreset("Midday", gSavedSettings.getBOOL("PhoenixInterpolateSky"));
+			// LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_MIDDAY);
+            // LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
 		}
 		else if (tod == "sunset")
 		{
-			//LLEnvManagerNew::instance().setUseSkyPreset("Sunset", gSavedSettings.getBOOL("PhoenixInterpolateSky"));
-			LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_SUNSET);
-            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL); 
+			LLEnvManagerNew::instance().setUseSkyPreset("Sunset", gSavedSettings.getBOOL("PhoenixInterpolateSky"));
+			// LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_SUNSET);
+            // LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL); 
 			
 		}
 		else if (tod == "midnight")
 		{
-			//LLEnvManagerNew::instance().setUseSkyPreset("Midnight", gSavedSettings.getBOOL("PhoenixInterpolateSky"));
+			LLEnvManagerNew::instance().setUseSkyPreset("Midnight", gSavedSettings.getBOOL("PhoenixInterpolateSky"));
 			 
-            LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_MIDNIGHT);
-            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL); 
+            // LLEnvironment::instance().setManualEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_MIDNIGHT);
+            // LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL); 
 		}
 		else // Use Region Environment Settings
 		{
-			//LLEnvManagerNew::instance().setUseRegionSettings(true, gSavedSettings.getBOOL("PhoenixInterpolateSky"));
-			LLEnvironment::instance().clearEnvironment(LLEnvironment::ENV_LOCAL);
-            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
+			LLEnvManagerNew::instance().setUseRegionSettings(true, gSavedSettings.getBOOL("PhoenixInterpolateSky"));
+			// LLEnvironment::instance().clearEnvironment(LLEnvironment::ENV_LOCAL);
+            // LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
 		}
 
 		return true;

@@ -29,7 +29,8 @@
 
 #include "llmemory.h"
 #include "llsd.h"
-
+#include "llsettingsbase.h"
+#include "llsettingssky.h"
 class LLWLParamManager;
 class LLWaterParamManager;
 class LLWLAnimator;
@@ -121,7 +122,7 @@ public:
 
 		return full_packet;
 	}
-
+	
 private:
 	LLSD mWLDayCycle, mWaterParams, mSkyMap;
 	F64 mDayTime;
@@ -199,7 +200,10 @@ public:
 	bool useSkyParams(const LLSD& params);
 	bool useDayCycle(const std::string& name, LLEnvKey::EScope scope);
 	bool useDayCycleParams(const LLSD& params, LLEnvKey::EScope scope, F32 time = 0.5);
-
+	LLSettingsSky::ptr_t getCurrentSky(){return currentSky;}
+	void setCurrentSky(LLSettingsSky::ptr_t newSky){currentSky = newSky;}
+	
+	
 	// setters for user env. preferences
 	void setUseRegionSettings(bool val, bool interpolate = false);
 	void setUseWaterPreset(const std::string& name, bool interpolate = false);
@@ -211,7 +215,8 @@ public:
 		const std::string& day_cycle_preset,
 		bool use_fixed_sky,
 		bool use_region_settings);
-
+	void loadFromEEPSettings(const LLUUID& asset_id, const LLUUID& inv_id);
+	
 	// debugging methods
 	void dumpUserPrefs();
 	void dumpPresets();
@@ -229,7 +234,7 @@ public:
 	// Public callbacks.
 	void onRegionSettingsResponse(const LLSD& content);
 	void onRegionSettingsApplyResponse(bool ok);
-
+	
 private:
 	friend class LLSingleton<LLEnvManagerNew>;
 	/*virtual*/ void initSingleton();
@@ -240,7 +245,7 @@ private:
 	void updateSkyFromPrefs(bool interpolate = false);
 	void updateWaterFromPrefs(bool interpolate);
 	void updateManagersFromPrefs(bool interpolate);
-
+	static void loadEEP(LLVFS *vfs, const LLUUID& asset_id, LLAssetType::EType asset_type, void *user_data, S32 status, LLExtStat ext_status);
 public:
 	bool useRegionSky();
 	bool useRegionWater();
@@ -267,6 +272,7 @@ private:
 	bool					mInterpNextChangeMessage;	/// Interpolate env. settings on next region change.
 	LLUUID					mCurRegionUUID;				/// To avoid duplicated region env. settings requests.
 	LLUUID					mLastReceivedID;			/// Id of last received region env. settings.
+	LLSettingsSky::ptr_t    currentSky;
 };
 
 #endif // LL_LLENVMANAGER_H

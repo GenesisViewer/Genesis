@@ -85,6 +85,10 @@ public:
 		{
 			return mTexNames[idx];
 		}
+		void setTexName(GLuint texName,U32 idx = 0)
+		{
+			mTexNames[idx] = texName;
+		}
 		void addAllocatedMemory(S32Bytes size, U8 components, U32 category)
 		{
 			mAllocationData.emplace_back(size, components, category);
@@ -322,7 +326,7 @@ private:
 public:		
 	void setCategory(S32 category) ;
 	S32  getCategory()const {return mCategory ;}
-
+	void setTexName(GLuint texName) { mTexName->setTexName(texName); }
 	//for debug use: show texture size distribution 
 	//----------------------------------------
 	static LLPointer<LLImageGL> sHighlightTexturep; //default texture to replace normal textures

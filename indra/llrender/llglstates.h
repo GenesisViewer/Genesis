@@ -203,6 +203,20 @@ public:
 		}
 	}
 };
+class LLGLSPipelineDepthTestSkyBox : public LLGLSPipelineSkyBox
+{ 
+public:
+	LLGLSPipelineDepthTestSkyBox(bool depth_test, bool depth_write);
+
+    LLGLDepthTest mDepth;
+};
+class LLGLSPipelineBlendSkyBox : public LLGLSPipelineDepthTestSkyBox 
+{ 
+public:
+	LLGLSPipelineBlendSkyBox(bool depth_test, bool depth_write);
+    LLGLEnable<GL_BLEND> mBlend;    
+};
+
 
 //----------------------------------------------------------------------------
 

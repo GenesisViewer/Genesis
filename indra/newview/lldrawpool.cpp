@@ -75,6 +75,9 @@ LLDrawPool *LLDrawPool::createPool(const U32 type, LLViewerTexture *tex0)
 	case POOL_FULLBRIGHT:
 		poolp = new LLDrawPoolFullbright();
 		break;
+	case POOL_INVISIBLE:
+		poolp = new LLDrawPoolInvisible();
+		break;
 	case POOL_GLOW:
 		poolp = new LLDrawPoolGlow();
 		break;
@@ -82,6 +85,7 @@ LLDrawPool *LLDrawPool::createPool(const U32 type, LLViewerTexture *tex0)
 		poolp = new LLDrawPoolAlpha();
 		break;
 	case POOL_AVATAR:
+	case POOL_CONTROL_AV:
 		poolp = new LLDrawPoolAvatar();
 		break;
 	case POOL_TREE:
@@ -124,6 +128,7 @@ LLDrawPool::LLDrawPool(const U32 type)
 	sNumDrawPools++;
 	mId = sNumDrawPools;
 	mVertexShaderLevel = 0;
+	mSkipRender = false;
 }
 
 LLDrawPool::~LLDrawPool()
@@ -198,7 +203,7 @@ void LLDrawPool::renderPostDeferred(S32 pass)
 //virtual
 void LLDrawPool::endRenderPass( S32 pass )
 {
-	/*for (U32 i = 0; i < (U32)gGLManager.mNumTextureImageUnits; i++)
+	/*for (U32 i = 0; i < gGLManager.mNumTextureImageUnits; i++)
 	{ //dummy cleanup of any currently bound textures
 		if (gGL.getTexUnit(i)->getCurrType() != LLTexUnit::TT_NONE)
 		{
@@ -206,6 +211,8 @@ void LLDrawPool::endRenderPass( S32 pass )
 			gGL.getTexUnit(i)->disable();
 		}
 	}*/
+
+	//make sure channel 0 is active channel
 	gGL.getTexUnit(0)->activate();
 }
 
@@ -294,15 +301,17 @@ LLViewerTexture *LLFacePool::getTexture()
 
 void LLFacePool::removeFaceReference(LLFace *facep)
 {
-	S32 idx = facep->getReferenceIndex();
-	if (idx != -1)
+	if (facep->getReferenceIndex() != -1)
 	{
-		facep->setReferenceIndex(-1);
-		std::vector<LLFace*>::iterator face_it(mReferences.begin() + idx);
-		std::vector<LLFace*>::iterator iter = vector_replace_with_last(mReferences, face_it);
-		if(iter != mReferences.end())
-			(*iter)->setReferenceIndex(idx);
+		if (facep->getReferenceIndex() != (S32)mReferences.size())
+		{
+			LLFace *back = mReferences.back();
+			mReferences[facep->getReferenceIndex()] = back;
+			back->setReferenceIndex(facep->getReferenceIndex());
+		}
+		mReferences.pop_back();
 	}
+		facep->setReferenceIndex(-1);
 }
 
 void LLFacePool::addFaceReference(LLFace *facep)
@@ -351,7 +360,7 @@ void LLFacePool::LLOverrideFaceColor::setColor(const LLColor4& color)
 
 void LLFacePool::LLOverrideFaceColor::setColor(const LLColor4U& color)
 {
-	gGL.diffuseColor4ubv(color.mV);
+	glColor4ubv(color.mV);
 }
 
 void LLFacePool::LLOverrideFaceColor::setColor(F32 r, F32 g, F32 b, F32 a)
@@ -374,16 +383,6 @@ LLRenderPass::~LLRenderPass()
 
 }
 
-LLDrawPool* LLRenderPass::instancePool()
-{
-#if LL_RELEASE_FOR_DOWNLOAD
-	LL_WARNS() << "Attempting to instance a render pass.  Invalid operation." << LL_ENDL;
-#else
-	LL_ERRS() << "Attempting to instance a render pass.  Invalid operation." << LL_ENDL;
-#endif
-	return NULL;
-}
-
 void LLRenderPass::renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture)
 {					
 	LLSpatialGroup::drawmap_elem_t& draw_info = group->mDrawMap[type];
@@ -397,9 +396,9 @@ void LLRenderPass::renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL t
 	}
 }
 
-void LLRenderPass::renderTexture(U32 type, U32 mask)
+void LLRenderPass::renderTexture(U32 type, U32 mask, BOOL batch_textures)
 {
-	pushBatches(type, mask, TRUE);
+	pushBatches(type, mask, true, batch_textures);
 }
 
 void LLRenderPass::pushBatches(U32 type, U32 mask, BOOL texture, BOOL batch_textures)
@@ -435,7 +434,7 @@ void LLRenderPass::pushMaskBatches(U32 type, U32 mask, BOOL texture, BOOL batch_
 	}
 }
 
-void LLRenderPass::applyModelMatrix(LLDrawInfo& params)
+void LLRenderPass::applyModelMatrix(const LLDrawInfo& params)
 {
 	if (params.mModelMatrix != gGLLastMatrix)
 	{
@@ -452,6 +451,11 @@ void LLRenderPass::applyModelMatrix(LLDrawInfo& params)
 
 void LLRenderPass::pushBatch(LLDrawInfo& params, U32 mask, BOOL texture, BOOL batch_textures)
 {
+    if (!params.mCount)
+    {
+        return;
+    }
+
 	applyModelMatrix(params);
 
 	bool tex_setup = false;
@@ -503,6 +507,7 @@ void LLRenderPass::pushBatch(LLDrawInfo& params, U32 mask, BOOL texture, BOOL ba
 
 	if (tex_setup)
 	{
+        gGL.matrixMode(LLRender::MM_TEXTURE0);
 		gGL.loadIdentity();
 		gGL.matrixMode(LLRender::MM_MODELVIEW);
 	}

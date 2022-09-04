@@ -57,6 +57,19 @@ public:
 	void init(const LLVector3 &sun_direction);
 
 	void cleanup();
+	// These directions should be in CFR coord sys (+x at, +z up, +y right)
+    void setSunAndMoonDirectionsCFR(const LLVector3 &sun_direction, const LLVector3 &moon_direction);
+    void setSunDirectionCFR(const LLVector3 &sun_direction);
+    void setMoonDirectionCFR(const LLVector3 &moon_direction);
+
+    void setSunTextures(const LLUUID& sun_texture, const LLUUID& sun_texture_next);
+    void setMoonTextures(const LLUUID& moon_texture, const LLUUID& moon_texture_next);
+    void setCloudNoiseTextures(const LLUUID& cloud_noise_texture, const LLUUID& cloud_noise_texture_next);
+    void setBloomTextures(const LLUUID& bloom_texture, const LLUUID& bloom_texture_next);
+
+    void setSunScale(F32 sun_scale);
+    void setMoonScale(F32 moon_scale);
+
 
 	void setOverrideSun(BOOL override);
 	BOOL getOverrideSun() { return mOverrideSimSunPosition; }

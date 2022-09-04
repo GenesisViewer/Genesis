@@ -797,7 +797,6 @@ BOOL LLGLSLShader::mapUniforms(const vector<LLStaticHashedString> * uniforms)
 	LL_DEBUGS("ShaderLoading") << "Total Uniform Size: " << mTotalUniformSize << LL_ENDL;
 	return res;
 }
-
 BOOL LLGLSLShader::link(BOOL suppress_errors)
 {
 	return LLShaderMgr::instance()->linkProgramObject(mProgramObject, suppress_errors);

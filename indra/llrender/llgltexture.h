@@ -104,7 +104,7 @@ public:
 
 	virtual void dump();	// debug info to llinfos
 
-	virtual const LLUUID& getID() const = 0;
+	virtual const LLUUID& getID() const;
 
 	void setBoostLevel(S32 level);
 	S32  getBoostLevel() { return mBoostLevel; }
@@ -132,7 +132,8 @@ public:
 	BOOL       setSubImage(const U8* datap, S32 data_width, S32 data_height, S32 x_pos, S32 y_pos, S32 width, S32 height, bool fast_update = false);
 	void       setGLTextureCreated (bool initialized);
 	void       setCategory(S32 category) ;
-
+	void       setTexName(LLGLuint); // for forcing w/ externally created textures only
+	void       setTarget(const LLGLenum target, const LLTexUnit::eTextureType bind_target);
 	LLTexUnit::eTextureAddressMode getAddressMode(void) const ;
 	S32        getMaxDiscardLevel() const;
 	S32        getDiscardLevel() const;

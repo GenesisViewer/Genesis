@@ -65,7 +65,9 @@ public:
 	{
 		TT_TEXTURE = 0,			// Standard 2D Texture
 		TT_CUBE_MAP,		// 6-sided cube map texture
-		TT_NONE 		// No texture type is currently enabled
+		TT_MULTISAMPLE_TEXTURE, // see GL_ARB_texture_multisample
+        TT_TEXTURE_3D,          // standard 3D Texture
+		TT_NONE, 		        // No texture type is currently enabled
 	} eTextureType;
 
 	typedef enum
@@ -301,10 +303,11 @@ public:
 
 	enum eTexIndex
 	{
-		DIFFUSE_MAP = 0,
-		NORMAL_MAP,
-		SPECULAR_MAP,
-		NUM_TEXTURE_CHANNELS,
+		DIFFUSE_MAP           = 0,
+        ALTERNATE_DIFFUSE_MAP = 1,
+		NORMAL_MAP            = 1,
+		SPECULAR_MAP          = 2,        
+		NUM_TEXTURE_CHANNELS  = 3,
 	};
 
 	enum eVolumeTexIndex

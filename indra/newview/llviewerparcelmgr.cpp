@@ -70,7 +70,7 @@
 #include "roles_constants.h"
 #include "llweb.h"
 #include "rlvactions.h"
-
+//#include "llenvironment.h"
 const F32 PARCEL_COLLISION_DRAW_SECS = 1.f;
 
 
@@ -663,6 +663,30 @@ LLParcelSelectionHandle LLViewerParcelMgr::getFloatingParcelSelection() const
 LLParcel *LLViewerParcelMgr::getAgentParcel() const
 {
 	return mAgentParcel;
+}
+
+LLParcel * LLViewerParcelMgr::getAgentOrSelectedParcel() const
+{
+    LLParcel *parcel(nullptr);
+
+    LLParcelSelectionHandle sel_handle(getFloatingParcelSelection());
+    if (sel_handle)
+    {
+        LLParcelSelection *selection(sel_handle.get());
+        if (selection)
+        {
+            parcel = selection->getParcel();
+            if (parcel && (parcel->getLocalID() == INVALID_PARCEL_ID))
+            {
+                parcel = NULL;
+            }
+        }
+    }
+
+    if (!parcel)
+        parcel = LLViewerParcelMgr::instance().getAgentParcel();
+
+    return parcel;
 }
 
 // Return whether the agent can build on the land they are on
@@ -1486,9 +1510,10 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 	BOOL	region_deny_identified_override = false; // Deprecated
 	BOOL	region_deny_transacted_override = false; // Deprecated
 	BOOL	region_deny_age_unverified_override = false;
-
+	S32     parcel_environment_version = 0;
+    BOOL	agent_parcel_update = false; // updating previous(existing) agent parcel
 	S32		other_clean_time = 0;
-
+	LL_INFOS() << "LLViewerParcelMgr::processParcelProperties " <<LL_ENDL;
 	LLViewerParcelMgr& parcel_mgr = LLViewerParcelMgr::instance();
 	LLViewerRegion* msg_region = LLWorld::getInstance()->getRegion(msg->getSender());
 	if(msg_region)
@@ -1580,6 +1605,20 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 	// Actually extract the data.
 	if (parcel)
 	{
+		if (local_id == parcel_mgr.mAgentParcel->getLocalID())
+        {
+            // Parcels in different regions can have same ids.
+            LLViewerRegion* parcel_region = LLWorld::getInstance()->getRegion(msg->getSender());
+            LLViewerRegion* agent_region = gAgent.getRegion();
+            if (parcel_region && agent_region && parcel_region->getRegionID() == agent_region->getRegionID())
+            {
+                // we got an updated version of agent parcel
+                agent_parcel_update = true;
+            }
+        }
+		LL_INFOS() << "LLViewerParcelMgr::processParcelProperties agent_parcel_update " << agent_parcel_update <<LL_ENDL;
+		S32 cur_parcel_environment_version = parcel->getParcelEnvironmentVersion();
+        bool environment_changed = (cur_parcel_environment_version != parcel_environment_version);
 		parcel->init(owner_id,
 			FALSE, FALSE, FALSE,
 			claim_date, claim_price_per_meter, rent_price_per_meter,
@@ -1599,7 +1638,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 		parcel->setOtherPrimCount(other_prims);
 		parcel->setSelectedPrimCount(selected_prims);
 		parcel->setParcelPrimBonus(parcel_prim_bonus);
-
+		parcel->setParcelEnvironmentVersion(cur_parcel_environment_version);
 		parcel->setCleanOtherTime(other_clean_time);
 		parcel->setRegionPushOverride(region_push_override);
 		parcel->setRegionDenyAnonymousOverride(region_deny_anonymous_override);
@@ -1623,13 +1662,25 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 
 			// Notify anything that wants to know when the agent changes parcels
 			instance->mAgentParcelChangedSignal();
-
+			gAgent.changeParcels();
 			if (instance->mTeleportInProgress)
 			{
 				instance->mTeleportInProgress = FALSE;
 				instance->mTeleportFinishedSignal(gAgent.getPositionGlobal());
 			}
-		}
+		}else if (agent_parcel_update)
+        {
+            parcel->setParcelEnvironmentVersion(parcel_environment_version);
+            // updated agent parcel
+            parcel_mgr.mAgentParcel->unpackMessage(msg);
+			
+			
+            // if ((LLEnvironment::instance().isExtendedEnvironmentEnabled() && environment_changed))
+            // {
+            //     LL_DEBUGS("ENVIRONMENT") << "Parcel environment version is " << parcel->getParcelEnvironmentVersion() << LL_ENDL;
+            //     LLEnvironment::instance().requestParcel(local_id);
+            // }
+        }
 	}
 	// Add any pending entry to the TP history now that we got the *new* parcel name.
 	LLFloaterTeleportHistory::getInstance()->addEntry(LLViewerParcelMgr::getInstance()->getAgentParcelName());
@@ -2560,7 +2611,11 @@ void LLViewerParcelMgr::onTeleportFailed()
 {
 	mTeleportFailedSignal();
 }
-
+bool  LLViewerParcelMgr::getTeleportInProgress()
+{
+    return mTeleportInProgress // case where parcel data arrives after teleport
+        || gAgent.getTeleportState() > LLAgent::TELEPORT_NONE; // For LOCAL, no mTeleportInProgress
+}
 boost::signals2::connection LLViewerParcelMgr::setCollisionUpdateCallback(const collision_update_signal_t::slot_type & cb)
 {
 	if (!mCollisionUpdateSignal)

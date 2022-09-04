@@ -86,7 +86,7 @@
 #include "llwaterparammanager.h"
 #include "llpostprocess.h"
 #include "sgmemstat.h"
-
+//#include "llenvironment.h"
 // [RLVa:KB]
 #include "rlvhandler.h"
 #include "rlvlocks.h"
@@ -206,9 +206,10 @@ void display_update_camera(bool tiling=false)
 	gViewerWindow->setup3DRender();
 	
 	// update all the sky/atmospheric/water settings
+	//LLEnvironment::instance().update(LLViewerCamera::getInstance());	
 	LLWLParamManager::getInstance()->update(LLViewerCamera::getInstance());
 	LLWaterParamManager::getInstance()->update(LLViewerCamera::getInstance());
-
+	
 	// Update land visibility too
 	LLWorld::getInstance()->setLandFarClip(final_far);
 }
@@ -682,7 +683,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot, boo
 		stop_glerror();
 		display_update_camera(tiling);
 		stop_glerror();
-				
+		
 		// *TODO: merge these two methods
 		LLHUDManager::getInstance()->updateEffects();
 		LLHUDObject::updateAll();

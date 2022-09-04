@@ -138,7 +138,70 @@ void LLSky::resetVertexBuffers()
 		gPipeline.markRebuild(gSky.mVOWLSkyp->mDrawable, LLDrawable::REBUILD_ALL, TRUE);
 	}
 }
+void LLSky::setSunScale(F32 sun_scale)
+{
+    if(mVOSkyp.notNull())
+    {
+        mVOSkyp->setSunScale(sun_scale);
+	}
+}
 
+void LLSky::setMoonScale(F32 moon_scale)
+{
+    if(mVOSkyp.notNull())
+    {
+        mVOSkyp->setMoonScale(moon_scale);
+	}
+}
+
+void LLSky::setSunTextures(const LLUUID& sun_texture, const LLUUID& sun_texture_next)
+{
+    if(mVOSkyp.notNull()) {
+        mVOSkyp->setSunTextures(sun_texture, sun_texture_next);
+	}
+}
+
+void LLSky::setMoonTextures(const LLUUID& moon_texture, const LLUUID& moon_texture_next)
+{
+    if(mVOSkyp.notNull()) {
+        mVOSkyp->setMoonTextures(moon_texture, moon_texture_next);
+	}
+}
+
+void LLSky::setCloudNoiseTextures(const LLUUID& cloud_noise_texture, const LLUUID& cloud_noise_texture_next)
+{
+    if(mVOSkyp.notNull()) {
+        mVOSkyp->setCloudNoiseTextures(cloud_noise_texture, cloud_noise_texture_next);
+	}
+}
+
+void LLSky::setBloomTextures(const LLUUID& bloom_texture, const LLUUID& bloom_texture_next)
+{
+    if(mVOSkyp.notNull()) {
+        mVOSkyp->setBloomTextures(bloom_texture, bloom_texture_next);
+	}
+}
+
+void LLSky::setSunAndMoonDirectionsCFR(const LLVector3 &sun_direction, const LLVector3 &moon_direction)
+{
+    if(mVOSkyp.notNull()) {
+        mVOSkyp->setSunAndMoonDirectionsCFR(sun_direction, moon_direction);
+	}
+}
+
+void LLSky::setSunDirectionCFR(const LLVector3 &sun_direction)
+{
+    if(mVOSkyp.notNull()) {
+        mVOSkyp->setSunDirectionCFR(sun_direction);
+	}
+}
+
+void LLSky::setMoonDirectionCFR(const LLVector3 &moon_direction)
+{
+    if(mVOSkyp.notNull()) {
+        mVOSkyp->setMoonDirectionCFR(moon_direction);
+	}
+}
 void LLSky::setOverrideSun(BOOL override)
 {
 	if (!mOverrideSimSunPosition && override)

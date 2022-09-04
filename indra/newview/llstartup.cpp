@@ -64,6 +64,7 @@
 #include "lllandmark.h"
 #include "llcachename.h"
 #include "lldir.h"
+//#include "llenvironment.h"
 #include "llerrorcontrol.h"
 #include "llfiltersd2xmlrpc.h"
 #include "llfocusmgr.h"
@@ -246,6 +247,8 @@
 #endif
 
 #include "NACLantispam.h"    // for NaCl Antispam Registry
+
+class LLEnvironment;
 
 //
 // exported globals
@@ -2000,6 +2003,7 @@ bool idle_startup()
 	//---------------------------------------------------------------------
 	if (STATE_AGENT_SEND == LLStartUp::getStartupState())
 	{
+		
 		LL_DEBUGS("AppInit") << "Connecting to region..." << LL_ENDL;
 		set_startup_status(0.60f, LLTrans::getString("LoginConnectingToRegion"), gAgent.mMOTD);
 		display_startup();
@@ -2012,6 +2016,8 @@ bool idle_startup()
 		LLViewerRegion* regionp = gAgent.getRegion();
 		if(regionp)
 		{
+			// Load stored local environment if needed.
+        	//LLEnvironment::instance().initOnLogin();
 			send_complete_agent_movement(regionp->getHost());
 			gAssetStorage->setUpstream(regionp->getHost());
 			gCacheName->setUpstream(regionp->getHost());

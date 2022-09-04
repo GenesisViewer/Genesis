@@ -133,6 +133,7 @@ set(viewer_SOURCE_FILES
     llappviewer.cpp
     llassetuploadqueue.cpp
     llassetuploadresponders.cpp
+    llatmosphere.cpp
     llattachmentsmgr.cpp
     llaudiosourcevo.cpp
     llautoreplace.cpp
@@ -179,6 +180,7 @@ set(viewer_SOURCE_FILES
     lldroptarget.cpp
     lldynamictexture.cpp
     llemote.cpp
+    llenvironment.cpp
     llenvmanager.cpp
     llestateinfomodel.cpp
     lleventinfo.cpp
@@ -472,6 +474,7 @@ set(viewer_SOURCE_FILES
     llscrollingpanelparambase.cpp
     llsculptidsize.cpp
     llselectmgr.cpp
+    llsettingsvo.cpp
     llshareavatarhandler.cpp
     llskinningutil.cpp
     llsky.cpp
@@ -686,6 +689,7 @@ set(viewer_HEADER_FILES
     llappviewer.h
     llassetuploadqueue.h
     llassetuploadresponders.h
+    llatmosphere.h
     llattachmentsmgr.h
     llaudiosourcevo.h
     llautoreplace.h
@@ -731,6 +735,7 @@ set(viewer_HEADER_FILES
     lldroptarget.h
     lldynamictexture.h
     llemote.h
+    llenvironment.h
     llenvmanager.h
     llestateinfomodel.h
     lleventinfo.h
@@ -1026,6 +1031,7 @@ set(viewer_HEADER_FILES
     llscrollingpanelparambase.h
     llsculptidsize.h
     llselectmgr.h
+    llsettingsvo.h
     llsimplestat.h
     llskinningutil.h
     llsky.h

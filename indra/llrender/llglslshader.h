@@ -53,6 +53,7 @@ public:
 	bool hasObjectSkinning;
 	bool hasAtmospherics;
 	bool hasGamma;
+    bool hasSrgb;	
 	S32 mIndexedTextureChannels;
 	bool disableTextureIndex;
 	bool hasAlphaMask;
@@ -119,7 +120,7 @@ public:
 	{
 		if (mUniform.size() <= index)
 		{
-			UNIFORM_ERRS << "Uniform index out of bounds." << LL_ENDL;
+			UNIFORM_ERRS << "Uniform index out of bounds. " << mUniform.size() << " " << index << LL_ENDL;
 			return -1;
 		}
 		return mUniform[index];

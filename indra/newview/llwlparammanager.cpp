@@ -552,7 +552,10 @@ bool LLWLParamManager::applySkyParams(const LLSD& params, bool interpolate /*= f
 
 	return true;
 }
-
+void LLWLParamManager::updateCloudScrolling()
+{
+	mCurParams.updateCloudScrolling();
+}
 void LLWLParamManager::resetAnimator(F32 curTime, bool run)
 {
 	mAnimator.setTrack(mDay.mTimeMap, mDay.mDayRate, 

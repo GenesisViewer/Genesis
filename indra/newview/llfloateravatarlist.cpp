@@ -1003,7 +1003,13 @@ void LLFloaterAvatarList::refreshAvatarList()
 		static const LLCachedControl<bool> hide_notes("RadarColumnNotesHidden");
 		if (!hide_notes)
 		{
-			element.columns.add(LLScrollListCell::Params().column("notes").type("checkbox").enabled(false).value(entry->mNotes));
+			LLScrollListCell::Params notes;
+			notes.column("notes");
+			notes.type("icon");
+			notes.value("inv_item_notecard.tga");
+			notes.color(entry->mNotes ? LLColor4::grey2 : LLColor4::transparent);
+			//element.columns.add(LLScrollListCell::Params().column("notes").type("checkbox").enabled(false).value(entry->mNotes));
+			element.columns.add(notes);
 		}
 
 		static const LLCachedControl<bool> hide_age("RadarColumnAgeHidden");

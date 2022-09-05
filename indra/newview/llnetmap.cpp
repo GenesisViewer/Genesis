@@ -319,11 +319,17 @@ bool mm_getMarkerColor(const LLUUID& id, LLColor4& color)
 void mm_clearMark(const LLUUID& id)
 {
 	mm_MarkerColors.erase(id);
+	//Genesis
+	//Need to redraw avatar tags when a mark changes
+	SHClientTagMgr::instance().resetAvatarTags();
 }
 
 void mm_setcolor(LLUUID key,LLColor4 col)
 {
 	mm_MarkerColors[key] = col;
+	//Genesis
+	//Need to redraw avatar tags when a mark changes
+	SHClientTagMgr::instance().resetAvatarTags();
 }
 void LLNetMap::draw()
 {

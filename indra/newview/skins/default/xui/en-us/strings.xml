@@ -4488,7 +4488,7 @@ If you continue to receive this message, contact the [SUPPORT_SITE].
 
 	<string name="ReceivedGift">You've received a gift! [USER] has given you "[PRODUCT]", and says "[MESSAGE]". You can find your gift in your Received Items folder.</string>
 	<string name="ReceivedPurchase">Your purchase of [PRODUCT] has been delivered to your Received Items folder.</string>
-
+	<string name="FriendOnlineOffline">[secondlife:///app/agent/[ID]/about [NAME]] is [STATUS]</string>
 	<!-- voice calls -->
 
   <string name="ringing-im">

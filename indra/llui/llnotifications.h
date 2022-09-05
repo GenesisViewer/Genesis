@@ -339,7 +339,7 @@ private:
 
 	void init(const std::string& template_name, const LLSD& form_elements);
 
-	LLNotification(const Params& p);
+	
 
 	// this is just for making it easy to look things up in a set organized by UUID -- DON'T USE IT
 	// for anything real!
@@ -351,7 +351,7 @@ public:
 
 	// constructor from a saved notification
 	LLNotification(const LLSD& sd);
-
+	LLNotification(const Params& p);
 	void setResponseFunctor(std::string const &responseFunctorName);
 
 	typedef enum e_response_template_type

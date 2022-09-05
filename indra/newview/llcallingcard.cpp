@@ -749,29 +749,50 @@ static void on_avatar_name_cache_notify(const LLUUID& agent_id,
 	args["STATUS"] = online ? LLTrans::getString("OnlineStatus") : LLTrans::getString("OfflineStatus");
 
 	// Popup a notify box with online status of this agent
-	LLNotificationPtr notification;
+	LLNotification* notification;
 	static const LLCachedControl<S32> behavior(gSavedSettings, "LiruOnlineNotificationBehavior", 1);
+	
+	bool showChiclet = gSavedSettings.getBOOL("GenesisShowOnlineNotificationChiclet");
 	if (online && behavior)
 	{
-		notification =
-			LLNotifications::instance().add("FriendOnlineOffline",
-									 args,
-									 payload,
-									 behavior == 1 ? boost::bind(&LLAvatarActions::startIM, agent_id) : (LLNotificationResponder)boost::bind(LLAvatarActions::showProfile, agent_id, false));
+		// notification =
+		// 	LLNotifications::instance().add("FriendOnlineOffline",
+		// 							 args,
+		// 							 payload,
+		// 							 behavior == 1 ? boost::bind(&LLAvatarActions::startIM, agent_id) : (LLNotificationResponder)boost::bind(LLAvatarActions::showProfile, agent_id, false));
+		LLNotification::Params notificationParam = LLNotification::Params("FriendOnlineOffline").substitutions(args).payload(payload).functor(behavior == 1 ? boost::bind(&LLAvatarActions::startIM, agent_id) : (LLNotificationResponder)boost::bind(LLAvatarActions::showProfile, agent_id, false));	
+		notification = new LLNotification(notificationParam);
+		if (showChiclet) {
+			LLNotificationPtr pNotif(notification);
+			
+			LLNotifications::instance().add(pNotif);
+		}
+		
 	}
 	else
 	{
-		notification =
-			LLNotifications::instance().add("FriendOnlineOffline", args, payload);
+		LLNotification::Params notificationParam = LLNotification::Params("FriendOnlineOffline").substitutions(args).payload(payload);	
+		notification = new LLNotification(notificationParam);
+		
+		if (showChiclet) {
+			
+			LLNotificationPtr pNotif(notification);
+			LLNotifications::instance().add(pNotif);
+		}
 	}
 
 	// If there's an open IM session with this agent, send a notification there too.
 	LLUUID session_id = LLIMMgr::computeSessionID(IM_NOTHING_SPECIAL, agent_id);
 	if (LLFloaterIMPanel* floater = gIMMgr->findFloaterBySession(session_id))
 	{
+		
 		std::string notify_msg = notification->getMessage();
 		if (!notify_msg.empty())
 			floater->addHistoryLine(notify_msg, gSavedSettings.getColor4("SystemChatColor"));
+	}
+	if (!showChiclet) {
+		//we don't have the notif as chiclet but we need it on local chat
+		gIMMgr->addSystemMessage(LLUUID::null, "FriendOnlineOffline", args);
 	}
 }
 

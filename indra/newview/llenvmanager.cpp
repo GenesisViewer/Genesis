@@ -366,13 +366,20 @@ void LLEnvManagerNew::loadEEP(LLVFS *vfs, const LLUUID& asset_id, LLAssetType::E
 				
 				LLEnvManagerNew::instance().setUseSkyPreset(settingkey.name);
 				
+
 				
 			}
 			if (settings->getSettingsType()=="water") {
-				legacysettings = LLSettingsVOWater::convertToLegacy(LLSettingsVOWater::buildWater(llsdsettings));
+				LLSettingsVOWater::ptr_t water = LLSettingsVOWater::buildWater(llsdsettings);
+				legacysettings = LLSettingsVOWater::convertToLegacy(water);
+				LLWLParamKey settingkey("eep-"+asset_id.asString(), LLEnvKey::EScope::SCOPE_LOCAL);
+				LLWaterParamManager::instance().addParamSet(settingkey.name,legacysettings);
+				
+				LLEnvManagerNew::instance().setUseWaterPreset(settingkey.name);
 				
 			}
 			if (settings->getSettingsType()=="daycycle") {
+				LL_INFOS() << "Loading Day Cycle" << LL_ENDL;
 				legacysettings = LLSettingsVODay::convertToLegacy(LLSettingsVODay::buildDay(llsdsettings));
 				
 			}

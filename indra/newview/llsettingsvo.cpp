@@ -1025,18 +1025,23 @@ LLSettingsVODay::LLSettingsVODay():
 
 LLSettingsDay::ptr_t LLSettingsVODay::buildDay(LLSD settings)
 {
+    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay" <<LL_ENDL;
     LLSettingsDay::validation_list_t validations = LLSettingsDay::validationList();
+    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 1" <<LL_ENDL;
     LLSD results = LLSettingsDay::settingValidation(settings, validations);
+    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 2" <<LL_ENDL;
     if (!results["success"].asBoolean())
     {
+        LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 2.1" <<LL_ENDL;
         LL_WARNS("SETTINGS") << "Day setting validation failed!\n" << results << LL_ENDL;
         LLSettingsDay::ptr_t();
     }
-
+    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 3" <<LL_ENDL;
     LLSettingsDay::ptr_t pday = std::make_shared<LLSettingsVODay>(settings);
+    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 4" <<LL_ENDL;
     if (pday)
         pday->initialize();
-
+    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 5" <<LL_ENDL;
     return pday;
 }
 

@@ -13,7 +13,34 @@ LLSqlMgr::~LLSqlMgr()
 }
 
 
-char LLSqlMgr::init(std::string db_path) {
+char LLSqlMgr::initALLAgentsDB(std::string db_path) {
+   LL_INFOS() << "Init Genesis DB :" << db_path << LL_ENDL;
+   char *zErrMsg = 0;
+   char *sql;
+   int rc;
+
+   rc = sqlite3_open(db_path.c_str(), &commondb);
+   if( rc ) {
+    return rc;
+   }
+
+    
+    //Colors from skin that can be updated
+    sql = "CREATE TABLE IF NOT EXISTS COLOR_SETTINGS(" \
+        "ID TEXT PRIMARY KEY     NOT NULL," \
+        "R               REAL    NOT NULL," \
+        "G               REAL    NOT NULL," \
+        "B               REAL    NOT NULL," \
+        "A               REAL    NOT NULL);";
+    rc = sqlite3_exec (commondb, sql, NULL, NULL, &zErrMsg);  
+    if( rc ) {
+        LL_WARNS() << "Can't initialise Genesis COLOR_SETTINGS table " << zErrMsg << LL_ENDL;
+        return rc;
+    }
+   
+    
+}
+char LLSqlMgr::initAgentDB(std::string db_path) {
    LL_INFOS() << "Init Genesis DB :" << db_path << LL_ENDL;
    char *zErrMsg = 0;
    char *sql;
@@ -84,9 +111,13 @@ void LLSqlMgr::close() {
    int rc;
 
    sqlite3_close(db);
+   sqlite3_close(commondb);
 }
 
 sqlite3 *LLSqlMgr::getDB() {
     return db;
 }
 
+sqlite3 *LLSqlMgr::getAllAgentsDB() {
+    return commondb;
+}

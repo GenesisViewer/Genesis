@@ -680,7 +680,13 @@ void LLControlGroup::setUntypedValue(const std::string& name, const LLSD& val)
 void LLControlGroup::saveColorSettings (std::string setting_name,LLColor4 setting_color) {
     char *sql;
     sqlite3_stmt *stmt;
-    sqlite3 *db = LLSqlMgr::instance().getDB();
+	sqlite3 *db;
+	if (LLSqlMgr::instance().isInit()) {
+		db = LLSqlMgr::instance().getDB();
+	} else {
+		db = LLSqlMgr::instance().getAllAgentsDB();
+	}
+    
     sql = "DELETE FROM COLOR_SETTINGS WHERE ID=?";
     sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     sqlite3_bind_text(stmt, 1,  setting_name.c_str(), strlen(setting_name.c_str()), 0);

@@ -13,12 +13,18 @@ public:
 	~LLSqlMgr();
 
     // viewer auth version
-	char init(std::string db_path);
+	char initAgentDB(std::string db_path);
+    char initALLAgentsDB(std::string db_path);
     sqlite3 *getDB();
+    sqlite3 *getAllAgentsDB();
     void close();
     bool isInit() {return ready;}
 private:
+    //db for a connected agent
     sqlite3 *db;
+    //db for all agents
+    sqlite3 *commondb;
+    
     bool ready = FALSE;
 };
 

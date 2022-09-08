@@ -50,6 +50,7 @@
 #include "llviewerinventory.h"
 
 #include "llenvironment.h"
+#include "llenvmanager.h"
 #include "llsky.h"
 
 #include "llpermissions.h"
@@ -1025,23 +1026,17 @@ LLSettingsVODay::LLSettingsVODay():
 
 LLSettingsDay::ptr_t LLSettingsVODay::buildDay(LLSD settings)
 {
-    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay" <<LL_ENDL;
+    
     LLSettingsDay::validation_list_t validations = LLSettingsDay::validationList();
-    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 1" <<LL_ENDL;
     LLSD results = LLSettingsDay::settingValidation(settings, validations);
-    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 2" <<LL_ENDL;
     if (!results["success"].asBoolean())
     {
-        LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 2.1" <<LL_ENDL;
         LL_WARNS("SETTINGS") << "Day setting validation failed!\n" << results << LL_ENDL;
         LLSettingsDay::ptr_t();
     }
-    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 3" <<LL_ENDL;
     LLSettingsDay::ptr_t pday = std::make_shared<LLSettingsVODay>(settings);
-    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 4" <<LL_ENDL;
     if (pday)
         pday->initialize();
-    LL_INFOS() << "LLSettingsDay::ptr_t LLSettingsVODay::buildDay 5" <<LL_ENDL;
     return pday;
 }
 
@@ -1331,14 +1326,15 @@ LLSettingsDay::ptr_t LLSettingsVODay::buildDeepCloneAndUncompress() const
 
 LLSD LLSettingsVODay::convertToLegacy(const LLSettingsVODay::ptr_t &pday)
 {
+    
     CycleTrack_t &trackwater = pday->getCycleTrack(TRACK_WATER);
-
+    
     LLSettingsWater::ptr_t pwater;
     if (!trackwater.empty())
     {
         pwater = std::static_pointer_cast<LLSettingsWater>((*trackwater.begin()).second);
     }
-
+    
     if (!pwater)
         pwater = LLSettingsVOWater::buildDefaultWater();
     
@@ -1346,32 +1342,30 @@ LLSD LLSettingsVODay::convertToLegacy(const LLSettingsVODay::ptr_t &pday)
     
     CycleTrack_t &tracksky = pday->getCycleTrack(1);   // first sky track
     std::map<std::string, LLSettingsSky::ptr_t> skys;
-    
     LLSD llsdcycle(LLSD::emptyArray());
-    
     for(CycleTrack_t::iterator it = tracksky.begin(); it != tracksky.end(); ++it)
     {
+        
         size_t hash = (*it).second->getHash();
         std::stringstream name;
         
         name << hash;
-        
         skys[name.str()] = std::static_pointer_cast<LLSettingsSky>((*it).second);
-        
         F32 frame = ((tracksky.size() == 1) && (it == tracksky.begin())) ? -1.0f : (*it).first;
         llsdcycle.append( LLSDArray(LLSD::Real(frame))(name.str()) );
+        
     }
-
+    
     LLSD llsdskylist(LLSD::emptyMap());
     
     for (std::map<std::string, LLSettingsSky::ptr_t>::iterator its = skys.begin(); its != skys.end(); ++its)
     {
+        LLEnvManagerNew::instance().setCurrentSky((*its).second);
         LLSD llsdsky = LLSettingsVOSky::convertToLegacy((*its).second, false);
-        llsdsky[SETTING_NAME] = (*its).first;
-        
+        llsdsky[SETTING_NAME] = (*its).first; 
         llsdskylist[(*its).first] = llsdsky;
     }
-
+    
     return LLSDArray(LLSD::emptyMap())(llsdcycle)(llsdskylist)(llsdwater);
 }
 

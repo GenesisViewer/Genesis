@@ -67,7 +67,7 @@ public:
 
 	/// Emitted when a preset gets added or deleted.
 	boost::signals2::connection setModifyCallback(const modify_signal_t::slot_type& cb);
-
+	bool addPreset(const std::string& name, const LLSD& data);
 private:
 	friend class LLSingleton<LLDayCycleManager>;
 	/*virtual*/ void initSingleton();
@@ -75,7 +75,7 @@ private:
 	void loadAllPresets();
 	void loadPresets(const std::string& dir);
 	bool loadPreset(const std::string& path);
-	bool addPreset(const std::string& name, const LLSD& data);
+	
 
 	static std::string getSysDir();
 	static std::string getUserDir();

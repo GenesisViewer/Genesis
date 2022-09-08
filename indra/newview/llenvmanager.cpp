@@ -380,7 +380,12 @@ void LLEnvManagerNew::loadEEP(LLVFS *vfs, const LLUUID& asset_id, LLAssetType::E
 			}
 			if (settings->getSettingsType()=="daycycle") {
 				LL_INFOS() << "Loading Day Cycle" << LL_ENDL;
+				
 				legacysettings = LLSettingsVODay::convertToLegacy(LLSettingsVODay::buildDay(llsdsettings));
+				std::string settingName = "eep-"+asset_id.asString();
+				LLDayCycleManager::instance().addPreset(settingName,legacysettings);
+				LLEnvManagerNew::instance().useDayCycle(settingName,LLEnvKey::EScope::SCOPE_LOCAL);
+				
 				
 			}
 		}

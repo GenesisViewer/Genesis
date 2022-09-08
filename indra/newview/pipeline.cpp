@@ -5943,8 +5943,75 @@ void LLPipeline::enableLightsAvatar(LLGLState<GL_LIGHTING>& light_state)
 
 void LLPipeline::enableLightsPreview(LLGLState<GL_LIGHTING>& light_state)
 {
-	updateHWLightMode(LIGHT_MODE_PREVIEW);
-	enableLights(0xFFFFFFFF, light_state);
+	// updateHWLightMode(LIGHT_MODE_PREVIEW);
+	// enableLights(0xFFFFFFFF, light_state);
+	//thanks to Firestorm for this code
+	disableLights(light_state);
+	if (!LLGLSLShader::sNoFixedFunction)
+	{
+		glEnable(GL_LIGHTING);
+	}
+	static LLCachedControl<LLColor4> PreviewAmbientColor("PreviewAmbientColor");
+	static LLCachedControl<LLColor4> PreviewDiffuse0("PreviewDiffuse0");
+	static LLCachedControl<LLColor4> PreviewSpecular0("PreviewSpecular0");
+	static LLCachedControl<LLColor4> PreviewDiffuse1("PreviewDiffuse1");
+	static LLCachedControl<LLColor4> PreviewSpecular1("PreviewSpecular1");
+	static LLCachedControl<LLColor4> PreviewDiffuse2("PreviewDiffuse2");
+	static LLCachedControl<LLColor4> PreviewSpecular2("PreviewSpecular2");
+	static LLCachedControl<LLVector3> PreviewDirection0("PreviewDirection0");
+	static LLCachedControl<LLVector3> PreviewDirection1("PreviewDirection1");
+	static LLCachedControl<LLVector3> PreviewDirection2("PreviewDirection2");
+
+	LLColor4 ambient = PreviewAmbientColor;
+	
+	gGL.setAmbientLightColor(ambient);
+	LLColor4 diffuse0 = PreviewDiffuse0;
+	LLColor4 specular0 = PreviewSpecular0;
+	LLColor4 diffuse1 = PreviewDiffuse1;
+	LLColor4 specular1 = PreviewSpecular1;
+	LLColor4 diffuse2 = PreviewDiffuse2;
+	LLColor4 specular2 = PreviewSpecular2;
+	LLVector3 dir0 = PreviewDirection0;
+	LLVector3 dir1 = PreviewDirection1;
+	LLVector3 dir2 = PreviewDirection2;
+
+	dir0.normVec();
+	dir1.normVec();
+	dir2.normVec();
+
+	LLVector4 light_pos(dir0, 0.0f);
+
+	LLLightState* light = gGL.getLight(1);
+
+	light->enable();
+	light->setPosition(light_pos);
+	light->setDiffuse(diffuse0);
+	//light->setAmbient(ambient);
+	light->setSpecular(specular0);
+	light->setSpotExponent(0.f);
+	light->setSpotCutoff(180.f);
+
+	light_pos = LLVector4(dir1, 0.f);
+
+	light = gGL.getLight(2);
+	light->enable();
+	light->setPosition(light_pos);
+	light->setDiffuse(diffuse1);
+	//light->setAmbient(ambient);
+	light->setSpecular(specular1);
+	light->setSpotExponent(0.f);
+	light->setSpotCutoff(180.f);
+
+	light_pos = LLVector4(dir2, 0.f);
+	light = gGL.getLight(3);
+	light->enable();
+	light->setPosition(light_pos);
+	light->setDiffuse(diffuse2);
+	//light->setAmbient(ambient);
+	light->setSpecular(specular2);
+	light->setSpotExponent(0.f);
+	light->setSpotCutoff(180.f);
+	enableLights(0xFFFFFFFF, light_state,&ambient);
 }
 void LLPipeline::enableLightsAvatarEdit(LLGLState<GL_LIGHTING>& light_state, const LLColor4& color)
 {

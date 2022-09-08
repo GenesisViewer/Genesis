@@ -3692,6 +3692,22 @@ BOOL LLModelPreview::render()
 	bool textures = mViewOption["show_textures"];
 	bool physics = mViewOption["show_physics"];
 
+	//Thanks to Firestorm team for this code
+ 	// <FS:Beq> restore things lost by the lab during importer work
+    // Extra configurability, to be exposed later as controls?
+    static LLCachedControl<LLColor4> canvas_col(gSavedSettings, "MeshPreviewCanvasColor");
+    static LLCachedControl<LLColor4> edge_col(gSavedSettings, "MeshPreviewEdgeColor");
+    static LLCachedControl<LLColor4> base_col(gSavedSettings, "MeshPreviewBaseColor");
+    static LLCachedControl<LLColor3> brightness(gSavedSettings, "MeshPreviewBrightnessColor");
+    static LLCachedControl<F32> edge_width(gSavedSettings, "MeshPreviewEdgeWidth");
+    static LLCachedControl<LLColor4> phys_edge_col(gSavedSettings, "MeshPreviewPhysicsEdgeColor");
+    static LLCachedControl<LLColor4> phys_fill_col(gSavedSettings, "MeshPreviewPhysicsFillColor");
+    static LLCachedControl<F32> phys_edge_width(gSavedSettings, "MeshPreviewPhysicsEdgeWidth");
+    static LLCachedControl<LLColor4> deg_edge_col(gSavedSettings, "MeshPreviewDegenerateEdgeColor");
+    static LLCachedControl<LLColor4> deg_fill_col(gSavedSettings, "MeshPreviewDegenerateFillColor");
+    static LLCachedControl<F32> deg_edge_width(gSavedSettings, "MeshPreviewDegenerateEdgeWidth");
+    static LLCachedControl<F32> deg_point_size(gSavedSettings, "MeshPreviewDegeneratePointSize");
+
 	S32 width = getWidth();
 	S32 height = getHeight();
 
@@ -3716,7 +3732,7 @@ BOOL LLModelPreview::render()
 		gGL.pushMatrix();
 		gGL.loadIdentity();
 
-		gGL.color4f(0.169f, 0.169f, 0.169f, 1.f);
+		gGL.color4fv(canvas_col().mV); // <FS:Beq/> restore changes removed by the lab
 
 		gl_rect_2d_simple(width, height);
 
@@ -3839,7 +3855,7 @@ BOOL LLModelPreview::render()
 	gGL.loadIdentity();
 	LLGLState<GL_LIGHTING> light_state;
 	gPipeline.enableLightsPreview(light_state);
-
+	gObjectPreviewProgram.uniform4fv(LLShaderMgr::AMBIENT, 1, gSavedSettings.getColor4("PreviewAmbientColor").mV); // <FS:Beq> pass ambient setting to shader
 	LLQuaternion camera_rot = LLQuaternion(mCameraPitch, LLVector3::y_axis) *
 	LLQuaternion(mCameraYaw, LLVector3::z_axis);
 
@@ -3857,8 +3873,7 @@ BOOL LLModelPreview::render()
 	stop_glerror();
 
 	gGL.pushMatrix();
-	const F32 BRIGHTNESS = 0.9f;
-	gGL.color3f(BRIGHTNESS, BRIGHTNESS, BRIGHTNESS);
+	gGL.color4fv(edge_col().mV); // <FS:Beq/> restore changes removed by the lab
 
 	const U32 type_mask = LLVertexBuffer::MAP_VERTEX | LLVertexBuffer::MAP_NORMAL | LLVertexBuffer::MAP_TEXCOORD0;
 
@@ -3948,12 +3963,12 @@ BOOL LLModelPreview::render()
 						}
 						else
 					{
-						gGL.diffuseColor4f(1,1,1,1);
+						gGL.diffuseColor4fv(base_col().mV); // <FS:Beq/> restore changes removed by the lab
 					}
 
 					buffer->drawRange(LLRender::TRIANGLES, 0, buffer->getNumVerts()-1, buffer->getNumIndices(), 0);
 					gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
-					gGL.diffuseColor3f(0.4f, 0.4f, 0.4f);
+					gGL.diffuseColor4fv(edge_col().mV); // <FS:Beq/> restore changes removed by the lab
 
 					if (edges)
 					{
@@ -4070,20 +4085,20 @@ BOOL LLModelPreview::render()
 									LLVertexBuffer* buffer = mVertexBuffer[LLModel::LOD_PHYSICS][model][i];
 
 									gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
-								gGL.diffuseColor4f(0.4f, 0.4f, 0.0f, 0.4f);
+									gGL.diffuseColor4fv(phys_fill_col().mV); // <FS:Beq/> restore changes removed by the lab
 
-								buffer->setBuffer(type_mask & buffer->getTypeMask());
-								buffer->drawRange(LLRender::TRIANGLES, 0, buffer->getNumVerts()-1, buffer->getNumIndices(), 0);
+									buffer->setBuffer(type_mask & buffer->getTypeMask());
+									buffer->drawRange(LLRender::TRIANGLES, 0, buffer->getNumVerts()-1, buffer->getNumIndices(), 0);
 
-								gGL.diffuseColor3f(1.f, 1.f, 0.f);
+									gGL.diffuseColor4fv(phys_edge_col().mV);
 
-								gGL.setLineWidth(2.f);
-								gGL.setPolygonMode(LLRender::PF_FRONT_AND_BACK, LLRender::PM_LINE);
-								buffer->drawRange(LLRender::TRIANGLES, 0, buffer->getNumVerts()-1, buffer->getNumIndices(), 0);
+									gGL.setLineWidth(2.f);
+									gGL.setPolygonMode(LLRender::PF_FRONT_AND_BACK, LLRender::PM_LINE);
+									buffer->drawRange(LLRender::TRIANGLES, 0, buffer->getNumVerts()-1, buffer->getNumIndices(), 0);
 
-								gGL.setPolygonMode(LLRender::PF_FRONT_AND_BACK, LLRender::PM_FILL);
-								gGL.setLineWidth(1.f);
-							}
+									gGL.setPolygonMode(LLRender::PF_FRONT_AND_BACK, LLRender::PM_FILL);
+									gGL.setLineWidth(1.f);
+								}
 						}
 
 						gGL.popMatrix();
@@ -4164,6 +4179,7 @@ BOOL LLModelPreview::render()
 					}
 					gGL.setLineWidth(1.f);
 					gGL.setPointSize(1.f);
+					gPipeline.enableLightsPreview(light_state);
 					gGL.setSceneBlendType(LLRender::BT_ALPHA);
 				}
 			}

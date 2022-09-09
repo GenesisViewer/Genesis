@@ -71,5 +71,10 @@
       <spinner bottom_delta="-20" decimal_digits="5" follows="top" height="16" increment="0.05" label="Y Modifier" label_width="65" max_val="0.20" min_val="-0.20" name="Y Modifier" width="128" control_name="AscentAvatarYModifier" tool_tip="Use this to manipulate, to a degree, your avatar bounding box. This can be used to distort orbiters, or to raise you up or down without altering your shape."/>
       <spinner bottom_delta="-20" decimal_digits="5" follows="top" height="16" increment="0.1" label="Z Modifier" label_width="65" max_val="5.0" min_val="-5.0" name="Z Modifier" width="128" control_name="AscentAvatarZModifier" tool_tip="Use this to manipulate, to a degree, your avatar bounding box. This can be used to distort orbiters, or to raise you up or down without altering your shape."/>
     </panel>
+    <panel border="true" left="1" bottom="-190" height="180" width="600" label="Contact Sets" name="Contact Sets">
+      <check_box bottom_delta="-20" control_name="ShowContactSetOnAvatarTag" follows="top" height="16" initial_value="true" label="Display the contact set name on avatar tag" left="10" tool_tip="Display the contact set name on avatar tag" name="show_contact_set_avatar_tag"/>
+      <check_box bottom_delta="-20" control_name="ShowContactSetOnLocalChat" follows="top" height="16" initial_value="true" label="Display the contact set name in local chat" left="10" tool_tip="Display the contact set name in the local chat" name="show_contact_set_local_chat"/>
+      <check_box bottom_delta="-20" control_name="ShowContactSetOnRadar" follows="top" height="16" initial_value="true" label="Display the contact set name on the radar floater" left="10" tool_tip="Display the contact set name on the radar floater" name="show_contact_set_radar"/>
+    </panel>
   </tab_container>
 </panel>

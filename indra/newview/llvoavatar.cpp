@@ -4095,7 +4095,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			}
 			
 		}
-		if (!contactSetId.empty()) {
+		if (!contactSetId.empty() && gSavedSettings.getBOOL("ShowContactSetOnAvatarTag")) {
 			LLColor4 contactSetColor = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(getID().asString());
 			addNameTagLine(contactSetName, contactSetColor, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
 		}

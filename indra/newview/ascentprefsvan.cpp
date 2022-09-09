@@ -177,6 +177,11 @@ void LLPrefsAscentVan::refreshValues()
     mAvatarYModifier        = gSavedSettings.getF32("AscentAvatarYModifier");
     mAvatarZModifier        = gSavedSettings.getF32("AscentAvatarZModifier");
     mAvatarNameColor        = gColors.getColor4("AvatarNameColor");
+
+//contact sets
+    mShowContactSetOnAvatarTag = gSavedSettings.getBOOL("ShowContactSetOnAvatarTag");
+    mShowContactSetOnLocalChat = gSavedSettings.getBOOL("ShowContactSetOnLocalChat");
+    mShowContactSetOnRadar = gSavedSettings.getBOOL("ShowContactSetOnRadar");
 }
 
 // Update controls based on current settings
@@ -260,7 +265,13 @@ void LLPrefsAscentVan::cancel()
         gColors.setColor4("AvatarNameColor",                 mAvatarNameColor);
         SHClientTagMgr::instance().resetAvatarTags();
     }
-    
+    if (mShowContactSetOnAvatarTag != gSavedSettings.getBOOL("ShowContactSetOnAvatarTag")) {
+         gSavedSettings.setBOOL("ShowContactSetOnAvatarTag",       mShowContactSetOnAvatarTag);
+         SHClientTagMgr::instance().resetAvatarTags();
+    }
+   
+    gSavedSettings.setBOOL("ShowContactSetOnLocalChat",       mShowContactSetOnLocalChat);
+    gSavedSettings.setBOOL("ShowContactSetOnRadar",           mShowContactSetOnRadar);
 }
 
 // Update local copy so cancel has no effect

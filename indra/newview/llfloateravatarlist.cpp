@@ -822,7 +822,8 @@ void LLFloaterAvatarList::refreshAvatarList()
 			//Genesis : Add Contact set to name
 			std::string csName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(av_id.asString());
 			if (!csName.empty()) {
-				name.value = entry->getName()+ " (" + csName + ")";
+				if (gSavedSettings.getBOOL("ShowContactSetOnRadar"))
+					name.value = entry->getName()+ " (" + csName + ")";
 				name.color = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(av_id.asString());
 			} else {
 				name.color = color*0.5f + unselected_color*0.5f;

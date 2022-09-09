@@ -103,6 +103,11 @@ private:
 	F32 mAvatarXModifier;
 	F32 mAvatarYModifier;
 	F32 mAvatarZModifier;
+
+	//contact sets
+	bool mShowContactSetOnAvatarTag;
+	bool mShowContactSetOnLocalChat;
+	bool mShowContactSetOnRadar;
 };
 
 #endif

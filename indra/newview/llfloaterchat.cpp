@@ -247,7 +247,7 @@ void add_timestamped_line(LLViewerTextEditor* edit, LLChat chat, const LLColor4&
 	LLColor4 contactSetColor;
 	if (chat.mSourceType == CHAT_SOURCE_AGENT && chat.mFromID.notNull()) {
 		std::string csName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(chat.mFromID.asString());
-		if (!csName.empty()) {
+		if (!csName.empty() && gSavedSettings.getBOOL("ShowContactSetOnLocalChat")) {
 			hasContactSet = TRUE;
 			contactSetColor = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(chat.mFromID.asString());
 			LLStyleSP style(new LLStyle);

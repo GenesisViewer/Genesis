@@ -429,17 +429,7 @@ Section "Viewer"
   CreateDirectory "$TEMP\AlchemyInst"
   SetOutPath "$TEMP\AlchemyInst"
 
-  ;Download LibVLC
-!ifdef WIN64_BIN_BUILD
-  inetc::get /RESUME "Failed to download VLC media package. Retry?" "https://download.videolan.org/pub/videolan/vlc/3.0.8/win64/vlc-3.0.8-win64.7z" "$TEMP\AlchemyInst\libvlc.7z" /END
-!else
-  inetc::get /RESUME "Failed to download VLC media package. Retry?" "https://download.videolan.org/pub/videolan/vlc/3.0.8/win32/vlc-3.0.8-win32.7z" "$TEMP\AlchemyInst\libvlc.7z" /END
-!endif
-  Nsis7z::ExtractWithDetails "$TEMP\AlchemyInst\libvlc.7z" "Unpacking media plugins %s..."
-  Rename "$TEMP\AlchemyInst\vlc-3.0.8\libvlc.dll" "$INSTDIR\llplugin\libvlc.dll"
-  Rename "$TEMP\AlchemyInst\vlc-3.0.8\libvlccore.dll" "$INSTDIR\llplugin\libvlccore.dll"
-  Rename "$TEMP\AlchemyInst\vlc-3.0.8\plugins" "$INSTDIR\llplugin\plugins"
-
+  
   ;Download and install VC redist
 !ifdef WIN64_BIN_BUILD
   inetc::get /RESUME "Failed to download VS2019 redistributable package. Retry?" "https://aka.ms/vs/16/release/vc_redist.x64.exe" "$TEMP\AlchemyInst\vc_redist_16.x64.exe" /END

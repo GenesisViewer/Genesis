@@ -2896,7 +2896,30 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 		LL_WARNS("Messaging") << "Got teleport notification for wrong agent!" << LL_ENDL;
 		return;
 	}
-	
+	//thanks to firestorm team for this code
+	if (gAgent.getTeleportState() == LLAgent::TELEPORT_NONE)
+    {
+        if (gAgent.canRestoreCanceledTeleport())
+        {
+            // Server either ignored teleport cancel message or did not receive it in time.
+            // This message can't be ignored since teleport is complete at server side
+			LL_INFOS("Teleport") << "Restoring canceled teleport request" << LL_ENDL;
+            gAgent.restoreCanceledTeleportRequest();
+        }
+        else
+        {
+            // Race condition? Make sure all variables are set correctly for teleport to work
+            LL_WARNS("Teleport","Messaging") << "Teleport 'finish' message without 'start'. Setting state to TELEPORT_REQUESTED" << LL_ENDL;
+            gTeleportDisplay = TRUE;
+           
+            gAgent.setTeleportState(LLAgent::TELEPORT_REQUESTED);
+            make_ui_sound("UISndTeleportOut");
+        }
+    }
+    else if (gAgent.getTeleportState() == LLAgent::TELEPORT_MOVING)
+    {
+        LL_WARNS("Teleport","Messaging") << "Teleport message in the middle of other teleport" << LL_ENDL;
+    }
 	// Teleport is finished; it can't be cancelled now.
 	gViewerWindow->setProgressCancelButtonVisible(FALSE);
 

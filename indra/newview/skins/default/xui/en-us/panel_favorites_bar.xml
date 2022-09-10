@@ -10,12 +10,12 @@
 	 right="-1"
 	 bottom="-1" />
 	<favorites_bar
-			height="20"
+			height="22"
 			bottom="-23" follows="left|bottom"
 			
 			name="favorite"
 			tool_tip="Drag Landmarks here for quick access to your favorite places!"
-			left="100"
+			left="0"
 			width="1024">
 				
 				

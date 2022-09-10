@@ -421,7 +421,15 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const std::string& name, const LLRect& re
 	mMoreCtrl->setClickedCallback(boost::bind(&LLFavoritesBarCtrl::showDropDownMenu, this));
 	addChild(mMoreCtrl);
 
+	//make toggle button   
+	LLButton::Params toggle_button_params (getToggleButtonParams());
+	toggleCtrl = new LLButton(toggle_button_params);
+	toggleCtrl->setFollows(FOLLOWS_LEFT | FOLLOWS_TOP);
+	toggleCtrl->setTabStop(false);
+	toggleCtrl->setVisible(TRUE);
 	
+	toggleCtrl->setClickedCallback(boost::bind(&LLFavoritesBarCtrl::toggle, this));
+	addChild(toggleCtrl);
 
 	mDropDownItemsCount = 0;
 	
@@ -448,6 +456,7 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const std::string& name, const LLRect& re
 	} 
 
 	
+	
 }
 
 // static
@@ -457,6 +466,9 @@ LLView* LLFavoritesBarCtrl::fromXML(LLXMLNodePtr node, LLView *parent, LLUICtrlF
 	favorites_bar->initFromXML(node,parent);
 	favorites_bar->setIsChrome(TRUE);
 	favorites_bar->setVisible(TRUE);
+	
+
+
 	favorites_bar->updateButtons();
 
 	return favorites_bar;
@@ -729,6 +741,7 @@ void LLFavoritesBarCtrl::reshape(S32 width, S32 height, BOOL called_from_parent)
     bool force_update = delta_width || delta_height || sForceReshape;
 	
 	LLUICtrl::reshape(width, height, called_from_parent);
+	
 	updateButtons();
 }
 
@@ -742,8 +755,11 @@ void LLFavoritesBarCtrl::draw()
 		rect.mRight=actual_right;
 		setRect(rect);
 		
+		
 		updateButtons();
 	}
+
+	
 	LLUICtrl::draw();
 
 	if (mShowDragMarker)
@@ -804,12 +820,30 @@ const LLButton::Params& LLFavoritesBarCtrl::getButtonParams()
 
 	return button_params;
 }
+const LLButton::Params& LLFavoritesBarCtrl::getToggleButtonParams()
+{
+	static LLButton::Params button_params;
+	static bool params_initialized = false;
 
+	if (!params_initialized)
+	{
+		LLXMLNodePtr button_xml_node;
+		if(LLUICtrlFactory::getLayeredXMLNode("button_favorites_bar_toggle.xml", button_xml_node))
+		{
+			LLXUIParser parser;
+			parser.readXUI(button_xml_node, button_params, "button_favorites_bar_toggle.xml");
+		}
+		params_initialized = true;
+	}
+
+	return button_params;
+}
 void LLFavoritesBarCtrl::updateButtons()
 {
 	
 	mItems.clear();
-
+	
+	
 	if (!collectFavoriteItems(mItems))
 	{
 		return;
@@ -877,7 +911,11 @@ void LLFavoritesBarCtrl::updateButtons()
 		{
 			removeChild(mMoreCtrl);
 		}
-		int last_right_edge = 0;
+		if (toggleCtrl->getParent() == this)
+		{
+			removeChild(toggleCtrl);
+		}
+		int last_right_edge = 20;
 		//calculate new buttons offset
 		if (getChildList()->size() > 0)
 		{
@@ -903,6 +941,7 @@ void LLFavoritesBarCtrl::updateButtons()
 			last_right_edge = last_new_button->getRect().mRight;
 
 			mLastTab = last_new_button;
+			last_new_button->setVisible(mToggle);
 		}
 		mFirstDropDownItem = j;
 		// Chevron button
@@ -921,7 +960,7 @@ void LLFavoritesBarCtrl::updateButtons()
 
 			addChild(mMoreCtrl);
 			mMoreCtrl->setRect(rect);
-			mMoreCtrl->setVisible(TRUE);
+			mMoreCtrl->setVisible(mToggle);
 		}
 		// Update overflow menu
 		LLMenuGL* overflow_menu = static_cast <LLMenuGL*> (mOverflowMenuHandle.get());
@@ -933,6 +972,16 @@ void LLFavoritesBarCtrl::updateButtons()
 				showDropDownMenu();
 			}
 		}
+		//toggleButton
+		// Toggle button should stay left aligned
+		LLRect rect;
+		rect.setOriginAndSize(0, 0,
+				toggleCtrl->getRect().getWidth(),
+				toggleCtrl->getRect().getHeight());
+
+		addChild(toggleCtrl);
+		toggleCtrl->setRect(rect);
+		toggleCtrl->setVisible(TRUE);
 	}
 	else
 	{
@@ -958,8 +1007,8 @@ LLButton* LLFavoritesBarCtrl::createButton(const LLPointer<LLViewerInventoryItem
 	LLFavoriteLandmarkButton* fav_btn = NULL;
 
 	
-	//we remove 100 to mRight cause of the space we have on the left
-	if(curr_x + width + 2*button_x_delta +  mMoreCtrl->getRect().getWidth() > getRect().mRight -100 )
+	//we remove 30 to mRight cause of the space we have on the left
+	if(curr_x + width + 2*button_x_delta +  mMoreCtrl->getRect().getWidth() > getRect().mRight -70 )
 	{
 		return NULL;
 	}
@@ -967,8 +1016,11 @@ LLButton* LLFavoritesBarCtrl::createButton(const LLPointer<LLViewerInventoryItem
 	
 	LLButton::Params fav_btn_params(button_params);
 	fav_btn = LLUICtrlFactory::create<LLFavoriteLandmarkButton>(fav_btn_params);
-	fav_btn->setImageColor(LLUI::sColorsGroup->getColor("ButtonUnselectedBgColor") );
-	fav_btn->setColor(LLUI::sColorsGroup->getColor("ButtonUnselectedFgColor"));
+	fav_btn->setAlpha((F32)0.8f);
+	// F32 bgcolor = 128.0f;
+	// F32 alpha = 0.5f;
+	// fav_btn->setImageColor(LLColor4(bgcolor,bgcolor,bgcolor,alpha ));
+	// fav_btn->setColor(LLColor4::white);
 	if (NULL == fav_btn)
 	{
 		LL_WARNS("FavoritesBar") << "Unable to create LLFavoriteLandmarkButton widget: " << item->getName() << LL_ENDL;
@@ -1041,6 +1093,34 @@ void LLFavoritesBarCtrl::onMoreTextBoxClicked()
 {
 	//LLUI::getInstance()->getMousePositionScreen(&mMouseX, &mMouseY);
 	showDropDownMenu();
+}
+void LLFavoritesBarCtrl::toggle()
+{
+	mToggle=!mToggle;
+	LLUICtrl* ctrl = NULL;
+	const child_list_t* list = getChildList();
+
+	for (child_list_const_iter_t i = list->begin(); i != list->end(); ++i)
+	{
+		// Look only for children that are favorite buttons
+		if ((*i)->getName() != "toggle_favorites_bar_btn")
+		{
+			(*i)->setVisible(mToggle);
+		} else {
+			std::string image = mToggle ? "scrollbutton_left_out_blue.tga" : "scrollbutton_right_out_blue.tga";
+			LLButton* toggle_btn = dynamic_cast<LLButton*>(*i);
+			toggle_btn->setImages(image,image);
+		}
+	}	
+	if(mItems.empty())
+	{
+		mBarLabel->setVisible(TRUE && mToggle);
+	}
+	else
+	{
+		mBarLabel->setVisible(FALSE);
+	}
+	
 }
 void LLFavoritesBarCtrl::showDropDownMenu()
 {

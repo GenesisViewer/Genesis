@@ -159,6 +159,8 @@
 #include "wlfPanel_AdvSettings.h"
 #include "llenvironment.h"
 
+#include "llfavoritesbar.h"
+
 using namespace LLOldEvents;
 using namespace LLAvatarAppearanceDefines;
 void init_client_menu(LLMenuGL* menu);
@@ -8712,7 +8714,15 @@ class LLViewCheckHUDAttachments final : public view_listener_t
 		return true;
 	}
 };
-
+class LLViewToggleFavoritesBar  final : public view_listener_t
+{
+	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
+	{
+		LLFavoritesBarCtrl* favbar = LLUI::getRootView()->getChild<LLFavoritesBarCtrl>("favorite",TRUE);
+		favbar->toggle();
+		return true;
+	}
+};
 class LLEditEnableTakeOff final : public view_listener_t
 {
 	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
@@ -10141,7 +10151,7 @@ void initialize_menus()
 	addMenu(new LLViewCheckHighlightTransparent(), "View.CheckHighlightTransparent");
 	addMenu(new LLViewCheckRenderType(), "View.CheckRenderType");
 	addMenu(new LLViewCheckHUDAttachments(), "View.CheckHUDAttachments");
-
+	addMenu(new LLViewToggleFavoritesBar(), "View.ToggleFavoritesBar");
 	// World menu
 	addMenu(new LLWorldSitOnGround(), "World.SitOnGround");
 	addMenu(new LLWorldEnableSitOnGround(), "World.EnableSitOnGround");

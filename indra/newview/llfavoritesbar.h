@@ -81,11 +81,13 @@ public:
 	void setLandingTab(LLUICtrl* tab) { mLandingTab = tab; }
 	void onButtonRightClick(LLUUID id,LLView* button,S32 x,S32 y,MASK mask);
 	LLUUID getStringUUIDSelectedItem() const override final { return mSelectedItemID; }
-
+	void toggle();
 protected:
+
 	void updateButtons();
 	LLButton* createButton(const LLPointer<LLViewerInventoryItem> item, const LLButton::Params& button_params, S32 x_offset );
 	const LLButton::Params& getButtonParams();
+	const LLButton::Params& getToggleButtonParams();
 	const LLButton::Params& getAddLandmarkParams();
 	BOOL collectFavoriteItems(LLInventoryModel::item_array_t &items);
 
@@ -165,10 +167,11 @@ private:
 	LLButton* mBarLabel;
 
 	LLButton* mMoreCtrl;
+	LLButton* toggleCtrl;
 	LLUUID mDragItemId;
 	BOOL mStartDrag;
 	LLInventoryModel::item_array_t mItems;
-
+	BOOL mToggle = TRUE;
 	BOOL mTabsHighlightEnabled;
 
 	boost::signals2::connection mEndDragConnection;

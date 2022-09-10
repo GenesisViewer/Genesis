@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+
+	<button
+	enabled="true"
+	follows="left|bottom"
+	halign="center"
+	height="20"
+	image_disabled="scrollbutton_left_out_blue.tga"
+	image_disabled_selected="scrollbutton_left_out_blue.tga"
+	image_selected="scrollbutton_left_out_blue.tga"
+	image_unselected="scrollbutton_left_out_blue.tga"
+	image_pressed="scrollbutton_left_out_blue.tga"
+	image_hover_selected="scrollbutton_left_out_blue.tga"
+	image_hover_unselected="scrollbutton_left_out_blue.tga"
+	hover_glow_amount="0.25"
+	label_shadow="false"
+	layout="topleft"
+	left="0"
+	label=""
+	name="toggle_favorites_bar_btn"
+	scale_image="true"
+	tab_stop="false"
+	bottom="0"
+	tooltip="Toggle favorites bar on/off"
+	width="20" 
+	/>
+			 

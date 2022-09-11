@@ -121,6 +121,7 @@ LLViewerParcelMgr::LLViewerParcelMgr()
 	mHoverRequestResult(0),
 	mHoverWestSouth(),
 	mHoverEastNorth(),
+	mTeleportInProgressPosition(),
 	mCollisionRegionHandle(0),
 	mCollisionUpdateSignal(nullptr),
 	mRenderCollision(FALSE),
@@ -1645,6 +1646,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 		parcel->setRegionDenyAgeUnverifiedOverride(region_deny_age_unverified_override);
 		parcel->unpackMessage(msg);
 
+		
 		if (parcel == parcel_mgr.mAgentParcel)
 		{
 			// new agent parcel
@@ -1660,26 +1662,31 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 			// Let interesting parties know about agent parcel change.
 			LLViewerParcelMgr* instance = LLViewerParcelMgr::getInstance();
 
-			// Notify anything that wants to know when the agent changes parcels
-			instance->mAgentParcelChangedSignal();
-			gAgent.changeParcels();
 			if (instance->mTeleportInProgress)
 			{
-				instance->mTeleportInProgress = FALSE;
-				instance->mTeleportFinishedSignal(gAgent.getPositionGlobal());
+				if(instance->mTeleportInProgressPosition.isNull())
+				{
+					//initial update
+					instance->mTeleportFinishedSignal(gAgent.getPositionGlobal());
+				}
+				else
+				{
+					instance->mTeleportFinishedSignal(instance->mTeleportInProgressPosition);
+				}
 			}
-		}else if (agent_parcel_update)
+            parcel->setParcelEnvironmentVersion(parcel_environment_version);
+            LL_DEBUGS("ENVIRONMENT") << "Parcel environment version is " << parcel->getParcelEnvironmentVersion() << LL_ENDL;
+
+            // Notify anything that wants to know when the agent changes parcels
+            gAgent.changeParcels();
+            instance->mTeleportInProgress = FALSE;
+        }
+        else if (agent_parcel_update)
         {
             parcel->setParcelEnvironmentVersion(parcel_environment_version);
             // updated agent parcel
             parcel_mgr.mAgentParcel->unpackMessage(msg);
-			
-			
-            // if ((LLEnvironment::instance().isExtendedEnvironmentEnabled() && environment_changed))
-            // {
-            //     LL_DEBUGS("ENVIRONMENT") << "Parcel environment version is " << parcel->getParcelEnvironmentVersion() << LL_ENDL;
-            //     LLEnvironment::instance().requestParcel(local_id);
-            // }
+            
         }
 	}
 	// Add any pending entry to the TP history now that we got the *new* parcel name.
@@ -2603,6 +2610,7 @@ void LLViewerParcelMgr::onTeleportFinished(bool local, const LLVector3d& new_pos
 		// Non-local teleport (inter-region or between different parcels of the same region).
 		// The agent parcel data has not been updated yet.
 		// Let's wait for the update and then emit the signal.
+		mTeleportInProgressPosition = new_pos;
 		mTeleportInProgress = TRUE;
 	}
 }

@@ -512,9 +512,23 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 
 	// *TODO:  These values could be tweaked at runtime to effect
 	// a fast/slow fetch throttle.  Once login is complete and the scene
-	U32 const max_batch_size = 5;
+	static const U32 max_batch_size = 10;
+	static const S32 max_concurrent_fetches(12);		// Outstanding requests, not connections
+	static const F32 new_min_time(0.05f);		// *HACK:  Clean this up when old code goes away entirely.
+	
+	mMinTimeBetweenFetches = new_min_time;
+	if (mMinTimeBetweenFetches < new_min_time) 
+	{
+		mMinTimeBetweenFetches = new_min_time;  // *HACK:  See above.
+	}
 
-
+	
+	
+	if ((mFetchCount > max_concurrent_fetches) ||
+		(mFetchTimer.getElapsedTimeF32() < mMinTimeBetweenFetches))
+	{
+		return;
+	}
 	U32 item_count(0);
 	U32 folder_count(0);
 
@@ -536,7 +550,7 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 	LLSD item_request_body;
 	LLSD item_request_body_lib;
 
-	while (! mFetchQueue.empty())
+	while (! mFetchQueue.empty() && (item_count + folder_count) < max_batch_size)
 	{
 		const FetchQueueInfo & fetch_info(mFetchQueue.front());
 		if (fetch_info.mIsCategory)
@@ -568,28 +582,18 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 						folder_sd["fetch_folders"]	= LLSD::Boolean(TRUE); //(LLSD::Boolean)sFullFetchStarted;
 						folder_sd["fetch_items"]	= LLSD::Boolean(TRUE);
 				    
-						if (ALEXANDRIA_LINDEN_ID == cat->getOwnerID())
+						// <FS:Beq> correct library owner for OpenSim (Rye)
+						// if (ALEXANDRIA_LINDEN_ID == cat->getOwnerID())
+						if (gInventory.getLibraryOwnerID() == cat->getOwnerID())
+						// </FS:Beq>
 						{
-							if (folder_lib_count == max_batch_size ||
-								(folder_lib_count == 0 &&
-								 !(approved_folder_lib = AIPerService::approveHTTPRequestFor(mPerServicePtr, cap_inventory))))
-							{
-								break;
-							}
 							folder_request_body_lib["folders"].append(folder_sd);
-							++folder_lib_count;
 						}
 						else
 						{
-							if (folder_count == max_batch_size ||
-								(folder_count == 0 &&
-								 !(approved_folder = AIPerService::approveHTTPRequestFor(mPerServicePtr, cap_inventory))))
-							{
-								break;
-							}
 							folder_request_body["folders"].append(folder_sd);
-							++folder_count;
 						}
+						folder_count++;
 					}
 					// May already have this folder, but append child folders to list.
 					if (fetch_info.mRecursive)
@@ -622,26 +626,14 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 				item_sd["item_id"] = itemp->getUUID();
 				if (itemp->getPermissions().getOwner() == gAgent.getID())
 				{
-					if (item_count == max_batch_size ||
-						(item_count == 0 &&
-						 !(approved_item = AIPerService::approveHTTPRequestFor(mPerServicePtr, cap_inventory))))
-					{
-						break;
-					}
 					item_request_body.append(item_sd);
-					++item_count;
 				}
 				else
 				{
-					if (item_lib_count == max_batch_size ||
-						(item_lib_count == 0 &&
-						 !(approved_item_lib = AIPerService::approveHTTPRequestFor(mPerServicePtr, cap_inventory))))
-					{
-						break;
-					}
 					item_request_body_lib.append(item_sd);
-					++item_lib_count;
 				}
+				//itemp->fetchFromServer();
+				item_count++;
 			}
 		}
 
@@ -692,9 +684,8 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 					LLHTTPClient::post_approved(url, body, handler, approved_item);
 				}
 			}
-		}
-		if (item_lib_count)
-		{
+		
+		
 			if (item_request_body_lib.size())
 			{
 				const std::string url(region->getCapability("FetchLib2"));

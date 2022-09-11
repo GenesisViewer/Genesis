@@ -341,6 +341,7 @@ private:
 	std::vector<LLParcelObserver*> mObservers;
 
 	BOOL						mTeleportInProgress;
+	LLVector3d					mTeleportInProgressPosition;
 	teleport_finished_signal_t	mTeleportFinishedSignal;
 	parcel_changed_signal_t		mTeleportFailedSignal;
 	parcel_changed_signal_t		mAgentParcelChangedSignal;

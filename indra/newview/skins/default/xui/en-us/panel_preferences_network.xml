@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel border="true" bottom="-409" height="408" label="Network" left="102" name="network" width="517">
-	<check_box bottom="-20" follows="top" left="12" label="Unlimited Bandwith (restart needed)" name="unlimited_bandwith" visible="true"/>
+	<check_box bottom="-20" follows="top" left="12" label="Adaptative Bandwith (restart needed)" name="unlimited_bandwith" visible="true"/>
 	<text bottom_delta="-20" follows="top" height="10" left="12" name="text_box">Maximum Bandwidth:</text>
 	<slider bottom_delta="-4" left_delta="110" can_edit_text="true" decimal_digits="0" follows="top" height="15" increment="10" initial_val="50" max_val="20000" min_val="50" name="max_bandwidth" show_text="true" value="500" width="180"/>
 	<text bottom_delta="4" follows="top" height="10" left_delta="186" name="text_box2">kbps (kilobits per second)</text>

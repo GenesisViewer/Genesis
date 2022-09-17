@@ -89,6 +89,7 @@ protected:
 	
 	LLFrameTimer mUpdateTimer;
 	F32 mThrottleFrac;
+	U32 countThrottleDown = 0;
 };
 
 extern LLViewerThrottle gViewerThrottle;

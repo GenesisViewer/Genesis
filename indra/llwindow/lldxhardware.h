@@ -92,7 +92,8 @@ public:
 
 	// Returns TRUE on success.
 	// vram_only TRUE does a "light" probe.
-	BOOL getInfo(BOOL vram_only, S32Megabytes sytem_ram);
+	//rewriting getInfo to FS way. thanks to the firestorm team for this.
+	BOOL getInfo(BOOL vram_only, bool disable_wmi);
 
 	S32 getVRAM() const { return mVRAM; }
 

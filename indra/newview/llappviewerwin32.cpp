@@ -489,8 +489,9 @@ bool LLAppViewerWin32::initHardwareTest()
 		gDXHardware.setWriteDebugFunc(write_debug_dx);
 
 		S32Megabytes system_ram = gSysMemory.getPhysicalMemoryKB();
-
-		BOOL probe_ok = gDXHardware.getInfo(vram_only, system_ram);
+		//change the DirectX hardware detection to the firestorm way
+		//in some cases Genesis was detecting really too much VRAM
+		BOOL probe_ok = gDXHardware.getInfo(vram_only, FALSE);
 
 		if (!probe_ok
 			&& gSavedSettings.getWarning("AboutDirectX9"))

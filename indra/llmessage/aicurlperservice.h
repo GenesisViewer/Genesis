@@ -290,6 +290,8 @@ class AIPerService {
 	AIAverage const& bandwidth(void) const { return mHTTPBandwidth; }
 
 	static void setNoHTTPBandwidthThrottling(bool nb) { sNoHTTPBandwidthThrottling = nb; }
+	//Torric Rodas : disable full bandwith when some packets are lost and back again when network feels better
+	static void informLostPacketsThrottlingCount(U32 throttleCount);
 	static void setHTTPThrottleBandwidth(F32 max_kbps) { sHTTPThrottleBandwidth125 = 125.f * max_kbps; }
 	static size_t getHTTPThrottleBandwidth125(void) { return sHTTPThrottleBandwidth125; }
 	static F32 throttleFraction(void) { return ThrottleFraction_wat(sThrottleFraction)->fraction / 1024.f; }

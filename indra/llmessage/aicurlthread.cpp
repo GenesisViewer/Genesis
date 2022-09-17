@@ -2949,7 +2949,16 @@ AIPerService::Approvement* AIPerService::approveHTTPRequestFor(AIPerServicePtr c
   }
   return new Approvement(per_service, capability_type);
 }
-
+void AIPerService::informLostPacketsThrottlingCount(U32 throttleCount) {
+	if (throttleCount == 0) {
+		//no more throttle, back to original configuration
+		AIPerService::setNoHTTPBandwidthThrottling(gSavedSettings.getBOOL("GenesisUnlimitedBandwith")); 
+	}
+	if (throttleCount > 0) {
+		//no more throttle, back to original configuration
+		AIPerService::setNoHTTPBandwidthThrottling(FALSE); 
+	}
+}
 bool AIPerService::checkBandwidthUsage(AIPerServicePtr const& per_service, U64 sTime_40ms)
 {
   if (sNoHTTPBandwidthThrottling)

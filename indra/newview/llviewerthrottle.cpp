@@ -321,6 +321,10 @@ void LLViewerThrottle::updateDynamicThrottle()
 		mCurrentBandwidth = mMaxBandwidth * mThrottleFrac;
 		mCurrent = getThrottleGroup(mCurrentBandwidth / 1024.0f);
 		mCurrent.sendToSim();
+		//Genesis
+		//ok too much packet lost, we probably need to reduce the http bandwith
+		countThrottleDown++;
+		AIPerService::informLostPacketsThrottlingCount(countThrottleDown);
 		LL_INFOS() << "Tightening network throttle to " << mCurrentBandwidth << LL_ENDL;
 	}
 	else if (LLViewerStats::getInstance()->mPacketsLostPercentStat.getMean() <= EASE_THROTTLE_THRESHOLD)
@@ -334,6 +338,8 @@ void LLViewerThrottle::updateDynamicThrottle()
 		mCurrentBandwidth = mMaxBandwidth * mThrottleFrac;
 		mCurrent = getThrottleGroup(mCurrentBandwidth/1024.0f);
 		mCurrent.sendToSim();
+		countThrottleDown--;
+		AIPerService::informLostPacketsThrottlingCount(countThrottleDown);
 		LL_INFOS() << "Easing network throttle to " << mCurrentBandwidth << LL_ENDL;
 	}
 }

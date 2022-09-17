@@ -1362,20 +1362,30 @@ S32Megabytes LLViewerTextureList::getMinVideoRamSetting()
 
 //static
 // Returns max setting for TextureMemory (in MB)
-S32Megabytes LLViewerTextureList::getMaxVideoRamSetting(bool get_recommended, float mem_multiplier)
+// <FS:Ansariel> Proper texture memory calculation
+//S32Megabytes LLViewerTextureList::getMaxVideoRamSetting(bool get_recommended, float mem_multiplier)
+S32Megabytes LLViewerTextureList::getMaxVideoRamSetting(bool get_recommended, float mem_multiplier, bool clamp_upper_limit /* = true */)
+// </FS:Ansariel>
 {
-#if LL_LINUX
-	if (gGLManager.mIsIntel && gGLManager.mGLVersion >= 3.f && !gGLManager.mVRAM)
-	{
-		gGLManager.mVRAM = 512;
-	}
-#endif
 	S32Megabytes max_texmem;
 	if (gGLManager.mVRAM != 0)
 	{
 		// Treat any card with < 32 MB (shudder) as having 32 MB
 		//  - it's going to be swapping constantly regardless
 		S32Megabytes max_vram(gGLManager.mVRAM);
+
+		if(gGLManager.mIsATI)
+		{
+			//shrink the availabe vram for ATI cards because some of them do not handel texture swapping well.
+			//<FS:TS> Add debug to not shrink
+			//max_vram = max_vram * 0.75f; 
+			if (!gSavedSettings.getBOOL("FSATIFullTextureMem"))
+			{  
+				max_vram = max_vram * 0.75f; 
+			}
+			//</FS:TS>
+		}
+
 		max_vram = llmax(max_vram, getMinVideoRamSetting());
 		max_texmem = max_vram;
 		if (!get_recommended)
@@ -1385,73 +1395,144 @@ S32Megabytes LLViewerTextureList::getMaxVideoRamSetting(bool get_recommended, fl
 	{
 		if (!get_recommended)
 		{
-			max_texmem = S32Megabytes(512);
+			max_texmem = (S32Megabytes)512;
 		}
 		else if (gSavedSettings.getBOOL("NoHardwareProbe")) //did not do hardware detection at startup
 		{
-			max_texmem = S32Megabytes(512);
+			max_texmem = (S32Megabytes)512;
 		}
 		else
 		{
-			max_texmem = S32Megabytes(128);
+			max_texmem = (S32Megabytes)128;
 		}
-
-		LL_WARNS() << "VRAM amount not detected, defaulting to " << max_texmem << " MB" << LL_ENDL;
 	}
 
 	S32Megabytes system_ram = gSysMemory.getPhysicalMemoryKB(); // In MB
-	LL_INFOS() << "get_recommended: " << get_recommended << LL_ENDL;
-	LL_INFOS() << "system_ram: " << system_ram << LL_ENDL;
-	LL_INFOS() << "max_texmem: " << max_texmem << LL_ENDL;
+	//LL_INFOS() << "*** DETECTED " << system_ram << " MB of system memory." << LL_ENDL;
 	if (get_recommended)
-		max_texmem = llmin(S32Megabytes(max_texmem * .7f), system_ram/2);
+		max_texmem = llmin(max_texmem, system_ram/2);
 	else
 		max_texmem = llmin(max_texmem, system_ram);
-
+		
     // limit the texture memory to a multiple of the default if we've found some cards to behave poorly otherwise
 	max_texmem = llmin(max_texmem, (S32Megabytes) (mem_multiplier * max_texmem));
 
-	max_texmem = llclamp(max_texmem, getMinVideoRamSetting(), gMaxVideoRam); 
+	// <FS:Ansariel> Proper texture memory calculation
+	//max_texmem = llclamp(max_texmem, getMinVideoRamSetting(), gMaxVideoRam);
+	if (clamp_upper_limit)
+	{
+		max_texmem = llclamp(max_texmem, getMinVideoRamSetting(), gMaxVideoRam);
+	}
+	else
+	{
+		max_texmem = llmax(max_texmem, getMinVideoRamSetting());
+	}
+	// </FS:Ansariel>
 	
 	return max_texmem;
 }
 
-const S32Megabytes VIDEO_CARD_FRAMEBUFFER_MEM_MIN(12);
-const S32Megabytes VIDEO_CARD_FRAMEBUFFER_MEM_MAX(512);
-const S32Megabytes MIN_MEM_FOR_NON_TEXTURE(16);
+const S32Megabytes VIDEO_CARD_FRAMEBUFFER_MEM(12);
+const S32Megabytes MIN_MEM_FOR_NON_TEXTURE(512);
 void LLViewerTextureList::updateMaxResidentTexMem(S32Megabytes mem)
 {
 	// Initialize the image pipeline VRAM settings
-	const S32Megabytes cur_mem(gSavedSettings.getS32("TextureMemory"));
-	const F32 mem_multiplier = gSavedSettings.getF32("RenderTextureMemoryMultiple");
-	const S32Megabytes default_mem = getMaxVideoRamSetting(true, mem_multiplier); // recommended default
-	const S32Megabytes max_mem = getMaxVideoRamSetting(false, mem_multiplier);
-	const S32Megabytes min_mem = getMinVideoRamSetting();
-
-	if (mem == 0)
+	S32Megabytes cur_mem(gSavedSettings.getS32("TextureMemory"));
+	F32 mem_multiplier = gSavedSettings.getF32("RenderTextureMemoryMultiple");
+	S32Megabytes default_mem = getMaxVideoRamSetting(true, mem_multiplier); // recommended default
+	if (mem == (S32Bytes)0)
 	{
 		mem = cur_mem > (S32Bytes)0 ? cur_mem : default_mem;
 	}
-	else if (mem < 0)
+	else if (mem < (S32Bytes)0)
 	{
 		mem = default_mem;
 	}
 
-	S32Megabytes reported_mem = llclamp(mem, min_mem, max_mem);
-	if (reported_mem != cur_mem)
+	mem = llclamp(mem, getMinVideoRamSetting(), getMaxVideoRamSetting(false, mem_multiplier));
+	if (mem != cur_mem)
 	{
-		gSavedSettings.setS32("TextureMemory", reported_mem.value());
+		gSavedSettings.setS32("TextureMemory", mem.value());
 		return; //listener will re-enter this function
 	}
 
-	S32Megabytes fb_mem = llmin(llmax(VIDEO_CARD_FRAMEBUFFER_MEM_MIN, mem / 4), VIDEO_CARD_FRAMEBUFFER_MEM_MAX); // 25% for framebuffers.
-	S32Megabytes misc_mem = llmax(MIN_MEM_FOR_NON_TEXTURE, mem / 5);  // 20% for misc.
+	if (gGLManager.mVRAM == 0)
+	{
+		LL_WARNS() << "VRAM amount not detected, defaulting to " << mem << " MB" << LL_ENDL;
+	}
 
-	mMaxTotalTextureMemInMegaBytes = llmin(mem - misc_mem, max_mem);
-	mMaxResidentTexMemInMegaBytes = llmin(mem - misc_mem - fb_mem, max_mem);
+	// TODO: set available resident texture mem based on use by other subsystems
+	// currently max(12MB, VRAM/4) assumed...
+	
+	S32Megabytes vb_mem = mem;
 
-	LL_INFOS() << "Available Texture Memory set to: " << mMaxResidentTexMemInMegaBytes << LL_ENDL;
-	LL_INFOS() << "Total Texture Memory set to: " << mMaxTotalTextureMemInMegaBytes << LL_ENDL;
+	// <FS:Ansariel> Proper texture memory calculation
+	S32Megabytes total_mem = getMaxVideoRamSetting(true, mem_multiplier, false);
+
+	if ((vb_mem / 3) > VIDEO_CARD_FRAMEBUFFER_MEM)
+	{
+		vb_mem = vb_mem * 4 / 3;
+	}
+	else
+	{
+		vb_mem += VIDEO_CARD_FRAMEBUFFER_MEM;
+	}
+
+	vb_mem = llmin (vb_mem, total_mem);
+	// </FS:Ansariel>
+
+	S32Megabytes fb_mem = llmax(VIDEO_CARD_FRAMEBUFFER_MEM, vb_mem/4);
+	//<FS:TS> The memory reported by ATI cards is actually the texture
+	//	memory in use, already corrected for the framebuffer and
+	//	VBO pools. Don't back it out a second time.
+	//mMaxResidentTexMemInMegaBytes = (vb_mem - fb_mem) ; //in MB
+	mMaxResidentTexMemInMegaBytes = vb_mem; //in MB
+	if(!gGLManager.mIsATI)
+	{
+		mMaxResidentTexMemInMegaBytes -= fb_mem; //in MB
+	}
+	//</FS:TS>
+	
+// <FS:Ansariel> Texture memory management
+	//mMaxTotalTextureMemInMegaBytes = mMaxResidentTexMemInMegaBytes * 2;
+#if ADDRESS_SIZE == 32
+	// </FS:Ansariel>
+	mMaxTotalTextureMemInMegaBytes = mMaxResidentTexMemInMegaBytes * 2;
+
+	if (mMaxResidentTexMemInMegaBytes > (S32Megabytes)640)
+	{
+		mMaxTotalTextureMemInMegaBytes -= (mMaxResidentTexMemInMegaBytes / 4);
+	}
+// <FS:Ansariel> Texture memory management
+	mMaxTotalTextureMemInMegaBytes = llclamp(mMaxTotalTextureMemInMegaBytes, (S32Megabytes)0, (S32Megabytes)768);
+#else
+	if (mMaxResidentTexMemInMegaBytes > gMaxVideoRam / 2)
+	{
+		mMaxTotalTextureMemInMegaBytes = gMaxVideoRam + (S32Megabytes)(mMaxResidentTexMemInMegaBytes * 0.25f);
+	}
+	else
+	{
+		mMaxTotalTextureMemInMegaBytes = mMaxResidentTexMemInMegaBytes * 2;
+	}
+#endif
+// </FS:Ansariel>
+
+	//system mem
+	S32Megabytes system_ram = gSysMemory.getPhysicalMemoryKB();
+
+	//minimum memory reserved for non-texture use.
+	//if system_raw >= 1GB, reserve at least 512MB for non-texture use;
+	//otherwise reserve half of the system_ram for non-texture use.
+	S32Megabytes min_non_texture_mem = llmin(system_ram / 2, MIN_MEM_FOR_NON_TEXTURE) ; 
+
+	if (mMaxTotalTextureMemInMegaBytes > system_ram - min_non_texture_mem)
+	{
+		mMaxTotalTextureMemInMegaBytes = system_ram - min_non_texture_mem ;
+	}
+	
+	LL_INFOS() << "Total Video Memory set to: " << vb_mem << " MB" << LL_ENDL;
+	//LL_INFOS() << "Available Texture Memory set to: " << (vb_mem - fb_mem) << " MB" << LL_ENDL;
+	LL_INFOS() << "Available Texture Memory set to: " << mMaxResidentTexMemInMegaBytes << " MB" << LL_ENDL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

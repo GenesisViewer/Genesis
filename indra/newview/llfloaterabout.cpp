@@ -205,14 +205,14 @@ LLFloaterAbout::LLFloaterAbout()
 		support += '\n';
 
 		support_widget->appendColoredText(support, FALSE, FALSE, gColors.getColor("TextFgReadOnlyColor"));
-
-		const std::string url(region->getCapability("ServerReleaseNotes"));
-		if (!url.empty())
-		{
-			LLStyleSP server_link_style(new LLStyle(*viewer_link_style));
-			server_link_style->setLinkHREF(url);
-			support_widget->appendText(LLTrans::getString("ReleaseNotes"), false, false, server_link_style);
-		}
+		//Torric Rodas, disabling seond release notes link 
+		// const std::string url(region->getCapability("ServerReleaseNotes"));
+		// if (!url.empty())
+		// {
+		// 	LLStyleSP server_link_style(new LLStyle(*viewer_link_style));
+		// 	server_link_style->setLinkHREF(url);
+		// 	support_widget->appendText(LLTrans::getString("ReleaseNotes"), false, false, server_link_style);
+		// }
 
 		support = "\n\n";
 	}

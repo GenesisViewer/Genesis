@@ -262,51 +262,48 @@ LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host)
 	F32 width = getRegionWidthInMeters();
 
 	LLViewerRegion *neighborp;
+// <FS:CR> Aurora Sim
+	LLViewerRegion *last_neighborp;
+// </FS:CR> Aurora Sim
 	from_region_handle(region_handle, &region_x, &region_y);
 
 	// Iterate through all directions, and connect neighbors if there.
 	S32 dir;
 	for (dir = 0; dir < 8; dir++)
 	{
+// <FS:CR> Aurora Sim
+		last_neighborp = NULL;
+// </FS:CR> Aurora Sim
 		adj_x = region_x + width * gDirAxes[dir][0];
 		adj_y = region_y + width * gDirAxes[dir][1];
+// <FS:CR> Aurora Sim
+		//to_region_handle(adj_x, adj_y, &adj_handle);
+		if(gDirAxes[dir][0] < 0) adj_x = region_x - WORLD_PATCH_SIZE;
+		if(gDirAxes[dir][1] < 0) adj_y = region_y - WORLD_PATCH_SIZE;
 
-		if (mWidth == 256 && mLength == 256)
+		for(S32 offset = 0; offset < width; offset += WORLD_PATCH_SIZE)
 		{
 			to_region_handle(adj_x, adj_y, &adj_handle);
 			neighborp = getRegionFromHandle(adj_handle);
-			if (neighborp)
+			
+			if (neighborp && last_neighborp != neighborp)
 			{
 				//LL_INFOS() << "Connecting " << region_x << ":" << region_y << " -> " << adj_x << ":" << adj_y << LL_ENDL;
 				regionp->connectNeighbor(neighborp, dir);
+				last_neighborp = neighborp;
 			}
-		}
-		else // Unconventional region size
-		{
-			LLViewerRegion* last_neighborp = NULL;
-			if(gDirAxes[dir][0] < 0) adj_x = region_x - WORLD_PATCH_SIZE;
-			if(gDirAxes[dir][1] < 0) adj_y = region_y - WORLD_PATCH_SIZE;
 
-			for (S32 offset = 0; offset < width; offset += WORLD_PATCH_SIZE)
+			if(dir == NORTHEAST ||
+			   dir == NORTHWEST ||
+			   dir == SOUTHWEST ||
+			   dir == SOUTHEAST)
 			{
-				to_region_handle(adj_x, adj_y, &adj_handle);
-				neighborp = getRegionFromHandle(adj_handle);
-
-				if (neighborp && last_neighborp != neighborp)
-				{
-					//LL_INFOS() << "Connecting " << region_x << ":" << region_y << " -> " << adj_x << ":" << adj_y << LL_ENDL;
-					regionp->connectNeighbor(neighborp, dir);
-					last_neighborp = neighborp;
-				}
-
-				if (dir == NORTH || dir == SOUTH)
-					adj_x += WORLD_PATCH_SIZE;
-				else if (dir == EAST || dir == WEST)
-					adj_y += WORLD_PATCH_SIZE;
-				else if (dir == NORTHEAST || dir == NORTHWEST || dir == SOUTHWEST || dir == SOUTHEAST)
-					break;
-
+				break;
 			}
+
+			if(dir == NORTH || dir == SOUTH) adj_x += WORLD_PATCH_SIZE;
+			if(dir == EAST || dir == WEST) adj_y += WORLD_PATCH_SIZE;
+// </FS:CR> Aurora Sim
 		}
 	}
 

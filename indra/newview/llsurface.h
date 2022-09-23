@@ -83,7 +83,7 @@ public:
 	void setRegion(LLViewerRegion *regionp);
 
 	void setOriginGlobal(const LLVector3d &origin_global);
-
+	
 	void connectNeighbor(LLSurface *neighborp, U32 direction);
 	void disconnectNeighbor(LLSurface *neighborp, U32 direction);
 	void disconnectAllNeighbors();

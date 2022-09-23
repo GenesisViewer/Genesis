@@ -979,7 +979,7 @@ void LLViewerRegion::forceUpdate()
 void LLViewerRegion::connectNeighbor(LLViewerRegion *neighborp, U32 direction)
 {
 	mImpl->mLandp->connectNeighbor(neighborp->mImpl->mLandp, direction);
-	neighborp->mImpl->mLandp->connectNeighbor(mImpl->mLandp, gDirOpposite[direction]);
+	//neighborp->mImpl->mLandp->connectNeighbor(mImpl->mLandp, gDirOpposite[direction]);
 #if ENABLE_CLASSIC_CLOUDS
 	mCloudLayer.connectNeighbor(&(neighborp->mCloudLayer), direction);
 #endif

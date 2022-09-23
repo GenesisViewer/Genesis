@@ -2974,9 +2974,8 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 		LLWorld::getInstance()->setRegionSize(region_size_x, region_size_y);
 	}
 	LLViewerRegion* regionp =  LLWorld::getInstance()->addRegion(region_handle, sim_host);
-
+	
 	M7WindlightInterface::getInstance()->receiveReset();
-
 	/*
 	// send camera update to new region
 	gAgentCamera.updateCamera();
@@ -2984,7 +2983,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	// likewise make sure the camera is behind the avatar
 	gAgentCamera.resetView(TRUE);
 	LLVector3 shift_vector = regionp->getPosRegionFromGlobal(gAgent.getRegion()->getOriginGlobal());
-	gAgent.setRegion(regionp);
+
 	gObjectList.shiftObjects(shift_vector);
 
 	if (isAgentAvatarValid())
@@ -3009,8 +3008,9 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 	msg->addUUIDFast(_PREHASH_ID, gAgent.getID());
 	msg->sendReliable(sim_host);
-
+	
 	send_complete_agent_movement(sim_host);
+	
 	gAgent.setTeleportState(LLAgent::TELEPORT_MOVING);
 	gAgent.setTeleportMessage(LLAgent::sTeleportProgressMessages["contacting"]);
 
@@ -3033,6 +3033,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	//	gTeleportDisplay = TRUE;
 	//	gTeleportDisplayTimer.reset();
 	//	gViewerWindow->setShowProgress(TRUE);
+	
 }
 
 // stuff we have to do every time we get an AvatarInitComplete from a sim
@@ -3108,20 +3109,20 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 		gAgent.getRegion()->getOriginGlobal());
 	gAgent.setRegion(regionp);
 	gObjectList.shiftObjects(shift_vector);
-	// Is this a really long jump?
-	if (shift_vector.length() > 2048.f * 256.f)
-	{
-		regionp->reInitPartitions();
-		gAgent.setRegion(regionp);
-		// Kill objects in the regions we left behind
-		for (auto r : LLWorld::getInstance()->getRegionList())
-		{
-			if (r != regionp)
-			{
-				gObjectList.killObjects(r);
-			}
-		}
-	}
+	// // Is this a really long jump?
+	// if (shift_vector.length() > 2048.f * 256.f)
+	// {
+	// 	regionp->reInitPartitions();
+	// 	gAgent.setRegion(regionp);
+	// 	// Kill objects in the regions we left behind
+	// 	for (auto r : LLWorld::getInstance()->getRegionList())
+	// 	{
+	// 		if (r != regionp)
+	// 		{
+	// 			gObjectList.killObjects(r);
+	// 		}
+	// 	}
+	// }
 	gAssetStorage->setUpstream(msg->getSender());
 	gCacheName->setUpstream(msg->getSender());
 	gViewerThrottle.sendToSim();

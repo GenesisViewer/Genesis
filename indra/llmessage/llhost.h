@@ -38,7 +38,7 @@ const U32 INVALID_HOST_IP_ADDRESS = 0x0;
 
 class LLHost {
 protected:
-	U16			mPort;
+	U32			mPort;
 	mutable U16	mHostNotFound;			// Singularity addition; caches a failed IP -> hostname lookup.
 	U32         mIP;
 public:

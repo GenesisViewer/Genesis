@@ -216,6 +216,7 @@ inline LLDATATYPE llmin(const LLDATATYPE& d1, const LLDATATYPE& d2, const LLDATA
 	return llmin(r1, r2);
 }
 
+
 template <class LLDATATYPE> 
 inline LLDATATYPE llclamp(const LLDATATYPE& a, const LLDATATYPE& minval, const LLDATATYPE& maxval)
 {
@@ -228,6 +229,8 @@ inline LLDATATYPE llclamp(const LLDATATYPE& a, const LLDATATYPE& minval, const L
 		return maxval;
 	}
 	return a;
+
+	
 }
 
 template <class LLDATATYPE> 

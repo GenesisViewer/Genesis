@@ -73,9 +73,11 @@ BOOL object_selected_and_point_valid(void *user_data);
 
 BOOL isAgentAvatarValid()
 {
-	return (gAgentAvatarp.notNull() && gAgentAvatarp->isValid() &&
-			(gAgentAvatarp->getRegion() != NULL) &&
-			(!gAgentAvatarp->isDead()));
+	// return (gAgentAvatarp.notNull() && gAgentAvatarp->isValid() &&
+	// 		(gAgentAvatarp->getRegion() != NULL) &&
+	// 		(!gAgentAvatarp->isDead()));
+
+	return (gAgentAvatarp.notNull() && gAgentAvatarp->isValid());
 }
 
 void selfStartPhase(const std::string& phase_name)

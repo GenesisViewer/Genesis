@@ -2976,6 +2976,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	LLViewerRegion* regionp =  LLWorld::getInstance()->addRegion(region_handle, sim_host);
 	
 	M7WindlightInterface::getInstance()->receiveReset();
+
 	/*
 	// send camera update to new region
 	gAgentCamera.updateCamera();
@@ -2983,7 +2984,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	// likewise make sure the camera is behind the avatar
 	gAgentCamera.resetView(TRUE);
 	LLVector3 shift_vector = regionp->getPosRegionFromGlobal(gAgent.getRegion()->getOriginGlobal());
-
+	gAgent.setRegion(regionp);
 	gObjectList.shiftObjects(shift_vector);
 
 	if (isAgentAvatarValid())
@@ -3010,7 +3011,6 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	msg->sendReliable(sim_host);
 	
 	send_complete_agent_movement(sim_host);
-	
 	gAgent.setTeleportState(LLAgent::TELEPORT_MOVING);
 	gAgent.setTeleportMessage(LLAgent::sTeleportProgressMessages["contacting"]);
 
@@ -3033,7 +3033,6 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	//	gTeleportDisplay = TRUE;
 	//	gTeleportDisplayTimer.reset();
 	//	gViewerWindow->setShowProgress(TRUE);
-	
 }
 
 // stuff we have to do every time we get an AvatarInitComplete from a sim

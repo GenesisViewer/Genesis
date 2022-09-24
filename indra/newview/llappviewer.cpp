@@ -570,7 +570,8 @@ LLAppViewer::LLAppViewer() :
 	mQuitRequested(false),
 	mLogoutRequestSent(false),
 	mMainloopTimeout(NULL),
-	mAgentRegionLastAlive(false)
+	mAgentRegionLastAlive(false),
+	mLastAgentForceUpdate(0)
 {
 	if(nullptr != sInstance)
 	{
@@ -4166,14 +4167,18 @@ void LLAppViewer::idle()
 
 		//	When appropriate, update agent location to the simulator.
 		F32 agent_update_time = agent_update_timer.getElapsedTimeF32();
-		BOOL flags_changed = gAgent.controlFlagsDirty()
-							 || (last_control_flags != gAgent.getControlFlags());
+		F32 agent_force_update_time = mLastAgentForceUpdate + agent_update_time;
+		BOOL force_update = gAgent.controlFlagsDirty()
+							|| (last_control_flags != gAgent.getControlFlags())
+							|| (agent_force_update_time > (1.0f / (F32) AGENT_FORCE_UPDATES_PER_SECOND));
+		
 
-		if (flags_changed || (agent_update_time > (1.0f / (F32)AGENT_UPDATES_PER_SECOND)))
+		if (force_update || (agent_update_time > (1.0f / (F32) AGENT_UPDATES_PER_SECOND)))
 		{
 			LL_RECORD_BLOCK_TIME(FTM_AGENT_UPDATE);
 			// Send avatar and camera info
 			last_control_flags = gAgent.getControlFlags();
+			mLastAgentForceUpdate = force_update ? 0 : agent_force_update_time;
 			send_agent_update(TRUE);
 			agent_update_timer.reset();
 		}

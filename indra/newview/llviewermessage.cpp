@@ -3009,31 +3009,12 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 	msg->addUUIDFast(_PREHASH_ID, gAgent.getID());
 	msg->sendReliable(sim_host);
-	gAgentMovementCompleted=FALSE;
-	
+	send_complete_agent_movement(sim_host);	
 	gAgent.setTeleportState(LLAgent::TELEPORT_MOVING);
 	gAgent.setTeleportMessage(LLAgent::sTeleportProgressMessages["contacting"]);
-	while (!gAgentMovementCompleted) {
-		send_complete_agent_movement(sim_host);
-		while (msg->checkAllMessages(gFrameCount, gServicePump))
-		{
-
-			if (gAgentMovementCompleted)
-			{
-				
-				break;
-			}
-			else
-			{
-				LL_INFOS("AppInit") << "Awaiting AvatarInitComplete, got "
-				<< msg->getMessageName() << LL_ENDL;
-			}
-			
-		}
-		msg->processAcks();
-	}
 	
 
+	
 	LL_DEBUGS("CrossingCaps") << "Calling setSeedCapability from process_teleport_finish(). Seed cap == "
 		<< seedCap << LL_ENDL;
 	regionp->setSeedCapability(seedCap);

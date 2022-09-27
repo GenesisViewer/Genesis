@@ -1423,7 +1423,7 @@ bool LLAppViewer::mainLoop()
 
 			// canonical per-frame event
 			mainloop.post(newFrame);
-
+			
 			if (!LLApp::isExiting())
 			{
 				pingMainloopTimeout("Main:JoystickKeyboard");

@@ -582,10 +582,9 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 						folder_sd["fetch_folders"]	= LLSD::Boolean(TRUE); //(LLSD::Boolean)sFullFetchStarted;
 						folder_sd["fetch_items"]	= LLSD::Boolean(TRUE);
 				    
-						// <FS:Beq> correct library owner for OpenSim (Rye)
-						// if (ALEXANDRIA_LINDEN_ID == cat->getOwnerID())
-						if (gInventory.getLibraryOwnerID() == cat->getOwnerID())
-						// </FS:Beq>
+						
+						if (ALEXANDRIA_LINDEN_ID == cat->getOwnerID())
+						
 						{
 							folder_request_body_lib["folders"].append(folder_sd);
 						}
@@ -654,9 +653,6 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 					LLHTTPClient::post_approved(url, folder_request_body, handler, approved_folder);
 				}
 			}
-		}
-		if (folder_lib_count)
-		{
 			if (folder_request_body_lib["folders"].size())
 			{
 				const std::string url(region->getCapability("FetchLibDescendents2"));
@@ -668,6 +664,7 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 				}
 			}
 		}
+		
 
 		if (item_count)
 		{

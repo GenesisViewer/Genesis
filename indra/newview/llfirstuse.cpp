@@ -299,16 +299,20 @@ void LLFirstUse::useMedia()
 // static
 void LLFirstUse::voiceLicenseAgreement()
 {
-	if (gSavedSettings.getWarning("FirstVoiceLicense"))
-	{
-		gSavedSettings.setWarning("FirstVoiceLicense", FALSE);
+	// if (gSavedSettings.getWarning("FirstVoiceLicense"))
+	// {
+	// 	gSavedSettings.setWarning("FirstVoiceLicense", FALSE);
 
-		auto inst = LLFloaterTOS::show(LLFloaterTOS::TOS_VOICE);
-		inst->open();
-		inst->center();
-	}
-	else // currently in STATE_LOGIN_VOICE_LICENSE when arriving here
-	{
-		LLStartUp::setStartupState(STATE_LOGIN_AUTH_INIT);
-	}
+	// 	auto inst = LLFloaterTOS::show(LLFloaterTOS::TOS_VOICE);
+	// 	inst->open();
+	// 	inst->center();
+	// }
+	// else // currently in STATE_LOGIN_VOICE_LICENSE when arriving here
+	// {
+	// 	LLStartUp::setStartupState(STATE_LOGIN_AUTH_INIT);
+	// }
+
+	// ISSUE 266 : Vivox licence don't need to be accepted
+	gSavedSettings.setWarning("FirstVoiceLicense", FALSE);
+	LLStartUp::setStartupState(STATE_LOGIN_AUTH_INIT);
 }

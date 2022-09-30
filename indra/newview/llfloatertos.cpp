@@ -115,7 +115,7 @@ public:
 			// *HACK: For purposes of this alive check, 302 Found
 			// (aka Moved Temporarily) is considered alive.  The web site
 			// redirects this link to a "cache busting" temporary URL. JC
-			mParent.get()->setSiteIsAlive(mStatus == HTTP_FOUND);
+			mParent.get()->setSiteIsAlive(mStatus <= 400);
 		}
 	}
 

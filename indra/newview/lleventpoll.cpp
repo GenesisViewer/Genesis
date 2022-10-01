@@ -174,13 +174,17 @@ namespace
 		std::string	msg_name	= content["message"];
 		LLSD message;
 		message["sender"] = mSender;
-		message["body"] = content["body"];
+		if( content.has( "body" ) )
+            message["body"] = content["body"];
+        else
+            LL_WARNS() << "Malformed content? " << ll_pretty_print_sd( content ) << LL_ENDL;
 		LLMessageSystem::dispatch(msg_name, message);
 	}
 
 	//virtual
 	void LLEventPollResponder::httpFailure(void)
 	{
+		LL_INFOS() << "LLEventPoll failure " << mSender << " " << mStatus << LL_ENDL;
 		if (mDone) return;
 
 		// Timeout
@@ -249,6 +253,7 @@ namespace
 	//virtual
 	void LLEventPollResponder::httpSuccess(void)
 	{
+		LL_INFOS() << "LLEventPoll sucess " << mSender << LL_ENDL;
 		LL_DEBUGS() <<	"LLEventPollResponder::result <" << mCount	<< ">" 
 				 <<	(mDone ? " -- done"	: "") << ll_pretty_print_sd(mContent)  << LL_ENDL; 
 		

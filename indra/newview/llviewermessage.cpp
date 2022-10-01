@@ -2974,7 +2974,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 		LLWorld::getInstance()->setRegionSize(region_size_x, region_size_y);
 	}
 	LLViewerRegion* regionp =  LLWorld::getInstance()->addRegion(region_handle, sim_host);
-	
+	regionp->setCapability("Seed","");
 	M7WindlightInterface::getInstance()->receiveReset();
 
 	/*

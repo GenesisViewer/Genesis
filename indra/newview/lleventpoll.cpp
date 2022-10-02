@@ -164,7 +164,7 @@ namespace
 		request["ack"] = mAcknowledge;
 		request["done"]	= mDone;
 		
-		LL_DEBUGS() <<	"LLEventPollResponder::makeRequest	<" << mCount <<	"> ack = "
+		LL_INFOS() <<	"LLEventPollResponder::makeRequest	<" << mCount <<	"> ack = "
 				 <<	LLSDXMLStreamer(mAcknowledge) << LL_ENDL;
 		LLHTTPClient::post(mPollURL, request, this);
 	}
@@ -213,7 +213,7 @@ namespace
 		    LL_WARNS("LLEventPollImpl") << "Critical error from poll request returned from libraries.  Canceling coroutine." << LL_ENDL;
 			stop();
 		}
-		else if (mErrorCount < MAX_EVENT_POLL_HTTP_ERRORS)
+		else 
 		{
 			++mErrorCount;
 			
@@ -222,39 +222,16 @@ namespace
 										+ mErrorCount * EVENT_POLL_ERROR_RETRY_SECONDS_INC
 									, this);
 
-			LL_WARNS() << "Unexpected HTTP error.  status: " << mStatus << ", reason: " << mReason << LL_ENDL;
+			LL_WARNS() << "Unexpected HTTP error.  status: " << mStatus << ", reason: " << mReason << "content:" << mContent<< LL_ENDL;
 		}
-		else
-		{
-			LL_WARNS() <<	"LLEventPollResponder::error: <" << mCount << "> got "
-					<<	mStatus << ": " << mReason
-					<<	(mDone ? " -- done"	: "") << LL_ENDL;
-			stop();
-
-			// At this point we have given up and the viewer will not receive HTTP messages from the simulator.
-			// IMs, teleports, about land, selecing land, region crossing and more will all fail.
-			// They are essentially disconnected from the region even though some things may still work.
-			// Since things won't get better until they relog we force a disconnect now.
-
-			/* Singu Note: There's no reason to disconnect, just because this failed a few too many times
-			// *NOTE:Mani - The following condition check to see if this failing event poll
-			// is attached to the Agent's main region. If so we disconnect the viewer.
-			// Else... its a child region and we just leave the dead event poll stopped and 
-			// continue running.
-			if(gAgent.getRegion() && gAgent.getRegion()->getHost().getIPandPort() == mSender)
-			{
-				LL_WARNS() << "Forcing disconnect due to stalled main region event poll."  << LL_ENDL;
-				LLAppViewer::instance()->forceDisconnect(LLTrans::getString("AgentLostConnection"));
-			}
-			*/
-		}
+		
 	}
 
 	//virtual
 	void LLEventPollResponder::httpSuccess(void)
 	{
 		LL_INFOS() << "LLEventPoll sucess " << mSender << LL_ENDL;
-		LL_DEBUGS() <<	"LLEventPollResponder::result <" << mCount	<< ">" 
+		LL_INFOS() <<	"LLEventPollResponder::result <" << mCount	<< ">" 
 				 <<	(mDone ? " -- done"	: "") << ll_pretty_print_sd(mContent)  << LL_ENDL; 
 		
 		if (mDone) return;

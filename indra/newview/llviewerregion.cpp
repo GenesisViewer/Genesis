@@ -2173,11 +2173,18 @@ void LLViewerRegion::failedSeedCapability()
 		LL_WARNS("AppInit", "Capabilities") << "Failed to get seed capabilities from '" << url << "' after " << mImpl->mSeedCapAttempts << " attempts.  Giving up!" << LL_ENDL;
 	}
 }
-
+void LLViewerRegion::restartEventPoller() 
+{
+	if (mLastEventPollURL.empty()) return;
+	delete mImpl->mEventPoll;
+	mImpl->mEventPoll = NULL;
+	mImpl->mEventPoll = new LLEventPoll(mLastEventPollURL, getHost());
+}
 void LLViewerRegion::setCapability(const std::string& name, const std::string& url)
 {
 	if(name == "EventQueueGet")
 	{
+		mLastEventPollURL = url;
 		delete mImpl->mEventPoll;
 		mImpl->mEventPoll = NULL;
 		mImpl->mEventPoll = new LLEventPoll(url, getHost());

@@ -268,7 +268,8 @@ public:
 	U32	getPacketsLost() const;
 
 	S32 getHttpResponderID() const;
-
+	std::string mLastEventPollURL;
+	void restartEventPoller();
 	// Get/set named capability URLs for this region.
 	void setSeedCapability(const std::string& url);
 	void failedSeedCapability();

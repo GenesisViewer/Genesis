@@ -2974,7 +2974,8 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 		LLWorld::getInstance()->setRegionSize(region_size_x, region_size_y);
 	}
 	LLViewerRegion* regionp =  LLWorld::getInstance()->addRegion(region_handle, sim_host);
-	regionp->setCapability("Seed","");
+	regionp->restartEventPoller();
+	// regionp->setCapability("Seed","");
 	M7WindlightInterface::getInstance()->receiveReset();
 
 	/*
@@ -3292,7 +3293,8 @@ void process_crossed_region(LLMessageSystem* msg, void**)
 	
 	std::string seedCap;
 	msg->getStringFast(_PREHASH_RegionData, _PREHASH_SeedCapability, seedCap);
-
+	LLViewerRegion* regionp = LLWorld::getInstance()->addRegion(region_handle, sim_host);
+	regionp->restartEventPoller();
 	send_complete_agent_movement(sim_host);
 
 	if (!gHippoGridManager->getConnectedGrid()->isSecondLife())
@@ -3303,8 +3305,8 @@ void process_crossed_region(LLMessageSystem* msg, void**)
 		msg->getU32(_PREHASH_RegionData, _PREHASH_RegionSizeY, region_size_y);
 		LLWorld::getInstance()->setRegionSize(region_size_x, region_size_y);
 	}
-	LLViewerRegion* regionp = LLWorld::getInstance()->addRegion(region_handle, sim_host);
-
+	
+	
 	LL_DEBUGS("CrossingCaps") << "Calling setSeedCapability from process_crossed_region(). Seed cap == "
 		<< seedCap << LL_ENDL;
 	regionp->setSeedCapability(seedCap);

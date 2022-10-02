@@ -737,7 +737,13 @@ Reply replyOp15s(15);
 AIHTTPTimeoutPolicyBase reply_15s(AIHTTPTimeoutPolicyBase::getDebugSettingsCurlTimeout(),
 	replyOp15s
 	);
-
+// The LLEventPollResponder needs a reply delay of at least 20 seconds, and although that is the
+// default -- enforce it to be 60 seconds and not depend on CurlTimeoutReplyDelay because changing
+// it makes no sense or will break stuff.
+Reply replyOp20s(20);
+AIHTTPTimeoutPolicyBase reply_20s(AIHTTPTimeoutPolicyBase::getDebugSettingsCurlTimeout(),
+	replyOp20s
+	);
 // The LLEventPollResponder needs a reply delay of at least 60 seconds, and although that is the
 // default -- enforce it to be 60 seconds and not depend on CurlTimeoutReplyDelay because changing
 // it makes no sense or will break stuff.
@@ -916,7 +922,7 @@ P(emeraldDicDownloader);
 P(environmentApplyResponder);
 P(environmentRequestResponder);
 P(environmentEepRequestResponder);
-P2(eventPollResponder,							reply_60s);
+P2(eventPollResponder,							reply_20s);
 P(FetchItemHttpHandler);
 P(fetchScriptLimitsAttachmentInfoResponder);
 P(fetchScriptLimitsRegionDetailsResponder);

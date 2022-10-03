@@ -47,6 +47,7 @@
         <combo_item name="month_first" value="default">MM/DD/YYYY</combo_item>
       </combo_box>
       <check_box bottom_delta="0" left="240" follows="top" control_name="SecondsInLog" label="Seconds in Log timestamps" name="seconds_in_log"/>
+      <check_box bottom_delta="-40" left="10" follows="top" control_name="GenxCmdLineSettingEnabled" label="Enable or disable /setdebug" name="GenxCmdLineSettingEnabled"/>
   </panel>
 
   <panel border="true" bottom="-580" height="525" label="Chat UI" left="1" name="ChatUI" width="418">

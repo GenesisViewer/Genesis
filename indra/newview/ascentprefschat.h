@@ -73,6 +73,7 @@ private:
 	S8 tempDateFormat;
 	bool mSecondsInChatAndIMs;
 	bool mSecondsInLog;
+	bool mGenxCmdLineSettingEnabled;
 
 	//Chat UI -----------------------------------------------------------------------------
 	bool mWoLfVerticalIMTabs;

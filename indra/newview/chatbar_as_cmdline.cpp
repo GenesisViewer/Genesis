@@ -271,6 +271,7 @@ bool cmd_line_chat(std::string data, EChatType type)
 		static LLCachedControl<std::string> sAwayCommand(gSavedSettings,  "SinguCmdLineAway");
 		static LLCachedControl<std::string> sURLCommand(gSavedSettings,  "SinguCmdLineURL");
 		static LLCachedControl<std::string> sSettingCommand(gSavedSettings, "SinguCmdLineSetting");
+		//static LLCachedControl<bool> sSettingCommandEnabled(gSavedSettings, "GenxCmdLineSettingEnabled");
 
 		if (cmd == utf8str_tolower(sDrawDistanceCommand)) // dd
 		{
@@ -558,7 +559,7 @@ bool cmd_line_chat(std::string data, EChatType type)
 			}
 			return false;
 		}
-		else if (cmd == utf8str_tolower(sSettingCommand))
+		else if (cmd == utf8str_tolower(sSettingCommand) && gSavedSettings.getBOOL("GenxCmdLineSettingEnabled"))
 		{
 			std::string control_name;
 			if (input >> control_name)

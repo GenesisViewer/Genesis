@@ -208,6 +208,8 @@ void LLPrefsAscentChat::onCommitKeywords(LLUICtrl* ctrl)
 	gSavedPerAccountSettings.setColor4("KeywordsColor",     childGetValue("KeywordsColor"));
 	gSavedPerAccountSettings.setBOOL("KeywordsPlaySound",   childGetValue("KeywordsPlaySound"));
 	gSavedPerAccountSettings.setString("KeywordsSound",     childGetValue("KeywordsSound"));
+	
+	
 }
 
 // Store current settings for cancel
@@ -227,6 +229,7 @@ void LLPrefsAscentChat::refreshValues()
     mLinksForChattingObjects        = gSavedSettings.getU32("LinksForChattingObjects");
     mSecondsInChatAndIMs            = gSavedSettings.getBOOL("SecondsInChatAndIMs");
     mSecondsInLog                   = gSavedSettings.getBOOL("SecondsInLog");
+	mGenxCmdLineSettingEnabled      = gSavedSettings.getBOOL("GenxCmdLineSettingEnabled");
 
     std::string format = gSavedSettings.getString("ShortTimeFormat");
     mTimeFormat = format == "%R" ? 0
@@ -419,6 +422,8 @@ void LLPrefsAscentChat::refresh()
 
     childSetValue("KeywordsPlaySound",   mKeywordsPlaySound);
     childSetValue("KeywordsSound",       mKeywordsSound);
+
+	childSetValue("GenxCmdLineSettingEnabled", mGenxCmdLineSettingEnabled);
 }
 
 // Reset settings to local copy
@@ -519,6 +524,8 @@ void LLPrefsAscentChat::cancel()
     gSavedPerAccountSettings.setColor4("KeywordsColor",     mKeywordsColor);
     gSavedPerAccountSettings.setBOOL("KeywordsPlaySound",   mKeywordsPlaySound);
     gSavedPerAccountSettings.setString("KeywordsSound",     mKeywordsSound.asString());
+
+	gSavedSettings.setBOOL("GenxCmdLineSettingEnabled",mGenxCmdLineSettingEnabled);
 }
 
 // Update local copy so cancel has no effect

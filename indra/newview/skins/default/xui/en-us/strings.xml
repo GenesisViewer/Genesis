@@ -4867,4 +4867,6 @@ Try enclosing path to the editor with double quotes.
   <string name="AIXMLImportError">Failed to import the [TYPE] wearable:</string>
   <string name="AIXMLImportNoArchetypeError">No archetype found in wearable import file "[FILE]".</string>
 
+  <string name="GenxMOTD">Please visit https://genesisviewer.org for tips and tricks</string>
+
 </strings>

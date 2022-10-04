@@ -248,6 +248,7 @@
 
 #include "NACLantispam.h"    // for NaCl Antispam Registry
 
+#include "genxmotd.h"
 class LLEnvironment;
 
 //
@@ -4137,8 +4138,13 @@ bool process_login_success_response(std::string& password, U32& first_sim_size_x
 		LLVector3 position = ll_vector3_from_sd(sd["position"]);
 		gAgent.setHomePosRegion(region_handle, position);
 	}
-
-	gAgent.mMOTD.assign(response["message"]);
+	//Genx : replace default motd with genxMotd every 25 logins
+	std::string genxMOTD = GenxMOTD::getInstance()->getMOTD();
+	LL_INFOS() << "Genx MOTD " << genxMOTD << LL_ENDL;
+	if (genxMOTD.empty())
+		gAgent.mMOTD.assign(response["message"]);
+	else 
+		gAgent.mMOTD.assign(genxMOTD);
 
 	// Options...
 	// Each 'option' is an array of submaps. 

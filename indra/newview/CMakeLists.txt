@@ -635,6 +635,7 @@ set(viewer_SOURCE_FILES
     shupdatechecker.cpp
     shfloatermediaticker.cpp
     wlfPanel_AdvSettings.cpp
+    genxmotd.cpp
     )
 
 set(viewer_HEADER_FILES
@@ -1199,6 +1200,7 @@ set(viewer_HEADER_FILES
     shfloatermediaticker.h
     shupdatechecker.h
     wlfPanel_AdvSettings.h
+    genxmotd.h
     )
 
 source_group("CMake Rules" FILES ViewerInstall.cmake)

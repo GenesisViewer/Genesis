@@ -195,7 +195,7 @@ Intenta iniciar sesión de nuevo en unos instantes.
 Intenta iniciar sesión de nuevo en unos instantes.
 	</string>
 
-	<string name="ViewerDownloadURL">https://www.singularityviewer.org/</string>	
+	<string name="ViewerDownloadURL">https://genesisviewer.org/</string>	
 
 	<!-- Disconnection -->
 	<string name="AgentLostConnection">Esta región está experimentando problemas.  Revisa por favor tu conexión a Internet.</string>

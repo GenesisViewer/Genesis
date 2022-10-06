@@ -152,7 +152,7 @@ Please try logging in again in a minute.</string>
 	<string name="LoginFailedLoggingOutSession">The system has begun logging out your last session.
 Please try logging in again in a minute.</string>
 
-	<string name="ViewerDownloadURL">https://www.singularityviewer.org/</string>
+	<string name="ViewerDownloadURL">https://genesisviewer.org/</string>
 
 	<!-- Disconnection -->
 	<string name="AgentLostConnection">This region may be experiencing trouble.  Please check your connection to the Internet.</string>

@@ -71,10 +71,12 @@ class ViewerManifest(LLManifest):
             self.path("*/*.j2c")
             self.path("*/*.jpg")
             self.path("*/*.png")
+            self.path("*/*.bmp")
             self.path("*.tga")
             self.path("*.j2c")
             self.path("*.jpg")
             self.path("*.png")
+            self.path("*.bmp")
             self.path("*.xml")
 
     def construct(self):

@@ -45,6 +45,7 @@ public:
 	virtual ~LLEventPoll();
 		///< will stop polling, cancelling any poll in progress.
 
+	BOOL isDone();
 
 private:
 	LLHTTPClient::ResponderPtr mImpl;

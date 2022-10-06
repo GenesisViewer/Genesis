@@ -101,8 +101,10 @@ BOOL LLAgentUI::buildLocationString(std::string& str, ELocationFormat fmt,const 
 	}
 
 	// create a default name and description for the landmark
-	std::string parcel_name = LLViewerParcelMgr::getInstance()->getAgentParcelName();
+	std::string parcel_name = parcel->getName();
 	std::string region_name = region->getName();
+	
+	
 // [RLVa:KB] - Checked: 2010-04-04 (RLVa-1.2.0d) | Modified: RLVa-1.2.0d
 	// RELEASE-RLVa: [SL-2.0.0] Check ELocationFormat to make sure our switch still makes sense
 	if (gRlvHandler.hasBehaviour(RLV_BHVR_SHOWLOC))

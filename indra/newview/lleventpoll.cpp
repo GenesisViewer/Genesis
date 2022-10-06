@@ -64,7 +64,7 @@ namespace
 		
 		static LLHTTPClient::ResponderPtr start(const std::string& pollURL, const LLHost& sender);
 		void stop();
-		
+		bool isDone(){return mDone;}
 		void makeRequest();
 
 	private:
@@ -281,5 +281,10 @@ LLEventPoll::~LLEventPoll()
 	LLHTTPClient::ResponderBase* responderp = mImpl.get();
 	LLEventPollResponder* event_poll_responder = dynamic_cast<LLEventPollResponder*>(responderp);
 	if (event_poll_responder) event_poll_responder->stop();
+}
+BOOL LLEventPoll::isDone() {
+	LLHTTPClient::ResponderBase* responderp = mImpl.get();
+	LLEventPollResponder* event_poll_responder = dynamic_cast<LLEventPollResponder*>(responderp);
+	return (event_poll_responder->isDone());
 }
 

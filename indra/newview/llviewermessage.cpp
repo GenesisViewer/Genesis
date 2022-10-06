@@ -3107,7 +3107,7 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 	// set our upstream host the new simulator and shuffle things as
 	// appropriate.
 	LLVector3 shift_vector = regionp->getPosRegionFromGlobal(
-		gAgent.getRegion()->getOriginGlobal());
+	gAgent.getRegion()->getOriginGlobal());
 	gAgent.setRegion(regionp);
 	gObjectList.shiftObjects(shift_vector);
 	// // Is this a really long jump?
@@ -3280,7 +3280,7 @@ void process_crossed_region(LLMessageSystem* msg, void**)
 	}
 	LL_INFOS("Messaging") << "process_crossed_region()" << LL_ENDL;
 	gAgentAvatarp->resetRegionCrossingTimer();
-	gAgent.setIsCrossingRegion(false); // Attachments getting lost on TP, region crossing hook
+	gAgent.setIsCrossingRegion(true); // Attachments getting lost on TP, region crossing hook
 
 
 	U32 sim_ip;

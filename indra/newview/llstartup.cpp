@@ -1171,6 +1171,7 @@ bool idle_startup()
 		if (!gNoRender)
 		{
 			init_start_screen(agent_location_id);
+			gSavedSettings.setBOOL("GenxStartupScreen",FALSE);
 		}
 
 		// Display the startup progress bar.
@@ -3347,18 +3348,22 @@ void init_start_screen(S32 location_id)
 	}
 
 	LL_DEBUGS("AppInit") << "Loading startup bitmap..." << LL_ENDL;
+	std::string temp_str ="";
+	if (gSavedSettings.getBOOL("GenxStartupScreen")) {
+		temp_str = gDirUtilp->getDefaultSkinDir() + gDirUtilp->getDirDelimiter();
+		temp_str += "textures" + gDirUtilp->getDirDelimiter() + "init_splash_screen.bmp";
+	} else {
+		temp_str = gDirUtilp->getLindenUserDir() + gDirUtilp->getDirDelimiter();
 
-	std::string temp_str = gDirUtilp->getLindenUserDir() + gDirUtilp->getDirDelimiter();
-
-	if ((S32)START_LOCATION_ID_LAST == location_id)
-	{
-		temp_str += SCREEN_LAST_FILENAME;
+		if ((S32)START_LOCATION_ID_LAST == location_id)
+		{
+			temp_str += SCREEN_LAST_FILENAME;
+		}
+		else
+		{
+			temp_str += SCREEN_HOME_FILENAME;
+		}
 	}
-	else
-	{
-		temp_str += SCREEN_HOME_FILENAME;
-	}
-
 	LLPointer<LLImageBMP> start_image_bmp = new LLImageBMP;
 	
 	// Turn off start screen to get around the occasional readback 
@@ -3405,6 +3410,7 @@ void release_start_screen()
 {
 	LL_DEBUGS("AppInit") << "Releasing bitmap..." << LL_ENDL;
 	gStartTexture = NULL;
+	
 }
 
 

@@ -3923,7 +3923,8 @@ void LLAppViewer::badNetworkHandler()
 		"the issue. \n"
 		" \n"
 		"If the problem continues, please report the issue at: \n"
-		"http://www.singularityviewer.org";
+		"https://genesisviewer.org \n"
+		"or contact us on inworld group Genesis";
 
 	if (!gHippoGridManager->getCurrentGrid()->getSupportUrl().empty())
 	{

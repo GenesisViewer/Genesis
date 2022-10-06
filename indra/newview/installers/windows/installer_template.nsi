@@ -504,12 +504,12 @@ installed:
   WriteRegStr HKLM "${MSUNINSTALL_KEY}" "DisplayVersion" "${VERSION_LONG}"
   WriteRegStr HKLM "${MSUNINSTALL_KEY}" "InstallLocation" "$INSTDIR"
   WriteRegStr HKLM "${MSUNINSTALL_KEY}" "InstallSource" "$EXEDIR\"
-  WriteRegStr HKLM "${MSUNINSTALL_KEY}" "HelpLink" "http://www.singularityviewer.org"
+  WriteRegStr HKLM "${MSUNINSTALL_KEY}" "HelpLink" "http://www.genesisviewer.org"
   WriteRegDWORD HKLM "${MSUNINSTALL_KEY}" "NoModify" 1
   WriteRegDWORD HKLM "${MSUNINSTALL_KEY}" "NoRepair" 1
   WriteRegStr HKLM "${MSUNINSTALL_KEY}" "Publisher" "${VENDORSTR}"
-  WriteRegStr HKLM "${MSUNINSTALL_KEY}" "URLInfoAbout" "http://www.singularityviewer.org"
-  WriteRegStr HKLM "${MSUNINSTALL_KEY}" "URLUpdateInfo" "http://www.singularityviewer.org/downloads"
+  WriteRegStr HKLM "${MSUNINSTALL_KEY}" "URLInfoAbout" "http://www.genesisviewer.org"
+  WriteRegStr HKLM "${MSUNINSTALL_KEY}" "URLUpdateInfo" "http://www.genesisviewer.org/downloads"
   WriteRegStr HKLM "${MSUNINSTALL_KEY}" "UninstallString" "$\"$INSTDIR\uninst.exe$\""
   WriteRegStr HKLM "${MSUNINSTALL_KEY}" "QuietUninstallString" "$\"$INSTDIR\uninst.exe$\" /S"
   ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2

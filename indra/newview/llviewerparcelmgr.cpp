@@ -628,6 +628,7 @@ void LLViewerParcelMgr::removeObserver(LLParcelObserver* observer)
 // from the list.
 void LLViewerParcelMgr::notifyObservers()
 {
+	LL_INFOS() << "Notifying Observers on parcel change" << LL_ENDL;
 	std::vector<LLParcelObserver*> observers;
 	S32 count = mObservers.size();
 	S32 i;
@@ -1554,6 +1555,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 	}
 	else if (sequence_id == 0 || sequence_id > parcel_mgr.mAgentParcelSequenceID)
 	{
+		LL_INFOS() << "New Agent Parcel" << LL_ENDL;
 		// new agent parcel
 		parcel_mgr.mAgentParcelSequenceID = sequence_id;
 		parcel = parcel_mgr.mAgentParcel;
@@ -1891,6 +1893,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 			}
 		}//if gAudiop
 	};
+	LL_INFOS() << "Parcel properties end " << parcel_mgr.mAgentParcel->getName() << LL_ENDL;
 }
 
 void optionally_start_music(LLParcel* parcel)

@@ -2176,6 +2176,7 @@ void LLViewerRegion::failedSeedCapability()
 void LLViewerRegion::restartEventPoller() 
 {
 	if (mLastEventPollURL.empty()) return;
+	if (!mImpl->mEventPoll->isDone()) return;
 	delete mImpl->mEventPoll;
 	mImpl->mEventPoll = NULL;
 	mImpl->mEventPoll = new LLEventPoll(mLastEventPollURL, getHost());

@@ -887,7 +887,7 @@ void LLAgent::handleServerBakeRegionTransition(const LLUUID& region_id)
 
 void LLAgent::changeParcels()
 {
-	LL_DEBUGS("AgentLocation") << "Calling ParcelChanged callbacks" << LL_ENDL;
+	LL_INFOS("AgentLocation") << "Calling ParcelChanged callbacks" << LL_ENDL;
 	// Notify anything that wants to know about parcel changes
 	mParcelChangedSignal();
 }
@@ -909,6 +909,7 @@ void LLAgent::setRegion(LLViewerRegion *regionp)
 		std::string ip = regionp->getHost().getString();
 		LL_INFOS("AgentLocation") << "Moving agent into region: " << regionp->getName()
 				<< " located at " << ip << LL_ENDL;
+		mRegionp = regionp;		
 		if (mRegionp)
 		{
 			// NaCl - Antispam Registry
@@ -972,8 +973,10 @@ void LLAgent::setRegion(LLViewerRegion *regionp)
 		LLAppViewer::metricsUpdateRegion(regionp->getHandle());
 	}
 
-	mRegionp = regionp;
-
+	// Pass the region host to LLUrlEntryParcel to resolve parcel name
+	// with a server request.
+	LLUrlEntryParcel::setRegionHost(getRegionHost());
+	
 	// Must shift hole-covering water object locations because local
 	// coordinate frame changed.
 	LLWorld::getInstance()->updateWaterObjects();

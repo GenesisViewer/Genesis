@@ -272,6 +272,7 @@ LLFloaterLand::LLFloaterLand(const LLSD& seed)
 
 	sObserver = new LLParcelSelectionObserver();
 	LLViewerParcelMgr::getInstance()->addObserver( sObserver );
+	
 }
 
 BOOL LLFloaterLand::postBuild()

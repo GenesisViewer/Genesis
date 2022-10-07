@@ -1039,7 +1039,7 @@ bool getColorFor(const LLUUID& id, LLViewerRegion* parent_estate, LLColor4& colo
 bool mm_getMarkerColor(const LLUUID&, LLColor4&);
 bool getCustomColor(const LLUUID& id, LLColor4& color, LLViewerRegion* parent_estate)
 {
-	return (mm_getMarkerColor(id, color)  && (SHClientTagMgr::instance().notesRequested(id))) || getColorFor(id, parent_estate, color);
+	return mm_getMarkerColor(id, color) || getColorFor(id, parent_estate, color);
 }
 bool getCustomColorRLV(const LLUUID& id, LLColor4& color, LLViewerRegion* parent_estate, bool name_restricted)
 {
@@ -1048,7 +1048,7 @@ bool getCustomColorRLV(const LLUUID& id, LLColor4& color, LLViewerRegion* parent
 bool SHClientTagMgr::getClientColor(const LLVOAvatar* pAvatar, bool check_status, LLColor4& color) const
 {
 	const LLUUID& id(pAvatar->getID());
-	if (mm_getMarkerColor(id, color) && (SHClientTagMgr::instance().notesRequested(id))) return true;
+	if (mm_getMarkerColor(id, color)) return true;
 	static const LLCachedControl<bool> ascent_use_status_colors("AscentUseStatusColors",true);
 	static const LLCachedControl<bool> ascent_show_self_tag_color("AscentShowSelfTagColor");
 	static const LLCachedControl<bool> ascent_show_others_tag_color("AscentShowOthersTagColor");

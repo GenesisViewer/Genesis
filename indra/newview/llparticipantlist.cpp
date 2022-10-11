@@ -229,6 +229,13 @@ void LLParticipantList::refreshSpeakers()
 		return;
 	}
 	mUpdateTimer.reset();
+	if (LLUICtrl* ctrl = findChild<LLUICtrl>("resident_name"))
+	{
+		LLRect listRect = getChild<LLUICtrl>("speakers_list")->getRect();
+		LLRect ctrlRect = getChild<LLUICtrl>("resident_name")->getRect();
+		ctrlRect.set(listRect.mLeft+34,ctrlRect.mTop,listRect.mRight,ctrlRect.mBottom);
+		ctrl->setRect(ctrlRect);
+	}
 	// store off current selection and scroll state to preserve across list rebuilds
 	const S32 scroll_pos = mAvatarList->getScrollInterface()->getScrollPos();
 

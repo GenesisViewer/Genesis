@@ -53,8 +53,11 @@ LLFloaterMessageLogItem::LLFloaterMessageLogItem(LLMessageLogEntry entry)
 		memcpy(&(DecodeBuffer[0]),&(mData[0]),decode_len);
 		U8* decodep = &(DecodeBuffer[0]);
 		mFlags = DecodeBuffer[0];
-		gMessageSystem->zeroCodeExpand(&decodep, &decode_len);
-		if(decode_len < 7)
+		
+		if (decode_len==0) {
+			decode_invalid = TRUE;
+		} 
+		else if(decode_len < 7)
 			decode_invalid = TRUE;
 		else
 		{
@@ -64,62 +67,67 @@ LLFloaterMessageLogItem::LLFloaterMessageLogItem(LLMessageLogEntry entry)
 				decode_invalid = TRUE;
 			else
 			{
-				if(!sTemplateMessageReader->decodeData(decodep, mFromHost, true))
-					decode_invalid = TRUE;
-				else
-				{
-					LLMessageTemplate* temp = sTemplateMessageReader->mCurrentRMessageTemplate;
-					mName = temp->mName;
-					mSummary = "";
-					
-					if(mFlags)
+				S32 valid = gMessageSystem->zeroCodeExpand(&decodep, &decode_len,FALSE);
+				if (valid>=0) {
+					if(!sTemplateMessageReader->decodeData(decodep, mFromHost, true))
+						decode_invalid = TRUE;
+					else
 					{
-						mSummary.append(" [ ");
-						if(mFlags & LL_ZERO_CODE_FLAG)
-							mSummary.append(" Zer ");
-						if(mFlags & LL_RELIABLE_FLAG)
-							mSummary.append(" Rel ");
-						if(mFlags & LL_RESENT_FLAG)
-							mSummary.append(" Rsd ");
-						if(mFlags & LL_ACK_FLAG)
-							mSummary.append(" Ack ");
-						mSummary.append(" ] ");
-					}
-					
-					LLMessageTemplate::message_block_map_t::const_iterator blocks_end = temp->mMemberBlocks.end();
-					for (LLMessageTemplate::message_block_map_t::const_iterator blocks_iter = temp->mMemberBlocks.begin();
-						 blocks_iter != blocks_end; ++blocks_iter)
-					{
-						const LLMessageBlock* block = temp->mMemberBlocks.toValue(blocks_iter);
-						const char* block_name = block->mName;
-						S32 num_blocks = sTemplateMessageReader->getNumberOfBlocks(block_name);
-						if(!num_blocks)
-							mSummary.append(" { } ");
-						else if(num_blocks > 1)
-							mSummary.append(llformat(" %s [ %d ] { ... } ", block_name, num_blocks));
-						else for(S32 i = 0; i < 1; i++)
+						LLMessageTemplate* temp = sTemplateMessageReader->mCurrentRMessageTemplate;
+						mName = temp->mName;
+						mSummary = "";
+						
+						if(mFlags)
 						{
-							mSummary.append(" { ");
-							LLMessageBlock::message_variable_map_t::const_iterator var_end = block->mMemberVariables.end();
-							for (LLMessageBlock::message_variable_map_t::const_iterator var_iter = block->mMemberVariables.begin();
-								 var_iter != var_end; ++var_iter)
+							mSummary.append(" [ ");
+							if(mFlags & LL_ZERO_CODE_FLAG)
+								mSummary.append(" Zer ");
+							if(mFlags & LL_RELIABLE_FLAG)
+								mSummary.append(" Rel ");
+							if(mFlags & LL_RESENT_FLAG)
+								mSummary.append(" Rsd ");
+							if(mFlags & LL_ACK_FLAG)
+								mSummary.append(" Ack ");
+							mSummary.append(" ] ");
+						}
+						
+						LLMessageTemplate::message_block_map_t::const_iterator blocks_end = temp->mMemberBlocks.end();
+						for (LLMessageTemplate::message_block_map_t::const_iterator blocks_iter = temp->mMemberBlocks.begin();
+							blocks_iter != blocks_end; ++blocks_iter)
+						{
+							const LLMessageBlock* block = temp->mMemberBlocks.toValue(blocks_iter);
+							const char* block_name = block->mName;
+							S32 num_blocks = sTemplateMessageReader->getNumberOfBlocks(block_name);
+							if(!num_blocks)
+								mSummary.append(" { } ");
+							else if(num_blocks > 1)
+								mSummary.append(llformat(" %s [ %d ] { ... } ", block_name, num_blocks));
+							else for(S32 i = 0; i < 1; i++)
 							{
-								const LLMessageVariable* variable = block->mMemberVariables.toValue(var_iter);
-								const char* var_name = variable->getName();
-								BOOL returned_hex;
-								std::string value = getString(sTemplateMessageReader, block_name, i, var_name, variable->getType(), returned_hex, TRUE);
-								mSummary.append(llformat(" %s=%s ", var_name, value.c_str()));
+								mSummary.append(" { ");
+								LLMessageBlock::message_variable_map_t::const_iterator var_end = block->mMemberVariables.end();
+								for (LLMessageBlock::message_variable_map_t::const_iterator var_iter = block->mMemberVariables.begin();
+									var_iter != var_end; ++var_iter)
+								{
+									const LLMessageVariable* variable = block->mMemberVariables.toValue(var_iter);
+									const char* var_name = variable->getName();
+									BOOL returned_hex;
+									std::string value = getString(sTemplateMessageReader, block_name, i, var_name, variable->getType(), returned_hex, TRUE);
+									mSummary.append(llformat(" %s=%s ", var_name, value.c_str()));
+								}
+								mSummary.append(" } ");
+								if(mSummary.length() > 255) break;
 							}
-							mSummary.append(" } ");
-							if(mSummary.length() > 255) break;
-						}
-						if(mSummary.length() > 255)
-						{
-							mSummary.append(" ... ");
-							break;
-						}
-					} // blocks_iter
-				} // decode_valid
+							if(mSummary.length() > 255)
+							{
+								mSummary.append(" ... ");
+								break;
+							}
+						} // blocks_iter
+					} // decode_valid
+				} else {
+					decode_invalid=TRUE;
+				}	
 			}
 		}
 		if(decode_invalid)

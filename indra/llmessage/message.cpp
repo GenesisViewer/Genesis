@@ -2867,7 +2867,7 @@ S32 LLMessageSystem::zeroCodeAdjustCurrentSendTotal()
 
 
 
-S32 LLMessageSystem::zeroCodeExpand(U8** data, S32* data_size)
+S32 LLMessageSystem::zeroCodeExpand(U8** data, S32* data_size,bool sendExceptions)
 {
 	if ((*data_size ) < LL_MINIMUM_VALID_PACKET_SIZE)
 	{
@@ -2912,7 +2912,9 @@ S32 LLMessageSystem::zeroCodeExpand(U8** data, S32* data_size)
 		if (outptr > (&mEncodedRecvBuffer[MAX_BUFFER_SIZE-1]))
 		{
 			LL_WARNS("Messaging") << "attempt to write past reasonable encoded buffer size 1" << LL_ENDL;
-			callExceptionFunc(MX_WROTE_PAST_BUFFER_SIZE);
+			if (sendExceptions)
+				callExceptionFunc(MX_WROTE_PAST_BUFFER_SIZE);
+			else return -1;	
 			outptr = mEncodedRecvBuffer;					
 			break;
 		}
@@ -2924,7 +2926,9 @@ S32 LLMessageSystem::zeroCodeExpand(U8** data, S32* data_size)
   				if (outptr > (&mEncodedRecvBuffer[MAX_BUFFER_SIZE-256]))
   				{
   					LL_WARNS("Messaging") << "attempt to write past reasonable encoded buffer size 2" << LL_ENDL;
-					callExceptionFunc(MX_WROTE_PAST_BUFFER_SIZE);
+					if (sendExceptions)
+						callExceptionFunc(MX_WROTE_PAST_BUFFER_SIZE);
+					else return -1;		
 					outptr = mEncodedRecvBuffer;
 					count = -1;
 					break;
@@ -2943,7 +2947,9 @@ S32 LLMessageSystem::zeroCodeExpand(U8** data, S32* data_size)
   				if (outptr > (&mEncodedRecvBuffer[MAX_BUFFER_SIZE-(*inptr)]))
 				{
   					LL_WARNS("Messaging") << "attempt to write past reasonable encoded buffer size 3" << LL_ENDL;
-					callExceptionFunc(MX_WROTE_PAST_BUFFER_SIZE);
+					if (sendExceptions)
+						callExceptionFunc(MX_WROTE_PAST_BUFFER_SIZE);
+					else return -1;			
 					outptr = mEncodedRecvBuffer;					
 				}
 				memset(outptr,0,(*inptr) - 1);

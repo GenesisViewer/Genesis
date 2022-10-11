@@ -460,7 +460,7 @@ public:
 	//void	buildMessage();
 
 	S32     zeroCode(U8 **data, S32 *data_size);
-	S32		zeroCodeExpand(U8 **data, S32 *data_size);
+	S32		zeroCodeExpand(U8 **data, S32 *data_size,bool sendExceptions = TRUE);
 	S32		zeroCodeAdjustCurrentSendTotal();
 
 	// Uses ping-based retry

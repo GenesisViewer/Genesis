@@ -24,6 +24,6 @@
 	<check_box bottom="-325" height="16" initial_value="false" label="Show incoming IM in Local Chat log" name="log_chat_IM"/>
 	<check_box bottom="-345" height="16" initial_value="false" label="Include date with timestamps" left="148" name="log_date_timestamp"/>
 	<check_box bottom="-365" height="16" initial_value="false" label="Append date to log filename" name="logfile_name_datestamp"/>
-	<button bottom="-353" follows="right|bottom" height="20" label="Change Path" label_selected="Change Path" left="70" name="log_path_button" width="90" />
-	<line_editor border_drop_shadow_visible="false" border_visible="false" bottom="-386" drop_shadow_visible="true" follows="top|left|right" height="19" left="148"	max_length="254" mouse_opaque="false" name="log_path_string" right="-20" />
+	<button bottom="-351" follows="right|bottom" height="20" label="Change Path" label_selected="Change Path" left="330" name="log_path_button" width="90" />
+	<line_editor border_drop_shadow_visible="false" border_visible="false" bottom="-386" drop_shadow_visible="true" follows="top|left|right" height="19" left="148"	max_length="254"  mouse_opaque="false" name="log_path_string" right="-200" />
 </panel>

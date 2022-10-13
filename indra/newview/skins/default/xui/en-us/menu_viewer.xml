@@ -1019,7 +1019,7 @@
 		</menu_item_call>
 	</menu>
 	<menu create_jump_keys="true" drop_shadow="true" enabled="true" label="[SHORT_APP_NAME]" mouse_opaque="false" name="Singularity" opaque="true" tear_off="true">
-		<menu_item_call label="Close All Dialogs" mouse_opaque="true" name="Close All Dialogs" shortcut="control|alt|shift|D">
+		<menu_item_call label="Close All Dialogs" mouse_opaque="true" name="Close All Dialogs">
 			<on_click function="CloseAllDialogs"/>
 		</menu_item_call>
 		<menu_item_separator mouse_opaque="true" name="separators1"/>

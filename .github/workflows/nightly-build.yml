@@ -52,7 +52,7 @@ jobs:
          dep_user: ${{secrets.DEP_USER}}
         run: mkdir -p /tmp/nsis/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/StdUtils.nsh --output /tmp/nsis/StdUtils.nsh
         
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: fmod
           path: /tmp/deps/
@@ -81,7 +81,7 @@ jobs:
      - run : pip install autobuild llbase
      
      - name: downloading-private-fmod
-       uses: actions/download-artifact@v2
+       uses: actions/download-artifact@v3
        with:
            name: fmod
            path: c:/temp/

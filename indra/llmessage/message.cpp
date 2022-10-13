@@ -2114,7 +2114,7 @@ void LLMessageSystem::dispatch(
 		return;
 	}
 	// enable this for output of message names
-	LL_INFOS("Messaging") << "< \"" << msg_name << "\"" << LL_ENDL;
+	//LL_INFOS("Messaging") << "< \"" << msg_name << "\"" << LL_ENDL;
 	//LL_DEBUGS() << "data: " << LLSDNotationStreamer(message) << LL_ENDL;	   
 
 	handler->post(responsep, context, message);

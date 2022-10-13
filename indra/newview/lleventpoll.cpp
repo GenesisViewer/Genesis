@@ -164,7 +164,7 @@ namespace
 		request["ack"] = mAcknowledge;
 		request["done"]	= mDone;
 		
-		LL_INFOS() <<	"LLEventPollResponder::makeRequest	<" << mCount <<	"> ack = "
+		LL_DEBUGS() <<	"LLEventPollResponder::makeRequest	<" << mCount <<	"> ack = "
 				 <<	LLSDXMLStreamer(mAcknowledge) << LL_ENDL;
 		LLHTTPClient::post(mPollURL, request, this);
 	}
@@ -184,7 +184,7 @@ namespace
 	//virtual
 	void LLEventPollResponder::httpFailure(void)
 	{
-		LL_INFOS() << "LLEventPoll failure " << mSender << " " << mStatus << LL_ENDL;
+		LL_DEBUGS() << "LLEventPoll failure " << mSender << " " << mStatus << LL_ENDL;
 		if (mDone) return;
 
 		// Timeout
@@ -230,8 +230,8 @@ namespace
 	//virtual
 	void LLEventPollResponder::httpSuccess(void)
 	{
-		LL_INFOS() << "LLEventPoll sucess " << mSender << LL_ENDL;
-		LL_INFOS() <<	"LLEventPollResponder::result <" << mCount	<< ">" 
+		LL_DEBUGS() << "LLEventPoll sucess " << mSender << LL_ENDL;
+		LL_DEBUGS() <<	"LLEventPollResponder::result <" << mCount	<< ">" 
 				 <<	(mDone ? " -- done"	: "") << ll_pretty_print_sd(mContent)  << LL_ENDL; 
 		
 		if (mDone) return;

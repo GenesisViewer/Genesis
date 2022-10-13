@@ -439,6 +439,8 @@ bool HTTPTimeout::maybe_upload_finished(void)
 
 void HTTPTimeout::print_diagnostics(CurlEasyRequest const* curl_easy_request, char const* eff_url)
 {
+  //decomment this for timeout diagnostics
+  return;
 #ifndef HTTPTIMEOUT_TESTSUITE
   LL_WARNS() << "Request to \"" << curl_easy_request->getLowercaseServicename() << "\" timed out for " << curl_easy_request->getTimeoutPolicy()->name() << LL_ENDL;
   LL_INFOS() << "Effective URL: \"" << eff_url << "\"." << LL_ENDL;

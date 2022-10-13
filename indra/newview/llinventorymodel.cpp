@@ -1640,7 +1640,7 @@ void LLInventoryModel::idleNotifyObservers()
 // Call this method when it's time to update everyone on a new state.
 void LLInventoryModel::notifyObservers()
 {
-	LL_INFOS() << " LLInventoryModel::notifyObservers()" << LL_ENDL;
+	LL_DEBUGS() << " LLInventoryModel::notifyObservers()" << LL_ENDL;
 	if (mIsNotifyObservers)
 	{
 		// Within notifyObservers, something called notifyObservers

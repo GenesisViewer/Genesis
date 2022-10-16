@@ -570,8 +570,7 @@ LLAppViewer::LLAppViewer() :
 	mQuitRequested(false),
 	mLogoutRequestSent(false),
 	mMainloopTimeout(NULL),
-	mAgentRegionLastAlive(false),
-	mLastAgentForceUpdate(0)
+	mAgentRegionLastAlive(false)
 {
 	if(nullptr != sInstance)
 	{
@@ -1423,7 +1422,7 @@ bool LLAppViewer::mainLoop()
 
 			// canonical per-frame event
 			mainloop.post(newFrame);
-			
+
 			if (!LLApp::isExiting())
 			{
 				pingMainloopTimeout("Main:JoystickKeyboard");
@@ -2665,7 +2664,7 @@ bool LLAppViewer::initConfiguration()
 	//
 	// Set the name of the window
 	//
-	gWindowTitle = LLTrans::getString("APP_NAME") + llformat(" (%d) ", LLVersionInfo::getBuild())
+	gWindowTitle = LLVersionInfo::getChannel() + llformat(" (%d.%d.%d) ",LLVersionInfo::getMajor(),LLVersionInfo::getMinor(), LLVersionInfo::getBuild())
 #if LL_DEBUG
 		+ "[DEBUG] "
 #endif
@@ -3923,8 +3922,7 @@ void LLAppViewer::badNetworkHandler()
 		"the issue. \n"
 		" \n"
 		"If the problem continues, please report the issue at: \n"
-		"https://genesisviewer.org \n"
-		"or contact us on inworld group Genesis";
+		"http://www.singularityviewer.org";
 
 	if (!gHippoGridManager->getCurrentGrid()->getSupportUrl().empty())
 	{
@@ -4168,18 +4166,14 @@ void LLAppViewer::idle()
 
 		//	When appropriate, update agent location to the simulator.
 		F32 agent_update_time = agent_update_timer.getElapsedTimeF32();
-		F32 agent_force_update_time = mLastAgentForceUpdate + agent_update_time;
-		BOOL force_update = gAgent.controlFlagsDirty()
-							|| (last_control_flags != gAgent.getControlFlags())
-							|| (agent_force_update_time > (1.0f / (F32) AGENT_FORCE_UPDATES_PER_SECOND));
-		
+		BOOL flags_changed = gAgent.controlFlagsDirty()
+							 || (last_control_flags != gAgent.getControlFlags());
 
-		if (force_update || (agent_update_time > (1.0f / (F32) AGENT_UPDATES_PER_SECOND)))
+		if (flags_changed || (agent_update_time > (1.0f / (F32)AGENT_UPDATES_PER_SECOND)))
 		{
 			LL_RECORD_BLOCK_TIME(FTM_AGENT_UPDATE);
 			// Send avatar and camera info
 			last_control_flags = gAgent.getControlFlags();
-			mLastAgentForceUpdate = force_update ? 0 : agent_force_update_time;
 			send_agent_update(TRUE);
 			agent_update_timer.reset();
 		}
@@ -4695,7 +4689,6 @@ void LLAppViewer::idleNameCache()
 
 #ifdef TIME_THROTTLE_MESSAGES
 #define CHECK_MESSAGES_DEFAULT_MAX_TIME .020f // 50 ms = 50 fps (just for messages!)
-#define CHECK_MESSAGES_MAX_TIME_LIMIT 1.0f // 1 second, a long time but still able to stay connected
 static F32 CheckMessagesMaxTime = CHECK_MESSAGES_DEFAULT_MAX_TIME;
 #endif
 
@@ -4754,29 +4747,16 @@ void LLAppViewer::idleNetwork()
 		}
 
 		// Handle per-frame message system processing.
-		gMessageSystem->processAcks(0.1f);
+		gMessageSystem->processAcks();
 
 #ifdef TIME_THROTTLE_MESSAGES
 		if (total_time >= CheckMessagesMaxTime)
 		{
-		// <FS:Beq> Don't allow busy network to excessively starve rendering loop
-		// 	// Increase CheckMessagesMaxTime so that we will eventually catch up
-		// 	CheckMessagesMaxTime *= 1.035f; // 3.5% ~= x2 in 20 frames, ~8x in 60 frames
-		// }
-		// else
-		// {
-			if( CheckMessagesMaxTime < CHECK_MESSAGES_MAX_TIME_LIMIT ) // cap the increase to avoid logout through ping starvation
-			{// Increase CheckMessagesMaxTime so that we will eventually catch up
-				CheckMessagesMaxTime *= 1.035f; // 3.5% ~= x2 in 20 frames, ~8x in 60 frames
-			}
-			else
-			{
-				CheckMessagesMaxTime = CHECK_MESSAGES_MAX_TIME_LIMIT;
-			}
+			// Increase CheckMessagesMaxTime so that we will eventually catch up
+			CheckMessagesMaxTime *= 1.035f; // 3.5% ~= x2 in 20 frames, ~8x in 60 frames
 		}
 		else
 		{
-		// </FS:Beq>
 			// Reset CheckMessagesMaxTime to default value
 			CheckMessagesMaxTime = CHECK_MESSAGES_DEFAULT_MAX_TIME;
 		}

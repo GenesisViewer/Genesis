@@ -197,11 +197,11 @@
 ;--------------------------------
 ;Version Information
 
-  VIProductVersion "1.0.0.0"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Genesis-Eve Installer"
+  VIProductVersion "${VERSION_LONG}"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Genesis Installer"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "A viewer for the meta-verse!"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "${VENDORSTR}"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright © 2010-2020, ${VENDORSTR}"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright © 2010-2022, ${VENDORSTR}"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${APPNAME} Installer"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${VERSION_LONG}"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION_LONG}"

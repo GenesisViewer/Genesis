@@ -226,8 +226,8 @@ class ViewerManifest(LLManifest):
             'version_underscores' : '_'.join(self.args['version']),
             'arch':self.args['arch']
             }
-        #return "%(channel_vendor_base)s%(channel_variant_underscores)s_%(version_underscores)s_%(arch)s" % substitution_strings
-        return "%(channel_vendor_base)s-Eve_%(channel_variant_underscores)s_%(arch)s" % substitution_strings
+        return "%(channel_vendor_base)s%(channel_variant_underscores)s_%(version_underscores)s_%(arch)s" % substitution_strings
+        #return "%(channel_vendor_base)s_%(channel_variant_underscores)s_%(arch)s" % substitution_strings
 
     def app_name(self):
         #global CHANNEL_VENDOR_BASE

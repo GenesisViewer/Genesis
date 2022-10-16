@@ -1171,7 +1171,8 @@ bool idle_startup()
 		if (!gNoRender)
 		{
 			init_start_screen(agent_location_id);
-			gSavedSettings.setBOOL("GenxStartupScreen",FALSE);
+			
+			gSavedSettings.setS32("GenxRevision",LLVersionInfo::getBuild());	
 		}
 
 		// Display the startup progress bar.
@@ -3349,7 +3350,7 @@ void init_start_screen(S32 location_id)
 
 	LL_DEBUGS("AppInit") << "Loading startup bitmap..." << LL_ENDL;
 	std::string temp_str ="";
-	if (gSavedSettings.getBOOL("GenxStartupScreen")) {
+	if (LLVersionInfo::getBuild() != gSavedSettings.getS32("GenxRevision")){
 		temp_str = gDirUtilp->getDefaultSkinDir() + gDirUtilp->getDirDelimiter();
 		temp_str += "textures" + gDirUtilp->getDirDelimiter() + "init_splash_screen.bmp";
 	} else {

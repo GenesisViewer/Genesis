@@ -19440,6 +19440,18 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <integer>1</integer>
     </map>
+    
+    <key>GenxRevision</key>
+    <map>
+      <key>Comment</key>
+      <string>The current revision of Genx installation</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>S32</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>GenxStartupScreen</key>
     <map>
       <key>Comment</key>

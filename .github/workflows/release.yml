@@ -3,7 +3,6 @@
 name: release-build
 
 on:
-  schedule:
     
   workflow_dispatch:
 

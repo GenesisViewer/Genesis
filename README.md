@@ -11,16 +11,19 @@ These tools are needed to be able to build the project
 
 Extract StdUtils and move the Include directory into your NSIS install and
 move Plugins\Unicode\StdUtils.dll to plugins\x86-unicode\ in your NSIS install
+
 Extract the 7z Plugin and move the Plugins directory into your NSIS install directory
+
 Extract the INetC Plugin and move the Plugins directory into your NSIS Install directory
 
 ## Install autobuild
-pip install git+https://bitbucket.org/lindenlab/autobuild.git@v3
+pip install autobuild llbase
 
 ## Generating the project
-set the environment variable AUTOBUILD_VARIABLES_FILE=<path-to-your-variables-file>
-run set AUTOBUILD_WIN_VSHOST=x64
-autobuild configure -cRelease -A64 --  -DUSE_FMODSTUDIO:BOOL=ON
+
+run set AUTOBUILD_WIN_VSHOST=v143
+
+autobuild configure -cRelease -A64 -- -DVIEWER_CHANNEL_BASE="Genesis" -DVIEWER_CHANNEL_TYPE=Test'
 
 ## Building the project
 autobuild build --no-configure -cRelease -A64

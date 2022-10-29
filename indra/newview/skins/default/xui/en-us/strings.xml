@@ -25,8 +25,8 @@ Make sure you entered the correct Login URI. An example of a Login URI is: \"htt
 
 	<!-- Default Args - these arguments will be replaced in all strings -->
 	<string name="SECOND_LIFE">Second Life</string>
-	<string name="APP_NAME">Genesis-Eve</string>
-	<string name="CAPITALIZED_APP_NAME">GENESIS-EVE</string>
+	<string name="APP_NAME">Genesis</string>
+	<string name="CAPITALIZED_APP_NAME">GENESIS</string>
 	<string name="SHORT_APP_NAME">Genesis</string>
 	<string name="APP_SITE">https://www.genesisviewer.org</string>
 	<string name="SECOND_LIFE_GRID">Second Life Grid</string>

@@ -241,7 +241,7 @@ class ViewerManifest(LLManifest):
         if self.channel_type() == 'release':
             return "Genesis"
         else: 
-            return "Genesis-Eve_test"    
+            return "Genesis-Eve"    
 
     def app_name_oneword(self):
         return ''.join(self.app_name().split())
@@ -766,19 +766,33 @@ class WindowsManifest(ViewerManifest):
             substitution_strings['caption'] = CHANNEL_VENDOR_BASE
         else:
             substitution_strings['caption'] = self.app_name() + ' ${VERSION}'
-
-        inst_vars_template = """
-            !define INSTEXE  "%(final_exe)s"
-            !define INSTOUTFILE "%(installer_file)s"
-            !define APPNAME   "%(app_name)s"
-            !define APPNAMEONEWORD   "%(app_name_oneword)s"
-            !define URLNAME   "secondlife"
-            !define CAPTIONSTR "%(caption)s"
-            !define VENDORSTR "Genesis-Eve Project"
-            !define VERSION "%(version_short)s"
-            !define VERSION_LONG "%(version)s"
-            !define VERSION_DASHES "%(version_dashes)s"
-            """
+        inst_vars_template=""
+        if self.channel_type() == 'test':
+            inst_vars_template = """
+                !define INSTEXE  "%(final_exe)s"
+                !define INSTOUTFILE "%(installer_file)s"
+                !define APPNAME   "%(app_name)s_%(channel_type)s"
+                !define APPNAMEONEWORD   "%(app_name_oneword)s_%(channel_type)s"
+                !define URLNAME   "secondlife"
+                !define CAPTIONSTR "%(caption)s"
+                !define VENDORSTR "Genesis-Eve Project"
+                !define VERSION "%(version_short)s"
+                !define VERSION_LONG "%(version)s"
+                !define VERSION_DASHES "%(version_dashes)s"
+                """
+        else:                
+            inst_vars_template = """
+                !define INSTEXE  "%(final_exe)s"
+                !define INSTOUTFILE "%(installer_file)s"
+                !define APPNAME   "%(app_name)s"
+                !define APPNAMEONEWORD   "%(app_name_oneword)s"
+                !define URLNAME   "secondlife"
+                !define CAPTIONSTR "%(caption)s"
+                !define VENDORSTR "Genesis-Eve Project"
+                !define VERSION "%(version_short)s"
+                !define VERSION_LONG "%(version)s"
+                !define VERSION_DASHES "%(version_dashes)s"
+                """
 
         tempfile = "%s_setup_tmp.nsi" % self.viewer_branding_id()
         # the following replaces strings in the nsi template

@@ -108,6 +108,9 @@ private:
 	bool mShowContactSetOnAvatarTag;
 	bool mShowContactSetOnLocalChat;
 	bool mShowContactSetOnRadar;
+
+	//favorites bar
+	bool mShowFavBar;
 };
 
 #endif

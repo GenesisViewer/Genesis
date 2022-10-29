@@ -2287,7 +2287,7 @@ void LLViewerWindow::initWorldUI_postLogin()
 		gFavoritesBar->setFollows(FOLLOWS_LEFT | FOLLOWS_RIGHT | FOLLOWS_TOP);
 		gFavoritesBar->reshape(root_rect.getWidth(), 20, TRUE);
 		gFavoritesBar->translate(0, root_rect.getHeight() - gFavoritesBar->getRect().getHeight()- status_rect.getHeight() - 1);
-		gFavoritesBar->setVisible(TRUE);
+		gFavoritesBar->setVisible(gSavedSettings.getBOOL("GenxFavBar"));
 		
 
 		getRootView()->addChildInBack(gFavoritesBar,0);

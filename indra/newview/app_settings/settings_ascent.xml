@@ -1324,7 +1324,7 @@ Changing this setting only affects new text.</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <boolean>0</boolean>
+      <boolean>1</boolean>
       <key>IsCOA</key>
       <integer>1</integer>
     </map>
@@ -1428,7 +1428,7 @@ Changing this setting only affects new text.</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <boolean>0</boolean>
+      <boolean>1</boolean>
       <key>IsCOA</key>
       <integer>1</integer>
     </map>
@@ -1493,7 +1493,7 @@ Changing this setting only affects new text.</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <boolean>0</boolean>
+      <boolean>1</boolean>
       <key>IsCOA</key>
       <integer>1</integer>
     </map>
@@ -1623,7 +1623,7 @@ Changing this setting only affects new text.</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <boolean>0</boolean>
+      <boolean>1</boolean>
       <key>IsCOA</key>
       <integer>1</integer>
     </map>
@@ -2405,7 +2405,7 @@ Changing this setting only affects new text.</string>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <boolean>0</boolean>
+      <boolean>1</boolean>
       <key>IsCOA</key>
       <integer>1</integer>
     </map>

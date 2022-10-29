@@ -747,6 +747,7 @@ void LLFavoritesBarCtrl::reshape(S32 width, S32 height, BOOL called_from_parent)
 
 void LLFavoritesBarCtrl::draw()
 {
+	
 	S32 actual_right = LLUI::getRootView()->getChild<LLPanel>("status")->getRect().mRight;
 	if (actual_right!= getRect().mRight) {
 	
@@ -782,6 +783,7 @@ void LLFavoritesBarCtrl::draw()
 		// Once drawn, mark this false so we won't draw it again (unless we hit the favorite bar again)
 		mShowDragMarker = FALSE;
 	}
+	
 }
 const LLButton::Params& LLFavoritesBarCtrl::getAddLandmarkParams()
 {

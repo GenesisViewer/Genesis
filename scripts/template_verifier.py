@@ -329,7 +329,8 @@ http://wiki.secondlife.com/wiki/Template_verifier.py
         return 1
 
 if __name__ == '__main__':
-    #sys.exit(run(sys.argv[1:]))
-    sys.exit(0) 
+    sys.exit(run(sys.argv[1:]))
+
+
 
 

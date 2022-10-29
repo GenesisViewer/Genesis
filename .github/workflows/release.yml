@@ -1,11 +1,9 @@
 # This is a basic workflow to help you get started with Actions
 
-name: nightly-build
+name: release-build
 
 on:
-  schedule:
-    - cron: '0 2 * * *'
-  # Allows you to run this workflow manually from the Actions tab
+    
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -103,14 +101,14 @@ jobs:
           ref: ${{env.GITHUB_REF}}
           fetch-depth: 0
      - id: autobuild-configure
-       run : echo 'set AUTOBUILD_WIN_VSHOST=v143  && autobuild configure -cRelease -A64 --config-file autobuild-github.xml -- -DUSE_FMODSTUDIO:BOOL=ON -DVIEWER_CHANNEL_BASE="Genesis" -DVIEWER_CHANNEL_TYPE=Test' >configure.cmd
+       run : echo 'set AUTOBUILD_WIN_VSHOST=v143  && autobuild configure -cRelease -A64 -- -DUSE_FMODSTUDIO:BOOL=ON -DVIEWER_CHANNEL_BASE="Genesis" -DVIEWER_CHANNEL_TYPE=Release' >configure.cmd
      - id: run-autobuild-configure  
        run : ./configure.cmd
      - id: build-setup
        run : autobuild build --no-configure -cRelease -A64
      
      - name: find and rename
-       run : Get-ChildItem .\build-vc-64\newview\Release\*Setup.exe | Rename-Item -NewName "Genesis-eve_nightly_build_$(git rev-list --count HEAD).exe" && mv ".\build-vc-64\newview\Release\Genesis-eve_nightly_build_$(git rev-list --count HEAD).exe" c:/temp/
+       run : Get-ChildItem .\build-vc-64\newview\Release\*Setup.exe | Move-Item -Destination c:/temp/
      - name: ls
        run : ls -l c:/temp/
      - name: store artefact
@@ -142,7 +140,7 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./Genesis/
           server-dir: genesis/uploadsfromgit/
-      - run: curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 https://londoncitysl.com/genesis/nightly_builds/moveuploadedfiles.php
+      - run: curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 https://londoncitysl.com/genesis/releases/moveuploadedfiles.php
       - uses: geekyeggo/delete-artifact@v1
         with:
           name: Genesis-setup  

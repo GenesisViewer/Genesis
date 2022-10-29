@@ -182,6 +182,9 @@ void LLPrefsAscentVan::refreshValues()
     mShowContactSetOnAvatarTag = gSavedSettings.getBOOL("ShowContactSetOnAvatarTag");
     mShowContactSetOnLocalChat = gSavedSettings.getBOOL("ShowContactSetOnLocalChat");
     mShowContactSetOnRadar = gSavedSettings.getBOOL("ShowContactSetOnRadar");
+
+//favoritess bar
+    mShowFavBar = gSavedSettings.getBOOL("GenxFavBar");    
 }
 
 // Update controls based on current settings
@@ -272,6 +275,7 @@ void LLPrefsAscentVan::cancel()
    
     gSavedSettings.setBOOL("ShowContactSetOnLocalChat",       mShowContactSetOnLocalChat);
     gSavedSettings.setBOOL("ShowContactSetOnRadar",           mShowContactSetOnRadar);
+    gSavedSettings.setBOOL("GenxFavBar",                      mShowFavBar);
 }
 
 // Update local copy so cancel has no effect
@@ -279,6 +283,9 @@ void LLPrefsAscentVan::apply()
 {
     gColors.saveColorSettings("AvatarNameColor", gColors.getColor4("AvatarNameColor"));
     SHClientTagMgr::instance().resetAvatarTags();
+
+    getRootView()->getChild<LLPanel>("favoritestoolbar",TRUE)->setVisible(gSavedSettings.getBOOL("GenxFavBar"));
+
     refreshValues();
     refresh();
 }

@@ -238,7 +238,10 @@ class ViewerManifest(LLManifest):
         #    app_suffix=self.channel_variant()
         #return CHANNEL_VENDOR_BASE + ' ' + app_suffix
         #Mely : do not us channel for app_name
-        return "Genesis-Eve"
+        if self.channel_type() == 'release':
+            return "Genesis"
+        else: 
+            return "Genesis-Eve_test"    
 
     def app_name_oneword(self):
         return ''.join(self.app_name().split())
@@ -767,8 +770,8 @@ class WindowsManifest(ViewerManifest):
         inst_vars_template = """
             !define INSTEXE  "%(final_exe)s"
             !define INSTOUTFILE "%(installer_file)s"
-            !define APPNAME   "%(app_name)s_%(channel_type)s"
-            !define APPNAMEONEWORD   "%(app_name_oneword)s_%(channel_type)s"
+            !define APPNAME   "%(app_name)s"
+            !define APPNAMEONEWORD   "%(app_name_oneword)s"
             !define URLNAME   "secondlife"
             !define CAPTIONSTR "%(caption)s"
             !define VENDORSTR "Genesis-Eve Project"

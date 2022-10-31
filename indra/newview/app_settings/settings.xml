@@ -7142,7 +7142,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>%R</string>
+      <string>%I:%M %p</string>
     </map>
     <key>LongTimeFormat</key>
     <map>
@@ -7153,7 +7153,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>%T</string>
+      <string>%I:%M:%S %p</string>
     </map>
     <key>TimestampFormat</key>
     <map>
@@ -7164,7 +7164,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>%a %d %b %Y %T</string>
+      <string>%a %b %d %Y %I:%M %p</string>
     </map>
     <key>SecondsInChatAndIMs</key>
     <map>

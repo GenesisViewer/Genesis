@@ -595,9 +595,9 @@ LLAppViewer::LLAppViewer() :
 		//gDirUtilp->initAppDirs("SecondLife", newview_path);
 		std::string suffix="";
 		std::string channel = LLVersionInfo::getChannel();
-		if (channel.find("Test")!=std::string::npos) suffix = "-Test";
+		if (channel.find("Test")!=std::string::npos) suffix = "-Eve-Test";
 		if (channel.find("Beta")!=std::string::npos) suffix = "-Beta";
-		gDirUtilp->initAppDirs("Genesis-Eve" + suffix, newview_path);
+		gDirUtilp->initAppDirs("Genesis" + suffix, newview_path);
 	}
 	//
 	// IMPORTANT! Do NOT put anything that will write

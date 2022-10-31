@@ -70,7 +70,7 @@ void LLPanelSkins::refresh()
 {
 	if(mSkin=="")
 	{
-		oldSkin=mSkin="default";
+		oldSkin=mSkin="Genx";
 		gSavedSettings.setString("SkinCurrent",mSkin);
 	}
 	LLComboBox* comboBox = getChild<LLComboBox>("custom_skin_combo");

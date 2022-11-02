@@ -269,7 +269,7 @@ void LLFirstUse::useDebugMenus()
 	{
 		gSavedSettings.setWarning("FirstDebugMenus", FALSE);
 
-		LLNotificationsUtil::add("FirstDebugMenus");
+		//LLNotificationsUtil::add("FirstDebugMenus");
 	}
 }
 

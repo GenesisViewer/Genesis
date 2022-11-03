@@ -14,6 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: maketestfile
-        run: mkdir -p /tmp/test/ && echo "test" > /tmp/test/test.ok
+        run: mkdir -p /tmp/test/ && echo "test" > /tmp/test/test.ok2
       - name: upload  
         run: git ftp push -u ${{ secrets.FTP_USER }} -p ${{ secrets.FTP_PASS }} --syncroot /tmp/test/ ftp://${{ secrets.FTP_HOST }}/genesis/

@@ -376,7 +376,9 @@
       <button sound_flags="0" bottom="0" height="24" label="Texture Console" name="texture_console_btn" image_overlay="icn_toolbar_texture_console.tga" image_overlay_alignment="left" image_selected="toolbar_btn_selected.tga" image_unselected="toolbar_btn_enabled.tga" image_disabled="toolbar_btn_disabled.tga" scale_image="true" width="50" follows="left|right">
         <button.commit_callback function="ShowFloater" parameter="texture console"/>
       </button>
+      
     </layout_panel>
+    
     <layout_panel name="paneltexturecategoryconsole" height="24" width="50" user_resize="false" visibility_control="ToolbarVisibleTextureCategoryConsole">
       <button sound_flags="0" bottom="0" height="24" label="Texture Category Console" name="texture_category_console_btn" image_overlay="icn_toolbar_texture_category_console.tga" image_overlay_alignment="left" image_selected="toolbar_btn_selected.tga" image_unselected="toolbar_btn_enabled.tga" image_disabled="toolbar_btn_disabled.tga" scale_image="true" width="50" follows="left|right">
         <button.commit_callback function="ShowFloater" parameter="texture category console"/>

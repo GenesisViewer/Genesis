@@ -150,7 +150,7 @@ RenderGlowResolutionPow		1	9
 RenderMaxPartCount			1	256
 RenderObjectBump			1	1
 RenderLocalLights			1	1
-RenderReflectionDetail		1	2
+RenderReflectionDetail		1	0
 RenderTerrainDetail			1	1
 RenderTerrainScale			1	7.0
 RenderTerrainLODFactor		1	2.0
@@ -181,7 +181,7 @@ RenderGlowResolutionPow		1	9
 RenderMaxPartCount			1	256
 RenderObjectBump			1	1
 RenderLocalLights			1	1
-RenderReflectionDetail		1	4
+RenderReflectionDetail		1	0
 RenderTerrainDetail			1	1
 RenderTerrainScale			1	5.0
 RenderTerrainLODFactor		1	2.0

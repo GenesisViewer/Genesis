@@ -1142,7 +1142,7 @@
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
                   <string>-DADDRESS_SIZE:STRING=$AUTOBUILD_ADDRSIZE</string>
-                  <string>-DROOT_PROJECT_NAME:STRING=Genesis-Eve</string>
+                  <string>-DROOT_PROJECT_NAME:STRING=Genesis</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
               </map>
@@ -1163,7 +1163,7 @@
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=Release</string>
                   <string>-DADDRESS_SIZE:STRING=$AUTOBUILD_ADDRSIZE</string>
-                  <string>-DROOT_PROJECT_NAME:STRING=Genesis-Eve</string>
+                  <string>-DROOT_PROJECT_NAME:STRING=Genesis</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
               </map>
@@ -1360,7 +1360,7 @@
               <map>
                 <key>arguments</key>
                 <array>
-                  <string>Genesis-Eve.sln</string>
+                  <string>Genesis.sln</string>
                 </array>
                 <key>command</key>
                 <string>msbuild.exe</string>
@@ -1400,7 +1400,7 @@
               <map>
                 <key>arguments</key>
                 <array>
-                  <string>Genesis-Eve.sln</string>
+                  <string>Genesis.sln</string>
                 </array>
                 <key>command</key>
                 <string>msbuild.exe</string>

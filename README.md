@@ -1,6 +1,6 @@
-# Genesis-Eve
+# Genesis
 
-Genesis-Eve is a viewer for Second Life metaverse.
+Genesis is a viewer for Second Life metaverse.
 
 ## Tools needed
 These tools are needed to be able to build the project
@@ -23,7 +23,7 @@ pip install autobuild llbase
 
 run set AUTOBUILD_WIN_VSHOST=v143
 
-autobuild configure -cRelease -A64 -- -DVIEWER_CHANNEL_BASE="Genesis" -DVIEWER_CHANNEL_TYPE=Test'
+autobuild configure -cRelease -A64 -- -DVIEWER_CHANNEL_BASE="Genesis" -DVIEWER_CHANNEL_TYPE=Test
 
 ## Building the project
 autobuild build --no-configure -cRelease -A64

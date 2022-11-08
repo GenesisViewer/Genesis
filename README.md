@@ -1,6 +1,6 @@
 # Genesis Viewer
 
-Genesis is a viewer for Second Life metaverse.
+Genesis is a viewer for Second Life.
 
 ## Tools needed
 These tools are needed to be able to build the project

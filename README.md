@@ -1,4 +1,4 @@
-# Genesis
+# Genesis Viewer
 
 Genesis is a viewer for Second Life metaverse.
 

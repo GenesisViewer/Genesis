@@ -61,7 +61,8 @@
 // [RLVa:KB] - Checked: 2013-05-10 (RLVa-1.4.9)
 #include "rlvactions.h"
 #include "rlvcommon.h"
-#include "lltaggedavatarsmgr.h"
+
+#include "genxcontactset.h"
 // [/RLVa:KB]
 
 class AIHTTPTimeoutPolicy;
@@ -97,9 +98,9 @@ LLColor4 agent_chat_color(const LLUUID& id, const std::string& name, bool local_
 	static const LLCachedControl<bool> color_friend_chat("ColorFriendChat");
 	if (color_friend_chat && LLAvatarTracker::instance().isBuddy(id))
 		return gSavedSettings.getColor4("AscentFriendColor");
-	std::string csName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(id.asString());
-	if (!csName.empty()) {
-		return LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(id.asString());
+	ContactSet contactSet = GenxContactSetMgr::instance().getAvatarContactSet(id.asString());
+	if (!contactSet.getId().empty()) {
+		return contactSet.getColor();
 	}
 	static const LLCachedControl<bool> color_eo_chat("ColorEstateOwnerChat");
 	if (color_eo_chat)

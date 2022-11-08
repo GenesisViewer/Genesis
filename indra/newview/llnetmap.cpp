@@ -84,7 +84,8 @@
 #include "rlvhandler.h"
 // [/RLVa:KB]
 
-#include "lltaggedavatarsmgr.h"
+
+#include "genxcontactset.h"
 using namespace LLOldEvents;
 typedef LLMemberListener<LLView> view_listener_t;
 
@@ -666,6 +667,7 @@ void LLNetMap::draw()
 			const LLUUID& uuid = pair.first;
 			static const LLCachedControl<LLColor4>	standard_color("MapAvatar",LLColor4(0.f,1.f,0.f,1.f));
 			LLColor4 color = standard_color;
+			ContactSet contactSet = GenxContactSetMgr::instance().getAvatarContactSet(uuid.asString());
 			// TODO: it'd be very cool to draw these in sorted order from lowest Z to highest.
 			// just be careful to sort the avatar IDs along with the positions. -MG
 			const LLVector3d& position = pair.second;
@@ -685,9 +687,9 @@ void LLNetMap::draw()
 			{
 				color = *mark_color;
 			}
-			else if (!LLTaggedAvatarsMgr::instance().getAvatarContactSetName(uuid.asString()).empty()){
+			else if (!contactSet.getId().empty()){
 				//Genesis Contact set
-				color = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(uuid.asString());
+				color = contactSet.getColor();
 			} else
 			{
 				bool getColorFor(const LLUUID & id, LLViewerRegion * parent_estate, LLColor4 & color, bool name_restricted = false);

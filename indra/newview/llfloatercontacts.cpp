@@ -44,7 +44,8 @@
 #include "llcolorswatch.h"
 #include "llscrolllistctrl.h"
 #include "llscrolllistitem.h"
-#include "lltaggedavatarsmgr.h"
+
+#include "genxcontactset.h"
 #include "llnotificationsutil.h"
 #include "lluuid.h"
 #include "llpaneleditcontactset.h"
@@ -133,7 +134,7 @@ void LLPanelContactSets::deleteContactSet(void* userdata) {
 	LLScrollListCtrl *list = self->getChild<LLScrollListCtrl>("contact set list");
 	if (list->getFirstSelected()) {
 		std::string csId = list->getFirstSelected()->getColumn(1)->getValue().asString();
-		std::string name = LLTaggedAvatarsMgr::instance().getContactSetName(csId);
+		std::string name = GenxContactSetMgr::instance().getContactSet(csId).getName();
 		LLSD args;
 		LLSD payload;
 		args["NAME"] = name;
@@ -158,7 +159,7 @@ bool LLPanelContactSets::handleRemove(const LLSD& notification, const LLSD& resp
 		
 		if (option == 0){
 			//That was a YES
-			LLTaggedAvatarsMgr::instance().deleteContactSet(csId);
+			GenxContactSetMgr::instance().deleteContactSet(csId);
 			LLScrollListCtrl *list = contactSetPanel->getChild<LLScrollListCtrl>("contact set list");
 			init_contact_set_list(list);
 			break;
@@ -173,7 +174,7 @@ void LLPanelContactSets::addContactSet(void* userdata) {
 	LL_INFOS() << "Adding Contact Set" << LL_ENDL;
 	std::string newId = LLUUID::generateNewID().asString();			
 	std::string alias = "New Contact Set";
-	std::string id = LLTaggedAvatarsMgr::instance().insertContactSet(newId,alias);
+	std::string id = GenxContactSetMgr::instance().insertContactSet(newId,alias);
 	
 	
 
@@ -189,20 +190,20 @@ void LLPanelContactSets::addContactSet(void* userdata) {
 void init_contact_set_list(LLScrollListCtrl* ctrl)
 {
 	
-	std::map<std::string, std::string> contact_sets = LLTaggedAvatarsMgr::instance().getContactSets();
+	std::map<std::string, ContactSet> contact_sets = GenxContactSetMgr::instance().getContactSets();
 	LLCtrlListInterface *contact_set_list = ctrl->getListInterface();
 	contact_set_list->operateOnAll(LLCtrlListInterface::OP_DELETE);
 	
-	for(const auto& contact_set : contact_sets)
+	for(auto& contact_set : contact_sets)
 	{
 		
-		LLColor4 color = LLTaggedAvatarsMgr::instance().getColorContactSet(contact_set.first);
+		LLColor4 color = contact_set.second.getColor();
 		LLScrollListItem::Params newElement;
 		newElement.value = contact_set.first;
 		LLScrollListCell::Params name;
 		name.column = "contactsetname";
 		name.type = "text";
-		name.value = contact_set.second;
+		name.value = contact_set.second.getName();
 		name.color=color*0.5f + color*0.5f;;
 		newElement.columns.add(name);
 		LLScrollListCell::Params id;

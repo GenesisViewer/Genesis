@@ -80,7 +80,9 @@
 // [/RLVa:KB]
 
 //Genesis
-#include "lltaggedavatarsmgr.h"
+#include "genxcontactset.h"
+#include "llvoavatar.h"
+
 
 // Statics
 std::list<LLPanelAvatar*> LLPanelAvatar::sAllPanels;
@@ -182,13 +184,12 @@ void LLPanelAvatarSecondLife::onSelectedContactSet()
 		std::string avatarId = mAvatarID.asString();
 		std::string avatarName = getChild<LLLineEditor>("dnname")->getText();
 		if (selected_contact_set == " ") {
-			LLTaggedAvatarsMgr::instance().deleteAvatarContactSet(avatarId);
+			GenxContactSetMgr::instance().resetAvatarContactSet(avatarId);
 		} else {
-			LLTaggedAvatarsMgr::instance().updateContactSet(avatarId,selected_contact_set,avatarName);
+			GenxContactSetMgr::instance().updateAvatarContactSet(avatarId,selected_contact_set);
 		}
-		auto& inst(LLAvatarPropertiesProcessor::instance());
-		
-		inst.sendAvatarNotesRequest(mAvatarID);
+		//reset the client tag manager to update all avatars tag
+		SHClientTagMgr::getInstance()->resetAvatarTags();
 	}	
 	
 }
@@ -201,15 +202,15 @@ void LLPanelAvatarSecondLife::processProperties(void* data, EAvatarProcessorType
 	if (contact_set) {
 		contact_set->removeall();
 		contact_set->add(" "," ");
-		std::map<std::string, std::string> contact_sets = LLTaggedAvatarsMgr::instance().getContactSets();
-		for (const auto& key : contact_sets) {
-			contact_set->add(key.second,key.first);
+		std::map<std::string, ContactSet> contact_sets = GenxContactSetMgr::instance().getContactSets();
+		for (auto& key : contact_sets) {
+			contact_set->add(key.second.getName(),key.first);
 		}
-		
+		contact_sets.clear();
 
 	}
-
-	std::string avatar_contact_set = LLTaggedAvatarsMgr::instance().getAvatarContactSetId(mAvatarID.asString());
+	ContactSet contactSet = GenxContactSetMgr::instance().getAvatarContactSet(mAvatarID.asString());
+	std::string avatar_contact_set = contactSet.getId();
 	contact_set->setValue(avatar_contact_set);
 
 	contact_set->setCommitCallback(boost::bind(&LLPanelAvatarSecondLife::onSelectedContactSet, this));

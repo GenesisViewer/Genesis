@@ -1,6 +1,7 @@
 #include "llpaneleditcontactset.h"
 #include "lluictrlfactory.h"
-#include "lltaggedavatarsmgr.h"
+
+#include "genxcontactset.h"
 #include "llcolorswatch.h"
 #include "llfloatercontacts.h"
 #include "llvoavatar.h"
@@ -10,8 +11,9 @@ LLPanelEditContactSet::LLPanelEditContactSet() {
 }
 void LLPanelEditContactSet::setContactSetID(const std::string& contact_set_id) {
 	mContactSet = contact_set_id;
-	std::string name = LLTaggedAvatarsMgr::getInstance()->getContactSetName(contact_set_id);
-	LLColor4 color = LLTaggedAvatarsMgr::getInstance()->getColorContactSet(contact_set_id);
+	ContactSet contactSet = GenxContactSetMgr::instance().getContactSet(contact_set_id);
+	std::string name = contactSet.getName();
+	LLColor4 color = contactSet.getColor();
 	getChild<LLLineEditor>("contactset_name")->setValue(name);
 	getChild<LLColorSwatchCtrl>("contactset_color")->set(color);
 	childSetAction("Apply", saveContactSet, this);
@@ -26,8 +28,11 @@ void LLPanelEditContactSet::saveContactSet(void* userdata) {
 	LLColor4 color = self->getChild<LLColorSwatchCtrl>("contactset_color")->get();
 
 	if (name.length()>0) {
-		LLTaggedAvatarsMgr::getInstance()->updateContactSetName(self->mContactSet,name);
-		LLTaggedAvatarsMgr::getInstance()->updateColorContactSet(self->mContactSet,color);
+		ContactSet cs = ContactSet();
+		cs.setName(name);
+		cs.setColor(color);
+		cs.setId(self->mContactSet);
+		GenxContactSetMgr::instance().updateContactSet(cs);
 
 	}
 	self->mContactSetPanel->reset();

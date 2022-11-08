@@ -79,7 +79,10 @@ char LLSqlMgr::initAgentDB(std::string db_path) {
         LL_WARNS() << "Can't initialise Genesis Tagged avatars table " << zErrMsg << LL_ENDL;
         return rc;
     }
-
+    //delete the avatar_name column
+    sql = "ALTER TABLE CONTACT_SET_AVATARS DROP COLUMN AVATAR_NAME";
+    sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);  
+    
     //Favorites toolbar order
     sql = "CREATE TABLE IF NOT EXISTS FAV_BAR_ORDER(" \
         "FAV_UUID TEXT NOT NULL," \

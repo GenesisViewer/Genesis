@@ -58,7 +58,7 @@
 // [/RLVa:KB]
 
 //Genesis : 
-#include "lltaggedavatarsmgr.h"
+#include "genxcontactset.h"
 
 LLVector3d unpackLocalToGlobalPosition(U32 compact_local, const LLVector3d& origin);
 
@@ -820,11 +820,12 @@ void LLFloaterAvatarList::refreshAvatarList()
 			//<edit> custom colors for certain types of avatars!
 			getCustomColorRLV(av_id, color, LLWorld::getInstance()->getRegionFromPosGlobal(entry->getPosition()), name_restricted);
 			//Genesis : Add Contact set to name
-			std::string csName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(av_id.asString());
-			if (!csName.empty()) {
+			ContactSet contactSet = GenxContactSetMgr::instance().getAvatarContactSet(av_id.asString());
+			std::string csId = contactSet.getId();
+			if (!csId.empty()) {
 				if (gSavedSettings.getBOOL("ShowContactSetOnRadar"))
-					name.value = entry->getName()+ " (" + csName + ")";
-				name.color = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(av_id.asString());
+					name.value = entry->getName()+ " (" + contactSet.getName() + ")";
+				name.color = contactSet.getColor();
 			} else {
 				name.color = color*0.5f + unselected_color*0.5f;
 			}

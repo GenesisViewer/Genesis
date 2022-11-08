@@ -104,6 +104,7 @@ set(viewer_SOURCE_FILES
     floaterao.cpp
     floaterlocalassetbrowse.cpp
     generichandlers.cpp
+    genxcontactset.cpp
     groupchatlistener.cpp
     hbfloatergrouptitles.cpp
     hippofloaterxml.cpp
@@ -487,7 +488,6 @@ set(viewer_SOURCE_FILES
     llstylemap.cpp
     llsurface.cpp
     llsurfacepatch.cpp
-    lltaggedavatarsmgr.cpp
     lltexturecache.cpp
     lltexturectrl.cpp
     lltexturefetch.cpp
@@ -660,6 +660,7 @@ set(viewer_HEADER_FILES
     floaterao.h
     floaterlocalassetbrowse.h
     generichandlers.h
+    genxcontactset.h
     groupchatlistener.h
     hbfloatergrouptitles.h
     hippofloaterxml.h
@@ -1046,7 +1047,6 @@ set(viewer_HEADER_FILES
     llsurface.h
     llsurfacepatch.h
     lltable.h
-    lltaggedavatarsmgr.h
     lltexturecache.h
     lltexturectrl.h
     lltexturefetch.h

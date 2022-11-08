@@ -74,7 +74,8 @@
 #include "rlvactions.h"
 #include "rlvcommon.h"
 // [/RLVa:KB]
-#include "lltaggedavatarsmgr.h"
+
+#include "genxcontactset.h"
 BOOL is_agent_mappable(const LLUUID& agent_id); // For map stalkies
 
 class AIHTTPTimeoutPolicy;
@@ -835,9 +836,9 @@ void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, LLColor4 incol
 			LLStyleSP source_style = LLStyleMap::instance().lookupAgent(source);
 			source_style->mItalic = is_irc;
 			mHistoryEditor->appendText(show_name,false,prepend_newline,source_style, system);
-			std::string csName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(source.asString());
-			if (!csName.empty()) {
-				mHistoryEditor->appendText(" (" + csName +")",false,prepend_newline,source_style, system);
+			ContactSet contactSet = GenxContactSetMgr::instance().getAvatarContactSet(source.asString());
+			if (!contactSet.getId().empty()) {
+				mHistoryEditor->appendText(" (" + contactSet.getName() +")",false,prepend_newline,source_style, system);
 				
 			}
  		}

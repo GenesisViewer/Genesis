@@ -67,7 +67,7 @@
 #include "llviewertexteditor.h"
 #include "llviewerwindow.h"
 #include "llweb.h"
-#include "lltaggedavatarsmgr.h"
+#include "genxcontactset.h"
 // [RLVa:KB]
 #include "rlvhandler.h"
 // [/RLVa:KB]
@@ -246,14 +246,14 @@ void add_timestamped_line(LLViewerTextEditor* edit, LLChat chat, const LLColor4&
 	bool hasContactSet = FALSE;
 	LLColor4 contactSetColor;
 	if (chat.mSourceType == CHAT_SOURCE_AGENT && chat.mFromID.notNull()) {
-		std::string csName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(chat.mFromID.asString());
-		if (!csName.empty() && gSavedSettings.getBOOL("ShowContactSetOnLocalChat")) {
+		ContactSet contactSet = GenxContactSetMgr::instance().getAvatarContactSet(chat.mFromID.asString());
+		if (!contactSet.getId().empty() && gSavedSettings.getBOOL("ShowContactSetOnLocalChat")) {
 			hasContactSet = TRUE;
-			contactSetColor = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(chat.mFromID.asString());
+			contactSetColor = contactSet.getColor();
 			LLStyleSP style(new LLStyle);
 			style->mItalic = is_irc;
 			style->setColor(contactSetColor);
-			edit->appendText(" (" + csName + ")", false, prepend_newline, style, false);
+			edit->appendText(" (" + contactSet.getName() + ")", false, prepend_newline, style, false);
 		}
 	}
 	LLStyleSP style(new LLStyle);

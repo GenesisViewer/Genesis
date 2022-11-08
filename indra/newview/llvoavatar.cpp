@@ -127,7 +127,8 @@
 #include <boost/algorithm/string/replace.hpp>
 
 //Genesis
-#include "lltaggedavatarsmgr.h"
+
+#include "genxcontactset.h"
 
 #if LL_DARWIN
 size_t strnlen(const char *s, size_t n)
@@ -3887,8 +3888,9 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		LLColor4 name_tag_color = getNameTagColor(is_friend);
 
 		clearNameTag();
-		std::string contactSetId = LLTaggedAvatarsMgr::instance().getAvatarContactSetId(getID().asString());
-		std::string contactSetName = LLTaggedAvatarsMgr::instance().getAvatarContactSetName(getID().asString());
+		ContactSet contactSet = GenxContactSetMgr::instance().getAvatarContactSet(getID().asString());
+		std::string contactSetId = contactSet.getId();
+		std::string contactSetName = contactSet.getName();
 		std::string groupText;
 		std::string firstnameText;
 		std::string lastnameText;
@@ -4096,7 +4098,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			
 		}
 		if (!contactSetId.empty() && gSavedSettings.getBOOL("ShowContactSetOnAvatarTag")) {
-			LLColor4 contactSetColor = LLTaggedAvatarsMgr::instance().getAvatarColorContactSet(getID().asString());
+			LLColor4 contactSetColor = contactSet.getColor();
 			addNameTagLine(contactSetName, contactSetColor, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
 		}
 		mNameAway = is_away;

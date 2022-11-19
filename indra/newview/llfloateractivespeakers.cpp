@@ -55,7 +55,17 @@ LLFloaterActiveSpeakers::LLFloaterActiveSpeakers(const LLSD& seed) : mPanel(NULL
 	LLUICtrlFactory::getInstance()->buildFloater(this, "floater_active_speakers.xml", &getFactoryMap(), no_open);	
 	//RN: for now, we poll voice client every frame to get voice amplitude feedback
 	//LLVoiceClient::getInstance()->addObserver(this);
+	
+	
 	mPanel->refreshSpeakers();
+	mTitle = this->getTitle();
+	//buttons to pause/unpause the refresh of active speakers
+	LLButton*  buttonPause = this->getChild<LLButton>("active_speakers_pause");
+	buttonPause->setCommitCallback(boost::bind(&LLFloaterActiveSpeakers::toggleActiveSpeakersRefresh, this));
+	LLButton*  buttonUnPause = this->getChild<LLButton>("active_speakers_unpause");
+	buttonUnPause->setCommitCallback(boost::bind(&LLFloaterActiveSpeakers::toggleActiveSpeakersRefresh, this));
+	LLButton*  buttonManualRefresh = this->getChild<LLButton>("active_speakers_refresh");
+	buttonManualRefresh->setCommitCallback(boost::bind(&LLFloaterActiveSpeakers::manualActiveSpeakersRefresh, this));
 }
 
 LLFloaterActiveSpeakers::~LLFloaterActiveSpeakers()
@@ -64,13 +74,16 @@ LLFloaterActiveSpeakers::~LLFloaterActiveSpeakers()
 
 void LLFloaterActiveSpeakers::onOpen()
 {
+	
 	gSavedSettings.setBOOL("ShowActiveSpeakers", TRUE);
 }
 
 void LLFloaterActiveSpeakers::onClose(bool app_quitting)
 {
+	
 	if (!app_quitting)
 	{
+		this->setTitle(mTitle);
 		gSavedSettings.setBOOL("ShowActiveSpeakers", FALSE);
 	}
 	setVisible(FALSE);
@@ -79,7 +92,12 @@ void LLFloaterActiveSpeakers::onClose(bool app_quitting)
 void LLFloaterActiveSpeakers::draw()
 {
 	// update state every frame to get live amplitude feedback
-	mPanel->refreshSpeakers();
+	if (!mPaused) {
+		mPanel->refreshSpeakers();
+		this->setTitle(mTitle);
+	} else {
+		this->setTitle(mTitle + " (Paused)");
+	}
 	LLFloater::draw();
 }
 
@@ -92,6 +110,22 @@ BOOL LLFloaterActiveSpeakers::postBuild()
 void LLFloaterActiveSpeakers::onParticipantsChanged()
 {
 	//refresh();
+}
+void LLFloaterActiveSpeakers::manualActiveSpeakersRefresh()
+{
+	if (mPaused) {	
+		mPanel->readWhilePausedEvents();
+	}
+}
+void LLFloaterActiveSpeakers::toggleActiveSpeakersRefresh()
+{
+	mPaused = !mPaused;
+	
+	this->getChild<LLButton>("active_speakers_unpause")->setEnabled(mPaused);
+	this->getChild<LLButton>("active_speakers_unpause")->setVisible(mPaused);
+	this->getChild<LLButton>("active_speakers_pause")->setEnabled(!mPaused);
+	this->getChild<LLButton>("active_speakers_pause")->setVisible(!mPaused);
+	mPanel->toggleRefreshActiveSpeakers();
 }
 
 //static

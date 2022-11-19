@@ -28,7 +28,6 @@
 #define LL_PARTICIPANTLIST_H
 
 #include "lllayoutstack.h"
-
 class LLSpeakerMgr;
 class LLNameListCtrl;
 class LLUICtrl;
@@ -50,12 +49,12 @@ public:
 	 * @param[in] avatar_id - Avatar UUID to be added into the list
 	 */
 	void addAvatarIDExceptAgent(const LLUUID& avatar_id);
-
+	void toggleRefreshActiveSpeakers();
 	/**
 	 * Refreshes the participant list.
 	 */
 	void refreshSpeakers();
-
+	void readWhilePausedEvents();
 	/**
 	 * Set a callback to be called before adding a speaker. Invalid speakers will not be added.
 	 *
@@ -71,15 +70,22 @@ protected:
 	/**
 	 * LLSpeakerMgr event handlers
 	 */
-	bool onAddItemEvent(LLPointer<LLOldEvents::LLEvent> event, const LLSD& userdata);
-	bool onRemoveItemEvent(LLPointer<LLOldEvents::LLEvent> event, const LLSD& userdata);
+	
+	void addWhilePausedEvent(int typeEvent, LLUUID uuid);
+	bool onAddItemEvent(LLUUID uuid, const LLSD& userdata);
+	bool onRemoveItemEvent(LLUUID uuid, const LLSD& userdata);
 	bool onClearListEvent(LLPointer<LLOldEvents::LLEvent> event, const LLSD& userdata);
+	bool mRefresh = TRUE;
 	//bool onModeratorUpdateEvent(LLPointer<LLOldEvents::LLEvent> event, const LLSD& userdata);
 	bool onSpeakerMuteEvent(LLPointer<LLOldEvents::LLEvent> event, const LLSD& userdata);
 	void onSpeakerBatchBeginEvent();
 	void onSpeakerBatchEndEvent();
 	void onSpeakerSortingUpdateEvent();
-
+	//when we the refresh is paused, we store events to be able to refresh the active speaker list when we unpause
+	//the array contains 2 informations :
+	// - 0 for an add event, 1 for a delete event
+	// - the uuid of the avatar for this event
+	std::list<LLSD> whilePauseEvents = {};
 	/**
 	 * List of listeners implementing LLOldEvents::LLSimpleListener.
 	 * There is no way to handle all the events in one listener as LLSpeakerMgr registers

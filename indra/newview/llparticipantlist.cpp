@@ -221,9 +221,33 @@ void LLParticipantList::handleSpeakerSelect()
 		view->setVisible(self_speakerp->mIsModerator);
 	}
 }
-
+void LLParticipantList::readWhilePausedEvents() {
+	//replay the stored events when whe were paused
+	bool refreshStatus = mRefresh;
+	mRefresh=true;
+	for (LLSD event : whilePauseEvents) {
+		int type = event.get(0).asInteger();
+		LLUUID uuid = event.get(1).asUUID();
+		if (type==0) {
+			onAddItemEvent(uuid, NULL);
+		} else if (type==1) {
+			onRemoveItemEvent(uuid, NULL);
+		}
+	}
+	whilePauseEvents.clear();
+	mRefresh=refreshStatus;
+}
+void LLParticipantList::toggleRefreshActiveSpeakers()
+{
+	mRefresh = !mRefresh;
+	if (mRefresh) {
+		readWhilePausedEvents();
+	}
+	
+}
 void LLParticipantList::refreshSpeakers()
 {
+	if (!mRefresh) return;
 	if (mUpdateTimer.getElapsedTimeF32() < .5f)
 	{
 		return;
@@ -370,23 +394,39 @@ void LLParticipantList::setValidateSpeakerCallback(validate_speaker_callback_t c
 {
 	mValidateSpeakerCallback = cb;
 }
-
-bool LLParticipantList::onAddItemEvent(LLPointer<LLOldEvents::LLEvent> event, const LLSD& userdata)
+void LLParticipantList::addWhilePausedEvent(int typeEvent, LLUUID uuid) {
+	LLSD event = LLSD();
+		LLSD type = LLSD(type);
+		LLSD eventUUID = LLSD(uuid);
+		event.insert(0, typeEvent);
+		event.insert(1,eventUUID);
+		whilePauseEvents.push_back(event);
+		LL_INFOS() << "Storing event " << event << LL_ENDL;
+}
+bool LLParticipantList::onAddItemEvent(LLUUID uuid, const LLSD& userdata)
 {
-	LLUUID uu_id = event->getValue().asUUID();
+	if (!mRefresh) {
+		addWhilePausedEvent(0,uuid);
+		return true;
+	}
+	//LLUUID uu_id = event->getValue().asUUID();
 
-	if (mValidateSpeakerCallback && !mValidateSpeakerCallback(uu_id))
+	if (mValidateSpeakerCallback && !mValidateSpeakerCallback(uuid))
 	{
 		return true;
 	}
 
-	addAvatarIDExceptAgent(uu_id);
+	addAvatarIDExceptAgent(uuid);
 	return true;
 }
 
-bool LLParticipantList::onRemoveItemEvent(LLPointer<LLOldEvents::LLEvent> event, const LLSD& userdata)
+bool LLParticipantList::onRemoveItemEvent(LLUUID uuid, const LLSD& userdata)
 {
-	const S32 pos = mAvatarList->getItemIndex(event->getValue().asUUID());
+	if (!mRefresh) {
+		addWhilePausedEvent(1,uuid);
+		return true;
+	}
+	const S32 pos = mAvatarList->getItemIndex(uuid);
 	if (pos != -1)
 	{
 		mAvatarList->deleteSingleItem(pos);
@@ -513,7 +553,7 @@ bool LLParticipantList::SpeakerAddListener::handleEvent(LLPointer<LLOldEvents::L
 	{
 		return false;
 	}
-	return mParent.onAddItemEvent(event, userdata);
+	return mParent.onAddItemEvent(event->getValue().asUUID(), userdata);
 }
 
 //
@@ -521,7 +561,7 @@ bool LLParticipantList::SpeakerAddListener::handleEvent(LLPointer<LLOldEvents::L
 //
 bool LLParticipantList::SpeakerRemoveListener::handleEvent(LLPointer<LLOldEvents::LLEvent> event, const LLSD& userdata)
 {
-	return mParent.onRemoveItemEvent(event, userdata);
+	return mParent.onRemoveItemEvent(event->getValue().asUUID(), userdata);
 }
 
 //

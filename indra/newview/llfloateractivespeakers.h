@@ -59,7 +59,10 @@ public:
 
 protected:
 	LLFloaterActiveSpeakers(const LLSD& seed);
-
+	BOOL mPaused = FALSE;
+	std::string mTitle;
+	void toggleActiveSpeakersRefresh();
+	void manualActiveSpeakersRefresh();
 	LLParticipantList* mPanel;
 };
 

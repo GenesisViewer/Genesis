@@ -143,7 +143,29 @@ const LLMatrix4a &LLViewerCamera::getModelview() const
 
 void LLViewerCamera::calcProjection(const F32 far_distance) const
 {
-	mProjectionMatrix = gGL.genPersp( getView()*RAD_TO_DEG, getAspect(), getNear(), far_distance );
+	F32 fov_y, zFar, zNear, aspect, f;
+	fov_y = getView();
+	zFar = far_distance;
+	zNear = getNear();
+	aspect = getAspect();
+
+	 f = 1/tan(fov_y*0.5f);
+
+	// mProjectionMatrix.setZero();
+	// mProjectionMatrix.mMatrix[0][0] = f/aspect;
+	// mProjectionMatrix.mMatrix[1][1] = f;
+	// mProjectionMatrix.mMatrix[2][2] = (z_far + z_near)/(z_near - z_far);
+	// mProjectionMatrix.mMatrix[3][2] = (2*z_far*z_near)/(z_near - z_far);
+	// mProjectionMatrix.mMatrix[2][3] = -1;
+	//mProjectionMatrix = gGL.genPersp( getView()*RAD_TO_DEG, getAspect(), getNear(), far_distance );
+
+	
+
+	//LLMatrix4a persp_mat;
+	mProjectionMatrix.setRow<0>(LLVector4a(f/aspect,0,0));
+	mProjectionMatrix.setRow<1>(LLVector4a(0,f,0));
+	mProjectionMatrix.setRow<2>(LLVector4a(0,0,(zFar+zNear)/(zNear-zFar),-1.f));
+	mProjectionMatrix.setRow<3>(LLVector4a(0,0,(2.f*zFar*zNear)/(zNear-zFar),0));
 }
 
 // Sets up opengl state for 3D drawing.  If for selection, also

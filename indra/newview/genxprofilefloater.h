@@ -4,11 +4,11 @@
 
 #include "llfloater.h"
 #include "llinstancetracker.h"
-
+#include "llavatarpropertiesprocessor.h"
 
 
 class GenxFloaterAvatarInfo
-:	public LLFloater, public LLInstanceTracker<GenxFloaterAvatarInfo,LLUUID>
+:	public LLFloater, public LLInstanceTracker<GenxFloaterAvatarInfo,LLUUID>, public LLAvatarPropertiesObserver
 {
 public:
 
@@ -17,6 +17,7 @@ public:
 	void resetGroupList();
 	void handleReshape(const LLRect& new_rect, bool by_user = false);
 	void setOpenedPosition();
+    /*virtual*/void processProperties(void* data, EAvatarProcessorType type);
 	
 private:
 	LLUUID			mAvatarID;			// for which avatar is this window?

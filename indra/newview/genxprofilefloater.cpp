@@ -2,6 +2,9 @@
 
 #include "genxprofilefloater.h"
 #include "lluictrlfactory.h"
+#include "llavatarpropertiesprocessor.h"
+#include "lltexturectrl.h"
+#include "llnameeditor.h"
 GenxFloaterAvatarInfo::floater_positions_t GenxFloaterAvatarInfo::floater_positions;
 LLUUID GenxFloaterAvatarInfo::lastMoved;
 
@@ -15,6 +18,10 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	
 	LLUICtrlFactory::getInstance()->buildFloater(this, "genx_floater_profile.xml");
 	setTitle(name);
+    LLAvatarPropertiesProcessor::getInstance()->addObserver(mAvatarID, this);
+    LLAvatarPropertiesProcessor::getInstance()->sendAvatarPropertiesRequest(mAvatarID);
+    getChild<LLNameEditor>("dnname")->setNameID(avatar_id, LFIDBearer::AVATAR);
+
 }
 void GenxFloaterAvatarInfo::handleReshape(const LLRect& new_rect, bool by_user) {
 
@@ -78,8 +85,20 @@ void GenxFloaterAvatarInfo::setOpenedPosition() {
 	}
 	
 }
-
+// virtual
+void GenxFloaterAvatarInfo::processProperties(void* data, EAvatarProcessorType type)
+{
+    const LLAvatarData* pAvatarData = static_cast<const LLAvatarData*>( data );
+    if (pAvatarData && (mAvatarID == pAvatarData->avatar_id) && (pAvatarData->avatar_id != LLUUID::null))  
+    {
+        if(type == APT_PROPERTIES)
+	    {
+            getChild<LLTextureCtrl>("img2ndLife")->setImageAssetID(pAvatarData->image_id);
+        }
+    }
+}
 // virtual
 GenxFloaterAvatarInfo::~GenxFloaterAvatarInfo()
 {
+    LLAvatarPropertiesProcessor::getInstance()->removeObserver(mAvatarID, this);
 }

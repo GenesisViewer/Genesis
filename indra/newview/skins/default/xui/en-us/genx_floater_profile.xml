@@ -2,5 +2,27 @@
 <floater can_close="true" can_drag_on_left="false" can_minimize="true"
      can_resize="false" height="548" min_height="0" min_width="0"
      name="avatarinfo" title="Profile" width="420">
-	
+     
+          <tab_container top="525" height="525" left="0" mouse_opaque="false" name="tab"
+	          tab_min_width="48" tab_position="top" width="420">
+               <panel label="Bio" name="genx_profile_bio" height="525">
+                    <texture_picker allow_no_texture="true" can_apply_immediately="false"
+			     default_image_name="None" follows="left|top" height="150" label=""
+			     left="5" mouse_opaque="true" name="img2ndLife"
+			     width="150" enabled="false"/>
+               <name_editor bevel_style="in" border_style="line" follows="left|top"
+				 border_thickness="1" enabled="false" 
+				 font="SansSerifSmall" height="16" is_unicode="false" left="161"
+				 max_length="254" mouse_opaque="false" name="dnname"
+				 width="258" name_system="PhoenixNameSystem" click_for_profile="false"/>     
+               </panel>
+               <panel label="Feed" name="genx_profile_feed"/>
+               <panel label="Picks" name="genx_profile_picks"/>
+               <panel label="Classified" name="genx_profile_classified"/>
+               <panel label="Real Life" name="genx_profile_rl"/>
+               <panel label="My Notes" name="genx_profile_notes"/>
+          </tab_container>
+      
+    
+     
 </floater>

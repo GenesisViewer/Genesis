@@ -470,6 +470,7 @@ void LLParticipantList::onSpeakerBatchEndEvent()
 
 void LLParticipantList::onSpeakerSortingUpdateEvent()
 {
+	if (!mRefresh) return;
 	bool re_sort = false;
 	for (auto&& item : mAvatarList->getAllData())
 	{

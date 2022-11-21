@@ -2,19 +2,89 @@
 <floater can_close="true" can_drag_on_left="false" can_minimize="true"
      can_resize="false" height="548" min_height="0" min_width="0"
      name="avatarinfo" title="Profile" width="420">
-     
+ <string name="CaptionTextAcctInfo">
+ SL Birthday : [SLBirthday]
+ 
+[ACCTTYPE]
+[PAYMENTINFO]
+
+			</string> 
+                  
           <tab_container top="525" height="525" left="0" mouse_opaque="false" name="tab"
 	          tab_min_width="48" tab_position="top" width="420">
                <panel label="Bio" name="genx_profile_bio" height="525">
+                
                     <texture_picker allow_no_texture="true" can_apply_immediately="false"
 			     default_image_name="None" follows="left|top" height="150" label=""
 			     left="5" mouse_opaque="true" name="img2ndLife"
 			     width="150" enabled="false"/>
-               <name_editor bevel_style="in" border_style="line" follows="left|top"
+                   
+               <name_editor bevel_style="in" border_style="line" follows="left"
 				 border_thickness="1" enabled="false" 
-				 font="SansSerifSmall" height="16" is_unicode="false" left="161"
-				 max_length="254" mouse_opaque="false" name="dnname"
-				 width="258" name_system="PhoenixNameSystem" click_for_profile="false"/>     
+				 font="SansSerif" height="24" is_unicode="false" left="161"
+				 max_length="254" mouse_opaque="false" name="dnname" bottom_delta="110"
+				 width="232" name_system="PhoenixNameSystem" click_for_profile="false"/> 
+               <button left="394" enabled="true" follows="left" height="24" bottom_delta="0"
+                    image_overlay="account_id_green.tga" 
+                    image_unselected="flyout_btn_right.tga"
+                    image_selected="flyout_btn_right_selected.tga"
+                    image_disabled="flyout_btn_right_disabled.tga"
+                    mouse_opaque="true" name="avatar_online_info" scale_image="true" toggle="false"
+                    tool_tip="Currently online" width="24" visible="false"/>         
+               
+               <button left_delta="0" enabled="true" follows="left" height="24" bottom_delta="0"
+                    image_overlay="account_id_orange.tga" 
+                    image_unselected="flyout_btn_right.tga"
+                    image_selected="flyout_btn_right_selected.tga"
+                    image_disabled="flyout_btn_right_disabled.tga"
+                    mouse_opaque="true" name="avatar_offline_info" scale_image="true" toggle="false"
+                    tool_tip="Currently offline" width="24" visible="false"/>         
+               <line_editor bevel_style="in" border_style="line"
+			     border_thickness="1" enabled="false" follows="left|top"
+			     font="SansSerifSmall" height="16" is_unicode="false" bottom_delta="-4" left_delta="-234"
+			     max_length="36" mouse_opaque="false" name="avatar_key"
+			     width="232" />
+               <button left_delta="234" enabled="true" follows="left" height="16" bottom_delta="-17"
+                    image_overlay="icn_copy.tga" 
+                    
+                    mouse_opaque="true" name="copy_avatar_key" scale_image="true" toggle="false"
+                    tool_tip="Copy key" width="16" visible="true"/>     
+                 
+               <text bg_visible="false" border_drop_shadow_visible="false"
+			     border_visible="true" bottom_delta="-50" drop_shadow_visible="true"
+			     follows="left" font="SansSerif" height="48" left_delta="-234"
+			     mouse_opaque="true" name="acct" width="238"></text>  
+
+               <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom_delta="-40" drop_shadow_visible="true" follows="left"
+			     font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
+			     mouse_opaque="true" name="partner_label"
+			     tool_tip="Second Life partner. For more info on how to set, see www.secondlife.com/partner"
+			     v_pad="0" width="60">
+				Partner:
+			</text>  
+               <name_editor bevel_style="in" border_style="line"
+			     border_thickness="1" bottom_delta="0" enabled="true" follows="left"
+			     font="SansSerifSmall" height="16" left_delta="60"
+			     max_length="1024" mouse_opaque="true" name="avatar_partner"
+			     width="170"/>   
+               <text_editor bottom_delta="-122" embedded_items="false"
+			     enabled="false" follows="left" font="SansSerifSmall" height="119"
+			     left="5" max_length="500" mouse_opaque="true" hide_scrollbar="true"
+			     name="about" width="410" word_wrap="true" spell_check="true" />  
+               <text bg_visible="false" border_drop_shadow_visible="false"
+			     border_visible="true" bottom_delta="-60" drop_shadow_visible="true"
+			     follows="left" font="SansSerifSmall" height="48" left="5"
+			     mouse_opaque="true" width="238">Group memberships</text> 
+               <text bg_visible="false" border_drop_shadow_visible="false"
+			     border_visible="true" bottom_delta="0" drop_shadow_visible="true"
+			     follows="left" font="SansSerifSmall" height="48" left="220"
+			     mouse_opaque="true" width="238">Contact Set</text>      
+               <scroll_list background_visible="true" bottom_delta="-130" column_padding="5" draw_border="true"
+			     follows="left" height="160" left="5" mouse_opaque="false"
+			     multi_select="false" name="groups" width="190" menu_num="1"/>    
+                
+               <combo_box height="18" left="220" bottom_delta="142" follows="left" tool_tip="Your contact set" name="avatar_contact_set" width="190"/>                                       
                </panel>
                <panel label="Feed" name="genx_profile_feed"/>
                <panel label="Picks" name="genx_profile_picks"/>
@@ -22,7 +92,53 @@
                <panel label="Real Life" name="genx_profile_rl"/>
                <panel label="My Notes" name="genx_profile_notes"/>
           </tab_container>
-      
+          <panel label="profile_actions" name="genx_profile_actions" height="40" follows="left|bottom" bottom="0">
+               <button bottom="4" enabled="true" follows="left" height="50" left="5" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_map_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"
+                    mouse_opaque="true" name="find_on_map" scale_image="true" toggle="false"
+                    tool_tip="Find this avatar on map" width="50" />
+               <button bottom="4" enabled="true" follows="left" height="50" left_delta="52" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_teleport_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"    
+               mouse_opaque="true" name="btn_teleport" scale_image="true" toggle="false"
+               tool_tip="Teleport..." width="50" />
+               <button bottom="4" enabled="true" follows="left" height="50" left_delta="52" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_add_friend_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"    
+               mouse_opaque="true" name="btn_add_friend" scale_image="true" toggle="false"
+               tool_tip="Add Friend" width="50" />
+               <button bottom="4" enabled="true" follows="left" height="50" left_delta="52" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_log_history_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"    
+               mouse_opaque="true" name="btn_log" scale_image="true" toggle="false"
+               tool_tip="Log History" width="50" />
+               <button bottom="4" enabled="true" follows="left" height="50" left_delta="52" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_pay_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"    
+               mouse_opaque="true" name="btn_pay" scale_image="true" toggle="false"
+               tool_tip="Pay" width="50" />
+               <button bottom="4" enabled="true" follows="left" height="50" left_delta="52" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_im_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"    
+               mouse_opaque="true" name="btn_instant_message" scale_image="true" toggle="false"
+               tool_tip="Instant Message" width="50" />
+               <button bottom="4" enabled="true" follows="left" height="50" left_delta="52" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_mute_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"    
+               mouse_opaque="true" name="btn_mute" scale_image="true" toggle="false"
+               tool_tip="Mute" width="50" />
+               <button bottom="4" enabled="true" follows="left" height="50" left_delta="0" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_unmute_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"    
+               mouse_opaque="true" name="btn_unmute" scale_image="true" toggle="false"
+               tool_tip="Unmute" width="50" />
+               <button bottom="4" enabled="true" follows="left" height="50" left_delta="52" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_add_group_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"    
+               mouse_opaque="true" name="btn_invite_group" scale_image="true" toggle="false"
+               tool_tip="Invite Group" width="50" />
+          </panel>
     
      
 </floater>

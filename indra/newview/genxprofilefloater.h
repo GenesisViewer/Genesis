@@ -22,7 +22,10 @@ public:
 private:
 	LLUUID			mAvatarID;			// for which avatar is this window?
 	typedef std::map<LLUUID, LLRect> floater_positions_t;
-	
+	void setOnlineStatus(bool online_status);
+    void onSelectedContactSet();
+    void manageMuteButtons();
+    void toggleBlock();
 	static floater_positions_t floater_positions;
 	static LLUUID lastMoved;
 };

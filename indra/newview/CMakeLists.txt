@@ -105,6 +105,7 @@ set(viewer_SOURCE_FILES
     floaterlocalassetbrowse.cpp
     generichandlers.cpp
     genxcontactset.cpp
+    genxprofilefloater.cpp
     groupchatlistener.cpp
     hbfloatergrouptitles.cpp
     hippofloaterxml.cpp
@@ -661,6 +662,7 @@ set(viewer_HEADER_FILES
     floaterlocalassetbrowse.h
     generichandlers.h
     genxcontactset.h
+    genxprofilefloater.h
     groupchatlistener.h
     hbfloatergrouptitles.h
     hippofloaterxml.h

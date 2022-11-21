@@ -38,6 +38,7 @@
 #include "llagentcamera.h"
 #include "llcallingcard.h"		// for LLAvatarTracker
 #include "llfloateravatarinfo.h"
+#include "genxprofilefloater.h" //Next Gen Profile floater
 #include "llfloateravatarpicker.h"	// for LLFloaterAvatarPicker
 #include "llfloaterchatterbox.h"
 #include "llfloatergroupbulkban.h"
@@ -339,17 +340,31 @@ static void on_avatar_name_show_profile(const LLUUID& agent_id, const LLAvatarNa
 {
 	if (gSavedSettings.getString("WebProfileURL").empty() || !(web || gSavedSettings.getBOOL("UseWebProfiles")))
 	{
-		LLFloaterAvatarInfo* floater = LLFloaterAvatarInfo::getInstance(agent_id);
-		if(!floater)
-		{
-			floater = new LLFloaterAvatarInfo(av_name.getCompleteName()+" - "+LLTrans::getString("Command_Profile_Label"), agent_id);
-			floater->setOpenedPosition();
+		if (gSavedSettings.getBOOL("GenxProfileFloater")) {
+			GenxFloaterAvatarInfo* floater = GenxFloaterAvatarInfo::getInstance(agent_id);
+			if(!floater)
+			{
+				floater = new GenxFloaterAvatarInfo(av_name.getCompleteName()+" - "+LLTrans::getString("Command_Profile_Label"), agent_id);
+				floater->setOpenedPosition();
+				
 			
-		
-		}
+			}
 
-		// ...bring that window to front
-		floater->open();	/*Flawfinder: ignore*/
+			// ...bring that window to front
+			floater->open();	/*Flawfinder: ignore*/
+		} else {
+			LLFloaterAvatarInfo* floater = LLFloaterAvatarInfo::getInstance(agent_id);
+			if(!floater)
+			{
+				floater = new LLFloaterAvatarInfo(av_name.getCompleteName()+" - "+LLTrans::getString("Command_Profile_Label"), agent_id);
+				floater->setOpenedPosition();
+				
+			
+			}
+
+			// ...bring that window to front
+			floater->open();	/*Flawfinder: ignore*/
+		}
 	}
 	else
 	{

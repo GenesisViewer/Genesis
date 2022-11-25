@@ -77,7 +77,7 @@
       <check_box bottom_delta="-20" control_name="ShowContactSetOnRadar" follows="top" height="16" initial_value="true" label="Display the contact set name on the radar floater" left="10" tool_tip="Display the contact set name on the radar floater" name="show_contact_set_radar"/>
     </panel>
     <panel border="true" left="1" bottom="-190" height="180" width="600" label="Favorites bar" name="FavBar">
-      <check_box bottom_delta="-20" control_name="GenxFavBar" follows="top" height="16" initial_value="true" label="Display or not the favorites bar" left="10" tool_tip="Display or not the favorites bar" name="genxfavbar"/>
+      <check_box bottom_delta="-20" control_name="GenxFavBar" follows="top" height="16" initial_value="true" label="Display the favorites bar" left="10" tool_tip="Display the favorites bar on screen" name="genxfavbar"/>
       
     </panel>
   </tab_container>

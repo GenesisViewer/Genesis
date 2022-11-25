@@ -39,11 +39,11 @@ Make sure you entered the correct Login URI. An example of a Login URI is: \"htt
 	<string name="StartupDetectingHardware">Detecting hardware...</string>
 	<string name="StartupLoading">Loading [APP_NAME]...</string>
 	<string name="StartupClearingCache">Nuking cache...</string>
-	<string name="StartupInitializingTextureCache0">Fluffing texture cache...</string>
-    <string name="StartupInitializingTextureCache1">Reticulating pixel dump...</string>
-    <string name="StartupInitializingTextureCache2">Preheating texture baker...</string>
-    <string name="StartupInitializingTextureCache3">Booping snoot, texturally...</string>
-    <string name="StartupInitializingTextureCache4">Waking lumbering giant...</string>
+	<string name="StartupInitializingTextureCache0">Organizing shoes...</string>
+    <string name="StartupInitializingTextureCache1">Oiling the hingers...</string>
+    <string name="StartupInitializingTextureCache2">Filling the world with oxygen...</string>
+    <string name="StartupInitializingTextureCache3">Creating your reality...</string>
+    <string name="StartupInitializingTextureCache4">Hold on to your hat...</string>
 	<string name="StartupInitializingVFS">Initializing VFS...</string>
   <string name="StartupRequireDriverUpdate">Graphics Initialization Failed. Please Update Your Graphics Driver!</string>
 

@@ -16,7 +16,7 @@
 		<combo_item name="Display Names only" value="2">Display Names only</combo_item>
 		<combo_item name="Old Names (with Display Names)" value="3">Old Names (w/Display)</combo_item>
 	</combo_box>
-	<check_box bottom_delta="0" follows="top" height="16" label="Show Resident" left_delta="174" name="show_resident_checkbox"/>
+	<check_box bottom_delta="0" follows="top" height="16" label="Show 'Resident'" left_delta="174" name="show_resident_checkbox" tool_tip="Enabled will show Resident as the last name on screen for legacy accounts.  It determines how the IM chat log is saved, eg:  Alice Resident.txt or Alice.txt and is included for backward capability of importing chats from other viewers."/>
 	<check_box bottom_delta="-25" follows="top" height="16" initial_value="true" label="Small Avatar Names" left="101" name="small_avatar_names_checkbox"/>
 	<check_box bottom_delta="-18" follows="top" height="16" initial_value="false" label="Hide My Name On My Screen" name="show_my_name_checkbox"/>
 	<text bottom_delta="-24" follows="top" height="16" left="10" name="group_titles_textbox">Group Titles:</text>

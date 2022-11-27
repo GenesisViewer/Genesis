@@ -247,7 +247,7 @@ void LLParticipantList::toggleRefreshActiveSpeakers()
 }
 void LLParticipantList::refreshSpeakers()
 {
-	if (!mRefresh) return;
+	
 	if (mUpdateTimer.getElapsedTimeF32() < .5f)
 	{
 		return;
@@ -271,7 +271,7 @@ void LLParticipantList::refreshSpeakers()
 	LLRect screen_rect;
 	localRectToScreen(getLocalRect(), &screen_rect);
 	bool resort_ok = !(screen_rect.pointInRect(gViewerWindow->getCurrentMouseX(), gViewerWindow->getCurrentMouseY()) && gMouseIdleTimer.getElapsedTimeF32() < 5.f);
-	mSpeakerMgr->update(resort_ok);
+	mSpeakerMgr->update(resort_ok && mRefresh);
 
 	bool re_sort = false;
 	size_t start_pos = llmax(0, scroll_pos - 20);

@@ -93,6 +93,7 @@ void LLPanelVoiceEffect::onCommitVoiceEffect()
 	}
 
 	LLSD value = mVoiceEffectCombo->getValue();
+	
 	if (value.asInteger() == PREVIEW_VOICE_EFFECTS)
 	{
 		// Open the Voice Morph preview floater
@@ -107,13 +108,14 @@ void LLPanelVoiceEffect::onCommitVoiceEffect()
 	{
 		effect_interface->setVoiceEffect(value.asUUID());
 	}
-
+	
 	mVoiceEffectCombo->setValue(effect_interface->getVoiceEffect());
 }
 
 // virtual
 void LLPanelVoiceEffect::onVoiceEffectChanged(bool effect_list_updated)
 {
+	
 	update(effect_list_updated);
 }
 
@@ -125,6 +127,7 @@ void LLPanelVoiceEffect::update(bool list_updated)
 		if (!effect_interface) return;
 		if (list_updated)
 		{
+			
 			// Add the default "No Voice Morph" entry.
 			mVoiceEffectCombo->removeall();
 			mVoiceEffectCombo->add(getString("no_voice_effect"), LLUUID::null);

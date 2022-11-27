@@ -3,7 +3,7 @@
      can_resize="false" height="548" min_height="0" min_width="0"
      name="avatarinfo" title="Profile" width="420">
  <string name="CaptionTextAcctInfo">
- SL Birthday : [SLBirthday]
+Born : [SLBirthday]
  
 [ACCTTYPE]
 [PAYMENTINFO]
@@ -44,12 +44,11 @@
 			     font="SansSerifSmall" height="16" is_unicode="false" bottom_delta="-4" left_delta="-234"
 			     max_length="36" mouse_opaque="false" name="avatar_key"
 			     width="232" />
-               <button left_delta="234" enabled="true" follows="left" height="16" bottom_delta="-17"
-                    image_overlay="icn_copy.tga" 
-                    
-                    mouse_opaque="true" name="copy_avatar_key" scale_image="true" toggle="false"
-                    tool_tip="Copy key" width="16" visible="true"/>     
-                 
+               
+               <flyout_button left_delta="234" follows="left" height="17" bottom_delta="-17" font="SansSerifSmall" tool_tip="Copy key to clipboard, press the arrow for other copy options" name="copy_flyout" width="20">
+                    <flyout_button_item label="Copy Key" name="copy_key_item" value="0"/>
+                    <flyout_button_item label="Copy SLURL" name="copy_slurl_item" value="1"/>
+               </flyout_button>  
                <text bg_visible="false" border_drop_shadow_visible="false"
 			     border_visible="true" bottom_delta="-50" drop_shadow_visible="true"
 			     follows="left" font="SansSerif" height="48" left_delta="-234"
@@ -68,8 +67,8 @@
 			     font="SansSerifSmall" height="16" left_delta="60"
 			     max_length="1024" mouse_opaque="true" name="avatar_partner"
 			     width="170"/>   
-               <text_editor bottom_delta="-122" embedded_items="false"
-			     enabled="false" follows="left" font="SansSerifSmall" height="119"
+               <text_editor bottom_delta="-153" embedded_items="false"
+			     enabled="false" follows="left" font="SansSerifSmall" height="150"
 			     left="5" max_length="500" mouse_opaque="true" hide_scrollbar="true"
 			     name="about" width="410" word_wrap="true" spell_check="true" />  
                <text bg_visible="false" border_drop_shadow_visible="false"
@@ -80,13 +79,28 @@
 			     border_visible="true" bottom_delta="0" drop_shadow_visible="true"
 			     follows="left" font="SansSerifSmall" height="48" left="220"
 			     mouse_opaque="true" width="238">Contact Set</text>      
-               <scroll_list background_visible="true" bottom_delta="-130" column_padding="5" draw_border="true"
-			     follows="left" height="160" left="5" mouse_opaque="false"
+               <scroll_list background_visible="true" bottom_delta="-99" column_padding="5" draw_border="true"
+			     follows="left" height="129" left="5" mouse_opaque="false"
 			     multi_select="false" name="groups" width="190" menu_num="1"/>    
                 
-               <combo_box height="18" left="220" bottom_delta="142" follows="left" tool_tip="Your contact set" name="avatar_contact_set" width="190"/>                                       
+               <combo_box height="18" left="220" bottom_delta="111" follows="left" tool_tip="Your contact set" name="avatar_contact_set" width="190"/>   
+
+               
+               <drop_target bottom_delta="-50" height="40" left="220" width="190" fill_parent="true" show_reset="false" name="drop_target_rect" label="Drop inventory item here." tool_tip="Drop inventory items here to give them to this person."/>
                </panel>
-               <panel label="Feed" name="genx_profile_feed"/>
+
+               <panel label="Feed" name="genx_profile_feed" height="525">
+                    <web_browser
+                         name="profile_html"
+                         height="450"
+                         left="5"
+                         bottom_delta="-225"
+                         follows="left|top"
+                         trusted_content="true"
+                         start_url=""
+                    />
+                    
+               </panel>     
                <panel label="Picks" name="genx_profile_picks"/>
                <panel label="Classified" name="genx_profile_classified"/>
                <panel label="Real Life" name="genx_profile_rl"/>

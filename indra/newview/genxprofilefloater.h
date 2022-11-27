@@ -17,6 +17,8 @@ public:
 	void resetGroupList();
 	void handleReshape(const LLRect& new_rect, bool by_user = false);
 	void setOpenedPosition();
+	void updateData();
+	void onAvatarNameCache(const LLUUID& agent_id, const LLAvatarName& av_name);
     /*virtual*/void processProperties(void* data, EAvatarProcessorType type);
 	
 private:
@@ -26,8 +28,10 @@ private:
     void onSelectedContactSet();
     void manageMuteButtons();
     void toggleBlock();
+	void onClickCopy(const LLSD& val);
 	static floater_positions_t floater_positions;
 	static LLUUID lastMoved;
+	
 };
 
 #endif

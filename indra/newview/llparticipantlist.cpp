@@ -37,6 +37,7 @@
 #include "llviewerwindow.h"
 #include "llvoicechannel.h" // Edit: For menu duality
 #include "llworld.h" // Edit: For ghost detection
+
 // [RLVa:KB]
 #include "rlvhandler.h"
 // [/RLVa:KB]

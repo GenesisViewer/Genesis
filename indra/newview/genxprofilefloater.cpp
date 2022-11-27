@@ -12,10 +12,15 @@
 #include "llscrolllistctrl.h"
 #include "llscrolllistitem.h"
 #include "llcombobox.h"
+#include "lldroptarget.h"
+#include "llwindow.h"
 #include "llgroupactions.h"
 #include "llmutelist.h"
+#include "llmediactrl.h"
 #include <boost/date_time.hpp>
 #include "llvoavatar.h"
+#include "llviewerwindow.h"
+#include "llweb.h"
 //Genesis
 #include "genxcontactset.h"
 
@@ -103,7 +108,56 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 
     getChild<LLUICtrl>("btn_invite_group")->setCommitCallback(boost::bind(static_cast<void(*)(const LLUUID&)>(LLAvatarActions::inviteToGroup), mAvatarID));
 	
+
+	LLDropTarget* drop_target = findChild<LLDropTarget>("drop_target_rect");
+	drop_target->setEntityID(mAvatarID);
+
+	getChild<LLUICtrl>("copy_flyout")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickCopy, this, _2));
+
+
+	//Feed Tab
+	LLMediaCtrl* webBrowser = getChild<LLMediaCtrl>("profile_html");
+    
+    webBrowser->setHomePageUrl("about:blank");
+
+	LLAvatarNameCache::get(mAvatarID, boost::bind(&GenxFloaterAvatarInfo::onAvatarNameCache, this, _1, _2));
 	
+}
+void GenxFloaterAvatarInfo::onAvatarNameCache(const LLUUID& agent_id, const LLAvatarName& av_name)
+{
+	//feed tab
+	
+	std::string username = av_name.getAccountName();
+	if (username.empty())
+	{
+		username = LLCacheName::buildUsername(av_name.getDisplayName());
+	}
+	else
+	{
+		LLStringUtil::replaceChar(username, ' ', '.');
+	}
+
+	std::string url = gSavedSettings.getString("WebProfileURL") + "[FEED_ONLY]";
+	LLSD subs;
+	subs["AGENT_NAME"] = username;
+	subs["FEED_ONLY"] = "/?feed_only=true";
+	url = LLWeb::expandURLSubstitutions(url, subs);
+	LLStringUtil::toLower(url);
+	LLMediaCtrl* webBrowser = getChild<LLMediaCtrl>("profile_html");
+	webBrowser->navigateTo(url);
+}
+void GenxFloaterAvatarInfo::onClickCopy(const LLSD& val)
+{
+	if (val.asInteger() == 0)
+	{
+		
+		gViewerWindow->getWindow()->copyTextToClipboard(utf8str_to_wstring(mAvatarID.asString()));
+	}
+	else
+	{
+		void copy_profile_uri(const LLUUID& id, const LFIDBearer::Type& type = LFIDBearer::AVATAR);
+		copy_profile_uri(mAvatarID);
+	}
 }
 void GenxFloaterAvatarInfo::toggleBlock() 
 {
@@ -238,6 +292,10 @@ void GenxFloaterAvatarInfo::processProperties(void* data, EAvatarProcessorType t
 			getChildView("avatar_partner")->setValue(pAvatarData->partner_id);
 
             getChild<LLTextEditor>("about")->setText(pAvatarData->about_text, false);
+
+
+			
+			
         }
         else if (type == APT_GROUPS)
         {

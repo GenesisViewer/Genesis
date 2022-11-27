@@ -56,6 +56,7 @@ public:
 	/*virtual*/ void onParticipantsChanged();
 
 	static void* createSpeakersPanel(void* data);
+	
 
 protected:
 	LLFloaterActiveSpeakers(const LLSD& seed);

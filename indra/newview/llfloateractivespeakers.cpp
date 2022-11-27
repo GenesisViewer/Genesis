@@ -116,6 +116,15 @@ void LLFloaterActiveSpeakers::manualActiveSpeakersRefresh()
 	if (mPaused) {	
 		mPanel->readWhilePausedEvents();
 	}
+	
+	if (LLVoiceClient::instance().isVoiceWorking()) {
+		LLVoiceEffectInterface* effect_interface = LLVoiceClient::instance().getVoiceEffectInterface();
+		LLUUID voice_effect = effect_interface->getVoiceEffect();
+		effect_interface->setVoiceEffect(LLUUID::null);
+		LLVoiceClient::instance().leaveChannel();
+		effect_interface->setVoiceEffect(voice_effect);
+	}
+	
 }
 void LLFloaterActiveSpeakers::toggleActiveSpeakersRefresh()
 {

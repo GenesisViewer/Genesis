@@ -89,11 +89,13 @@ Born : [SLBirthday]
                <drop_target bottom_delta="-50" height="40" left="220" width="190" fill_parent="true" show_reset="false" name="drop_target_rect" label="Drop inventory item here." tool_tip="Drop inventory items here to give them to this person."/>
                </panel>
 
-               <panel label="Feed" name="genx_profile_feed" height="525">
+               <panel label="Feed" name="genx_profile_feed" height="525" width="420">
                     <web_browser
                          name="profile_html"
                          height="450"
-                         left="5"
+                         left="0"
+                         zoom_factor="0.9"
+                         stretch_to_fill="false"
                          bottom_delta="-225"
                          follows="left|top"
                          trusted_content="true"
@@ -101,7 +103,47 @@ Born : [SLBirthday]
                     />
                     
                </panel>     
-               <panel label="Picks" name="genx_profile_picks"/>
+               <panel label="Picks" name="genx_profile_picks">
+                    <text name="picks_info" follows="left|top" bottom_delta="-20" left="15">there 's no pick to show</text>
+                    <button bottom_delta="-30" enabled="true" follows="left|top" height="25" left="5" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                         image_overlay="genx_left_icone.tga"
+                         image_disabled="icn_toolbar_fly.tga"
+                         mouse_opaque="true" name="pick_prev_btn" scale_image="true" toggle="false"
+                         tool_tip="Previous pick" width="25" />
+                    <combo_box height="25" bottom_delta="0" follows="left|top" tool_tip="Picks" name="avatar_picks" width="360" left="30"/>        
+                    <button bottom_delta="0" enabled="true" follows="left|top" height="25" left="390" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                         image_overlay="genx_right_icone.tga"
+                         image_disabled="icn_toolbar_fly.tga"
+                         mouse_opaque="true" name="pick_next_btn" scale_image="true" toggle="false"
+                         tool_tip="Next pick" width="25" />     
+                    <texture_picker bottom_delta="-190" follows="left|top" height="180" left="65" name="pick_snapshot"
+	                    width="290" />
+                    <button bottom_delta="20" enabled="true" follows="left|top" height="25" left="355" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                         image_overlay="genx_open_external_icon.tga"
+                         image_disabled="icn_toolbar_fly.tga"
+                         mouse_opaque="true" name="pick_eye_btn" scale_image="true" toggle="false"
+                         tool_tip="Open picture" width="25" />      
+                    <line_editor bottom_delta="-28" enabled="false" follows="left|top"
+                         font="SansSerif" height="20" left="65" name="given_name_editor"
+                         width="290" />    
+                    <text_editor enabled="false" follows="left|top"
+                         font="SansSerifSmall" height="130" left="65" max_length="1023"
+                         name="desc_editor" width="290" word_wrap="true" spell_check="true" />
+                    <line_editor enabled="false" follows="left|top"
+                         font="SansSerifSmall" height="25" left="65" name="location_editor"
+                         width="290" />  
+                    <button bottom_delta="0" enabled="true" follows="left|top" height="25" left="357" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                         image_overlay="genx_teleport_icone.tga"
+                         image_disabled="icn_toolbar_fly.tga"
+                         mouse_opaque="true" name="pick_teleport_btn" scale_image="true" toggle="false"
+                         tool_tip="Teleport to this location" width="25" />    
+                    <button bottom_delta="0" enabled="true" follows="left|top" height="25" left="385" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                         image_overlay="genx_map_icone.tga"
+                         image_disabled="icn_toolbar_fly.tga"
+                         mouse_opaque="true" name="pick_map_btn" scale_image="true" toggle="false"
+                         tool_tip="View this location on map" width="25" />          
+               </panel>
+
                <panel label="Classified" name="genx_profile_classified"/>
                <panel label="Real Life" name="genx_profile_rl"/>
                <panel label="My Notes" name="genx_profile_notes"/>

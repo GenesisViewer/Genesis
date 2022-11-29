@@ -29,8 +29,17 @@ private:
     void manageMuteButtons();
     void toggleBlock();
 	void onClickCopy(const LLSD& val);
+	void loadPicks();
+	void pickNext();
+	void pickPrev();
+	void onSelectedPick();
+	bool onPreSelectedPick();
+	void displayPick(LLUUID pickId);
+	void onClickPickTeleport();
+	void onClicPickkMap();	
 	static floater_positions_t floater_positions;
 	static LLUUID lastMoved;
+	std::map<LLUUID,LLSD > mPicks;
 	
 };
 

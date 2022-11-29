@@ -78,7 +78,9 @@ LLMediaCtrl::Params::Params()
 	caret_color("caret_color"),
 	initial_mime_type("initial_mime_type"),
 	media_id("media_id"),
-	error_page_url("error_page_url")
+	error_page_url("error_page_url"),
+	stretch_to_fill("stretch_to_fill", true),
+	zoom_factor("zoom_factor",0)
 {
 }
 
@@ -92,7 +94,7 @@ LLMediaCtrl::LLMediaCtrl( const Params& p) :
 	mTrusted(p.trusted_content),
 	mAlwaysRefresh( false ),
 	mTakeFocusOnClick( p.focus_on_click ),
-	mStretchToFill( true ),
+	mStretchToFill( p.stretch_to_fill ),
 	mMaintainAspectRatio ( true ),
 	mClearCache(false),
 	mHoverTextChanged(false),
@@ -105,7 +107,8 @@ LLMediaCtrl::LLMediaCtrl( const Params& p) :
 	mMediaSource( nullptr ),
 	mTextureWidth ( 1024 ),
 	mTextureHeight ( 1024 ),
-	mContextMenu()
+	mContextMenu(),
+	mZoomFactor(p.zoom_factor)
 {
 	{
 		LLColor4 color = p.caret_color().get();
@@ -637,6 +640,7 @@ void LLMediaCtrl::navigateToLocalPage( const std::string& subdir, const std::str
 	{
 		mCurrentNavUrl = expanded_filename;
 		mMediaSource->setSize(mTextureWidth, mTextureHeight);
+		
 		mMediaSource->navigateTo(LLWeb::escapeURL(expanded_filename), "text/html", false);
 	}
 }
@@ -741,6 +745,7 @@ bool LLMediaCtrl::ensureMediaSourceExists()
 				mMediaSource->clearCache();
 				mClearCache = false;
 			}
+			
 		}
 		else
 		{
@@ -824,13 +829,17 @@ void LLMediaCtrl::draw()
 	{
 		gGL.pushUIMatrix();
 		{
-			F32 scale_factor = LLUI::getScaleFactor().mV[ VX ];
-			if (scale_factor != mMediaSource->getPageZoomFactor())
-			{
-				mMediaSource->setPageZoomFactor( scale_factor );
-				mUpdateScrolls = true;
+			if (mZoomFactor == 0) {
+				F32 scale_factor = LLUI::getScaleFactor().mV[ VX ];
+				if (scale_factor != mMediaSource->getPageZoomFactor())
+				{
+					mMediaSource->setPageZoomFactor( scale_factor );
+					mUpdateScrolls = true;
+				}
+			} else {
+				if (mZoomFactor !=mMediaSource->getPageZoomFactor())
+					mMediaSource->setPageZoomFactor( 0.5 );
 			}
-
 			// scale texture to fit the space using texture coords
 			gGL.getTexUnit(0)->bind(media_texture);
 			LLColor4 media_color = LLColor4::white;
@@ -1258,7 +1267,7 @@ LLView* LLMediaCtrl::fromXML(LLXMLNodePtr node, LLView *parent, LLUICtrlFactory 
 	LLColor4 color;
 	S32 ival;
 	LLRect rect;
-
+	F32 dval;
 	std::string sval("web_browser");
 	node->getAttributeString("name", sval);
 	p.name = sval;
@@ -1285,6 +1294,8 @@ LLView* LLMediaCtrl::fromXML(LLXMLNodePtr node, LLView *parent, LLUICtrlFactory 
 		p.texture_width = ival;
 	if(node->getAttributeBOOL("texture_height", ival))
 		p.texture_height = ival;
+	if(node->getAttributeF32("zoom_factor", dval))
+		p.zoom_factor = dval;	
 	if(LLUICtrlFactory::getAttributeColor(node, "caret_color", color))
 		p.caret_color = color;
 

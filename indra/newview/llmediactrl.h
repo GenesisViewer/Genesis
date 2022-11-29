@@ -65,6 +65,8 @@ public:
 		Optional<std::string>	initial_mime_type;
 		Optional<std::string>	media_id;
 		Optional<std::string>	error_page_url;
+		Optional<bool>			stretch_to_fill;
+		Optional<double>		zoom_factor;
 		
 		Params();
 	};
@@ -216,6 +218,7 @@ public:
 		viewer_media_t mMediaSource;
 		S32 mTextureWidth,
 			mTextureHeight;
+		double mZoomFactor;	
 		LLHandle<LLView> mContextMenu;
 };
 

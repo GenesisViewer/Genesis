@@ -21,6 +21,9 @@
 #include "llvoavatar.h"
 #include "llviewerwindow.h"
 #include "llweb.h"
+#include "llvector4a.h"
+#include "llfloaterworldmap.h"
+#include "llpreviewtexture.h"
 //Genesis
 #include "genxcontactset.h"
 
@@ -29,7 +32,18 @@ GenxFloaterAvatarInfo::floater_positions_t GenxFloaterAvatarInfo::floater_positi
 LLUUID GenxFloaterAvatarInfo::lastMoved;
 
 BOOL is_agent_mappable(const LLUUID& agent_id);
-
+void show_pick(const LLUUID& id, const std::string& name)
+{
+	// Try to show and focus existing preview
+	if (id.isNull() || LLPreview::show(id)) return;
+	// If there isn't one, make a new preview
+	S32 left, top;
+	gFloaterView->getNewFloaterPosition(&left, &top);
+	LLRect rect = gSavedSettings.getRect("PreviewTextureRect");
+	auto preview = new LLPreviewTexture("preview texture", rect.translate(left - rect.mLeft, rect.mTop - top), name, id);
+	preview->setFocus(true);
+	gFloaterView->adjustToFitScreen(preview, false);
+}
 void genx_show_log_browser(const LLUUID& id, const LFIDBearer::Type& type)
 {
 	void show_log_browser(const std::string& name, const LLUUID& id);
@@ -59,6 +73,7 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	setTitle(name);
     LLAvatarPropertiesProcessor::getInstance()->addObserver(mAvatarID, this);
     LLAvatarPropertiesProcessor::getInstance()->sendAvatarPropertiesRequest(mAvatarID);
+	LLAvatarPropertiesProcessor::getInstance()->sendAvatarPicksRequest(mAvatarID);
     getChild<LLNameEditor>("dnname")->setNameID(avatar_id, LFIDBearer::AVATAR);
     getChildView("avatar_key")->setValue(avatar_id);
     
@@ -122,6 +137,19 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 
 	LLAvatarNameCache::get(mAvatarID, boost::bind(&GenxFloaterAvatarInfo::onAvatarNameCache, this, _1, _2));
 	
+
+	//pick tab
+	getChild<LLUICtrl>("pick_next_btn")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::pickNext,this));
+	getChild<LLUICtrl>("pick_prev_btn")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::pickPrev,this));
+	getChild<LLUICtrl>("avatar_picks")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onSelectedPick, this));
+	getChild<LLComboBox>("avatar_picks")->setValidateCallback(boost::bind(&GenxFloaterAvatarInfo::onPreSelectedPick, this));
+	getChild<LLUICtrl>("pick_teleport_btn")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickPickTeleport,this));
+	getChild<LLUICtrl>("pick_map_btn")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClicPickkMap,this));
+	auto show_pic = [this] { show_pick(getChild<LLTextureCtrl>("pick_snapshot")->getImageAssetID(), getChild<LLLineEditor>("given_name_editor")->getText()); };
+	getChild<LLUICtrl>("pick_eye_btn")->setCommitCallback(std::bind(show_pic));
+	getChild<LLTextureCtrl>("pick_snapshot")->setEnabled(false);	
+	
+
 }
 void GenxFloaterAvatarInfo::onAvatarNameCache(const LLUUID& agent_id, const LLAvatarName& av_name)
 {
@@ -144,7 +172,33 @@ void GenxFloaterAvatarInfo::onAvatarNameCache(const LLUUID& agent_id, const LLAv
 	url = LLWeb::expandURLSubstitutions(url, subs);
 	LLStringUtil::toLower(url);
 	LLMediaCtrl* webBrowser = getChild<LLMediaCtrl>("profile_html");
+	
 	webBrowser->navigateTo(url);
+	
+}
+void GenxFloaterAvatarInfo::onClickPickTeleport()
+{
+	LLComboBox* avatar_picks = getChild<LLComboBox>("avatar_picks");
+	LLUUID pickId = avatar_picks->getCurrentID();
+	LLSD pickData = mPicks[pickId];
+	LLVector3d posGlobal = LLVector3d(pickData.get(5));
+    if (!posGlobal.isExactlyZero())
+    {
+        gAgent.teleportViaLocation(posGlobal);
+        gFloaterWorldMap->trackLocation(posGlobal);
+    }
+}
+void GenxFloaterAvatarInfo::onClicPickkMap()
+{
+	LLComboBox* avatar_picks = getChild<LLComboBox>("avatar_picks");
+	LLUUID pickId = avatar_picks->getCurrentID();
+	LLSD pickData = mPicks[pickId];
+	LLVector3d posGlobal = LLVector3d(pickData.get(5));
+    if (!posGlobal.isExactlyZero())
+    {
+        gFloaterWorldMap->trackLocation(posGlobal);
+		LLFloaterWorldMap::show(true);
+    }
 }
 void GenxFloaterAvatarInfo::onClickCopy(const LLSD& val)
 {
@@ -163,6 +217,58 @@ void GenxFloaterAvatarInfo::toggleBlock()
 {
     LLAvatarActions::toggleBlock(mAvatarID);
     manageMuteButtons();
+}
+void GenxFloaterAvatarInfo::pickNext() 
+{
+    LLComboBox* avatar_picks = getChild<LLComboBox>("avatar_picks");
+	int selected_index = avatar_picks->getCurrentIndex();
+	if (selected_index < avatar_picks->getItemCount()-1) {
+		selected_index++;
+		avatar_picks->setCurrentByIndex(selected_index);
+		//onSelectedPick();
+	}
+}
+void GenxFloaterAvatarInfo::pickPrev() 
+{
+    LLComboBox* avatar_picks = getChild<LLComboBox>("avatar_picks");
+	int selected_index = avatar_picks->getCurrentIndex();
+	if (selected_index >0) {
+		selected_index--;
+		avatar_picks->setCurrentByIndex(selected_index);
+		//onSelectedPick();
+	}
+}
+void GenxFloaterAvatarInfo::onSelectedPick() 
+{
+    LLComboBox* avatar_picks = getChild<LLComboBox>("avatar_picks");
+	int selected_index = avatar_picks->getCurrentIndex();
+	//enable or disable the prev and next buttons
+	getChild<LLUICtrl>("pick_next_btn")->setEnabled(true);
+	getChild<LLUICtrl>("pick_prev_btn")->setEnabled(true);
+	if (avatar_picks->getItemCount() == 0 || selected_index == avatar_picks->getItemCount()-1) {
+		getChild<LLUICtrl>("pick_next_btn")->setEnabled(false);
+	}
+	if (avatar_picks->getItemCount() == 0 || selected_index == 0) {
+		getChild<LLUICtrl>("pick_prev_btn")->setEnabled(false);
+	}
+	LLUUID pickId=avatar_picks->getSelectedValue();
+	displayPick(pickId);
+}
+void GenxFloaterAvatarInfo::displayPick(LLUUID pickId) 
+{
+	LLSD pickData = mPicks[pickId];
+	getChild<LLTextureCtrl>("pick_snapshot")->setImageAssetID(pickData.get(2));
+	getChild<LLLineEditor>("given_name_editor")->setText(pickData.get(1).asString());
+	getChild<LLTextEditor>("desc_editor")->setText(pickData.get(3).asString());
+	getChild<LLLineEditor>("location_editor")->setText(pickData.get(4).asString());
+}
+bool GenxFloaterAvatarInfo::onPreSelectedPick() 
+{
+	LLComboBox* avatar_picks = getChild<LLComboBox>("avatar_picks");
+	LLUUID pickId=avatar_picks->getSelectedValue();
+	displayPick(pickId);
+	return true;
+
 }
 void GenxFloaterAvatarInfo::manageMuteButtons() 
 {
@@ -271,7 +377,7 @@ void GenxFloaterAvatarInfo::processProperties(void* data, EAvatarProcessorType t
 					std::ostringstream born_on;
 					const std::locale date_fmt(std::locale::classic(), new date_facet(gSavedSettings.getString("ShortDateFormat").data()));
 					born_on.imbue(date_fmt);
-					born_on << birthday;
+					born_on << birthday << " (" << today - birthday << ')';
 					
                     args["[SLBirthday]"] = born_on.str();
 				}
@@ -336,8 +442,99 @@ void GenxFloaterAvatarInfo::processProperties(void* data, EAvatarProcessorType t
                     group_list->addRow(row,ADD_SORTED);
                 }
             }
-        }
+        } 
+		else if (type == APT_PICKS) 
+		{
+			LLAvatarPicks* picks = static_cast<LLAvatarPicks*>(data);
+			if (picks && mAvatarID == picks->target_id)
+			{
+				for (LLAvatarPicks::picks_list_t::iterator it = picks->picks_list.begin();
+					it != picks->picks_list.end(); ++it)
+				{
+					
+					mPicks[it->first]=LLSD();
+				}
+			}
+			loadPicks();
+		}
+	}
+	else if (type == APT_PICK_INFO)
+	{
+		
+		LLPickData* pick_info = static_cast<LLPickData*>(data);
+		if (pick_info->creator_id == mAvatarID) {
+			LLSD pick = LLSD();
+			pick.insert(0,pick_info->pick_id);
+			pick.insert(1,pick_info->name);
+			pick.insert(2,pick_info->snapshot_id);
+			pick.insert(3,pick_info->desc);
+			std::string location_text = pick_info->user_name + ", ";
+			if (!pick_info->original_name.empty())
+			{
+				location_text += pick_info->original_name + ", ";
+			}
+			location_text += pick_info->sim_name + " ";
+
+			S32 region_x = ll_round((F32)pick_info->pos_global.mdV[VX]) % REGION_WIDTH_UNITS;
+			S32 region_y = ll_round((F32)pick_info->pos_global.mdV[VY]) % REGION_WIDTH_UNITS;
+			S32 region_z = ll_round((F32)pick_info->pos_global.mdV[VZ]);
+			location_text.append(llformat("(%d, %d, %d)", region_x, region_y, region_z));
+
+			pick.insert(4,location_text);
+			pick.insert(5,pick_info->pos_global.getValue());
+			mPicks[pick_info->pick_id] = pick;
+			
+		} 
+		loadPicks();
+		
     }
+}
+void GenxFloaterAvatarInfo::loadPicks()
+{
+    for (auto& pick : mPicks) {
+		if (pick.second.size()==0) {
+			
+			LLAvatarPropertiesProcessor::instance().sendPickInfoRequest(mAvatarID,pick.first);
+			return;
+		}
+	}
+	//no more picks to load, we can fill the picks combobox
+	LLScrollListCtrl* picks_list = getChild<LLScrollListCtrl>("picks");
+	
+	//load contact set values
+	LLComboBox* avatar_picks = getChild<LLComboBox>("avatar_picks");
+	
+	if (avatar_picks) {
+		avatar_picks->removeall();
+		
+		
+		for (auto& pick : mPicks) {
+			avatar_picks->add(pick.second.get(1).asString(),pick.first);
+		}
+		avatar_picks->sortByName();
+		
+
+	}
+	if (avatar_picks->getItemCount()>0) {
+		avatar_picks->setCurrentByIndex(0);
+		displayPick(avatar_picks->getCurrentID());
+		getChild<LLUICtrl>("picks_info")->setVisible(false);
+	} else {
+		getChild<LLUICtrl>("pick_prev_btn")->setVisible(false);
+		getChild<LLUICtrl>("pick_next_btn")->setVisible(false);
+		getChild<LLUICtrl>("avatar_picks")->setVisible(false);
+		getChild<LLUICtrl>("pick_snapshot")->setVisible(false);
+		getChild<LLUICtrl>("pick_eye_btn")->setVisible(false);
+		getChild<LLUICtrl>("given_name_editor")->setVisible(false);
+		getChild<LLUICtrl>("desc_editor")->setVisible(false);
+		getChild<LLUICtrl>("location_editor")->setVisible(false);
+		getChild<LLUICtrl>("pick_teleport_btn")->setVisible(false);
+		getChild<LLUICtrl>("pick_map_btn")->setVisible(false);
+
+	}
+	
+
+		
 }
 void GenxFloaterAvatarInfo::setOnlineStatus(bool online_status)
 {

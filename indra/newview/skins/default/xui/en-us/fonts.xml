@@ -81,8 +81,9 @@
 
   <font name="Monospace"
 	comment="Name of monospace font">
-    <file>Roboto-Regular.ttf</file>
     <file>DejaVuSansMono.ttf</file>
+    <file>Roboto-Regular.ttf</file>
+    
   </font>
 
   <font name="DejaVu"

@@ -39,7 +39,7 @@
 #include "lltrans.h"
 #include "llui.h"				// LLUI::getLanguage()
 #include "message.h"
-
+#include "genxmembers.h"
 
 
 LLAvatarPropertiesProcessor::LLAvatarPropertiesProcessor()
@@ -226,6 +226,9 @@ void LLAvatarPropertiesProcessor::sendAvatarInterestsUpdate(const LLAvatarIntere
 //static
 std::string LLAvatarPropertiesProcessor::accountType(const LLAvatarData* avatar_data)
 {
+	//if Genx members, display 'Genesis Viewer memmber"
+	if (GenxMembers::instance().isMember(avatar_data->avatar_id))
+		return "Genesis Viewer Member";
 	// If you have a special account, like M Linden ("El Jefe!")
 	// return an untranslated "special" string
 	if (!avatar_data->caption_text.empty())

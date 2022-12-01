@@ -289,18 +289,18 @@ LLFloaterAbout::LLFloaterAbout()
 	bool want_fullname = true;
 	support.append( gAudiop ? gAudiop->getDriverName(want_fullname) : "(none)" );
 	support += '\n';
-
+	
 	std::stringstream supportstrm;
-	supportstrm << "Dullahan: "
-			<< DULLAHAN_VERSION_MAJOR
-			<< '.'
-			<< DULLAHAN_VERSION_MINOR
-			<< '.'
-			<< DULLAHAN_VERSION_BUILD
+	// supportstrm << "Dullahan: "
+	// 		<< DULLAHAN_VERSION_MAJOR
+	// 		<< '.'
+	// 		<< DULLAHAN_VERSION_MINOR
+	// 		<< '.'
+	// 		<< DULLAHAN_VERSION_BUILD
 
-			<< " / CEF: " << CEF_VERSION
-			<< " / Chrome: " << CHROME_VERSION_MAJOR
-			<< '\n';
+	// 		<< " / CEF: " << CEF_VERSION
+	// 		<< " / Chrome: " << CHROME_VERSION_MAJOR
+	// 		<< '\n';
 
 #if VLCPLUGIN
 	supportstrm << "LibVLC: ";

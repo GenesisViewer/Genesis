@@ -281,11 +281,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b9346fea7643b10308c7bd9a769ef5f7</string>
+              <string>d91143b26966ad939cf0ae1fef1a52f1</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///C:/temp/dullahan-1.3.201911222103_78.3.7_gea7ef34_chromium-78.0.3904.108-windows64-2.tar.bz2</string>
+              <string>http://pkg.genesisviewer.org/dullahan-1.12.4.202209142021_91.1.21_g9dd45fe_chromium-91.0.4472.114-windows64-575005.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>

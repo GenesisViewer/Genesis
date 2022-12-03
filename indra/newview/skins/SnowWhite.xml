@@ -1,0 +1,15 @@
+<llsd>
+    <map>
+    <key>skin_name</key>
+        <string>Snow White</string>
+    <key>author_name</key>
+        <string>James Random - Nomade Zhao</string>
+    <key>additional_author_names</key>
+        <string>Linden Lab</string>
+    <key>skin_info</key>
+        <string>A Wintery monochrome skin ideal for the holidays and skiing vacations. (Revised for Genesis in 2022)
+</string>
+    <key>folder_name</key>
+        <string>snowwhite</string>
+    </map>
+</llsd>

@@ -66,6 +66,7 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
+#include "genxtexturecache.h"
 class AIHTTPTimeoutPolicy;
 extern AIHTTPTimeoutPolicy HTTPGetResponder_timeout;
 extern AIHTTPTimeoutPolicy lcl_responder_timeout;
@@ -1041,7 +1042,7 @@ void LLTextureFetchWorker::startWork(S32 param)
 bool LLTextureFetchWorker::doWork(S32 param)
 {
 	LLMutexLock lock(&mWorkMutex);
-
+	//LL_INFOS() << "mState" << mState << LL_ENDL;
 	if ((mFetcher->isQuitting() || getFlags(LLWorkerClass::WCF_DELETE_REQUESTED)))
 	{
 		if (mState < DECODE_IMAGE)
@@ -1114,7 +1115,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		// fall through
 	}
 
-	if (mState == LOAD_FROM_TEXTURE_CACHE)
+	if (mState == LOAD_FROM_TEXTURE_CACHE && !gSavedSettings.getBOOL("GenxTextureCache"))
 	{
 		if (mCacheReadHandle == LLTextureCache::nullHandle())
 		{
@@ -1191,7 +1192,28 @@ bool LLTextureFetchWorker::doWork(S32 param)
 			return false;
 		}
 	}
-
+	if (mState == LOAD_FROM_TEXTURE_CACHE && gSavedSettings.getBOOL("GenxTextureCache"))
+	{
+		// For now, create formatted image based on extension
+		std::string extension = gDirUtilp->getExtension(mUrl);
+		mFormattedImage = LLImageFormatted::createFromType(LLImageBase::getCodecFromExtension(extension));
+		if (mFormattedImage.isNull())
+		{
+			mFormattedImage = new LLImageJ2C; // default
+		}
+		if (mFormattedImage.notNull()) {
+			
+			GenxTextureCache::instance().readTextureCache(mID,mFormattedImage,mUrl);
+		}
+		if (mFormattedImage->getDataSize() > 0) {
+			mFileSize = mFormattedImage->getDataSize();
+			mImageCodec = mFormattedImage->getCodec();
+			mInLocalCache = TRUE;
+			
+			mHaveAllData = TRUE;
+		}
+		setState(CACHE_POST);
+	}
 	if (mState == CACHE_POST)
 	{
 		mCachedSize = mFormattedImage.notNull() ? mFormattedImage->getDataSize() : 0;
@@ -1199,6 +1221,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		if ((mCachedSize >= mDesiredSize) || mHaveAllData)
 		{
 			// we have enough data, decode it
+			LL_INFOS() << "we have enough data, decode it " << mID << LL_ENDL;
 			llassert_always(mFormattedImage->getDataSize() > 0);
 			mLoadedDiscard = mDesiredDiscard;
 			if (mLoadedDiscard < 0)
@@ -1877,7 +1900,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		}
 	}
 
-	if (mState == WRITE_TO_CACHE)
+	if (mState == WRITE_TO_CACHE && !gSavedSettings.getBOOL("GenxTextureCache")) 
 	{
 		if (mWriteToCacheState != SHOULD_WRITE || mFormattedImage.isNull())
 		{
@@ -1909,6 +1932,24 @@ bool LLTextureFetchWorker::doWork(S32 param)
 																  mFormattedImage->getData(), datasize,
 																  mFileSize, responder);
 		// fall through
+		
+	}
+	if (mState == WRITE_TO_CACHE && gSavedSettings.getBOOL("GenxTextureCache")) 
+	{
+		if (mWriteToCacheState != SHOULD_WRITE || mFormattedImage.isNull())
+		{
+			// If we're in a local cache or we didn't actually receive any new data,
+			// or we failed to load anything, skip
+			setState(DONE);
+			return false;
+		}
+		if (mHaveAllData) {
+			S32 datasize = mFormattedImage->getDataSize();
+			GenxTextureCache::instance().writeTextureCache(mID, datasize,mFormattedImage->getData());
+
+			setState(DONE);
+		}
+		return true;
 	}
 	
 	if (mState == WAIT_ON_WRITE)

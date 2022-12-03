@@ -15,8 +15,10 @@ public:
     // viewer auth version
 	char initAgentDB(std::string db_path);
     char initALLAgentsDB(std::string db_path);
+    char initTextureCacheDB(std::string db_path);
     sqlite3 *getDB();
     sqlite3 *getAllAgentsDB();
+    sqlite3 *getTextureCacheDB();
     void close();
     bool isInit() {return ready;}
 private:
@@ -24,8 +26,10 @@ private:
     sqlite3 *db;
     //db for all agents
     sqlite3 *commondb;
-    
+    //db for texture cache
+    sqlite3 *textureCacheDB;
     bool ready = FALSE;
+    
 };
 
 #endif /* LLSQLMGR_H */

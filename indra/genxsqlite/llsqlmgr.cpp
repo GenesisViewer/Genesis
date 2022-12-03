@@ -12,7 +12,54 @@ LLSqlMgr::~LLSqlMgr()
 	
 }
 
+char LLSqlMgr::initTextureCacheDB(std::string db_path) {
+    char *zErrMsg = 0;
+    char *sql;
+    int rc;
 
+   rc = sqlite3_open(db_path.c_str(), &textureCacheDB);
+   if( rc ) {
+    return rc;
+   }
+
+   //texture cache entry
+   sql = "CREATE TABLE IF NOT EXISTS TEXTURE_CACHE_ENTRY(" \
+         "ID TEXT PRIMARY KEY NOT NULL," \
+         "SIZE INTEGER NOT NULL," \
+         "LAST_USED INTEGER NOT NULL)";
+    rc = sqlite3_exec (textureCacheDB, sql, NULL, NULL, &zErrMsg);  
+    if( rc ) {
+        LL_WARNS() << "Can't initialise Genesis Texture Cache entry table " << zErrMsg << LL_ENDL;
+        return rc;
+    }     
+    sql = "CREATE TABLE IF NOT EXISTS TEXTURE_CACHE_FILES(" \
+         "ID TEXT PRIMARY KEY NOT NULL," \
+         "PART INTEGER NOT NULL," \
+         "DATAS BLOB NOT NULL)";
+    rc = sqlite3_exec (textureCacheDB, sql, NULL, NULL, &zErrMsg);  
+    if( rc ) {
+        LL_WARNS() << "Can't initialise Genesis Texture Cache files table " << zErrMsg << LL_ENDL;
+        return rc;
+    }
+    sql ="PRAGMA page_size = 16384;";
+    rc = sqlite3_exec (textureCacheDB, sql, NULL, NULL, &zErrMsg);  
+    if( rc ) {
+        LL_WARNS() << "Can't set page_size on texture cache DB " << zErrMsg << LL_ENDL;
+        return rc;
+    }
+    sql ="VACUUM";
+    rc = sqlite3_exec (textureCacheDB, sql, NULL, NULL, &zErrMsg);  
+    if( rc ) {
+        LL_WARNS() << "Can't vacuum texture cache DB " << zErrMsg << LL_ENDL;
+        return rc;
+    }
+    sql ="PRAGMA cache_size = 114176;";
+    rc = sqlite3_exec (textureCacheDB, sql, NULL, NULL, &zErrMsg);  
+    if( rc ) {
+        LL_WARNS() << "Can't set cache_size on texture cache DB " << zErrMsg << LL_ENDL;
+        return rc;
+    }
+}
 char LLSqlMgr::initALLAgentsDB(std::string db_path) {
    LL_INFOS() << "Init Genesis DB :" << db_path << LL_ENDL;
    char *zErrMsg = 0;
@@ -123,4 +170,7 @@ sqlite3 *LLSqlMgr::getDB() {
 
 sqlite3 *LLSqlMgr::getAllAgentsDB() {
     return commondb;
+}
+sqlite3 *LLSqlMgr::getTextureCacheDB() {
+    return textureCacheDB;
 }

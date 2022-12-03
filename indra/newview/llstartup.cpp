@@ -165,6 +165,7 @@
 #include "llstatusbar.h"		// sendMoneyBalanceRequest(), owns L$ balance
 #include "llsurface.h"
 #include "lltexturecache.h"
+#include "genxtexturecache.h"
 #include "lltexturefetch.h"
 #include "lltoolmgr.h"
 #include "lltrans.h"

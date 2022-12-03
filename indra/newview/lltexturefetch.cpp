@@ -1807,7 +1807,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		}
 	}
 	
-	if (mState == DECODE_IMAGE)
+	if (mState == DECODE_IMAGE && !gSavedSettings.getBOOL("GenxDecodeImageSystem"))
 	{
 		static LLCachedControl<bool> textures_decode_disabled(gSavedSettings,"TextureDecodeDisabled");
 
@@ -1860,7 +1860,95 @@ bool LLTextureFetchWorker::doWork(S32 param)
 																  new DecodeResponder(mFetcher, mID, this));
 		// fall though
 	}
+	if (mState == DECODE_IMAGE && gSavedSettings.getBOOL("GenxDecodeImageSystem"))
+	{
+		static LLCachedControl<bool> textures_decode_disabled(gSavedSettings,"TextureDecodeDisabled");
+		if (textures_decode_disabled)
+		{
+			// for debug use, don't decode
+			setState(DONE);
+			return true;
+		}
+		if (mDesiredDiscard < 0)
+		{
+			// We aborted, don't decode
+			setState(DONE);
+			LL_INFOS(LOG_TXT) << mID << " DECODE_IMAGE abort: desired discard " << mDesiredDiscard << "<0" << LL_ENDL;
+			return true;
+		}
+		
+		if (mFormattedImage->getDataSize() <= 0)
+		{
+			LL_WARNS(LOG_TXT) << "Decode entered with invalid mFormattedImage. ID = " << mID << LL_ENDL;
+			
+			//abort, don't decode
+			setState(DONE);
+			LL_DEBUGS(LOG_TXT) << mID << " DECODE_IMAGE abort: (mFormattedImage->getDataSize() <= 0)" << LL_ENDL;
+			return true;
+		}
+		if (mLoadedDiscard < 0)
+		{
+			LL_WARNS(LOG_TXT) << "Decode entered with invalid mLoadedDiscard. ID = " << mID << LL_ENDL;
+
+			//abort, don't decode
+			setState(DONE);
+			LL_INFOS(LOG_TXT) << mID << " DECODE_IMAGE abort: mLoadedDiscard < 0" << LL_ENDL;
+			return true;
+		}
+
+		mRawImage = NULL;
+		mAuxImage = NULL;
+		llassert_always(mFormattedImage.notNull());
+		S32 discard = mHaveAllData ? 0 : mLoadedDiscard;
+		const F32 decode_time_slice = .1f;
+		
+		// parse formatted header
+		if (!mFormattedImage->updateData())
+		{
+			//abort, don't decode
+			setState(DONE);
+			return true;
+		}
+		if (!(mFormattedImage->getWidth() * mFormattedImage->getHeight() * mFormattedImage->getComponents()))
+		{
+			//abort, don't decode
+			setState(DONE);
+			return true;
+		}
+		if (discard >= 0)
+		{
+			mFormattedImage->setDiscardLevel(discard);
+		}
+		mRawImage = new LLImageRaw(mFormattedImage->getWidth(),
+									mFormattedImage->getHeight(),
+									mFormattedImage->getComponents());
+			
+		if(!mFormattedImage->decode(mRawImage, decode_time_slice)) {
+			//abort, don't decode
+			setState(DONE);
+			LL_INFOS(LOG_TXT) << mID << " DECODE_IMAGE abort: decode" << LL_ENDL;
+			return true;
+		}
+		if (mNeedsAux)
+		{
+		// Decode aux channel
+			
+			mAuxImage = new LLImageRaw(mFormattedImage->getWidth(),
+											mFormattedImage->getHeight(),
+											1);
+			
+			if(!mFormattedImage->decodeChannels(mAuxImage, decode_time_slice, 4, 4)) {
+				//abort, don't decode
+				setState(DONE);
+				LL_INFOS(LOG_TXT) << mID << " DECODE_IMAGE abort: decodeChannels" << LL_ENDL;
+				return true;
+			} // 1ms
+				
+		}
+		mDecodedDiscard = mFormattedImage->getDiscardLevel();
+		setState(WRITE_TO_CACHE);
 	
+	}
 	if (mState == DECODE_IMAGE_UPDATE)
 	{
 		if (mDecoded)

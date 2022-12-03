@@ -1194,6 +1194,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 	}
 	if (mState == LOAD_FROM_TEXTURE_CACHE && gSavedSettings.getBOOL("GenxTextureCache"))
 	{
+		mCacheReadTimer.reset();
 		// For now, create formatted image based on extension
 		std::string extension = gDirUtilp->getExtension(mUrl);
 		mFormattedImage = LLImageFormatted::createFromType(LLImageBase::getCodecFromExtension(extension));
@@ -1221,7 +1222,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		if ((mCachedSize >= mDesiredSize) || mHaveAllData)
 		{
 			// we have enough data, decode it
-			LL_INFOS() << "we have enough data, decode it " << mID << LL_ENDL;
+			LL_DEBUGS() << "we have enough data, decode it " << mID << LL_ENDL;
 			llassert_always(mFormattedImage->getDataSize() > 0);
 			mLoadedDiscard = mDesiredDiscard;
 			if (mLoadedDiscard < 0)

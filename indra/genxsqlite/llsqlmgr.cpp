@@ -33,9 +33,9 @@ char LLSqlMgr::initTextureCacheDB(std::string db_path) {
         return rc;
     }     
     sql = "CREATE TABLE IF NOT EXISTS TEXTURE_CACHE_FILES(" \
-         "ID TEXT PRIMARY KEY NOT NULL," \
+         "ID TEXT NOT NULL," \
          "PART INTEGER NOT NULL," \
-         "DATAS BLOB NOT NULL)";
+         "DATAS BLOB NOT NULL, PRIMARY KEY(ID,PART))";
     rc = sqlite3_exec (textureCacheDB, sql, NULL, NULL, &zErrMsg);  
     if( rc ) {
         LL_WARNS() << "Can't initialise Genesis Texture Cache files table " << zErrMsg << LL_ENDL;

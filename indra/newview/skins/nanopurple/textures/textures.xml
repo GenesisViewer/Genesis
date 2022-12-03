@@ -1,0 +1,8 @@
+<textures version="101">
+  <texture name="startup_logo.tga" preload="true"/>
+  <texture name="startup_logo2.j2c" preload="true"/>
+  <texture name="startup_logo3.tga" preload="true"/>
+  <texture name="SliderTrack_Horiz" file_name="icn_slide-groove_dark.tga" scale.left="2" scale.top="5" scale.right="29" scale.bottom="4" preload="true" />
+  <texture name="SliderTrack_Horiz_Highlight" file_name="icn_slide-highlight.tga" scale.left="2" scale.top="5" scale.right="29" scale.bottom="4" preload="true" />
+  <texture name="SliderThumb_Off" file_name="icn_slide-thumb_dark.tga" scale.left="2" scale.top="5" scale.right="29" scale.bottom="4" preload="true" />
+</textures>

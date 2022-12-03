@@ -213,6 +213,7 @@
 // llviewernetwork.h
 #include "llviewernetwork.h"
 
+#include "llsqlmgr.h"
 #include <random>
 
 #ifdef USE_CRASHPAD
@@ -3620,6 +3621,8 @@ bool LLAppViewer::initCache()
 			purgeCache(); // purge old cache
 			gSavedSettings.setString("CacheLocation", new_cache_location);
 		}
+
+		
 	}
 	
 	if (!gDirUtilp->setCacheDir(gSavedSettings.getString("CacheLocation")))
@@ -3629,7 +3632,8 @@ bool LLAppViewer::initCache()
 		// Keep NewCacheLocation equal to CacheLocation so we won't try to erase the cache the next time the viewer is run.
 		gSavedSettings.setString("NewCacheLocation", "");
 	}
-	
+	//GenxTextureCache
+	LLSqlMgr::instance().initTextureCacheDB(gDirUtilp->getCacheDir() + gDirUtilp->getDirDelimiter() + "texturecache.db");
 	if (mPurgeCache && !read_only)
 	{
 		LLSplashScreen::update(LLTrans::getString("StartupClearingCache"));

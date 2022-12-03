@@ -19485,6 +19485,17 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <boolean>0</boolean>
     </map>
+    <key>GenxTextureCache</key>
+    <map>
+      <key>Comment</key>
+      <string>Use the next gen texture cache system</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <boolean>1</boolean>
+    </map>
   </map>
 </llsd>
 

@@ -135,6 +135,12 @@ class ViewerManifest(LLManifest):
                 self.package_skin("dark.xml", "dark")
                 self.package_skin("Gemini.xml", "gemini")
                 self.package_skin("Dazzle.xml", "Dazzle_MC")
+                self.package_skin("nanopurple.xml", "nanopurple")
+                self.package_skin("New_Silver.xml", "new_silver")
+                self.package_skin("pslpurple.xml", "pslpurple")
+                self.package_skin("Retro.xml", "retro")
+                self.package_skin("SecondLove.xml", "secondlove")
+                self.package_skin("SnowWhite.xml", "snowwhite")
                 # Local HTML files (e.g. loading screen)
                 with self.prefix(src_dst="*/html"):
                     self.path("*.png")

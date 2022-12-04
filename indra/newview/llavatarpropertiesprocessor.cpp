@@ -228,7 +228,7 @@ std::string LLAvatarPropertiesProcessor::accountType(const LLAvatarData* avatar_
 {
 	//if Genx members, display 'Genesis Viewer memmber"
 	if (GenxMembers::instance().isMember(avatar_data->avatar_id))
-		return "Genesis Viewer Member";
+		return "Genesis Viewer Team";
 	// If you have a special account, like M Linden ("El Jefe!")
 	// return an untranslated "special" string
 	if (!avatar_data->caption_text.empty())

@@ -91,12 +91,19 @@ void LLFloaterActiveSpeakers::onClose(bool app_quitting)
 
 void LLFloaterActiveSpeakers::draw()
 {
+	this->getChild<LLButton>("active_speakers_refresh")->setEnabled(!inRefreshContext);
 	// update state every frame to get live amplitude feedback
 	if (!mPaused) {
 		mPanel->refreshSpeakers();
 		this->setTitle(mTitle);
 	} else {
 		this->setTitle(mTitle + " (Paused)");
+	}
+	if (inRefreshContext && (refreshTimerContext.getElapsedSeconds()-startRefreshTime) > 30.0f) {
+		LLVoiceEffectInterface* effect_interface = LLVoiceClient::instance().getVoiceEffectInterface();
+		effect_interface->enablePreviewBuffer(false);
+		
+		inRefreshContext=false;
 	}
 	LLFloater::draw();
 }
@@ -113,16 +120,28 @@ void LLFloaterActiveSpeakers::onParticipantsChanged()
 }
 void LLFloaterActiveSpeakers::manualActiveSpeakersRefresh()
 {
+	
 	if (mPaused) {	
 		mPanel->readWhilePausedEvents();
 	}
 	
 	if (LLVoiceClient::instance().isVoiceWorking()) {
 		LLVoiceEffectInterface* effect_interface = LLVoiceClient::instance().getVoiceEffectInterface();
-		LLUUID voice_effect = effect_interface->getVoiceEffect();
-		effect_interface->setVoiceEffect(LLUUID::null);
-		LLVoiceClient::instance().leaveChannel();
-		effect_interface->setVoiceEffect(voice_effect);
+		if (effect_interface)
+		{
+			
+
+			// Disconnect from the current voice channel ready to record a voice sample for previewing
+			effect_interface->enablePreviewBuffer(true);
+			effect_interface->getVoiceEffectTemplateList();
+			effect_interface->isPreviewRecording();
+		}
+	
+		
+		inRefreshContext=true;
+		startRefreshTime = refreshTimerContext.getElapsedSeconds();
+		
+		
 	}
 	
 }

@@ -65,6 +65,11 @@ protected:
 	void toggleActiveSpeakersRefresh();
 	void manualActiveSpeakersRefresh();
 	LLParticipantList* mPanel;
+private:	
+	bool inRefreshContext = false;
+	LLTimer refreshTimerContext;
+	F64 startRefreshTime;
+	LLUUID savedEffect;
 };
 
 #endif // LL_LLFLOATERACTIVESPEAKERS_H

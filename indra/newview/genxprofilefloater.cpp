@@ -26,7 +26,8 @@
 #include "llpreviewtexture.h"
 //Genesis
 #include "genxcontactset.h"
-
+#include "llhttpclient.h"
+#include "llviewertexturelist.h"
 
 GenxFloaterAvatarInfo::floater_positions_t GenxFloaterAvatarInfo::floater_positions;
 LLUUID GenxFloaterAvatarInfo::lastMoved;
@@ -61,10 +62,12 @@ void genx_show_log_browser(const LLUUID& id, const LFIDBearer::Type& type)
 	show_log_browser(name, id);
 }
 
+
 GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUUID &avatar_id)
 :	LLFloater(name), LLInstanceTracker<GenxFloaterAvatarInfo, LLUUID>(avatar_id),
 	mAvatarID(avatar_id)
 {
+	bool self = (avatar_id==gAgent.getID());
 	setAutoFocus(true);
 
 	LLCallbackMap::map_t factory_map;
@@ -129,6 +132,17 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 
 	getChild<LLUICtrl>("copy_flyout")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickCopy, this, _2));
 
+	getChild<LLButton>("upload_SL_pic")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickUploadPhoto, this));
+
+	childSetVisible("contact_set_label",!self);
+	childSetVisible("avatar_contact_set",!self);
+	childSetVisible("drop_target_rect",!self);
+	childSetEnabled("avatar_partner",self);
+
+	childSetVisible("upload_SL_pic",self);
+	childSetVisible("change_SL_pic",self);
+	childSetVisible("remove_SL_pic",self);
+	childSetEnabled("change_display_name",self);
 
 	//Feed Tab
 	LLMediaCtrl* webBrowser = getChild<LLMediaCtrl>("profile_html");
@@ -149,7 +163,145 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	getChild<LLUICtrl>("pick_eye_btn")->setCommitCallback(std::bind(show_pic));
 	getChild<LLTextureCtrl>("pick_snapshot")->setEnabled(false);	
 	
+	//Real Life Tab
+	
+	getChild<LLTextureCtrl>("imgRL")->setFallbackImageName("default_profile_picture.j2c");
+	childSetEnabled("imgRL", self);
+	childSetEnabled("aboutRL", self);
 
+	//Profile actions
+	childSetEnabled("genx_profile_actions", !self);
+	childSetVisible("genx_profile_actions", !self);
+}
+
+void GenxFloaterAvatarInfo::sl_filepicker_callback(AIFilePicker* picker)
+{
+	if (picker->hasFilename())
+	{
+		
+		std::string filename = picker->getFilename();
+		
+		// generate a temp texture file for coroutine
+		std::string temp_file = gDirUtilp->getTempFilename();
+		U32 codec = LLImageBase::getCodecFromExtension(gDirUtilp->getExtension(filename));
+		const S32 MAX_DIM = 256;
+		if (!LLViewerTextureList::createUploadFile(filename, temp_file, codec, MAX_DIM))
+		{
+			//todo: image not supported notification
+			LL_WARNS("AvatarProperties") << "Failed to upload profile image of type " << "sl_image_id" ", failed to open image" << LL_ENDL;
+			return;
+		}
+
+		//upload the pic
+		LLSD data = LLSD::emptyMap();
+		data["profile-image-asset"] = "sl_image_id";
+		LL_INFOS() << "posting to " << gAgent.getRegionCapability("UploadAgentProfileImage") << LL_ENDL;
+		LLHTTPClient::post(gAgent.getRegionCapability("UploadAgentProfileImage"), data,new LLCoroResponder(
+                    boost::bind(&GenxFloaterAvatarInfo::sl_http_upload_first_step,this,_1,temp_file)));
+	  
+	}
+}
+void GenxFloaterAvatarInfo::sl_http_upload_first_step(const LLCoroResponder& responder,std::string filename)
+{
+    const auto& status = responder.getStatus();
+	
+    if (!responder.isGoodStatus(status))
+    {
+        LL_WARNS() << "HTTP status First file upload step" << status << ": " << responder.getReason() <<
+            ". First file upload step failed." << LL_ENDL;
+    }
+    else
+    {
+        {
+                     
+			LLSD result = responder.getContent();
+			if (result.has("uploader")) {
+				
+				std::string uploader_cap = result["uploader"].asString();
+
+				//get the file length
+				S64 fileLength;
+				U8 *data;
+				{
+					llifstream instream(filename.c_str(), std::iostream::binary | std::iostream::ate);
+					if (!instream.is_open())
+					{
+						LL_WARNS("AvatarProperties") << "Failed to open file " << filename << LL_ENDL;
+						
+					}
+					fileLength = instream.tellg();
+					instream.seekg(0, std::ios::beg);
+
+					std::vector<char> buffer(fileLength);
+
+					if (instream.read(buffer.data(), fileLength)) {
+						std::string str(buffer.begin(), buffer.end());
+
+						std::vector<U8> vec(str.begin(), str.end());
+
+						data = (uint8_t*) malloc(sizeof(uint8_t) * vec.size());
+						copy(vec.begin(), vec.end(), data);
+
+						
+					}
+				}
+				AIHTTPHeaders headers;
+				headers.addHeader("Content-Type","application/jp2");
+				headers.addHeader("Content-Length", llformat("%d", fileLength));
+				
+				
+				
+				
+				LLHTTPClient::postRaw(uploader_cap,data,fileLength,new LLCoroResponder(
+                    boost::bind(&GenxFloaterAvatarInfo::sl_http_upload_second_step,this,_1,filename)),headers);
+				
+			} else {
+				LL_WARNS() << "First upload step failed, I don't have an uploader CAP" << LL_ENDL;
+				
+			}
+            
+        }
+    }
+}
+void GenxFloaterAvatarInfo::sl_http_upload_second_step(const LLCoroResponder& responder,std::string filename)
+{
+    const auto& status = responder.getStatus();
+	
+    if (!responder.isGoodStatus(status))
+    {
+        LL_WARNS() << "HTTP status First file upload step" << status << ": " << responder.getReason() <<
+            ". First file upload step failed." << LL_ENDL;
+    }
+    else
+    {
+        
+            
+            
+		LLSD result = responder.getContent();
+		if (result["state"].asString() != "complete")
+		{
+			if (result.has("message"))
+			{
+				LL_WARNS("AvatarProperties") << "Failed to upload image, state " << result["state"] << " message: " << result["message"] << LL_ENDL;
+			}
+			else
+			{
+				LL_WARNS("AvatarProperties") << "Failed to upload image " << result << LL_ENDL;
+			}
+			
+		} else {
+			getChild<LLTextureCtrl>("img2ndLife")->setImageAssetID(result["new_asset"].asUUID());
+		}
+            
+        
+    }
+}
+void GenxFloaterAvatarInfo::onClickUploadPhoto()
+{
+	AIFilePicker* picker = AIFilePicker::create();
+	picker->open(FFLOAD_IMAGE, "", "images");
+	
+	picker->run(boost::bind(&GenxFloaterAvatarInfo::sl_filepicker_callback, this, picker));
 }
 void GenxFloaterAvatarInfo::onAvatarNameCache(const LLUUID& agent_id, const LLAvatarName& av_name)
 {
@@ -399,7 +551,9 @@ void GenxFloaterAvatarInfo::processProperties(void* data, EAvatarProcessorType t
 
             getChild<LLTextEditor>("about")->setText(pAvatarData->about_text, false);
 
-
+			//Real Life
+			getChild<LLTextEditor>("aboutRL")->setText(pAvatarData->fl_about_text, false);
+			getChild<LLTextureCtrl>("imgRL")->setImageAssetID(pAvatarData->fl_image_id);
 			
 			
         }

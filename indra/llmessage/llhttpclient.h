@@ -194,7 +194,8 @@ public:
 		// Accessors.
 		std::string const& getURL(void) const { return mURL; }
 		CURLcode result_code(void) const { return mCode; }
-
+		// Another convenience method to match upstream.
+		std::string dumpResponse(void) const;
 	protected:
 		// Short cut.
 		void setResult(S32 status, std::string const& reason, LLSD const& content) { mStatus = status; mReason = reason; mContent = content; mFinished = true; }
@@ -210,8 +211,7 @@ public:
 			llassert(needsHeaders());
 			return mReceivedHeaders;
 		}
-		// Another convenience method to match upstream.
-		std::string dumpResponse(void) const;
+		
 	public:
 		// The next two are public because blocking_request() needs access too.
 		S32 getStatus(void) const { return mStatus; }

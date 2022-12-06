@@ -142,7 +142,8 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	childSetVisible("upload_SL_pic",self);
 	childSetVisible("change_SL_pic",self);
 	childSetVisible("remove_SL_pic",self);
-	childSetEnabled("change_display_name",self);
+	childSetVisible("change_display_name",self);
+	
 
 	//Feed Tab
 	LLMediaCtrl* webBrowser = getChild<LLMediaCtrl>("profile_html");

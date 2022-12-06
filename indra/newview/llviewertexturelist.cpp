@@ -1241,7 +1241,8 @@ void LLViewerTextureList::decodeAllImages(F32 max_time)
 
 BOOL LLViewerTextureList::createUploadFile(const std::string& filename,
 										 const std::string& out_filename,
-										 const U8 codec)
+										 const U8 codec,
+										 const S32 max_image_dimentions)
 {
 	// Load the image
 	LLPointer<LLImageFormatted> image = LLImageFormatted::createFromType(codec);
@@ -1269,7 +1270,7 @@ BOOL LLViewerTextureList::createUploadFile(const std::string& filename,
 		return FALSE;
 	}
 	// Convert to j2c (JPEG2000) and save the file locally
-	LLPointer<LLImageJ2C> compressedImage = convertToUploadFile(raw_image);	
+	LLPointer<LLImageJ2C> compressedImage = convertToUploadFile(raw_image, max_image_dimentions);	
 	if (compressedImage.isNull())
 	{
 		LLImage::setLastError("Couldn't convert the image to jpeg2000.");
@@ -1318,9 +1319,9 @@ BOOL LLViewerTextureList::verifyUploadFile(const std::string& out_filename, cons
 }
 
 // note: modifies the argument raw_image!!!!
-LLPointer<LLImageJ2C> LLViewerTextureList::convertToUploadFile(LLPointer<LLImageRaw> raw_image)
+LLPointer<LLImageJ2C> LLViewerTextureList::convertToUploadFile(LLPointer<LLImageRaw> raw_image, const S32 max_image_dimentions)
 {
-	raw_image->biasedScaleToPowerOfTwo(LLViewerFetchedTexture::MAX_IMAGE_SIZE_DEFAULT);
+	raw_image->biasedScaleToPowerOfTwo(max_image_dimentions);
 	LLPointer<LLImageJ2C> compressedImage = new LLImageJ2C();
 	compressedImage->setRate(0.f);
 	

@@ -5,6 +5,8 @@
 #include "llfloater.h"
 #include "llinstancetracker.h"
 #include "llavatarpropertiesprocessor.h"
+#include "statemachine/aifilepicker.h"
+#include "llcororesponder.h"
 
 
 class GenxFloaterAvatarInfo
@@ -37,6 +39,10 @@ private:
 	void displayPick(LLUUID pickId);
 	void onClickPickTeleport();
 	void onClicPickkMap();	
+	void onClickUploadPhoto();
+	void sl_filepicker_callback(AIFilePicker* picker);
+	void sl_http_upload_first_step(const LLCoroResponder& responder,std::string filename);
+	void sl_http_upload_second_step(const LLCoroResponder& responder,std::string filename);
 	static floater_positions_t floater_positions;
 	static LLUUID lastMoved;
 	std::map<LLUUID,LLSD > mPicks;

@@ -78,14 +78,24 @@ Born : [SLBirthday]
                <text bg_visible="false" border_drop_shadow_visible="false"
 			     border_visible="true" bottom_delta="0" drop_shadow_visible="true"
 			     follows="left" font="SansSerifSmall" height="48" left="220"
-			     mouse_opaque="true" width="238">Contact Set</text>      
+			     mouse_opaque="true" width="238" name="contact_set_label">Contact Set</text>      
                <scroll_list background_visible="true" bottom_delta="-99" column_padding="5" draw_border="true"
 			     follows="left" height="129" left="5" mouse_opaque="false"
 			     multi_select="false" name="groups" width="190" menu_num="1"/>    
                 
                <combo_box height="18" left="220" bottom_delta="111" follows="left" tool_tip="Your contact set" name="avatar_contact_set" width="190"/>   
-
-               
+               <button bottom_delta="-10" enabled="true" follows="left" height="25" left="220" sound_flags="0" label="Upload Profile Picture"
+                    mouse_opaque="true" name="upload_SL_pic" toggle="false"
+                    tool_tip="Upload a new profile picture" width="180"/>
+               <button bottom_delta="-30" enabled="true" follows="left" height="25" left="220" sound_flags="0" label="Change Profile Picture"
+                    mouse_opaque="true" name="change_SL_pic" toggle="false"
+                    tool_tip="Change your profile picture" width="180"/>     
+               <button bottom_delta="-30" enabled="true" follows="left" height="25" left="220" sound_flags="0" label="Remove Profile Picture"
+                    mouse_opaque="true" name="remove_SL_pic" toggle="false"
+                    tool_tip="Remove your profile picture" width="180"/>     
+               <button bottom_delta="-40" enabled="true" follows="left" height="25" left="220" sound_flags="0" label="Change Display Name"
+                    mouse_opaque="true" name="change_display_name" toggle="false"
+                    tool_tip="Change your display name" width="180"/>
                <drop_target bottom_delta="-50" height="40" left="220" width="190" fill_parent="true" show_reset="false" name="drop_target_rect" label="Drop inventory item here." tool_tip="Drop inventory items here to give them to this person."/>
                </panel>
 
@@ -94,7 +104,6 @@ Born : [SLBirthday]
                          name="profile_html"
                          height="450"
                          left="0"
-                         zoom_factor="0.9"
                          stretch_to_fill="false"
                          bottom_delta="-225"
                          follows="left|top"
@@ -145,7 +154,16 @@ Born : [SLBirthday]
                </panel>
 
                <panel label="Classified" name="genx_profile_classified"/>
-               <panel label="Real Life" name="genx_profile_rl"/>
+               <panel label="Real Life" name="genx_profile_rl">
+                    <texture_picker allow_no_texture="true" bottom="-171" can_apply_immediately="false"
+                         default_image_name="None" follows="left|top" height="151" label=""
+                         left="5" mouse_opaque="true" name="imgRL"
+                         width="135" enabled="false"/>
+                    <text_editor bottom="-420" embedded_items="false"
+                         enabled="true" follows="left|top" font="SansSerifSmall" height="250"
+                         is_unicode="false" left="5" max_length="254" mouse_opaque="false"
+                         name="aboutRL" width="410" word_wrap="true" spell_check="true"/>     
+               </panel>
                <panel label="My Notes" name="genx_profile_notes"/>
           </tab_container>
           <panel label="profile_actions" name="genx_profile_actions" height="40" follows="left|bottom" bottom="0">

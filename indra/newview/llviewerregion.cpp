@@ -2019,6 +2019,7 @@ void LLViewerRegionImpl::buildCapabilityNames(LLSD& capabilityNames)
 	capabilityNames.append("GetDisplayNames");
 	capabilityNames.append("GetExperiences");
 	capabilityNames.append("AgentExperiences");
+	capabilityNames.append("AgentProfile");
 	capabilityNames.append("FindExperienceByName");
 	capabilityNames.append("GetExperienceInfo");
 	capabilityNames.append("GetAdminExperiences");
@@ -2081,6 +2082,7 @@ void LLViewerRegionImpl::buildCapabilityNames(LLSD& capabilityNames)
 	capabilityNames.append("UpdateGestureTaskInventory");
 	capabilityNames.append("UpdateNotecardAgentInventory");
 	capabilityNames.append("UpdateNotecardTaskInventory");
+	capabilityNames.append("UploadAgentProfileImage");
 	capabilityNames.append("UpdateScriptAgent");
 	capabilityNames.append("UpdateScriptTask");
 	capabilityNames.append("UploadBakedTexture");

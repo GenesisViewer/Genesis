@@ -43,6 +43,7 @@ private:
 	void onClickChangePhoto();
 	void saveProfile();
 	void sendAvatarPropertiesUpdate();
+	void onTextureSelectionChanged(LLInventoryItem* itemp);
 	void sl_filepicker_callback(AIFilePicker* picker);
 	void sl_http_upload_first_step(const LLCoroResponder& responder,std::string filename);
 	void sl_http_upload_second_step(const LLCoroResponder& responder,std::string filename);

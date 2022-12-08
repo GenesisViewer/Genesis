@@ -105,10 +105,10 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 
     getChild<LLUICtrl>("btn_teleport")->setCommitCallback(boost::bind(static_cast<void(*)(const LLUUID&)>(LLAvatarActions::offerTeleport), mAvatarID));
 
-    LLTextureCtrl* ctrl = getChild<LLTextureCtrl>("img2ndLife");
-	ctrl->setFallbackImageName("default_profile_picture.j2c");
-
     
+	getChild<LLTextureCtrl>("img2ndLife")->setFallbackImageName("default_profile_picture.j2c");
+	//getChild<LLTextureCtrl>("img2ndLife")->setOnTextureSelectedCallback(boost::bind(&GenxFloaterAvatarInfo::onTextureSelectionChanged, this, _1));
+    getChild<LLTextureCtrl>("img2ndLife")->setEnabled(self);
     bool isFriend = LLAvatarActions::isFriend(mAvatarID);
     getChild<LLUICtrl>("btn_add_friend")->setCommitCallback(boost::bind(LLAvatarActions::requestFriendshipDialog, mAvatarID));
     getChild<LLUICtrl>("btn_add_friend")->setEnabled(!self && !isFriend);
@@ -179,6 +179,11 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	childSetVisible("genx_profile_actions", !self);
 	childSetEnabled("genx_self_profile_actions", self);
 	childSetVisible("genx_self_profile_actions", self);
+}
+void GenxFloaterAvatarInfo::onTextureSelectionChanged(LLInventoryItem* itemp)
+{
+	getChild<LLTextureCtrl>("img2ndLife")->setImageAssetID(itemp->getAssetUUID());
+	
 }
 void GenxFloaterAvatarInfo::saveProfile()
 {
@@ -326,6 +331,7 @@ void GenxFloaterAvatarInfo::sl_http_upload_second_step(const LLCoroResponder& re
 void GenxFloaterAvatarInfo::onClickChangePhoto()
 {
 	getChild<LLTextureCtrl>("img2ndLife")->showPicker(false);
+	
 }
 void GenxFloaterAvatarInfo::onClickUploadPhoto()
 {

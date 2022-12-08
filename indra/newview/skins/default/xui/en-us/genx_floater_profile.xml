@@ -213,6 +213,12 @@ Born : [SLBirthday]
                mouse_opaque="true" name="btn_invite_group" scale_image="true" toggle="false"
                tool_tip="Invite Group" width="50" />
           </panel>
-    
+          <panel label="self_profile_actions" name="genx_self_profile_actions" height="40" follows="left|bottom" bottom="0">
+               <button bottom="4" enabled="true" follows="left" height="50" left="5" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_save_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"
+                    mouse_opaque="true" name="save_profile" scale_image="true" toggle="false"
+                    tool_tip="Save..." width="50" />
+          </panel>
      
 </floater>

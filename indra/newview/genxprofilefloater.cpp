@@ -108,10 +108,10 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
     LLTextureCtrl* ctrl = getChild<LLTextureCtrl>("img2ndLife");
 	ctrl->setFallbackImageName("default_profile_picture.j2c");
 
-    bool own_avatar(mAvatarID == gAgentID);
+    
     bool isFriend = LLAvatarActions::isFriend(mAvatarID);
     getChild<LLUICtrl>("btn_add_friend")->setCommitCallback(boost::bind(LLAvatarActions::requestFriendshipDialog, mAvatarID));
-    getChild<LLUICtrl>("btn_add_friend")->setEnabled(!own_avatar && !isFriend);
+    getChild<LLUICtrl>("btn_add_friend")->setEnabled(!self && !isFriend);
 
 
     getChild<LLUICtrl>("btn_log")->setCommitCallback(boost::bind(genx_show_log_browser, mAvatarID, LFIDBearer::AVATAR));
@@ -126,6 +126,7 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 
     getChild<LLUICtrl>("btn_invite_group")->setCommitCallback(boost::bind(static_cast<void(*)(const LLUUID&)>(LLAvatarActions::inviteToGroup), mAvatarID));
 	
+	getChild<LLUICtrl>("save_profile")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::saveProfile,this));
 
 	LLDropTarget* drop_target = findChild<LLDropTarget>("drop_target_rect");
 	drop_target->setEntityID(mAvatarID);
@@ -133,7 +134,8 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	getChild<LLUICtrl>("copy_flyout")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickCopy, this, _2));
 
 	getChild<LLButton>("upload_SL_pic")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickUploadPhoto, this));
-
+	getChild<LLButton>("change_SL_pic")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickChangePhoto, this));
+	
 	childSetVisible("contact_set_label",!self);
 	childSetVisible("avatar_contact_set",!self);
 	childSetVisible("drop_target_rect",!self);
@@ -143,6 +145,8 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	childSetVisible("change_SL_pic",self);
 	childSetVisible("remove_SL_pic",self);
 	childSetVisible("change_display_name",self);
+
+	childSetEnabled("about",self);
 	
 
 	//Feed Tab
@@ -173,8 +177,30 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	//Profile actions
 	childSetEnabled("genx_profile_actions", !self);
 	childSetVisible("genx_profile_actions", !self);
+	childSetEnabled("genx_self_profile_actions", self);
+	childSetVisible("genx_self_profile_actions", self);
 }
+void GenxFloaterAvatarInfo::saveProfile()
+{
+	sendAvatarPropertiesUpdate();
+	this->close();
 
+	
+}
+void GenxFloaterAvatarInfo::sendAvatarPropertiesUpdate()
+{
+	LL_INFOS() << "Sending avatarinfo update" << LL_ENDL;
+	LLAvatarData avatar_data;
+	avatar_data.image_id = getChild<LLTextureCtrl>("img2ndLife")->getImageAssetID();
+	avatar_data.fl_image_id = getChild<LLTextureCtrl>("imgRL")->getImageAssetID();
+	avatar_data.about_text = this->childGetValue("about").asString();
+	avatar_data.fl_about_text = childGetValue("aboutRL").asString();
+	avatar_data.allow_publish = true;
+	//avatar_data.profile_url = mPanelWeb->childGetText("url_edit");
+	LLAvatarPropertiesProcessor::getInstance()->sendAvatarPropertiesUpdate(&avatar_data);
+
+	
+}
 void GenxFloaterAvatarInfo::sl_filepicker_callback(AIFilePicker* picker)
 {
 	if (picker->hasFilename())
@@ -296,6 +322,10 @@ void GenxFloaterAvatarInfo::sl_http_upload_second_step(const LLCoroResponder& re
             
         
     }
+}
+void GenxFloaterAvatarInfo::onClickChangePhoto()
+{
+	getChild<LLTextureCtrl>("img2ndLife")->showPicker(false);
 }
 void GenxFloaterAvatarInfo::onClickUploadPhoto()
 {

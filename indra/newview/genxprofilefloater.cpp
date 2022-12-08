@@ -135,6 +135,7 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 
 	getChild<LLButton>("upload_SL_pic")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickUploadPhoto, this));
 	getChild<LLButton>("change_SL_pic")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickChangePhoto, this));
+	getChild<LLButton>("remove_SL_pic")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickRemovePhoto, this));
 	
 	childSetVisible("contact_set_label",!self);
 	childSetVisible("avatar_contact_set",!self);
@@ -179,6 +180,11 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	childSetVisible("genx_profile_actions", !self);
 	childSetEnabled("genx_self_profile_actions", self);
 	childSetVisible("genx_self_profile_actions", self);
+}
+void GenxFloaterAvatarInfo::onClickRemovePhoto()
+{
+	getChild<LLTextureCtrl>("img2ndLife")->setImageAssetID(LLUUID::null);
+	
 }
 void GenxFloaterAvatarInfo::onTextureSelectionChanged(LLInventoryItem* itemp)
 {

@@ -41,6 +41,7 @@ private:
 	void onClicPickkMap();	
 	void onClickUploadPhoto();
 	void onClickChangePhoto();
+	void onClickRemovePhoto();
 	void saveProfile();
 	void sendAvatarPropertiesUpdate();
 	void onTextureSelectionChanged(LLInventoryItem* itemp);

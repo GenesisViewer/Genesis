@@ -28,6 +28,7 @@
 #include "genxcontactset.h"
 #include "llhttpclient.h"
 #include "llviewertexturelist.h"
+#include "llmenucommands.h"
 
 GenxFloaterAvatarInfo::floater_positions_t GenxFloaterAvatarInfo::floater_positions;
 LLUUID GenxFloaterAvatarInfo::lastMoved;
@@ -136,6 +137,7 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	getChild<LLButton>("upload_SL_pic")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickUploadPhoto, this));
 	getChild<LLButton>("change_SL_pic")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickChangePhoto, this));
 	getChild<LLButton>("remove_SL_pic")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickRemovePhoto, this));
+	getChild<LLButton>("change_display_name")->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::onClickChangeDisplayName, this));
 	
 	childSetVisible("contact_set_label",!self);
 	childSetVisible("avatar_contact_set",!self);
@@ -180,6 +182,12 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	childSetVisible("genx_profile_actions", !self);
 	childSetEnabled("genx_self_profile_actions", self);
 	childSetVisible("genx_self_profile_actions", self);
+}
+void GenxFloaterAvatarInfo::onClickChangeDisplayName()
+{
+	void show_floater(const std::string& floater_name);
+	show_floater("displayname");
+	
 }
 void GenxFloaterAvatarInfo::onClickRemovePhoto()
 {

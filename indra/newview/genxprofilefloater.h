@@ -42,6 +42,7 @@ private:
 	void onClickUploadPhoto();
 	void onClickChangePhoto();
 	void onClickRemovePhoto();
+	void onClickChangeDisplayName();
 	void saveProfile();
 	void sendAvatarPropertiesUpdate();
 	void onTextureSelectionChanged(LLInventoryItem* itemp);

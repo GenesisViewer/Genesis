@@ -78,6 +78,8 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
     LLAvatarPropertiesProcessor::getInstance()->addObserver(mAvatarID, this);
     LLAvatarPropertiesProcessor::getInstance()->sendAvatarPropertiesRequest(mAvatarID);
 	LLAvatarPropertiesProcessor::getInstance()->sendAvatarPicksRequest(mAvatarID);
+	mHaveNotes = false;
+	LLAvatarPropertiesProcessor::getInstance()->sendAvatarNotesRequest(mAvatarID); // Rerequest notes to update anyone that might be listening, also to be sure we match the server.
     getChild<LLNameEditor>("dnname")->setNameID(avatar_id, LFIDBearer::AVATAR);
     getChildView("avatar_key")->setValue(avatar_id);
     
@@ -177,11 +179,30 @@ GenxFloaterAvatarInfo::GenxFloaterAvatarInfo(const std::string& name, const LLUU
 	childSetEnabled("imgRL", self);
 	childSetEnabled("aboutRL", self);
 
+	//Notes tab
+	LLTextEditor* te(getChild<LLTextEditor>("notes"));
+	te->setCommitCallback(boost::bind(&GenxFloaterAvatarInfo::sendAvatarNotesUpdate, this));
+	te->setCommitOnFocusLost(true);
+	
+
 	//Profile actions
 	childSetEnabled("genx_profile_actions", !self);
 	childSetVisible("genx_profile_actions", !self);
 	childSetEnabled("genx_self_profile_actions", self);
 	childSetVisible("genx_self_profile_actions", self);
+}
+void GenxFloaterAvatarInfo::sendAvatarNotesUpdate()
+{
+	std::string notes = childGetValue("notes").asString();
+
+	if (!mHaveNotes && (notes.empty() || // no notes from server and no user updates
+		notes == mLastNotes)) // Avatar notes unchanged
+		return;
+
+	auto& inst(LLAvatarPropertiesProcessor::instance());
+	inst.sendNotes(mAvatarID, notes);
+	inst.sendAvatarNotesRequest(mAvatarID); // Rerequest notes to update anyone that might be listening, also to be sure we match the server.
+	
 }
 void GenxFloaterAvatarInfo::onClickChangeDisplayName()
 {
@@ -559,11 +580,12 @@ void GenxFloaterAvatarInfo::setOpenedPosition() {
 // virtual
 void GenxFloaterAvatarInfo::processProperties(void* data, EAvatarProcessorType type)
 {
-    const LLAvatarData* pAvatarData = static_cast<const LLAvatarData*>( data );
-    if (pAvatarData && (mAvatarID == pAvatarData->avatar_id) && (pAvatarData->avatar_id != LLUUID::null))  
-    {
-        if(type == APT_PROPERTIES)
-	    {
+    if(type == APT_PROPERTIES)
+	{
+		const LLAvatarData* pAvatarData = static_cast<const LLAvatarData*>( data );
+		if (pAvatarData && (mAvatarID == pAvatarData->avatar_id) && (pAvatarData->avatar_id != LLUUID::null))  
+		{
+        
             getChild<LLTextureCtrl>("img2ndLife")->setImageAssetID(pAvatarData->image_id);
             setOnlineStatus(pAvatarData->flags & AVATAR_ONLINE ? true : false);
 
@@ -608,60 +630,58 @@ void GenxFloaterAvatarInfo::processProperties(void* data, EAvatarProcessorType t
 			
 			
         }
-        else if (type == APT_GROUPS)
-        {
-            const LLAvatarGroups* pAvatarGroups = static_cast<const LLAvatarGroups*>(data);
-            if (pAvatarGroups && pAvatarGroups->avatar_id == mAvatarID && pAvatarGroups->avatar_id.notNull())
-            {
-                LLScrollListCtrl* group_list = getChild<LLScrollListCtrl>("groups");
-                if (!pAvatarGroups->group_list.size())
-                {
-                    group_list->setCommentText(getString("None"));
-                }
-
-                for(LLAvatarGroups::group_list_t::const_iterator it = pAvatarGroups->group_list.begin();
-                    it != pAvatarGroups->group_list.end(); ++it)
-                {
-                    // Is this really necessary?  Remove existing entry if it exists.
-                    // TODO: clear the whole list when a request for data is made
-                    S32 index = group_list->getItemIndex(it->group_id);
-                    if (index >= 0)
-                        group_list->deleteSingleItem(index);
-
-                    LLScrollListItem::Params row;
-                    row.value(it->group_id);
-
-                    std::string font_style("NORMAL"); // Set normal color if not found or if group is visible in profile
-                    if (pAvatarGroups->avatar_id == pAvatarGroups->agent_id) // own avatar
-                        for (std::vector<LLGroupData>::iterator i = gAgent.mGroups.begin(); i != gAgent.mGroups.end(); ++i) // Search for this group in the agent's groups list
-                            if (i->mID == it->group_id)
-                            {
-                                if (i->mListInProfile)
-                                    font_style = "BOLD";
-                                break;
-                            }
-
-                    if (it->group_id == gAgent.getGroupID())
-                        font_style.append("|ITALIC");
-                    row.columns.add(LLScrollListCell::Params().value(it->group_id.notNull() ? it->group_name : "").font("SANSSERIF_SMALL").font_style(font_style));
-                    group_list->addRow(row,ADD_SORTED);
-                }
-            }
-        } 
-		else if (type == APT_PICKS) 
+	} else if (type == APT_GROUPS)
+	{
+		const LLAvatarGroups* pAvatarGroups = static_cast<const LLAvatarGroups*>(data);
+		if (pAvatarGroups && pAvatarGroups->avatar_id == mAvatarID && pAvatarGroups->avatar_id.notNull())
 		{
-			LLAvatarPicks* picks = static_cast<LLAvatarPicks*>(data);
-			if (picks && mAvatarID == picks->target_id)
+			LLScrollListCtrl* group_list = getChild<LLScrollListCtrl>("groups");
+			if (!pAvatarGroups->group_list.size())
 			{
-				for (LLAvatarPicks::picks_list_t::iterator it = picks->picks_list.begin();
-					it != picks->picks_list.end(); ++it)
-				{
-					
-					mPicks[it->first]=LLSD();
-				}
+				group_list->setCommentText(getString("None"));
 			}
-			loadPicks();
+
+			for(LLAvatarGroups::group_list_t::const_iterator it = pAvatarGroups->group_list.begin();
+				it != pAvatarGroups->group_list.end(); ++it)
+			{
+				// Is this really necessary?  Remove existing entry if it exists.
+				// TODO: clear the whole list when a request for data is made
+				S32 index = group_list->getItemIndex(it->group_id);
+				if (index >= 0)
+					group_list->deleteSingleItem(index);
+
+				LLScrollListItem::Params row;
+				row.value(it->group_id);
+
+				std::string font_style("NORMAL"); // Set normal color if not found or if group is visible in profile
+				if (pAvatarGroups->avatar_id == pAvatarGroups->agent_id) // own avatar
+					for (std::vector<LLGroupData>::iterator i = gAgent.mGroups.begin(); i != gAgent.mGroups.end(); ++i) // Search for this group in the agent's groups list
+						if (i->mID == it->group_id)
+						{
+							if (i->mListInProfile)
+								font_style = "BOLD";
+							break;
+						}
+
+				if (it->group_id == gAgent.getGroupID())
+					font_style.append("|ITALIC");
+				row.columns.add(LLScrollListCell::Params().value(it->group_id.notNull() ? it->group_name : "").font("SANSSERIF_SMALL").font_style(font_style));
+				group_list->addRow(row,ADD_SORTED);
+			}
 		}
+	} else if (type == APT_PICKS) 
+	{
+		LLAvatarPicks* picks = static_cast<LLAvatarPicks*>(data);
+		if (picks && mAvatarID == picks->target_id)
+		{
+			for (LLAvatarPicks::picks_list_t::iterator it = picks->picks_list.begin();
+				it != picks->picks_list.end(); ++it)
+			{
+				
+				mPicks[it->first]=LLSD();
+			}
+		}
+		loadPicks();
 	}
 	else if (type == APT_PICK_INFO)
 	{
@@ -692,7 +712,21 @@ void GenxFloaterAvatarInfo::processProperties(void* data, EAvatarProcessorType t
 		} 
 		loadPicks();
 		
-    }
+    } else if (type == APT_NOTES) 
+	{
+		const LLAvatarNotes* pAvatarNotes = static_cast<const LLAvatarNotes*>( data );
+		if (pAvatarNotes && (mAvatarID == pAvatarNotes->target_id) && (pAvatarNotes->target_id != LLUUID::null))
+		{
+			if (!mHaveNotes) // Only update the UI if we don't already have the notes, we could be editing them now!
+			{
+				auto notes = getChildView("notes");
+				notes->setEnabled(true);
+				notes->setValue(pAvatarNotes->notes);
+				mHaveNotes = true;
+			}
+			mLastNotes = pAvatarNotes->notes;
+		}
+	}
 }
 void GenxFloaterAvatarInfo::loadPicks()
 {

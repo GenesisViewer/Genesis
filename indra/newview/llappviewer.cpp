@@ -216,6 +216,8 @@
 #include "llsqlmgr.h"
 #include <random>
 
+#include "llgroupactions.h"
+
 #ifdef USE_CRASHPAD
 #pragma warning(disable:4265)
 
@@ -4521,7 +4523,14 @@ void LLAppViewer::idle()
 		gGLActive = TRUE;
 		idleShutdown();
 	}
-
+	//Genesis for group floater to open once
+	//GenxForceOpenGenesisGroup
+	if (gSavedSettings.getS32("GenxForceOpenGenesisGroup") > gSavedSettings.getS32("GenxForcedOpenGenesisGroup") ) {
+		LLUUID genesis_group = LLUUID("19cdbd96-8581-b2b2-1f5a-626ae275d54f");
+		
+		LLGroupActions::show(genesis_group);
+		gSavedSettings.setS32("GenxForcedOpenGenesisGroup",gSavedSettings.getS32("GenxForcedOpenGenesisGroup")+1);
+	}
 	stop_glerror();
 }
 

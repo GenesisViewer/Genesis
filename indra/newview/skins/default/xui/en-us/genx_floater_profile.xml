@@ -164,7 +164,20 @@ Born : [SLBirthday]
                          is_unicode="false" left="5" max_length="254" mouse_opaque="false"
                          name="aboutRL" width="410" word_wrap="true" spell_check="true"/>     
                </panel>
-               <panel label="My Notes" name="genx_profile_notes"/>
+               <panel label="My Notes" name="genx_profile_notes">
+                    <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom="-52" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="left" height="48" left="10"
+			     mouse_opaque="true" name="label" v_pad="0" width="412">
+				Use this space to record your notes about this person.  Keep track
+of trades in progress, joint projects, etc.  Only you can see these
+notes.  This person cannot see them, nor can other people.
+			</text>
+                    <text_editor bottom="-410" embedded_items="false"
+                         enabled="true" follows="left|top" font="SansSerifSmall" height="350"
+                         is_unicode="false" left="5" max_length="254" mouse_opaque="false"
+                         name="notes" width="410" word_wrap="true" spell_check="true"/> 
+               </panel>
           </tab_container>
           <panel label="profile_actions" name="genx_profile_actions" height="40" follows="left|bottom" bottom="0">
                <button bottom="4" enabled="true" follows="left" height="50" left="5" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
@@ -213,6 +226,12 @@ Born : [SLBirthday]
                mouse_opaque="true" name="btn_invite_group" scale_image="true" toggle="false"
                tool_tip="Invite Group" width="50" />
           </panel>
-    
+          <panel label="self_profile_actions" name="genx_self_profile_actions" height="40" follows="left|bottom" bottom="0">
+               <button bottom="4" enabled="true" follows="left" height="50" left="5" sound_flags="0" image_selected="genx_btn_selected.tga" image_unselected="genx_btn_unselected.tga" label=""
+                    image_overlay="genx_save_icone.tga"
+                    image_disabled="icn_toolbar_fly.tga"
+                    mouse_opaque="true" name="save_profile" scale_image="true" toggle="false"
+                    tool_tip="Save..." width="50" />
+          </panel>
      
 </floater>

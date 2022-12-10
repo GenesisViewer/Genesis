@@ -4525,11 +4525,11 @@ void LLAppViewer::idle()
 	}
 	//Genesis for group floater to open once
 	//GenxForceOpenGenesisGroup
-	if (gSavedSettings.getS32("GenxForceOpenGenesisGroup") > gSavedSettings.getS32("GenxForcedOpenGenesisGroup") ) {
+	if (gSavedSettings.getS32("GenxForceOpenGenesisGroup") > gSavedSettings.getS32("GenxForcedOpenGenesisGroup") && !gNoRender) {
 		LLUUID genesis_group = LLUUID("19cdbd96-8581-b2b2-1f5a-626ae275d54f");
-		
-		LLGroupActions::show(genesis_group);
-		gSavedSettings.setS32("GenxForcedOpenGenesisGroup",gSavedSettings.getS32("GenxForcedOpenGenesisGroup")+1);
+		if (!gAgent.isInGroup(genesis_group))
+			LLGroupActions::show(genesis_group);
+		gSavedSettings.setS32("GenxForcedOpenGenesisGroup",gSavedSettings.getS32("GenxForceOpenGenesisGroup"));
 	}
 	stop_glerror();
 }

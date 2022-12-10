@@ -19505,7 +19505,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
-      <boolean>1</boolean>
+      <integer>2</integer>
     </map>
     <key>GenxForcedOpenGenesisGroup</key>
     <map>
@@ -19516,7 +19516,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
-      <boolean>0</boolean>
+      <integer>0</integer>
     </map>
   </map>
 

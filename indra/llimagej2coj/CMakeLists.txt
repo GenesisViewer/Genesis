@@ -6,11 +6,12 @@ include(00-Common)
 include(LLCommon)
 include(LLImage)
 include(OpenJPEG)
-
+include(GenxCuda)
 include_directories(
     ${LLCOMMON_INCLUDE_DIRS}
     ${LLIMAGE_INCLUDE_DIRS}
     ${OPENJPEG_INCLUDE_DIR}
+    ${GENXCUDA_INCLUDE_DIRS}
     )
 
 if (LIBOPENJPEG2)
@@ -47,5 +48,6 @@ target_link_libraries(
     PUBLIC
     llcommon
     ${OPENJPEG_LIBRARIES}
+    ${GENXCUDA_LIBRARIES}
     )
 

@@ -13,6 +13,7 @@ include(BuildVersion)
 include(BuildBranding)
 include(CMakeCopyIfDifferent)
 include(CrashPad)
+include(CUDA)
 include(DBusGlib)
 include(FMODSTUDIO)
 include(GeneratePrecompiledHeader)
@@ -36,6 +37,7 @@ include(LLUI)
 include(LLVFS)
 include(LLWindow)
 include (GenxSqlite)
+include (GenxCuda)
 include(LLXML)
 include(NDOF)
 include(NVAPI)
@@ -64,6 +66,7 @@ include_directories(
     ${DBUSGLIB_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
     ${GLOD_INCLUDE_DIR}
+    ${CUDA_INCLUDE_DIR}
     ${LLAUDIO_INCLUDE_DIRS}
     ${LLCHARACTER_INCLUDE_DIRS}
     ${LLCOMMON_INCLUDE_DIRS}
@@ -79,6 +82,7 @@ include_directories(
     ${LLVFS_INCLUDE_DIRS}
     ${LLWINDOW_INCLUDE_DIRS}
     ${GENXSQLITE_INCLUDE_DIRS}
+    ${GENXCUDA_INCLUDE_DIRS}
     ${LLXML_INCLUDE_DIRS}
     ${HUNSPELL_INCLUDE_DIR}
     ${OPENAL_LIB_INCLUDE_DIRS}
@@ -1703,11 +1707,13 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLVFS_LIBRARIES}
     ${LLWINDOW_LIBRARIES}
     ${GENXSQLITE_LIBRARIES}
+    ${GENXCUDA_LIBRARIES}
     ${LLXML_LIBRARIES}
     ${LLMATH_LIBRARIES}
     ${LLCOMMON_LIBRARIES}
     ${NDOF_LIBRARY}
     ${NVAPI_LIBRARY}
+    ${CUDA_LIBRARIES}
     ${URIPARSER_LIBRARY}
     ${viewer_LIBRARIES}
     ${Boost_CONTEXT_LIBRARY}

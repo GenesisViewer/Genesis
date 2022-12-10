@@ -161,6 +161,40 @@
         <key>version</key>
         <string>c6d76a90.194</string>
       </map>
+      <key>cuda</key>
+      <map>
+        <key>copyright</key>
+        <string>Nvidia Cuda library</string>
+        <key>description</key>
+        <string>Nvidia Cuda library.</string>
+        <key>license</key>
+        <string>Nvidia Corporation</string>
+        <key>license_file</key>
+        <string>LICENSES/cuda.txt</string>
+        <key>name</key>
+        <string>cuda</string>
+        
+        <key>platforms</key>
+        <map>
+          <key>windows64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>ea3e9920dc17e4e1ba947c25e664c55e</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://pkg.genesisviewer.org/cuda-11.7.0-windows64-202208281556.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>11.7.0</string>
+      </map>
+    
       <key>curl</key>
       <map>
         <key>copyright</key>
@@ -1109,7 +1143,7 @@
         <key>version</key>
         <string>1.2.11</string>
       </map>
-    </map>
+    </map>  
     <key>package_description</key>
     <map>
       <key>copyright</key>

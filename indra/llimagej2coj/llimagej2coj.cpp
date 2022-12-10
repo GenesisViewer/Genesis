@@ -31,6 +31,7 @@
 #include "openjpeg.h"
 
 #include "lltimer.h"
+#include "genxcudamgr.h"
 //#include "llmemory.h"
 
 // Factory function: see declaration in llimagej2c.cpp
@@ -111,7 +112,9 @@ LLImageJ2COJ::~LLImageJ2COJ()
 BOOL LLImageJ2COJ::decodeImpl(LLImageJ2C &base, LLImageRaw &raw_image, F32 decode_time, S32 first_channel, S32 max_channel_count)
 {
 	LLTimer decode_timer;
-
+	if (GenxCudaMgr::instance().cudaEnabled()) {
+		LL_INFOS() << " I can decode image with nvjpeg2000 " <<LL_ENDL;
+	}
 	/* Extract metadata */
 	/* ---------------- */
 	U8* c_data = base.getData();

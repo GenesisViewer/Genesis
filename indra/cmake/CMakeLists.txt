@@ -20,6 +20,7 @@ set(cmake_SOURCE_FILES
     CMakeCopyIfDifferent.cmake
     Colladadom.cmake
     ConfigurePkgConfig.cmake
+    CUDA.cmake
     CURL.cmake
     Copy3rdPartyLibs.cmake
     CrashPad.cmake
@@ -70,6 +71,7 @@ set(cmake_SOURCE_FILES
     LLVFS.cmake
     LLWindow.cmake
     GenxSqlite.cmake
+    GenxCuda.cmake
     LLXML.cmake
     LScript.cmake
     Linking.cmake

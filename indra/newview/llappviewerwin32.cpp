@@ -66,7 +66,7 @@
 
 #include "llcommandlineparser.h"
 #include "lltrans.h"
-
+#include "genxcudamgr.h"
 const std::string LLAppViewerWin32::sWindowClass = "Second Life";
 
 // Create app mutex creates a unique global windows object. 
@@ -515,7 +515,8 @@ bool LLAppViewerWin32::initHardwareTest()
 			gSavedSettings.setWarning("AboutDirectX9", FALSE);
 		}
 		LL_DEBUGS("AppInit") << "Done polling DirectX for hardware info" << LL_ENDL;
-
+		//Genesis CUDA detection
+		GenxCudaMgr::instance().detectCuda();
 		// Only probe once after installation
 		gSavedSettings.setBOOL("ProbeHardwareOnStartup", FALSE);
 

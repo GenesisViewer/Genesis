@@ -199,6 +199,7 @@
 
 // [RLVa:KB]
 #include "rlvhandler.h"
+
 // [/RLVa:KB]
 
 // *FIX: These extern globals should be cleaned up.

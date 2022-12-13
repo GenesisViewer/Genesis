@@ -516,7 +516,7 @@ bool LLAppViewerWin32::initHardwareTest()
 		}
 		LL_DEBUGS("AppInit") << "Done polling DirectX for hardware info" << LL_ENDL;
 		//Genesis CUDA detection
-		GenxCudaMgr::instance().detectCuda();
+		GenxCudaMgr::instance().detectCuda(gSavedSettings.getBOOL("GenxDecodeImageWithCuda"));
 		// Only probe once after installation
 		gSavedSettings.setBOOL("ProbeHardwareOnStartup", FALSE);
 

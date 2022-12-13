@@ -13,16 +13,12 @@ class GenxCudaMgr : public LLSingleton<GenxCudaMgr>
 public:
 	GenxCudaMgr();
 	~GenxCudaMgr();
-    void detectCuda();
+    void detectCuda(BOOL canUseIt);
     bool cudaEnabled() {return mCudaEnabled;}
-    nvjpeg2kHandle_t getNvHandle(){return nvjpeg2k_handle;}
-    nvjpeg2kStream_t getNvStream() {return nvjpeg2k_stream;}
-    nvjpeg2kDecodeState_t getNvDecodeState() {return decode_state;}
+    
 private:
     bool mCudaEnabled;
-    nvjpeg2kHandle_t nvjpeg2k_handle;
-    nvjpeg2kStream_t nvjpeg2k_stream;
-    nvjpeg2kDecodeState_t decode_state;
+    
 
 };
 

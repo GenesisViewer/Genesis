@@ -239,7 +239,7 @@ BOOL LLImageJ2COJ::decodeImpl(LLImageJ2C &base, LLImageRaw &raw_image, F32 decod
 {
 	bool cudadecoding = false;
 	LLTimer decode_timer;
-	if (GenxCudaMgr::instance().cudaEnabled()) {
+	if (GenxCudaMgr::instance().cudaEnabled() ) {
 		
 		cudadecoding = decodeNVJPEG2000_main(base, raw_image, decode_time, first_channel, max_channel_count);
 		

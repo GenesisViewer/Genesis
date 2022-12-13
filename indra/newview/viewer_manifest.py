@@ -492,7 +492,7 @@ class WindowsManifest(ViewerManifest):
             self.path('libapr-1.dll')
             self.path('libaprutil-1.dll')
             self.path('libapriconv-1.dll')
-
+            self.path('nvjpeg2k_0.dll')
             # Mesh 3rd party libs needed for auto LOD and collada reading
             if self.path("glod.dll") == 0:
                 print ("Skipping GLOD library (assumming linked statically)")

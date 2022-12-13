@@ -102,6 +102,7 @@
         "filesystem": "cpp",
         "span": "cpp",
         "*.inc": "cpp",
-        "__nullptr": "cpp"
+        "__nullptr": "cpp",
+        "__mutex_base": "cpp"
     }
 }

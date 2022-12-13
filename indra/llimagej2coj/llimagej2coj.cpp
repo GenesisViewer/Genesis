@@ -32,6 +32,7 @@
 
 #include "lltimer.h"
 #include "genxcudamgr.h"
+
 //#include "llmemory.h"
 
 // Factory function: see declaration in llimagej2c.cpp
@@ -101,20 +102,150 @@ int ceildivpow2(int a, int b)
 LLImageJ2COJ::LLImageJ2COJ()
 	: LLImageJ2CImpl()
 {
+	
 }
 
 
 LLImageJ2COJ::~LLImageJ2COJ()
 {
+	
+}
+bool LLImageJ2COJ::allocate_output_buffers(nvjpeg2kImage_t& output_image, nvjpeg2kImageInfo_t& image_info,
+    int bytes_per_element, int rgb_output)
+{
+    output_image.num_components = image_info.num_components;
+    
+	// for RGB output all component outputs dimensions are equal
+	for(uint32_t c = 0; c < image_info.num_components;c++)
+	{
+		cudaMallocPitch(&output_image.pixel_data[c], &output_image.pitch_in_bytes[c], 
+			image_info.image_width * bytes_per_element, image_info.image_height);
+	}
+    
+    
+    return true;
+}
+double LLImageJ2COJ::decodeNVJPEG2000_decode_image(LLImageJ2C &base, LLImageRaw &raw_image, F32 decode_time, S32 first_channel, S32 max_channel_count,decode_params_t &params)
+{
+	cudaEvent_t startEvent = NULL, stopEvent = NULL;
+	CHECK_CUDA(cudaStreamSynchronize(params.stream));
+	CHECK_CUDA(cudaEventCreateWithFlags(&startEvent, cudaEventBlockingSync));
+    CHECK_CUDA(cudaEventCreateWithFlags(&stopEvent, cudaEventBlockingSync));
+    nvjpeg2kDecodeParams_t decode_params;
+    CHECK_NVJPEG2K(nvjpeg2kDecodeParamsCreate(&decode_params));
+
+	CHECK_NVJPEG2K(nvjpeg2kDecodeParamsSetRGBOutput(decode_params, params.rgb_output));
+
+	int bytes_per_element = 1;
+    nvjpeg2kImage_t output_image;
+    nvjpeg2kImageInfo_t image_info;
+	std::vector<size_t> decode_output_pitch;
+	std::vector<unsigned char *> decode_output_u8;
+	CHECK_NVJPEG2K(nvjpeg2kStreamParse(params.nvjpeg2k_handle, base.getData(), base.getDataSize(),
+             0, 0, params.jpeg2k_stream));
+
+	CHECK_NVJPEG2K(nvjpeg2kStreamGetImageInfo(params.jpeg2k_stream, &image_info));		
+
+	 
+
+	decode_output_pitch.resize(image_info.num_components);
+    output_image.pitch_in_bytes = decode_output_pitch.data();
+
+	decode_output_u8.resize(image_info.num_components);
+	output_image.pixel_data = (void **)decode_output_u8.data();
+	output_image.pixel_type = NVJPEG2K_UINT8;
+	bytes_per_element = 1;
+
+	if(allocate_output_buffers(output_image, image_info,  bytes_per_element, params.rgb_output))
+	{
+
+		CHECK_CUDA(cudaEventRecord(startEvent, params.stream));
+		CHECK_NVJPEG2K(nvjpeg2kDecodeImage(params.nvjpeg2k_handle, params.nvjpeg2k_decode_state,
+            params.jpeg2k_stream, decode_params, &output_image, params.stream));
+		CHECK_CUDA(cudaEventRecord(stopEvent, params.stream));
+
+        CHECK_CUDA(cudaEventSynchronize(stopEvent));	
+		S32 img_components = image_info.num_components;
+		S32 channels = img_components - first_channel;
+		if( channels > max_channel_count )
+			channels = max_channel_count;
+		raw_image.resize(image_info.image_width, image_info.image_height, channels);
+		U8* rawp = raw_image.getData();	
+		for (S32 comp = 0, dest=0; comp < channels;
+			comp++, dest++)
+		{
+			
+			std::vector<U8> vchan(image_info.image_height * image_info.image_width);
+			U8* chan = vchan.data();
+			cudaMemcpy2D(chan, (size_t)image_info.image_width, output_image.pixel_data[comp], output_image.pitch_in_bytes[comp], image_info.image_width, image_info.image_height, cudaMemcpyDeviceToHost);
+			
+				
+			S32 offset = dest;
+			for (S32 y = (image_info.image_height - 1); y >= 0; y--)
+			//for (S32 y=0; y<= (image_info.image_height - 1);y++)
+			{
+				for (S32 x = 0; x < image_info.image_width; x++)
+				{
+					rawp[offset] = chan[y * image_info.image_width + x];
+					offset += channels;
+				}
+			}
+			
+		}
+		for(uint32_t c = 0; c < output_image.num_components;c++)
+		{
+			CHECK_CUDA(cudaFree(output_image.pixel_data[c]));
+		}
+	}
+	CHECK_NVJPEG2K(nvjpeg2kDecodeParamsDestroy(decode_params));
+	return EXIT_SUCCESS;
+}
+double LLImageJ2COJ::decodeNVJPEG2000_process_image(LLImageJ2C &base, LLImageRaw &raw_image, F32 decode_time, S32 first_channel, S32 max_channel_count,decode_params_t &params)
+{
+	CHECK_CUDA(cudaStreamCreateWithFlags(&params.stream, cudaStreamNonBlocking));
+	if (decodeNVJPEG2000_decode_image(base, raw_image, decode_time, first_channel, max_channel_count,params))
+		return EXIT_FAILURE;
+	CHECK_CUDA(cudaStreamDestroy(params.stream));
+
+    return EXIT_SUCCESS;	
+}
+BOOL LLImageJ2COJ::decodeNVJPEG2000_main(LLImageJ2C &base, LLImageRaw &raw_image, F32 decode_time, S32 first_channel, S32 max_channel_count)
+{
+	BOOL status = TRUE;
+	decode_params_t params;
+	params.rgb_output = 1;
+	nvjpeg2kDeviceAllocator_t dev_allocator = {&dev_malloc, &dev_free};
+    nvjpeg2kPinnedAllocator_t pinned_allocator = {&host_malloc, &host_free};
+	CHECK_NVJPEG2K(nvjpeg2kCreate(NVJPEG2K_BACKEND_DEFAULT, &dev_allocator,
+                                  &pinned_allocator, &params.nvjpeg2k_handle));
+
+    CHECK_NVJPEG2K(
+        nvjpeg2kDecodeStateCreate(params.nvjpeg2k_handle, &params.nvjpeg2k_decode_state));
+
+    CHECK_NVJPEG2K(nvjpeg2kStreamCreate(&params.jpeg2k_stream));
+
+	if (decodeNVJPEG2000_process_image(base, raw_image, decode_time, first_channel, max_channel_count,params))
+        status = FALSE;
+
+	CHECK_NVJPEG2K(nvjpeg2kStreamDestroy(params.jpeg2k_stream));
+    CHECK_NVJPEG2K(nvjpeg2kDecodeStateDestroy(params.nvjpeg2k_decode_state));
+    CHECK_NVJPEG2K(nvjpeg2kDestroy(params.nvjpeg2k_handle));
+
+	return status;
 }
 
 
 BOOL LLImageJ2COJ::decodeImpl(LLImageJ2C &base, LLImageRaw &raw_image, F32 decode_time, S32 first_channel, S32 max_channel_count)
 {
+	bool cudadecoding = false;
 	LLTimer decode_timer;
 	if (GenxCudaMgr::instance().cudaEnabled()) {
-		LL_INFOS() << " I can decode image with nvjpeg2000 " <<LL_ENDL;
+		
+		cudadecoding = decodeNVJPEG2000_main(base, raw_image, decode_time, first_channel, max_channel_count);
+		
+		if (cudadecoding)return TRUE;
 	}
+	
 	/* Extract metadata */
 	/* ---------------- */
 	U8* c_data = base.getData();

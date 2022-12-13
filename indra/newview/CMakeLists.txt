@@ -1561,6 +1561,7 @@ if (WINDOWS)
       ${CMAKE_SOURCE_DIR}/../etc/message.xml
       ${CMAKE_SOURCE_DIR}/../scripts/messages/message_template.msg
       ${SHARED_LIB_STAGING_DIR}/Release/glod.dll
+      ${SHARED_LIB_STAGING_DIR}/Release/nvjpeg2k_0.dll
       ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/glod.dll
       ${SHARED_LIB_STAGING_DIR}/Release/SLVoice.exe
       ${SHARED_LIB_STAGING_DIR}/Release/vivoxplatform.dll
@@ -1707,7 +1708,6 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLVFS_LIBRARIES}
     ${LLWINDOW_LIBRARIES}
     ${GENXSQLITE_LIBRARIES}
-    ${GENXCUDA_LIBRARIES}
     ${LLXML_LIBRARIES}
     ${LLMATH_LIBRARIES}
     ${LLCOMMON_LIBRARIES}

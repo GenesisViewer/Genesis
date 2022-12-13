@@ -850,7 +850,37 @@
         <key>version</key>
         <string>1.0.298370</string>
       </map>
-      
+      <key>nvjpeg2k</key>
+      <map>
+        <key>copyright</key>
+        <string>Nvidia Corporation</string>
+        <key>license</key>
+        <string>internal</string>
+        <key>license_file</key>
+        <string>LICENSE</string>
+        <key>name</key>
+        <string>nvjpeg2k</string>
+        <key>platforms</key>
+        <map>
+          
+          <key>windows64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>e9fb7cfff2a54fd83c96211b778a0274</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://pkg.genesisviewer.org/nvjpeg2k-0.6.0.20221010-windows64-20221010.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>0.6.0</string>
+      </map>
       
       <key>ogg_vorbis</key>
       <map>

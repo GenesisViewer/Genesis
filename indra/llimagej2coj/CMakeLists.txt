@@ -6,6 +6,7 @@ include(00-Common)
 include(LLCommon)
 include(LLImage)
 include(OpenJPEG)
+include (NVJPEG2K)
 include(GenxCuda)
 include_directories(
     ${LLCOMMON_INCLUDE_DIRS}
@@ -49,5 +50,6 @@ target_link_libraries(
     llcommon
     ${OPENJPEG_LIBRARIES}
     ${GENXCUDA_LIBRARIES}
+    ${NVJPEG2K_LIBRARIES}
     )
 

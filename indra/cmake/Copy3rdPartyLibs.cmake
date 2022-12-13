@@ -98,7 +98,9 @@ if(WINDOWS)
       list(APPEND debug_files fmodL.dll)
       list(APPEND release_files fmod.dll)
     endif (USE_FMODSTUDIO)
-
+    list(APPEND debug_files nvjpeg2k_0.dll)
+    list(APPEND release_files nvjpeg2k_0.dll)
+    
 elseif(DARWIN)
     set(SHARED_LIB_STAGING_DIR_DEBUG            "${SHARED_LIB_STAGING_DIR}/Debug/Resources")
     set(SHARED_LIB_STAGING_DIR_RELWITHDEBINFO   "${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/Resources")

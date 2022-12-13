@@ -46,6 +46,7 @@ add_subdirectory(${LIBS_OPEN_PREFIX}llrender)
 add_subdirectory(${LIBS_OPEN_PREFIX}llvfs)
 add_subdirectory(${LIBS_OPEN_PREFIX}llwindow)
 add_subdirectory(${LIBS_OPEN_PREFIX}genxsqlite)
+add_subdirectory(${LIBS_OPEN_PREFIX}genxcuda)
 add_subdirectory(${LIBS_OPEN_PREFIX}llxml)
 
 

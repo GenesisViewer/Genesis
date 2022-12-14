@@ -336,7 +336,8 @@ public:
 	BOOL isDecoded()  const { return mDecoded ? TRUE : FALSE; }
 	void setDiscardLevel(S8 discard_level) { mDiscardLevel = discard_level; }
 	S8 getDiscardLevel() const { return mDiscardLevel; }
-
+	void setMID(LLUUID id) {mId=id;}
+	LLUUID getMID() {return mId;}
 	// setLastError needs to be deferred for J2C images since it may be called from a DLL
 	virtual void resetLastError();
 	virtual void setLastError(const std::string& message, const std::string& filename = std::string());
@@ -345,6 +346,7 @@ protected:
 	BOOL copyData(U8 *data, S32 size);
 	
 protected:
+	LLUUID mId;
 	S8 mCodec;
 	S8 mDecoding;
 	S8 mDecoded;  // unused, but changing LLImage layout requires recompiling static Mac/Linux libs. 2009-01-30 JC

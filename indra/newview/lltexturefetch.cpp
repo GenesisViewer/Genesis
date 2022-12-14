@@ -1856,6 +1856,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		setState(DECODE_IMAGE_UPDATE);
 		LL_DEBUGS(LOG_TXT) << mID << ": Decoding. Bytes: " << mFormattedImage->getDataSize() << " Discard: " << discard
 				<< " All Data: " << mHaveAllData << LL_ENDL;
+		mFormattedImage->setMID(mID);					
 		mDecodeHandle = mFetcher->mImageDecodeThread->decodeImage(mFormattedImage, image_priority, discard, mNeedsAux,
 																  new DecodeResponder(mFetcher, mID, this));
 		// fall though
@@ -1922,7 +1923,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		mRawImage = new LLImageRaw(mFormattedImage->getWidth(),
 									mFormattedImage->getHeight(),
 									mFormattedImage->getComponents());
-			
+		LL_INFOS(LOG_TXT) << mID << " mFormattedImage->decode" << LL_ENDL;	
 		if(!mFormattedImage->decode(mRawImage, decode_time_slice)) {
 			//abort, don't decode
 			setState(DONE);
@@ -1936,7 +1937,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 			mAuxImage = new LLImageRaw(mFormattedImage->getWidth(),
 											mFormattedImage->getHeight(),
 											1);
-			
+			LL_INFOS(LOG_TXT) << mID << " mFormattedImage->decodeChannels" << LL_ENDL;	
 			if(!mFormattedImage->decodeChannels(mAuxImage, decode_time_slice, 4, 4)) {
 				//abort, don't decode
 				setState(DONE);

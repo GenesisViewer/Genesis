@@ -59,7 +59,7 @@ struct decode_params_t
         cudaError_t _e = (call);                                                                                  \
         if (_e != cudaSuccess)                                                                                    \
         {                                                                                                         \
-            std::cout << "CUDA Runtime failure: '#" << _e << "' at " << __FILE__ << ":" << __LINE__ << std::endl; \
+            LL_INFOS() << "CUDA Runtime failure: '#" << _e << "' at " << __FILE__ << ":" << __LINE__ << LL_ENDL; \
             return EXIT_FAILURE;                                                                                     \
         }                                                                                                         \
     }
@@ -69,7 +69,7 @@ struct decode_params_t
         nvjpeg2kStatus_t _e = (call);                                                                       \
         if (_e != NVJPEG2K_STATUS_SUCCESS)                                                                  \
         {                                                                                                   \
-            std::cout << "NVJPEG failure: '#" << _e << "' at " << __FILE__ << ":" << __LINE__ << std::endl; \
+            LL_INFOS() << "NVJPEG failure: '#" << _e << "' at " << __FILE__ << ":" << __LINE__ << LL_ENDL; \
             return EXIT_FAILURE;                                                                            \
         }                                                                                                   \
     }
@@ -85,7 +85,7 @@ class LLImageJ2COJ : public LLImageJ2CImpl
 public:
 	LLImageJ2COJ();
 	virtual ~LLImageJ2COJ();
-
+	
 protected:
 	/*virtual*/ BOOL getMetadata(LLImageJ2C &base);
 	/*virtual*/ BOOL decodeImpl(LLImageJ2C &base, LLImageRaw &raw_image, F32 decode_time, S32 first_channel, S32 max_channel_count);
@@ -105,7 +105,7 @@ protected:
 	}
 private:
 	bool useCudaForDecoding=false;
-
+	
 	
 };
 

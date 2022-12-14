@@ -171,7 +171,7 @@ double LLImageJ2COJ::decodeNVJPEG2000_decode_image(LLImageJ2C &base, LLImageRaw 
 			channels = max_channel_count;
 		raw_image.resize(image_info.image_width, image_info.image_height, channels);
 		U8* rawp = raw_image.getData();	
-		for (S32 comp = 0, dest=0; comp < channels;
+		for (S32 comp = first_channel, dest=0; comp < first_channel + channels;
 			comp++, dest++)
 		{
 			
@@ -230,7 +230,7 @@ BOOL LLImageJ2COJ::decodeNVJPEG2000_main(LLImageJ2C &base, LLImageRaw &raw_image
 	CHECK_NVJPEG2K(nvjpeg2kStreamDestroy(params.jpeg2k_stream));
     CHECK_NVJPEG2K(nvjpeg2kDecodeStateDestroy(params.nvjpeg2k_decode_state));
     CHECK_NVJPEG2K(nvjpeg2kDestroy(params.nvjpeg2k_handle));
-
+	LL_INFOS() << "CUDA decoding status " << base.getMID()<<","<<status << LL_ENDL;
 	return status;
 }
 

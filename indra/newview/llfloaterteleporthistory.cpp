@@ -44,6 +44,8 @@
 #include "llurlaction.h"
 #include "llviewerwindow.h"
 #include "llwindow.h"
+#include "llfiltereditor.h"
+#include "llstring.h"
 #include "llweb.h"
 
 // [RLVa:KB]
@@ -94,6 +96,10 @@ BOOL LLFloaterTeleportHistory::postBuild()
 	childSetAction("teleport", onTeleport, this);
 	childSetAction("show_on_map", onShowOnMap, this);
 	childSetAction("copy_slurl", onCopySLURL, this);
+	mFilterEditor = getChild<LLFilterEditor>("search_history");
+	
+	mFilterEditor->setCommitCallback(boost::bind(&LLFloaterTeleportHistory::onFilterEdit, this, _2));
+	
 
 	return TRUE;
 }
@@ -125,9 +131,15 @@ void LLFloaterTeleportHistory::addPendingEntry(std::string regionName, S16 x, S1
 	// Prepare the SLURL
 	mPendingSLURL = slurl.getSLURLString();
 }
-
+void LLFloaterTeleportHistory::onFilterEdit(const std::string& search_string)
+{
+	
+	filterValue = search_string;
+	refreshList();
+}
 void LLFloaterTeleportHistory::addEntry(std::string parcelName)
 {
+	
 	if (mPendingRegionName.empty())
 	{
 		return;
@@ -156,7 +168,7 @@ void LLFloaterTeleportHistory::addEntry(std::string parcelName)
 
 		// add the new list entry on top of the list, deselect all and disable the buttons
 		const S32 max_entries = gSavedSettings.getS32("TeleportHistoryMaxEntries");
-		S32 num_entries = mPlacesList->getItemCount();
+		S32 num_entries = datas.size();
 		if (max_entries <= 0)
 		{
 			if (!max_entries)
@@ -164,11 +176,14 @@ void LLFloaterTeleportHistory::addEntry(std::string parcelName)
 		}
 		else while(num_entries >= max_entries)
 		{
-			mPlacesList->deleteItems(LLSD(mID - num_entries--));
+			//mPlacesList->deleteItems(LLSD(mID - num_entries--));
 		}
-
-		mPlacesList->addElement(value, ADD_TOP);
-		mPlacesList->deselectAllItems(TRUE);
+		datas.insert(datas.begin(), value);
+		
+		// mPlacesList->addElement(value, ADD_TOP);
+		// mPlacesList->deselectAllItems(TRUE);
+		refreshList();
+		
 		setButtonsEnabled(FALSE);
 		mID++;
 		saveFile("teleport_history.xml");	//Comment out to disable saving after every teleport.
@@ -188,9 +203,9 @@ void LLFloaterTeleportHistory::setButtonsEnabled(BOOL on)
 	childSetEnabled("show_on_map", on);
 	childSetEnabled("copy_slurl", on);
 }
-//static
-void LLFloaterTeleportHistory::loadFile(const std::string &file_name)
+void LLFloaterTeleportHistory::refreshList()
 {
+	LL_INFOS() << "Refreshing tP history with filter = " << filterValue << LL_ENDL;
 	LLFloaterTeleportHistory *pFloaterHistory = LLFloaterTeleportHistory::findInstance();
 	if(!pFloaterHistory)
 		return;
@@ -198,6 +213,32 @@ void LLFloaterTeleportHistory::loadFile(const std::string &file_name)
 	LLScrollListCtrl* pScrollList = pFloaterHistory->mPlacesList;
 	if(!pScrollList)
 		return;
+	pScrollList->clearRows();		
+	
+	for(S32 i = 0; i < datas.size(); i++) //Lower entry = newer
+	{
+		if (filterValue.empty())
+			pScrollList->addElement(datas[i], ADD_BOTTOM);
+		else 
+		{
+			std::string parcelName = datas[i]["columns"][LIST_PARCEL]["value"].asString();
+			std::string regionName = datas[i]["columns"][LIST_REGION]["value"].asString();
+			LLStringUtil::toLower(parcelName);
+			LLStringUtil::toLower(regionName);
+			LLStringUtil::toLower(filterValue);
+			if (parcelName.find(filterValue) != std::string::npos || regionName.find(filterValue) != std::string::npos) {
+				pScrollList->addElement(datas[i], ADD_BOTTOM);
+			}
+		}	
+	}
+	pScrollList->deselectAllItems(TRUE);
+	pFloaterHistory->mID = datas.size();
+	pFloaterHistory->setButtonsEnabled(FALSE);
+}
+//static
+void LLFloaterTeleportHistory::loadFile(const std::string &file_name)
+{
+	
 
 	std::string temp_str(gDirUtilp->getLindenUserDir() + gDirUtilp->getDirDelimiter() + file_name);
 
@@ -218,23 +259,28 @@ void LLFloaterTeleportHistory::loadFile(const std::string &file_name)
 		{
 			const S32 max_entries = gSavedSettings.getS32("TeleportHistoryMaxEntries");
 			const S32 num_entries = llmin(max_entries < 0 ? S32_MAX : max_entries,(const S32)data.size());
-			pScrollList->clear();
+			
+			// for(S32 i = 0; i < num_entries; i++) //Lower entry = newer
+			// {
+			// 	pScrollList->addElement(data[i], ADD_BOTTOM);
+			// }
+			// pScrollList->deselectAllItems(TRUE);
+			// pFloaterHistory->mID = pScrollList->getItemCount();
+			// pFloaterHistory->setButtonsEnabled(FALSE);
 			for(S32 i = 0; i < num_entries; i++) //Lower entry = newer
 			{
-				pScrollList->addElement(data[i], ADD_BOTTOM);
+				LLFloaterTeleportHistory::getInstance()->datas.push_back(data[i]);
 			}
-			pScrollList->deselectAllItems(TRUE);
-			pFloaterHistory->mID = pScrollList->getItemCount();
-			pFloaterHistory->setButtonsEnabled(FALSE);
+			LLFloaterTeleportHistory::getInstance()->refreshList();
 		}
 	}
 }
 
-struct SortByAge{
-  inline bool operator() (LLScrollListItem* const i,LLScrollListItem* const j) const {
-	  return (i->getValue().asInteger()>j->getValue().asInteger());
-  }
-};
+// struct SortByAge{
+//   inline bool operator() (LLScrollListItem* const i,LLScrollListItem* const j) const {
+// 	  return (i->getValue().asInteger()>j->getValue().asInteger());
+//   }
+// };
 
 //static
 void LLFloaterTeleportHistory::saveFile(const std::string &file_name)
@@ -260,23 +306,29 @@ void LLFloaterTeleportHistory::saveFile(const std::string &file_name)
 
 	LLSD elements;
 	LLScrollListCtrl* pScrollList = pFloaterHistory->mPlacesList;
-	if (pScrollList)
+	// if (pScrollList)
+	// {
+	// 	std::vector<LLScrollListItem*> data_list = pScrollList->getAllData();
+	// 	std::sort(data_list.begin(),data_list.end(),SortByAge());//Re-sort. Column sorting may have mucked the list up. Newer entries in front.
+	// 	for (std::vector<LLScrollListItem*>::iterator itr = data_list.begin(); itr != data_list.end(); ++itr)
+	// 	{
+	// 		//Pack into LLSD mimicing one passed to addElement
+	// 		LLSD data_entry;
+	// 		//id is actually reverse of the indexing of the element LLSD. Higher id = newer.
+	// 		data_entry["id"] = pScrollList->getItemCount() - elements.size() - 1;	
+	// 		for(S32 i = 0; i < (*itr)->getNumColumns(); ++i)	
+	// 		{
+	// 			data_entry["columns"][i]["column"]=pScrollList->getColumn(i)->mName;
+	// 			data_entry["columns"][i]["value"]=(*itr)->getColumn(i)->getValue();
+	// 		}
+	// 		elements.append(data_entry);
+	// 	}
+	// }
+	// std::sort(pFloaterHistory->datas.begin(),pFloaterHistory->datas.end(),SortByAge());//Re-sort. Column sorting may have mucked the list up. Newer entries in front.
+	for(S32 i = 0; i < pFloaterHistory->datas.size(); i++)
 	{
-		std::vector<LLScrollListItem*> data_list = pScrollList->getAllData();
-		std::sort(data_list.begin(),data_list.end(),SortByAge());//Re-sort. Column sorting may have mucked the list up. Newer entries in front.
-		for (std::vector<LLScrollListItem*>::iterator itr = data_list.begin(); itr != data_list.end(); ++itr)
-		{
-			//Pack into LLSD mimicing one passed to addElement
-			LLSD data_entry;
-			//id is actually reverse of the indexing of the element LLSD. Higher id = newer.
-			data_entry["id"] = pScrollList->getItemCount() - elements.size() - 1;	
-			for(S32 i = 0; i < (*itr)->getNumColumns(); ++i)	
-			{
-				data_entry["columns"][i]["column"]=pScrollList->getColumn(i)->mName;
-				data_entry["columns"][i]["value"]=(*itr)->getColumn(i)->getValue();
-			}
-			elements.append(data_entry);
-		}
+		pFloaterHistory->datas[i]["id"]=i;
+		elements.append(pFloaterHistory->datas[i]);
 	}
 	LLSDSerialize::toXML(elements, export_file);
 	export_file.close();

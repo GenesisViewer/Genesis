@@ -43,6 +43,7 @@
 // linden library includes
 #include "llfocusmgr.h"		// gFocusMgr
 #include "lltrans.h"
+#include "llinventoryclipboard.h"
 // statics 
 std::map<U8, LLFontGL*> LLFolderViewItem::sFonts; // map of styles to fonts
 
@@ -1034,6 +1035,10 @@ void LLFolderViewItem::draw()
 	//--------------------------------------------------------------------------------//
 	// Highlight filtered text
 	//
+	U8 fontStyle= LLFontGL::NORMAL;
+	if (id && LLInventoryClipboard::instance().isOnClipboard(*id)) {
+		fontStyle= LLFontGL::ITALIC;
+	}
 	if (getRoot()->getDebugFilters())
 	{
 		if (!getFiltered() && !possibly_has_children)
@@ -1044,7 +1049,7 @@ void LLFolderViewItem::draw()
 			LLColor4(0.5f, 0.8f, 0.5f, 1.f) : 
 			LLColor4(0.8f, 0.5f, 0.5f, 1.f);
 		LLFontGL::getFontMonospace()->renderUTF8(mStatusText, 0, text_left, y, filter_color,
-												 LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW,
+												 LLFontGL::LEFT, LLFontGL::BOTTOM, fontStyle, LLFontGL::NO_SHADOW,
 												 S32_MAX, S32_MAX, &right_x, FALSE );
 		text_left = right_x;
 	}
@@ -1052,7 +1057,7 @@ void LLFolderViewItem::draw()
 	// Draw the actual label text
 	//
 	font->renderUTF8(mLabel, 0, text_left, y, color,
-					 LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW,
+					 LLFontGL::LEFT, LLFontGL::BOTTOM, fontStyle, LLFontGL::NO_SHADOW,
 					 S32_MAX, getRect().getWidth() - (S32) text_left, &right_x, TRUE);
 
 	//--------------------------------------------------------------------------------//
@@ -1075,7 +1080,7 @@ void LLFolderViewItem::draw()
 	{
 		static std::string const load_string = " ( " + LLTrans::getString("LoadingData") + " ) ";
 		font->renderUTF8(load_string, 0, right_x, y, sSearchStatusColor,
-						 LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW, 
+						 LLFontGL::LEFT, LLFontGL::BOTTOM, fontStyle, LLFontGL::NO_SHADOW, 
 						 S32_MAX, S32_MAX, &right_x, FALSE);
 	}
 
@@ -1085,7 +1090,7 @@ void LLFolderViewItem::draw()
 	if (!mLabelSuffix.empty())
 	{
 		font->renderUTF8( mLabelSuffix, 0, right_x, y, sSuffixColor,
-						  LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW,
+						  LLFontGL::LEFT, LLFontGL::BOTTOM, fontStyle, LLFontGL::NO_SHADOW,
 						  S32_MAX, S32_MAX, &right_x, FALSE );
 	}
 
@@ -1111,7 +1116,7 @@ void LLFolderViewItem::draw()
 			F32 yy = (F32)getRect().getHeight() - font->getLineHeight() - (F32)TEXT_PAD - (F32)TOP_PAD;
 			font->renderUTF8( combined_string, mStringMatchOffset, match_string_left, yy,
 
-							sFilterTextColor, LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW, 
+							sFilterTextColor, LLFontGL::LEFT, LLFontGL::BOTTOM, fontStyle, LLFontGL::NO_SHADOW, 
 							filter_string_length, S32_MAX, &right_x, FALSE );
 		}
 	}

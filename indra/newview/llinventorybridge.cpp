@@ -301,7 +301,7 @@ BOOL LLInvFVBridge::perform_cutToClipboard()
 	if (isItemMovable())
 	{
 		LLInventoryClipboard::instance().cut(mUUID);
-		LLFolderView::removeCutItems();
+		//LLFolderView::removeCutItems();
 		return true;
 	}
 	return false;

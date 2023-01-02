@@ -42,6 +42,7 @@
 #include "lldefs.h"
 #include "llfloater.h"
 #include "llscrolllistctrl.h"
+#include "llfiltereditor.h"
 
 class LLFloaterTeleportHistory : public LLFloater, public LLUISingleton<LLFloaterTeleportHistory, VisibilityPolicy<LLFloater> >
 {
@@ -64,7 +65,12 @@ public:
 	void addPendingEntry(std::string regionName, S16 x, S16 y, S16 z);
 	/// @brief: adds the destination to the list of visited places
 	void addEntry(std::string parcelName);
-
+	void onFilterEdit(const std::string& search_string);
+	
+	LLFilterEditor*				mFilterEditor;
+	std::string filterValue;
+	std::vector<LLSD> datas;
+	void refreshList();
 	static void loadFile(const std::string &file_name);
 	static void saveFile(const std::string &file_name);
 private:
@@ -82,7 +88,7 @@ private:
 	static void onTeleport(void* data);
 	static void onShowOnMap(void* data);
 	static void onCopySLURL(void* data);
-
+	
 	/// @brief: enables or disables the "Teleport", "Show On Map" and "Copy To SLURL" buttons **/
 	void setButtonsEnabled(BOOL on);
 

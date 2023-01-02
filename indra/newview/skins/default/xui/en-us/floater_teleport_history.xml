@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <floater name="teleporthistory" title="Teleport History" rect_control="FloaterTeleportHistoryRect"
 	can_close="true" can_drag_on_left="false" can_minimize="true" can_resize="true"
-	min_width="550" min_height="150" width="550" height="200">
+	min_width="550" min_height="158" width="550" height="220">
+	<filter_editor bevel_style="in" border_style="line" border_thickness="1" bottom_delta="-40" follows="left|top" height="20"
+	     left="10" name="search_history" width="260" label="Type here to search"/>
 	<scroll_list name="places_list" can_resize="true" multi_select="false"
 		background_visible="true" draw_border="true" draw_stripes="true" draw_heading="true"
-		height="150" width="530" bottom_delta="-170" top="10" left="10" follows="left|top|right|bottom">
+		height="130" width="530" bottom_delta="-135" top="10" left="10" follows="left|top|right|bottom">
 		<column name="parcel" label="Parcel" dynamicwidth="true" />
 		<column name="region" label="Region" width="150" />
 		<column name="position" label="Position" width="90" />

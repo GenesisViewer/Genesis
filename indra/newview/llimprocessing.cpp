@@ -1806,7 +1806,7 @@ void LLIMProcessing::processNewMessage(const LLUUID& from_id,
 
 			if (is_muted)
 			{
-				LLNotifications::instance().forceResponse(LLNotification::Params("OfferFriendship").payload(payload), 1);
+				LLNotifications::instance().forceResponse(LLNotification::Params("OfferFriendship").payload(payload), 999); // 999 is the dialog option for auto decline friendship request cause the avatar is muted
 			}
 			else
 			{

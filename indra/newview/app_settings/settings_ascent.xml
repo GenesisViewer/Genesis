@@ -1088,10 +1088,12 @@ Changing this setting only affects new text.</string>
 		</map>
 		<key>UseWebSearch</key>
 		<map>
+      <key>HideFromEditor</key>
+      <integer>1</integer>
 			<key>Comment</key>
-			<string>Always use web-based search instead of legacy search.</string>
+			<string>Always use web-based search instead of legacy search. (Deprecated)</string>
 			<key>Persist</key>
-			<integer>1</integer>
+			<integer>0</integer>
 			<key>Type</key>
 			<string>Boolean</string>
 			<key>Value</key>

@@ -42,6 +42,8 @@
 
 void toggle_search_floater()
 {
+	//Force to use the legacy search window
+	gSavedSettings.setBOOL("UseWebSearch",FALSE);
 	if (!gSavedSettings.getString("SearchURL").empty() && gSavedSettings.getBOOL("UseWebSearch"))
 	{
 		if (LLFloaterSearch::instanceExists() && LLFloaterSearch::instance().getVisible())

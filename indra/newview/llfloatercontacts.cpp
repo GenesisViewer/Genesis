@@ -190,26 +190,26 @@ void LLPanelContactSets::addContactSet(void* userdata) {
 void init_contact_set_list(LLScrollListCtrl* ctrl)
 {
 	
-	std::map<std::string, ContactSet> contact_sets = GenxContactSetMgr::instance().getContactSets();
+	std::vector<ContactSet> contact_sets = GenxContactSetMgr::instance().getContactSets();
 	LLCtrlListInterface *contact_set_list = ctrl->getListInterface();
 	contact_set_list->operateOnAll(LLCtrlListInterface::OP_DELETE);
 	
 	for(auto& contact_set : contact_sets)
 	{
 		
-		LLColor4 color = contact_set.second.getColor();
+		LLColor4 color = contact_set.getColor();
 		LLScrollListItem::Params newElement;
-		newElement.value = contact_set.first;
+		newElement.value = contact_set.getId();
 		LLScrollListCell::Params name;
 		name.column = "contactsetname";
 		name.type = "text";
-		name.value = contact_set.second.getName();
+		name.value = contact_set.getName();
 		name.color=color*0.5f + color*0.5f;;
 		newElement.columns.add(name);
 		LLScrollListCell::Params id;
 		id.column = "contactsetid";
 		id.type = "text";
-		id.value = contact_set.first;
+		id.value = contact_set.getId();
 		id.color=color*0.5f + color*0.5f;;
 		newElement.columns.add(id);
 		ctrl->addRow(newElement);

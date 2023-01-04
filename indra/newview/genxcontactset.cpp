@@ -48,14 +48,14 @@ ContactSet GenxContactSetMgr::getContactSet(std::string csId) {
    return contactSet;
 }
 
-std::map<std::string, ContactSet> GenxContactSetMgr::getContactSets(){
+std::vector<ContactSet> GenxContactSetMgr::getContactSets(){
    char *sql;
    sqlite3_stmt *stmt;
-   std::map<std::string, ContactSet> contactsets;
+   std::vector<ContactSet> contactsets;
    
    
    sqlite3 *db = LLSqlMgr::instance().getDB();
-   sql = "SELECT R,G,B,A,IFNULL(ALIAS,ID),ID  FROM CONTACTS_SET order by 4";
+   sql = "SELECT R,G,B,A,IFNULL(ALIAS,ID),ID  FROM CONTACTS_SET order by 5 COLLATE NOCASE ASC";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
    
    
@@ -75,7 +75,7 @@ std::map<std::string, ContactSet> GenxContactSetMgr::getContactSets(){
       contactSet.setId(csId);
       contactSet.setName(contactSetName);
       contactSet.setColor(colorContactSet);
-      contactsets[csId]=contactSet;
+      contactsets.push_back(contactSet);
    }
    sqlite3_finalize(stmt);
    return contactsets;
@@ -203,7 +203,7 @@ std::string GenxContactSetMgr::insertContactSet(std::string csId, std::string cs
    sqlite3_step(stmt);
   
    sqlite3_finalize(stmt);
-   return result;
+   return csId;
 }
 void GenxContactSetMgr::deleteContactSet(std::string csId) {
      

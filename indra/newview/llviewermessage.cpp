@@ -320,7 +320,7 @@ bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
             }
 		break;
 	}
-        case 1: // Decline
+        case 1 or 999: // Decline (999 is for auto decline cause the avatar is muted)
 	    // fall-through
 	    //case 3: // Send IM - decline and start IM session
 		    {
@@ -363,6 +363,7 @@ bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
                     LL_WARNS("Friendship") << "Failed to decline friendship offer, neither capability nor transaction id are accessible" << LL_ENDL;
                 }
 	    }
+		
 	default:
 		// close button probably, possibly timed out
 		break;

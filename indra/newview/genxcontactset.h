@@ -27,7 +27,7 @@ class GenxContactSetMgr : public LLSingleton<GenxContactSetMgr>
         ~GenxContactSetMgr();
         void init();
         ContactSet getContactSet(std::string csId);
-        std::map<std::string, ContactSet> getContactSets();
+        std::vector<ContactSet> getContactSets();
         ContactSet getAvatarContactSet(std::string avatarId);
         void resetAvatarContactSet(std::string avatarId);
         void updateAvatarContactSet(std::string avatarId, std::string contactSetId);

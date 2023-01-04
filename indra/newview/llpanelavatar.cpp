@@ -202,9 +202,9 @@ void LLPanelAvatarSecondLife::processProperties(void* data, EAvatarProcessorType
 	if (contact_set) {
 		contact_set->removeall();
 		contact_set->add(" "," ");
-		std::map<std::string, ContactSet> contact_sets = GenxContactSetMgr::instance().getContactSets();
+		std::vector<ContactSet> contact_sets = GenxContactSetMgr::instance().getContactSets();
 		for (auto& key : contact_sets) {
-			contact_set->add(key.second.getName(),key.first);
+			contact_set->add(key.getName(),key.getId());
 		}
 		contact_sets.clear();
 

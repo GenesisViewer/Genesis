@@ -4340,8 +4340,7 @@ This should be as low as possible, but too low may break functionality</string>
     <key>LetterKeysFocusChatBar</key>
     <map>
       <key>Comment</key>
-      <string>When printable characters keys (possibly with Shift held) are pressed, the chatbar takes focus</string>
-      <key>Persist</key>
+      <string>When printable characters keys (possibly with Shift held) are pressed, the chatbar takes focus.  Set to False for WASD operation.</string>      <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>

@@ -67,7 +67,7 @@ private:
 	LLColor4 mHTMLLinkColor;
 	BOOL mChatFullWidth;
 	BOOL mCloseChatOnReturn;
-	BOOL mArrowKeysMoveAvatar;
+	//BOOL mArrowKeysMoveAvatar;
 	BOOL mShowTimestamps;
 	BOOL mPlayTypingAnim;
 	BOOL mChatBubbles;
@@ -98,7 +98,7 @@ LLPrefsChatImpl::LLPrefsChatImpl()
 	getChild<LLColorSwatchCtrl>("background")->set(gSavedSettings.getColor4("BackgroundChatColor"));
 	getChild<LLColorSwatchCtrl>("links")->set(gSavedSettings.getColor4("HTMLLinkColor"));
 
-	childSetValue("arrow_keys_move_avatar_check", gSavedSettings.getBOOL("ArrowKeysMoveAvatar"));
+	//childSetValue("arrow_keys_move_avatar_check", gSavedSettings.getBOOL("ArrowKeysMoveAvatar"));
 	childSetValue("show_timestamps_check", gSavedSettings.getBOOL("ChatShowTimestamps"));
 	childSetValue("script_errors_as_chat", gSavedSettings.getBOOL("ScriptErrorsAsChat"));
  
@@ -126,7 +126,7 @@ void LLPrefsChatImpl::refreshValues()
 	mBGChatColor = gSavedSettings.getColor4("BackgroundChatColor");
 	mScriptErrorColor = gSavedSettings.getColor4("ScriptErrorColor");
 	mHTMLLinkColor = gSavedSettings.getColor4("HTMLLinkColor");
-	mArrowKeysMoveAvatar = gSavedSettings.getBOOL("ArrowKeysMoveAvatar");
+	//mArrowKeysMoveAvatar = gSavedSettings.getBOOL("ArrowKeysMoveAvatar");
 	mShowTimestamps = gSavedSettings.getBOOL("ChatShowTimestamps");
 	mScriptErrorAsChat = gSavedSettings.getBOOL("ScriptErrorsAsChat");
 	mChatBubbles = gSavedSettings.getBOOL("UseChatBubbles");
@@ -152,7 +152,7 @@ void LLPrefsChatImpl::cancel()
 	gSavedSettings.setColor4("BackgroundChatColor", mBGChatColor);
 	gSavedSettings.setColor4("ScriptErrorColor", mScriptErrorColor);
 	gSavedSettings.setColor4("HTMLLinkColor", mHTMLLinkColor);
-	gSavedSettings.setBOOL("ArrowKeysMoveAvatar", mArrowKeysMoveAvatar);
+	//gSavedSettings.setBOOL("ArrowKeysMoveAvatar", mArrowKeysMoveAvatar);
 	gSavedSettings.setBOOL("ChatShowTimestamps", mShowTimestamps);
 	gSavedSettings.setBOOL("ScriptErrorsAsChat", mScriptErrorAsChat);
 	gSavedSettings.setBOOL("UseChatBubbles", mChatBubbles);
@@ -180,7 +180,7 @@ void LLPrefsChatImpl::apply()
 
 	gSavedSettings.setColor4("HTMLLinkColor", childGetValue("links"));
 
-	gSavedSettings.setBOOL("ArrowKeysMoveAvatar", childGetValue("arrow_keys_move_avatar_check"));
+	//gSavedSettings.setBOOL("ArrowKeysMoveAvatar", childGetValue("arrow_keys_move_avatar_check"));
 	gSavedSettings.setBOOL("ChatShowTimestamps", childGetValue("show_timestamps_check"));
 	gSavedSettings.setBOOL("ScriptErrorsAsChat", childGetValue("script_errors_as_chat"));
 	gSavedSettings.setBOOL("UseChatBubbles", childGetValue("bubble_text_chat"));

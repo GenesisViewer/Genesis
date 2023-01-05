@@ -27,8 +27,8 @@
 	<check_box bottom_delta="-25" control_name="ChatFullWidth" follows="top" height="16" initial_value="false" label="Use full screen width (Requires restart)" name="chat_full_width_check"/>
 	<text bottom_delta="-12" follows="top" height="10" left="12" mouse_opaque="false" name="text_box6" width="135">Chat Options:</text>
 	<check_box bottom_delta="-8"  follows="top" height="16" initial_value="false" label="Close chat bar after hitting return" left="148" name="close_chat_on_return_check"/>
-	<check_box bottom_delta="-20" follows="top" height="16" initial_value="false" label="Arrow keys always move avatar when chatting" name="arrow_keys_move_avatar_check"/>
-	<check_box bottom_delta="-20" follows="top" height="16" control_name="LetterKeysFocusChatBar" label="Letter keys start typing into local chat (WASD)" name="letter_keys_start_local_chat" tool_tip="not checked for WASD operation"/>
+	<!--<check_box bottom_delta="-20" follows="top" height="16" initial_value="false" label="Arrow keys always move avatar when chatting" name="arrow_keys_move_avatar_check"/>
+	<check_box bottom_delta="-20" follows="top" height="16" control_name="LetterKeysFocusChatBar" label="Letter keys start typing into local chat (WASD)" name="letter_keys_start_local_chat" tool_tip="not checked for WASD operation"/>-->
 	<check_box bottom_delta="-20" follows="top" height="16" initial_value="false" label="Show timestamps in Local Chat" name="show_timestamps_check"/>
 	<check_box bottom_delta="-20" control_name="ScriptErrorsAsChat" follows="top" height="16" initial_value="false" label="Show script errors and warnings as regular chat" name="script_errors_as_chat"/>
 	<check_box bottom_delta="-20" control_name="PlayTypingAnim" follows="top" height="16" initial_value="true" label="Play typing animation when chatting" name="play_typing_animation"/>

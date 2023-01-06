@@ -577,7 +577,7 @@ BOOL LLFloaterIMPanel::postBuild()
 		case SUPPORT_SESSION:
 		{
 			auto support = getChildView("Support Check");
-			support->setVisible(true);
+			support->setVisible(false);
 			//Genesis : Support is ticked by default
 			support->setValue(true);
 			auto control = gSavedSettings.getControl(support->getControlName());

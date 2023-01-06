@@ -65,6 +65,8 @@ BOOL LLPanelInput::postBuild()
 	childSetValue("appearance_camera_movement", gSavedSettings.getBOOL("AppearanceCameraMovement"));
 	childSetValue("unsit_on_camera_reset", gSavedSettings.getBOOL("SianaUnsitOnCamReset"));
 	childSetValue("first_person_avatar_visible", gSavedSettings.getBOOL("FirstPersonAvatarVisible"));
+	childSetValue("letter_keys_start_local_chat", !gSavedSettings.getBOOL("LetterKeysFocusChatBar"));
+	mLetterKeysFocusChatBar = !gSavedSettings.getBOOL("LetterKeysFocusChatBar");
 
 	LLSliderCtrl* fov_slider = getChild<LLSliderCtrl>("camera_fov");
 	fov_slider->setCommitCallback(boost::bind(onFOVAdjust, _2));
@@ -94,6 +96,7 @@ void LLPanelInput::apply()
 	gSavedSettings.setBOOL("SianaUnsitOnCamReset", childGetValue("unsit_on_camera_reset"));
 	gSavedSettings.setF32("CameraAngle", mPreAdjustFOV);
 	gSavedSettings.setBOOL("FirstPersonAvatarVisible", childGetValue("first_person_avatar_visible"));
+	gSavedSettings.setBOOL("LetterKeysFocusChatBar", !childGetValue("letter_keys_start_local_chat"));
 }
 
 void LLPanelInput::cancel()

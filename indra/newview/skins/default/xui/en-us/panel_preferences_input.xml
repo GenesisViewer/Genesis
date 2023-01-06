@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel border="true" bottom="-409" height="408" label="Input &amp; Camera" left="102" name="Input panel" width="517">
-	<text bottom="-20" follows="top" height="10" left="10" name=" Mouselook Options:">Mouselook Options:</text>
+  <tab_container label="InputCamera" bottom="0" height="440" width="600" name="Ascent Movement" tab_min_width="0">
+    <panel border="true" bottom="-409" height="408" label="Input &amp; Movement" left="102" name="" width="517">
+      <text bottom="-20" follows="top" height="10" left="10" name=" Mouselook Options:">Mouselook Options:</text>
 	<text bottom="-20" follows="top" height="10" left="148" name=" Mouse Sensitivity:">Mouse Sensitivity:</text>
 	<slider_bar bottom="-26" follows="top" height="16" increment="0.25" initial_val="2" left="276" max_val="15" min_val="0" name="mouse_sensitivity" width="128"/>
 	<check_box bottom_delta="-18" follows="top" height="16" label="Invert Mouse" left="148" name="invert_mouse"/>
@@ -18,7 +20,11 @@
 	<check_box bottom_delta="-6" follows="top" height="16" label="Fly/land on holding up/down" left="148" name="automatic_fly"/>
 	<check_box bottom_delta="-18" follows="top" height="16" label="Allow crouch toggle by holding shift" name="crouch_toggle" control_name="SGShiftCrouchToggle"/>
 	<check_box bottom_delta="-18" follows="top" height="16" label="Use azerty layout instead of qwerty layout" name="azerty_keys" control_name="LiruUseZQSDKeys"/>
-	<text bottom_delta="-20" follows="top" height="10" left="10" name=" Camera Options:">Camera Options:</text>
+      <check_box bottom_delta="-18" follows="top" height="16" initial_value="false" label="Arrow keys always move avatar when chatting" control_name="ArrowKeysMoveAvatar"/>
+      <check_box bottom_delta="-18" follows="top" height="16" label="WASD to control movement" name="letter_keys_start_local_chat" tool_tip="When unchecked, the keyboard arrow keys move your avatar"/>
+    </panel>
+    <panel border="true" left="1" bottom="-190" height="180" width="600" label="Camera Options" name="CameraOptions">
+      <text bottom_delta="-20" follows="top" height="10" left="10" name=" Camera Options:">Camera Options:</text>
   <text bottom_delta="0" follows="top" height="10" left="148" name="camera_fov_label">Camera View Angle:</text>
   <slider bottom_delta="-6" can_edit_text="true" decimal_digits="2" follows="top" width="128" height="16" increment=".025" initial_val="1.57" left="276" max_val="2.97" min_val=".17" name="camera_fov" value="60"/>
   <text bottom_delta="-14" follows="top" height="10" left="148" name="Camera Follow Distance:" width="128">Camera Follow Distance:</text>
@@ -30,4 +36,6 @@
 	<check_box bottom_delta="-18" follows="top" height="16" label="Disable Camera Constraints" left="148" control_name="DisableCameraConstraints" name="DisableCameraConstraints" tool_tip="Prevent the camera from automatically zooming when you approach walls, objects, etc., too closely."/>
 	<check_box bottom_delta="-18" follows="top" height="16" label="Limit Select Distance" left="148" control_name="LimitSelectDistance" name="Limit Select Distance" tool_tip="Limit the distance at which an object can be selected."/>
 	<button bottom_delta="-30" follows="top" font="SansSerif" height="20" label="Joystick Setup" name="joystick_setup_button" width="155"/>
+    </panel>
+  </tab_container>
 </panel>

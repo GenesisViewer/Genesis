@@ -49,6 +49,7 @@ private:
 	static void onClickJoystickSetup(void* user_data);
 	F32 mPreAdjustFOV;
 	F32 mPreAdjustCameraOffsetScale;
+	bool mLetterKeysFocusChatBar;
 };
 
 #endif

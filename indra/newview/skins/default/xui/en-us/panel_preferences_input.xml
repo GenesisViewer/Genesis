@@ -21,7 +21,7 @@
 	<check_box bottom_delta="-18" follows="top" height="16" label="Allow crouch toggle by holding shift" name="crouch_toggle" control_name="SGShiftCrouchToggle"/>
 	<check_box bottom_delta="-18" follows="top" height="16" label="Use azerty layout instead of qwerty layout" name="azerty_keys" control_name="LiruUseZQSDKeys"/>
       <check_box bottom_delta="-18" follows="top" height="16" initial_value="false" label="Arrow keys always move avatar when chatting" control_name="ArrowKeysMoveAvatar"/>
-      <check_box bottom_delta="-18" follows="top" height="16" label="WASD to control movement" name="letter_keys_start_local_chat" tool_tip="When unchecked, the keyboard arrow keys move your avatar"/>
+      <check_box bottom_delta="-18" follows="top" height="16" label="WASD to control movement" name="letter_keys_start_local_chat" tool_tip="With WASD disabled, typing letters opens the bottom chat bar.  For those of you who do not use the bottom chat, leave WASD enabled, you can still use arrow keys to move."/>
     </panel>
     <panel border="true" left="1" bottom="-190" height="180" width="600" label="Camera Options" name="CameraOptions">
       <text bottom_delta="-20" follows="top" height="10" left="10" name=" Camera Options:">Camera Options:</text>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<panel border="true" bottom="-409" height="408" label="Input &amp; Camera" left="102" name="Input panel" width="517">
+<panel border="true" bottom="-409" height="408" label="Input" left="102" name="Input panel" width="517">
   <tab_container label="InputCamera" bottom="0" height="440" width="600" name="Ascent Movement" tab_min_width="0">
     <panel border="true" bottom="-409" height="408" label="Input &amp; Movement" left="102" name="" width="517">
       <text bottom="-20" follows="top" height="10" left="10" name=" Mouselook Options:">Mouselook Options:</text>

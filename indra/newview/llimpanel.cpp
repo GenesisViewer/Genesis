@@ -306,6 +306,7 @@ LLFloaterIMPanel::LLFloaterIMPanel(
 	mSentTypingState(true),
 	mShowSpeakersOnConnect(true),
 	mDing(false),
+	mDingAlways(false),
 	mRPMode(false),
 	mTextIMPossible(true),
 	mCallBackEnabled(true),
@@ -361,6 +362,7 @@ LLFloaterIMPanel::LLFloaterIMPanel(
 		LLAvatarTracker::instance().addParticularFriendObserver(mOtherParticipantUUID, this);
 		LLMuteList::instance().addObserver(this);
 		mDing = gSavedSettings.getBOOL("LiruNewMessageSoundIMsOn");
+		mDingAlways = gSavedSettings.getBOOL("FriendsChatAlwaysDing");
 		break;
 	}
 
@@ -779,7 +781,7 @@ void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, LLColor4 incol
 		}
 
 		bool focused(hasFocus());
-		if (mDing && (!focused || !gFocusMgr.getAppHasFocus()))
+		if (((mDingAlways && LLAvatarActions::isFriend(mOtherParticipantUUID))|| mDing) && (!focused || !gFocusMgr.getAppHasFocus()))
 		{
 			static const LLCachedControl<std::string> ding("LiruNewMessageSound");
 			static const LLCachedControl<std::string> dong("LiruNewMessageSoundForSystemMessages");
@@ -1118,7 +1120,7 @@ void LLFloaterIMPanel::removeDynamics(LLComboBox* flyout)
 
 void LLFloaterIMPanel::addDynamics(LLComboBox* flyout)
 {
-	flyout->add(mDing ? getString("ding on") : getString("ding off"), 6);
+		flyout->add(mDing ? getString("ding on") : getString("ding off"), 6);
 	flyout->add(mRPMode ? getString("rp mode on") : getString("rp mode off"), 7);
 	flyout->add(LLAvatarActions::isFriend(mOtherParticipantUUID) ? getString("remove friend") : getString("add friend"), 8);
 	flyout->add(LLAvatarActions::isBlocked(mOtherParticipantUUID) ? getString("unmute") : getString("mute"), 9);

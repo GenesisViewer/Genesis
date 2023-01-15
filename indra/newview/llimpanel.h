@@ -237,6 +237,7 @@ private:
 	bool mShowSpeakersOnConnect;
 
 	bool mDing; // Whether or not to play a ding on new messages
+	bool mDingAlways; // Friends IM always Ding (from FriendsChatAlwaysDing settings)
 	bool mRPMode;
 
 	bool mTextIMPossible;

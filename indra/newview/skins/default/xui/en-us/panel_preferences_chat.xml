@@ -32,6 +32,8 @@
 	<check_box bottom_delta="-20" follows="top" height="16" initial_value="false" label="Show timestamps in Local Chat" name="show_timestamps_check"/>
 	<check_box bottom_delta="-20" control_name="ScriptErrorsAsChat" follows="top" height="16" initial_value="false" label="Show script errors and warnings as regular chat" name="script_errors_as_chat"/>
 	<check_box bottom_delta="-20" control_name="PlayTypingAnim" follows="top" height="16" initial_value="true" label="Play typing animation when chatting" name="play_typing_animation"/>
+	<check_box bottom_delta="-20" control_name="FriendsChatAlwaysDing" follows="top" height="16" initial_value="false" label="A friend IM always ding" name="friends_im_always_ding"/>
+	
 	<text bottom_delta="-32" follows="top" height="10" left="12" name="text_box7">Bubble Chat:</text>
 	<check_box bottom_delta="-5" follows="top" control_name="UseChatBubbles" height="16" initial_value="false" label="Show chat bubbles" left="148" name="bubble_text_chat"/>
 	<slider bottom_delta="-16" follows="top" can_edit_text="false" control_name="ChatBubbleOpacity" height="12" increment="0.05" initial_val="1" label="Opacity" max_val="1" min_val="0" name="bubble_chat_opacity" value="0.5" width="200"/>

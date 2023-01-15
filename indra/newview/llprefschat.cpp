@@ -106,6 +106,7 @@ LLPrefsChatImpl::LLPrefsChatImpl()
 	childSetValue("chat_full_width_check", gSavedSettings.getBOOL("ChatFullWidth"));
 	childSetValue("close_chat_on_return_check", gSavedSettings.getBOOL("CloseChatOnReturn"));
 	childSetValue("play_typing_animation", gSavedSettings.getBOOL("PlayTypingAnim"));
+	childSetValue("friends_im_always_ding", gSavedSettings.getBOOL("FriendsChatAlwaysDing"));
 	childSetValue("console_opacity", gSavedSettings.getF32("ConsoleBackgroundOpacity"));
 	childSetValue("bubble_chat_opacity", gSavedSettings.getF32("ChatBubbleOpacity"));
 }
@@ -187,7 +188,7 @@ void LLPrefsChatImpl::apply()
 	gSavedSettings.setBOOL("ChatFullWidth", childGetValue("chat_full_width_check"));
 	gSavedSettings.setBOOL("CloseChatOnReturn", childGetValue("close_chat_on_return_check"));
 	gSavedSettings.setBOOL("PlayTypingAnim", childGetValue("play_typing_animation"));
-
+	gSavedSettings.setBOOL("FriendsChatAlwaysDing", childGetValue("friends_im_always_ding"));
 	gSavedSettings.setF32("ConsoleBackgroundOpacity", childGetValue("console_opacity").asReal());
 	gSavedSettings.setF32("ChatBubbleOpacity", childGetValue("bubble_chat_opacity").asReal());
 

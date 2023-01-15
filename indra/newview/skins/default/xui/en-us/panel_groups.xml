@@ -4,7 +4,7 @@
 	<scroll_list background_visible="true" bottom="45" column_padding="0" draw_border="true"
 	     draw_heading="true" draw_stripes="true" enabled="true"
 	     follows="left|top|right|bottom" left="10" mouse_opaque="true"
-	     multi_select="true" name="group list" tab_stop="true" top="-10"
+	     multi_select="true" name="group list" tab_stop="true" top="-40"
 	     width="240" menu_num="1">
 		<column dynamicwidth="true" label="Name" name="name" tool_tip="Name" />
     <!--<column label="Active" name="is_active_group"
@@ -16,6 +16,7 @@
     <column image_overlay="smicon_warn.tga" name="is_notice_group"
         tool_tip="Receive group notices" width="20" />
 	</scroll_list>
+	<filter_editor bottom_delta="225" enabled="true" follows="left|top" font="SansSerif" height="18" name="group_search_lineedit" label="Group Search" tool_tip="The group name you want to search for" width="160"/>
 	<text type="string" length="1" bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
 	     bottom="22" drop_shadow_visible="true" enabled="true" follows="left|bottom"
 	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="12"

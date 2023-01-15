@@ -19506,28 +19506,7 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <boolean>0</boolean>
     </map>
-    <key>GenxForceOpenGenesisGroup</key>
-    <map>
-      <key>Comment</key>
-      <string>Number of times the Genesis floater group will be forced to open</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>S32</string>
-      <key>Value</key>
-      <integer>2</integer>
-    </map>
-    <key>GenxForcedOpenGenesisGroup</key>
-    <map>
-      <key>Comment</key>
-      <string>Number of times the Genesis floater group has been forced to open</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>S32</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
+    
   </map>
 
 </llsd>

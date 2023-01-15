@@ -1173,7 +1173,6 @@ bool idle_startup()
 		{
 			init_start_screen(agent_location_id);
 			
-			gSavedSettings.setS32("GenxRevision",LLVersionInfo::getBuild());	
 		}
 
 		// Display the startup progress bar.

@@ -119,6 +119,7 @@ protected:
 	void onGroupList();
 	static void onBtnInvite(void* userdata);
 	void invite();
+	void filterGroups(const std::string& search_name);
 };
 
 

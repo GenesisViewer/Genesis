@@ -47,6 +47,7 @@
 #include "llagent.h"
 #include "llagentbenefits.h"
 #include "llbutton.h"
+#include "llfiltereditor.h"
 #include "llfloatergroupinvite.h"
 #include "llgroupactions.h"
 #include "llimview.h"
@@ -61,7 +62,7 @@
 using namespace LLOldEvents;
 
 // helper functions
-void init_group_list(LLScrollListCtrl* ctrl, const LLUUID& highlight_id, U64 powers_mask = GP_ALL_POWERS);
+void init_group_list(LLScrollListCtrl* ctrl, LLFilterEditor* filterEditor,const LLUUID& highlight_id, U64 powers_mask = GP_ALL_POWERS);
 
 ///----------------------------------------------------------------------------
 /// Class LLFloaterGroupPicker
@@ -91,16 +92,18 @@ LLFloaterGroupPicker::~LLFloaterGroupPicker()
 void LLFloaterGroupPicker::setPowersMask(U64 powers_mask)
 {
 	mPowersMask = powers_mask;
-	init_group_list(getChild<LLScrollListCtrl>("group list"), gAgent.getGroupID(), mPowersMask);
+	init_group_list(getChild<LLScrollListCtrl>("group list"), getChild<LLFilterEditor>("group_search_lineedit"),gAgent.getGroupID(), mPowersMask);
 }
 
 
 BOOL LLFloaterGroupPicker::postBuild()
 {
+	
+
 	LLScrollListCtrl* list_ctrl = getChild<LLScrollListCtrl>("group list");
 	if (list_ctrl)
 	{
-		init_group_list(list_ctrl, gAgent.getGroupID(), mPowersMask);
+		init_group_list(list_ctrl, getChild<LLFilterEditor>("group_search_lineedit"),gAgent.getGroupID(), mPowersMask);
 		list_ctrl->setDoubleClickCallback(onBtnOK, this);
 	}
 
@@ -197,18 +200,22 @@ void LLPanelGroups::setTexts()
 void LLPanelGroups::reset()
 {
 	setTexts();
-	init_group_list(getChild<LLScrollListCtrl>("group list"), gAgent.getGroupID());
+	init_group_list(getChild<LLScrollListCtrl>("group list"), getChild<LLFilterEditor>("group_search_lineedit"),gAgent.getGroupID());
 	enableButtons();
 }
 
 BOOL LLPanelGroups::postBuild()
 {
 	setTexts();
-
+	
+	if (LLFilterEditor* group = getChild<LLFilterEditor>("group_search_lineedit"))
+	{
+		group->setCommitCallback(boost::bind(&LLPanelGroups::filterGroups, this, _2));
+	}
 	LLScrollListCtrl *list = getChild<LLScrollListCtrl>("group list");
 	if (list)
 	{
-		init_group_list(list, gAgent.getGroupID());
+		init_group_list(list, getChild<LLFilterEditor>("group_search_lineedit"),gAgent.getGroupID());
 		list->setCommitCallback(boost::bind(&LLPanelGroups::onGroupList, this));
 		list->setSortChangedCallback(boost::bind(&LLPanelGroups::onGroupSortChanged,this)); //Force 'none' to always be first entry.
 		list->setDoubleClickCallback(boost::bind(LLGroupActions::startIM, boost::bind(&LLScrollListCtrl::getCurrentID, list)));
@@ -236,7 +243,13 @@ BOOL LLPanelGroups::postBuild()
 
 	return TRUE;
 }
+void LLPanelGroups::filterGroups(const std::string& search_name)
+{
+	init_group_list(getChild<LLScrollListCtrl>("group list"),getChild<LLFilterEditor>("group_search_lineedit"), gAgent.getGroupID(), GP_ALL_POWERS);
 
+	
+	
+}
 void LLPanelGroups::enableButtons()
 {
 	getChildView("Create")->setEnabled(gAgent.canJoinGroups());
@@ -374,12 +387,12 @@ LLSD create_group_element(const LLGroupData *group_datap, const LLUUID &active_g
 	return element;
 }
 
-void init_group_list(LLScrollListCtrl* ctrl, const LLUUID& highlight_id, U64 powers_mask)
+void init_group_list(LLScrollListCtrl* ctrl, LLFilterEditor* filterEditor, const LLUUID& highlight_id, U64 powers_mask)
 {
 	LLUUID id;
 	LLCtrlListInterface *group_list = ctrl->getListInterface();
 	if (!group_list) return;
-
+	const std::string filter = filterEditor->getValue();
 	const LLUUID selected_id	= group_list->getSelectedValue();
 	const S32	selected_idx	= group_list->getFirstSelectedIndex();
 	const S32	scroll_pos		= ctrl->getScrollPos();
@@ -391,7 +404,10 @@ void init_group_list(LLScrollListCtrl* ctrl, const LLUUID& highlight_id, U64 pow
 		LLSD element = create_group_element(&group, highlight_id, powers_mask);
 		if (element.size())
 		{
-			group_list->addElement(element, ADD_SORTED);
+			LLSD& name_column = element["columns"][0];
+			std::string group_name=utf8str_tolower(name_column["value"]);
+			if (filter.empty() || (group_name.find(utf8str_tolower(filter)) != std::string::npos))
+				group_list->addElement(element, ADD_SORTED);
 			// Force a name lookup here to get it added to the cache so other UI is prepared
 			std::string dummy;
 			gCacheName->getGroupName(group.mID, dummy);

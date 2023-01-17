@@ -76,9 +76,24 @@
       <check_box bottom_delta="-20" control_name="ShowContactSetOnLocalChat" follows="top" height="16" initial_value="true" label="Display the contact set name in local chat" left="10" tool_tip="Display the contact set name in the local chat" name="show_contact_set_local_chat"/>
       <check_box bottom_delta="-20" control_name="ShowContactSetOnRadar" follows="top" height="16" initial_value="true" label="Display the contact set name on the radar floater" left="10" tool_tip="Display the contact set name on the radar floater" name="show_contact_set_radar"/>
     </panel>
-    <panel border="true" left="1" bottom="-190" height="180" width="600" label="Favorites bar" name="FavBar">
-      <check_box bottom_delta="-20" control_name="GenxFavBar" follows="top" height="16" initial_value="true" label="Display the favorites bar" left="10" tool_tip="Display the favorites bar on screen" name="genxfavbar"/>
-      
+    <panel border="true" left="1" bottom="-190" height="180" width="600" label="Adv. Features" name="FavBar">
+      <text bottom_delta="-25" follows="top" height="16" left="15" name="UIoptions">UI options :</text>
+      <check_box bottom_delta="0" control_name="GenxFavBar" follows="top" height="16" initial_value="true" label="Display the favorites bar" left="150" tool_tip="Display the favorites bar on screen" name="genxfavbar"/>
+
+      <text bottom_delta="-30" follows="top" height="16" left="15" name="RenderOptions">Render options :</text>
+      <text bottom_delta="0" follows="top" left="150" height="16" name="AvatarRender">Avatar Rendering option :</text>
+      <radio_group bottom_delta="-74" follows="top" draw_border="true" height="72" left="170" name="Render_Radio_Options" width="390">
+        <radio_item bottom_delta="26" height="16" left="10" name="radio0" width="370" tool_tip="Only render avatars that are below the max complexity setting">Render avatars with complexity below 'Avatars Max Complexity'</radio_item>
+        <radio_item bottom_delta="-8" height="16" left="10"	name="radio1" width="370" tool_tip="Always render friends. And only render others who are below max complexity">Always render friends. Regardless of the 'Avatars Max Complexity'</radio_item>
+        <radio_item bottom_delta="-8" height="16" left="10" name="radio2" width="370" tool_tip="the max complexity setting is not used">Only render friends</radio_item>
+        <radio_item bottom_delta="-8" height="16" left="10"	name="radio3" width="370" tool_tip="the max complexity setting is not used">Only render yourself</radio_item>
+      </radio_group>
+
+      <!--  RenderAvatarMaxComplexity = 0 disables the max Complexity  -->
+      <text bottom_delta="-24" follows="top" left="150" height="16" name="Render_Max_Comp_label">Avatars Max complexity :</text>
+      <spinner bottom_delta="0" follows="top" decimal_digits="0" height="16" increment="1000" initial_val="0" label="" width="100" label_width="0" left="300" max_val="500000" min_val="0" control_name="RenderAvatarMaxComplexity" name="Render_Max_Comp" tool_tip="Set to zero to disable the max complexity limit"/>
+      <text bottom_delta="-18" follows="top" height="16" left="150" name="Always_Render_Note">(Note: Set to 0 [zero] to disable the 'Avatar Max Complexity' render limit)</text>
+
     </panel>
   </tab_container>
 </panel>

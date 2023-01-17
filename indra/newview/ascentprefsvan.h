@@ -112,6 +112,7 @@ private:
 	// Adv. Features
 	bool mShowFavBar;
 	bool mShowToolBar;
+	F32 mUiToolTipDelay;
 	U32 mRenderAvatarMaxComplexity;
 };
 

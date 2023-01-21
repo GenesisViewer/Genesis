@@ -68,6 +68,7 @@ LLPrefsAscentVan::LLPrefsAscentVan()
 	getChild<LLUICtrl>("update_clientdefs")->setCommitCallback(boost::bind(LLPrefsAscentVan::onManualClientUpdate));
     getChild<LLUICtrl>("custom_avatar_name_color")->setCommitCallback(boost::bind(&LLPrefsAscentVan::onAvatarNameColor, this, _1));
     mShowToolBar = gSavedSettings.getBOOL("ShowToolBar");
+    mUiToolTipDelay = gSavedSettings.getF32("ToolTipDelay");
     mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
 
     // 'AlwaysRenderFriends' == 0, render below complexity limits.
@@ -215,6 +216,7 @@ void LLPrefsAscentVan::refreshValues()
     //adv. features
     mShowFavBar = gSavedSettings.getBOOL("GenxFavBar");    
     mShowToolBar = gSavedSettings.getBOOL("ShowToolBar");
+    mUiToolTipDelay = gSavedSettings.getF32("ToolTipDelay");
     mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
 }
 
@@ -316,6 +318,7 @@ void LLPrefsAscentVan::cancel()
     gSavedSettings.setBOOL("ShowContactSetOnRadar",           mShowContactSetOnRadar);
     gSavedSettings.setBOOL("GenxFavBar",                      mShowFavBar);
     gSavedSettings.setBOOL("ShowToolBar",                     mShowToolBar);
+    gSavedSettings.setF32("ToolTipDelay",                     mUiToolTipDelay);
     gSavedSettings.setU32("RenderAvatarMaxComplexity",        mRenderAvatarMaxComplexity);
 }
 

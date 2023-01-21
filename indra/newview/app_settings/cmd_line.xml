@@ -269,14 +269,7 @@
       <string>QAMode</string>
     </map>
 
-    <key>quitafter</key>
-    <map>
-      <key>count</key>
-      <integer>1</integer>
-      <key>map-to</key>
-      <string>QuitAfterSeconds</string>
-    </map>
-
+    
     <key>regionuri</key>
     <map>
       <key>desc</key>

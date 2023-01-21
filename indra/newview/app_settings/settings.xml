@@ -12572,10 +12572,12 @@ This should be as low as possible, but too low may break functionality</string>
     </map>
     <key>QuitAfterSeconds</key>
     <map>
-      <key>Comment</key>
-      <string>The duration allowed before quitting.</string>
-      <key>Persist</key>
+      <key>HideFromEditor</key>
       <integer>1</integer>
+      <key>Comment</key>
+      <string>The duration allowed before quitting. (Deprecated)</string>
+      <key>Persist</key>
+      <integer>0</integer>
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>

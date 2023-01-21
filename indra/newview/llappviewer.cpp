@@ -4092,15 +4092,15 @@ void LLAppViewer::idle()
 		// Smoothly weight toward current frame
 		gFPSClamped = (frame_rate_clamped + (4.f * gFPSClamped)) / 5.f;
 
-		static LLCachedControl<F32> qas(gSavedSettings, "QuitAfterSeconds");
-		if (qas > 0.f)
-		{
-			if (gRenderStartTime.getElapsedTimeF32() > qas)
-			{
-				LL_INFOS() << "Quitting after " << qas << " seconds. See setting \"QuitAfterSeconds\"." << LL_ENDL;
-				LLAppViewer::instance()->forceQuit();
-			}
-		}
+		// static LLCachedControl<F32> qas(gSavedSettings, "QuitAfterSeconds");
+		// if (qas > 0.f)
+		// {
+		// 	if (gRenderStartTime.getElapsedTimeF32() > qas)
+		// 	{
+		// 		LL_INFOS() << "Quitting after " << qas << " seconds. See setting \"QuitAfterSeconds\"." << LL_ENDL;
+		// 		LLAppViewer::instance()->forceQuit();
+		// 	}
+		// }
 	}
 
 	//////////////////////////////////////

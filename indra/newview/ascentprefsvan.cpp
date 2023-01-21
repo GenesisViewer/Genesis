@@ -51,7 +51,7 @@
 #include "llwind.h"
 #include "llviewernetwork.h"
 #include "pipeline.h"
-
+#include "llspinctrl.h"
 
 LLPrefsAscentVan::LLPrefsAscentVan()
 {
@@ -67,6 +67,34 @@ LLPrefsAscentVan::LLPrefsAscentVan()
 
 	getChild<LLUICtrl>("update_clientdefs")->setCommitCallback(boost::bind(LLPrefsAscentVan::onManualClientUpdate));
     getChild<LLUICtrl>("custom_avatar_name_color")->setCommitCallback(boost::bind(&LLPrefsAscentVan::onAvatarNameColor, this, _1));
+    mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
+
+    // 'AlwaysRenderFriends' == 0, render below complexity limits.
+    // 1 always render friends, 2 render only friends, 3 render only yourself
+    std::string render_radio;
+    switch (gSavedSettings.getS32("AlwaysRenderFriends"))
+    {
+    case 1:
+        render_radio = "radio1";
+        childSetEnabled("Render_Max_Comp_label", true);
+        childSetEnabled("Always_Render_Note", true);
+        break;
+    case 2:
+        render_radio = "radio2";
+        childSetEnabled("Render_Max_Comp_label", false);
+        childSetEnabled("Always_Render_Note", false);
+        break;
+    case 3:
+        render_radio = "radio3";
+        childSetEnabled("Render_Max_Comp_label", false);
+        childSetEnabled("Always_Render_Note", false);
+        break;
+    default:
+        render_radio = "radio0";
+        childSetEnabled("Render_Max_Comp_label", true);
+        childSetEnabled("Always_Render_Note", true);
+    }
+    childSetValue("Render_Radio_Options", render_radio);
     refreshValues();
     refresh();
 }
@@ -183,8 +211,9 @@ void LLPrefsAscentVan::refreshValues()
     mShowContactSetOnLocalChat = gSavedSettings.getBOOL("ShowContactSetOnLocalChat");
     mShowContactSetOnRadar = gSavedSettings.getBOOL("ShowContactSetOnRadar");
 
-//favoritess bar
+    //adv. features
     mShowFavBar = gSavedSettings.getBOOL("GenxFavBar");    
+    mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
 }
 
 // Update controls based on current settings
@@ -207,6 +236,14 @@ void LLPrefsAscentVan::refresh()
 
     LLColorSwatchCtrl* avatarNameColor = getChild<LLColorSwatchCtrl>("custom_avatar_name_color");
     avatarNameColor->set(mAvatarNameColor);
+
+    LLSpinCtrl* spinner_inc = getChild<LLSpinCtrl>("Render_Max_Comp");
+    if (mRenderAvatarMaxComplexity > 9999) {
+        spinner_inc->setIncrement(1000);
+    }
+    else {
+        spinner_inc->setIncrement(500);
+    }
 }
 
 // Reset settings to local copy
@@ -276,6 +313,7 @@ void LLPrefsAscentVan::cancel()
     gSavedSettings.setBOOL("ShowContactSetOnLocalChat",       mShowContactSetOnLocalChat);
     gSavedSettings.setBOOL("ShowContactSetOnRadar",           mShowContactSetOnRadar);
     gSavedSettings.setBOOL("GenxFavBar",                      mShowFavBar);
+    gSavedSettings.setU32("RenderAvatarMaxComplexity",        mRenderAvatarMaxComplexity);
 }
 
 // Update local copy so cancel has no effect
@@ -286,6 +324,22 @@ void LLPrefsAscentVan::apply()
 
     getRootView()->getChild<LLPanel>("favoritestoolbar",TRUE)->setVisible(gSavedSettings.getBOOL("GenxFavBar"));
 
+    std::string radioOpt = childGetValue("Render_Radio_Options");
+    S32 radioSet;
+    if (radioOpt == "radio1") radioSet = 1;
+    else if (radioOpt == "radio2") radioSet = 2;
+    else if (radioOpt == "radio3") radioSet = 3;
+    else radioSet = 0;
+    gSavedSettings.setS32("AlwaysRenderFriends", radioSet);
+
+    if (radioSet < 2) {
+        childSetEnabled("Render_Max_Comp_label", true);
+        childSetEnabled("Always_Render_Note", true);
+    }
+    else {
+        childSetEnabled("Render_Max_Comp_label", false);
+        childSetEnabled("Always_Render_Note", false);
+    }
     refreshValues();
     refresh();
 }

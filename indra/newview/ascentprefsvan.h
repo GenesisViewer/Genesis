@@ -109,8 +109,9 @@ private:
 	bool mShowContactSetOnLocalChat;
 	bool mShowContactSetOnRadar;
 
-	//favorites bar
+	// Adv. Features
 	bool mShowFavBar;
+	U32 mRenderAvatarMaxComplexity;
 };
 
 #endif

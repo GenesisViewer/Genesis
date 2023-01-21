@@ -3,6 +3,7 @@
   <string name="Redock Windows">Redock Windows</string>
   <string name="IMs">[COUNT] IMs</string>
   <string name="IM">1 IM</string>
+  <string name="IM Myself">IM Myself</string>
   <panel bottom="0" filename="panel_bg_toolbar.xml" height="28" left="0" width="1024"/>
   <layout_stack name="toolbar_stack" follows="left|right|bottom|top" bottom="2" left="1" width="1022" height="26" min_width="200" orientation="horizontal" border_size="0">
     <layout_panel name="panel1" height="2" width="2" auto_resize="false" user_resize="false" visibility_control="ToolbarVisibleChatbar">

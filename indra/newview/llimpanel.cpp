@@ -1474,7 +1474,8 @@ void LLFloaterIMPanel::onSendMsg()
 					}
 
 					bool other_was_typing = mOtherTyping;
-					addHistoryLine(utf8_text, gSavedSettings.getColor("UserChatColor"), true, gAgentID, name);
+					if (mOtherParticipantUUID != gAgentID)
+						addHistoryLine(utf8_text, gSavedSettings.getColor("UserChatColor"), true, gAgentID, name);
 					if (other_was_typing) addTypingIndicator(mOtherParticipantUUID);
 				}
 			}

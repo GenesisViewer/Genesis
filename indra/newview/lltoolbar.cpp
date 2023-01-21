@@ -51,7 +51,7 @@
 #include "lltoolmgr.h"
 #include "llviewerparcelmgr.h"
 #include "llvoavatarself.h"
-
+#include "llimview.h"
 // [RLVa:KB]
 #include "rlvhandler.h"
 // [/RLVa:KB]
@@ -247,6 +247,9 @@ void LLToolBar::updateCommunicateList()
 	static const auto redock = getString("Redock Windows");
 	mCommunicateBtn->add(redock, LLSD("redock"), ADD_TOP);
 	mCommunicateBtn->addSeparator(ADD_TOP);
+	static const auto selfIM = getString("IM Myself");
+	mCommunicateBtn->add(selfIM, LLSD("selfIM"), ADD_TOP);
+	mCommunicateBtn->addSeparator(ADD_TOP);
 	bold_if_equal(LLFloaterMute::getInstance(), frontmost_floater, mCommunicateBtn->add(LLFloaterMute::getInstance()->getShortTitle(), LLSD("mute list"), ADD_TOP));
 
 	if (gIMMgr->getIMFloaterHandles().size() > 0) mCommunicateBtn->addSeparator(ADD_TOP);
@@ -292,6 +295,9 @@ void LLToolBar::onClickCommunicate(const LLSD& selected_option)
 	if (selected_option.asString() == "contacts")
 	{
 		LLFloaterMyFriends::showInstance();
+	} 
+	else if (selected_option.asString() == "selfIM") {
+		LLIMMgr::instance().addSession("Myself",IM_NOTHING_SPECIAL,gAgent.getID());
 	}
 	else if (selected_option.asString() == "local chat")
 	{

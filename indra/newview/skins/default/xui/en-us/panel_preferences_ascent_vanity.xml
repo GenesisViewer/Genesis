@@ -79,7 +79,8 @@
     <panel border="true" left="1" bottom="-190" height="180" width="600" label="Adv. Features" name="FavBar">
       <text bottom_delta="-25" follows="top" height="16" left="15" name="UIoptions">UI options :</text>
       <check_box bottom_delta="0" control_name="GenxFavBar" follows="top" height="16" initial_value="true" label="Display the favorites bar" left="150" tool_tip="Display the favorites bar on screen" name="genxfavbar"/>
-
+      <check_box bottom_delta="-20" left="150" control_name="ShowToolBar" follows="top" height="16" initial_value="true" label="Display the tool-bar (bottom of the screen)" tool_tip="Display the toolbar bar on screen" name="bottomToolbar"/>
+      
       <text bottom_delta="-30" follows="top" height="16" left="15" name="RenderOptions">Render options :</text>
       <text bottom_delta="0" follows="top" left="150" height="16" name="AvatarRender">Avatar Rendering option :</text>
       <radio_group bottom_delta="-74" follows="top" draw_border="true" height="72" left="170" name="Render_Radio_Options" width="390">

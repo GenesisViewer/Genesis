@@ -111,6 +111,7 @@ private:
 
 	// Adv. Features
 	bool mShowFavBar;
+	bool mShowToolBar;
 	U32 mRenderAvatarMaxComplexity;
 };
 

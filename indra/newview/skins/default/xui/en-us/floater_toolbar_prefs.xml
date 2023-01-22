@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<floater bottom_delta="-20" can_close="true" can_minimize="true" can_resize="false" follows="left|right|bottom" height="350" name="floater_toolbar_prefs.xml" width="1024" title="Choose the buttons you want shown on the toolbar" rect_control="FloaterUploadRect">
+<floater bottom_delta="-20" can_close="true" can_minimize="true" can_resize="false" follows="left|right|bottom" height="370" name="floater_toolbar_prefs.xml" width="1024" title="Choose the buttons you want shown on the toolbar" rect_control="FloaterUploadRect">
   <check_box bottom="-38" image_selected="btn_chatbar_selected.tga" scale_image="true" image_unselected="btn_chatbar.tga" label="Chatbar Toggle" left="5" name="chat_btn" follows="left|right" control_name="ToolbarVisibleChatbar"/>
   <check_box bottom_delta="-20" label="Communicate Flyout" name="communicate_flyout" follows="left|right" control_name="ToolbarVisibleCommunicateIM"/>
   <check_box bottom_delta="-20" label="Communicate Button" name="communicate_btn" follows="left|right" control_name="ToolbarVisibleCommunicate"/>
+  <check_box bottom_delta="-20" label="TP Home" name="navigation_btn" follows="left|right" control_name="ToolbarVisibleNavigation"/>
   <check_box control_name="ToolbarVisibleFriends" bottom_delta="-20" label="Friends" name="friends_btn" follows="left|right"/>
   <check_box bottom_delta="-20" label="Groups" name="groups_btn" follows="left|right" control_name="ToolbarVisibleGroups"/>
   <check_box bottom_delta="-20" label="Group Titles" name="group_titles_btn" follows="left|right" control_name="ToolbarVisibleGroupTitles"/>

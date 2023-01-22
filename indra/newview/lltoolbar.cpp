@@ -121,6 +121,7 @@ BOOL LLToolBar::postBuild()
 {
 	mCommunicateBtn.connect(this, "communicate_btn");
 	mCommunicateBtn->setCommitCallback(boost::bind(&LLToolBar::onClickCommunicate, this, _2));
+	getChild<LLFlyoutButton>("navigation_btn")->setCommitCallback(boost::bind(&LLToolBar::onClickNavigate, this, _2));
 	mFlyBtn.connect(this, "fly_btn");
 	mBuildBtn.connect(this, "build_btn");
 	mMapBtn.connect(this, "map_btn");
@@ -290,6 +291,10 @@ void LLToolBar::updateCommunicateList()
 
 
 // static
+void LLToolBar::onClickNavigate(const LLSD& selected_option)
+{
+	gAgent.teleportHome();
+}
 void LLToolBar::onClickCommunicate(const LLSD& selected_option)
 {
 	if (selected_option.asString() == "contacts")

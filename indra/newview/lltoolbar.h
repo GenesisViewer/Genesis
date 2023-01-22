@@ -63,7 +63,7 @@ public:
 
 	// callbacks
 	void onClickCommunicate(const LLSD& selected);
-
+	void onClickNavigate(const LLSD& selected);
 	static F32 sInventoryAutoOpenTime;
 
 private:

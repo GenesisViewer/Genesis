@@ -62,12 +62,13 @@
 void syncFromPreferenceSetting(LLSliderCtrl* sldrCtrl);
 void onHoverSliderMoved(const LLSD& val);
 void onHoverSliderFinalCommit(const LLSD& val);
-
+void show_floater(const std::string& floater_name);
 wlfPanel_AdvSettings::wlfPanel_AdvSettings() : mExpanded(false)
 {
 	setVisible(false);
 	setIsChrome(TRUE);
 	setFocusRoot(TRUE);
+	mCommitCallbackRegistrar.add("ShowFloaterToolbarPrefs", boost::bind(show_floater, "floater_toolbar_prefs.xml"));
 	mCommitCallbackRegistrar.add("Wlf.ChangeCameraPreset", boost::bind(&wlfPanel_AdvSettings::onChangeCameraPreset, this, _1, _2));
 	if(rlv_handler_t::isEnabled())
 		gRlvHandler.setBehaviourToggleCallback(boost::bind(&wlfPanel_AdvSettings::onRlvBehaviorChange, this, _1, _2));

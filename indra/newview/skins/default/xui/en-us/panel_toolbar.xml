@@ -46,6 +46,11 @@
         <button.commit_callback function="ShowFloater" parameter="chat history"/>
       </button>
     </layout_panel>
+    <layout_panel name="panelnavigation" height="24" width="50" user_resize="false" visibility_control="ToolbarVisibleNavigation">
+      <flyout_button sound_flags="0" bottom="0" height="24" label="Home" name="navigation_btn" width="50" follows="left|right" list_position="above" >
+        
+      </flyout_button>
+    </layout_panel>
     <layout_panel name="panelactivespeakers" height="24" width="50" user_resize="false" visibility_control="ToolbarVisibleActiveSpeakers">
       <button sound_flags="0" bottom="0" height="24" label="Active Speakers" name="active_speakers_btn" image_overlay="active_speakers.tga" image_overlay_alignment="left" image_selected="toolbar_btn_selected.tga" image_unselected="toolbar_btn_enabled.tga" image_disabled="toolbar_btn_disabled.tga" scale_image="true" width="50" follows="left|right">
         <button.commit_callback function="ShowFloater" parameter="active speakers"/>

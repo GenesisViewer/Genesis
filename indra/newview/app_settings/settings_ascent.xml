@@ -1317,6 +1317,19 @@ Changing this setting only affects new text.</string>
       <key>IsCOA</key>
       <integer>1</integer>
     </map>
+    <key>ToolbarVisibleNavigation</key>
+    <map>
+      <key>Comment</key>
+      <string>Whether or not the button for navigation(TP Home, TP back, TP next) is on the toolbar</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <boolean>1</boolean>
+      <key>IsCOA</key>
+      <integer>1</integer>
+    </map>
     <key>ToolbarVisibleActiveSpeakers</key>
     <map>
       <key>Comment</key>

@@ -61,7 +61,7 @@ private:
 	bool mLiruFlyAfterTeleport;
 	bool mLiruContinueFlying;
 	bool mPreviewAnimInWorld;
-	bool mSaveScriptsAsMono;
+	//bool mSaveScriptsAsMono;
 	bool mAlwaysRezInGroup;
 	bool mBuildAlwaysEnabled;
 	bool mAlwaysShowFly;

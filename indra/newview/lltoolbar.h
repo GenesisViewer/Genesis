@@ -64,6 +64,7 @@ public:
 	// callbacks
 	void onClickCommunicate(const LLSD& selected);
 	void onClickNavigate(const LLSD& selected);
+	static void onTeleportHome(const LLSD& notification, const LLSD& response);
 	static F32 sInventoryAutoOpenTime;
 
 private:

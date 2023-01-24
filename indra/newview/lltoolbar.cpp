@@ -52,6 +52,7 @@
 #include "llviewerparcelmgr.h"
 #include "llvoavatarself.h"
 #include "llimview.h"
+#include "llnotificationsutil.h"
 // [RLVa:KB]
 #include "rlvhandler.h"
 // [/RLVa:KB]
@@ -289,11 +290,21 @@ void LLToolBar::updateCommunicateList()
 	if (!selected.isUndefined()) mCommunicateBtn->setValue(selected);
 }
 
+// static
+void LLToolBar::onTeleportHome(const LLSD& notification, const LLSD& response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	if (option != 0) return; // canceled
 
+	gAgent.teleportHome();
+}
 // static
 void LLToolBar::onClickNavigate(const LLSD& selected_option)
 {
-	gAgent.teleportHome();
+	LLSD subst;
+	LLSD payload;
+	LLNotificationsUtil::add("TeleportFromLandmark",subst,payload,boost::bind(onTeleportHome, _1, _2));
+	
 }
 void LLToolBar::onClickCommunicate(const LLSD& selected_option)
 {

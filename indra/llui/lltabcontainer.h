@@ -137,7 +137,11 @@ public:
 	void onPrevBtnHeld(const LLSD& data);
 	void onJumpFirstBtn( const LLSD& data );
 	void onJumpLastBtn( const LLSD& data );
+	void setAllowRearrange(bool enable) { mAllowRearrange = enable; }
+	bool getAllowRearrange() const      { return mAllowRearrange; }
 
+	typedef boost::signals2::signal<void(S32, LLPanel*)> tab_rearrange_signal_t;
+	boost::signals2::connection setRearrangeCallback(const tab_rearrange_signal_t::slot_type& cb);
 	static LLView* fromXML(LLXMLNodePtr node, LLView *parent, LLUICtrlFactory *factory);
 
 private:
@@ -204,6 +208,10 @@ private:
 	S32								mTotalTabWidth;
 
 	LLFrameTimer					mDragAndDropDelayTimer;
+	BOOL							mHideScrollArrows;
+	bool							mOpenTabsOnDragAndDrop;
+	bool							mAllowRearrange;
+	tab_rearrange_signal_t*			mRearrangeSignal;
 };
 
 

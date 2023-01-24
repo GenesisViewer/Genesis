@@ -47,7 +47,7 @@ class LLFloaterChatterBox : public LLMultiFloater, public LLUISingleton<LLFloate
 public:
 	LLFloaterChatterBox(const LLSD& seed);
 	virtual ~LLFloaterChatterBox();
-
+	/*virtual*/ BOOL postBuild();
 	/*virtual*/ BOOL handleKeyHere(KEY key, MASK mask);
 	/*virtual*/ void draw();
 	/*virtual*/ void onOpen();
@@ -114,6 +114,7 @@ private:
 
 protected:
 	LLFloater* mActiveVoiceFloater;
+	void onIMTabRearrange(S32 tab_index, LLPanel* tab_panel);
 	
 };
 

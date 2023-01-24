@@ -15061,6 +15061,8 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Comment</key>
       <string>When editing and saving a script in inventory, configure it to compile as mono when dragged into a task : (this setting should always be True)</string>
       <key>Persist</key>
+      <integer>0</integer>
+      <key>HideFromEditor</key>
       <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>

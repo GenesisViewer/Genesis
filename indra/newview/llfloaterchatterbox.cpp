@@ -163,7 +163,22 @@ LLFloaterChatterBox::LLFloaterChatterBox(const LLSD& seed) :
 LLFloaterChatterBox::~LLFloaterChatterBox()
 {
 }
+BOOL LLFloaterChatterBox::postBuild()
+{
+	
+	// mTabContainer will be initialized in LLMultiFloater::addChild()
 
+	mTabContainer->setAllowRearrange(true);
+	mTabContainer->setRearrangeCallback(boost::bind(&LLFloaterChatterBox::onIMTabRearrange, this, _1, _2));
+
+	
+
+	return TRUE;
+}
+void LLFloaterChatterBox::onIMTabRearrange(S32 tab_index, LLPanel* tab_panel)
+{
+	
+}
 BOOL LLFloaterChatterBox::handleKeyHere(KEY key, MASK mask)
 {
 	if (key == 'W' && mask == MASK_CONTROL)

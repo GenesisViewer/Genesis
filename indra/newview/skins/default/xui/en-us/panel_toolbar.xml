@@ -410,6 +410,11 @@
         <button.commit_callback function="ShowInvFloater.Type" parameter="my_otfts"/>
       </button>
     </layout_panel>
+    <layout_panel name="panellandmark" height="24" width="50" user_resize="false" visibility_control="ToolbarVisibleLandmarks">
+      <button sound_flags="0" bottom="0" height="24" label="Landmarks" image_overlay="icn_toolbar_favorites.tga" image_overlay_alignment="left" image_selected="toolbar_btn_selected.tga" image_unselected="toolbar_btn_enabled.tga" image_disabled="toolbar_btn_disabled.tga" scale_image="true" name="favs_btn" width="50" follows="left|right">
+        <button.commit_callback function="ShowInvFloater.Type" parameter="landmark"/>
+      </button>
+    </layout_panel>
     <layout_panel name="panelfavs" height="24" width="50" user_resize="false" visibility_control="ToolbarVisibleInventoryFavs">
       <button sound_flags="0" bottom="0" height="24" label="Favorites" image_overlay="icn_toolbar_favorites.tga" image_overlay_alignment="left" image_selected="toolbar_btn_selected.tga" image_unselected="toolbar_btn_enabled.tga" image_disabled="toolbar_btn_disabled.tga" scale_image="true" name="favs_btn" width="50" follows="left|right">
         <button.commit_callback function="ShowInvFloater.Type" parameter="favorite"/>

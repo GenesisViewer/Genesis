@@ -81,6 +81,7 @@
   <check_box bottom_delta="-20" label="Default Avatars" name="default_avatars_btn" follows="left|right" control_name="ToolbarVisibleAvatar"/>
   <check_box bottom_delta="-20" label="Make Outfit" name="make_outfit_btn" follows="left|right" control_name="ToolbarVisibleOutfit"/>
   <check_box bottom_delta="-20" label="Outfits" name="outfits_btn" follows="left|right" control_name="ToolbarVisibleInventoryOutfits"/>
+  <check_box bottom_delta="-20" label="Landmarks" name="landmrk_btn" follows="left|right" control_name="ToolbarVisibleLandmarks"/>
   <check_box bottom_delta="-20" label="Favorites" name="favs_btn" follows="left|right" control_name="ToolbarVisibleInventoryFavs"/>
   <check_box bottom_delta="-20" label="Inventory" name="inventory_btn" follows="left|right" control_name="ToolbarVisibleInventory"/>
   <check_box bottom_delta="-20" label="Received Items" name="received_items_btn" follows="left|right" control_name="ToolbarVisibleInventoryReceivedItems"/>

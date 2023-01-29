@@ -9,9 +9,9 @@
     <check_box bottom="-540" enabled="false" follows="left|bottom" font="SansSerif"
 	     height="18" initial_value="true" label="Running" left="12"
 	     mouse_opaque="true" name="running" radio_style="false" width="100" />
-    <!--<check_box bottom="-540" enabled="false" follows="left|bottom" font="SansSerif"
+    <check_box bottom="-540" enabled="false" follows="left|bottom" font="SansSerif"
 	     height="18" hidden="false" initial_value="true" label="Mono" left="82"
-	     mouse_opaque="true" name="mono" radio_style="false" width="100" />-->
+	     mouse_opaque="true" name="mono" radio_style="false" width="100" />
     <check_box width="130"
      height="21"
      enabled="false"

@@ -46,6 +46,7 @@
 #include "llimpanel.h"
 #include "llstring.h"
 
+
 namespace
 {
 	void handleLocalChatBar(LLFloaterChat* floater_chat, bool show_bar)

@@ -16,7 +16,7 @@ char LLSqlMgr::initTextureCacheDB(std::string db_path) {
     char *zErrMsg = 0;
     char *sql;
     int rc;
-
+   LL_INFOS() << "Initializing Genesis Texture Cache DB :" << db_path << LL_ENDL;
    rc = sqlite3_open(db_path.c_str(), &textureCacheDB);
    if( rc ) {
     return rc;
@@ -47,12 +47,12 @@ char LLSqlMgr::initTextureCacheDB(std::string db_path) {
         LL_WARNS() << "Can't set page_size on texture cache DB " << zErrMsg << LL_ENDL;
         return rc;
     }
-    sql ="VACUUM";
-    rc = sqlite3_exec (textureCacheDB, sql, NULL, NULL, &zErrMsg);  
-    if( rc ) {
-        LL_WARNS() << "Can't vacuum texture cache DB " << zErrMsg << LL_ENDL;
-        return rc;
-    }
+    // sql ="VACUUM";
+    // rc = sqlite3_exec (textureCacheDB, sql, NULL, NULL, &zErrMsg);  
+    // if( rc ) {
+    //     LL_WARNS() << "Can't vacuum texture cache DB " << zErrMsg << LL_ENDL;
+    //     return rc;
+    // }
     sql ="PRAGMA cache_size = 114176;";
     rc = sqlite3_exec (textureCacheDB, sql, NULL, NULL, &zErrMsg);  
     if( rc ) {

@@ -399,7 +399,18 @@ BOOL LLTabContainer::handleMouseDown( S32 x, S32 y, MASK mask )
 							  has_scroll_arrows ? mNextArrowBtn->getRect().mLeft : mJumpNextArrowBtn->getRect().mRight,
 							  firsttuple->mButton->getRect().mBottom );
 		}
-		
+		//where we start drand and drop?
+		for(tuple_list_t::iterator iter	= mTabList.begin();	iter !=	 mTabList.end(); ++iter)
+		{
+			LLTabTuple*	tuple =	*iter;
+			tuple->mButton->setVisible(	TRUE );
+			S32	local_x	= x	- tuple->mButton->getRect().mLeft;
+			S32	local_y	= y	- tuple->mButton->getRect().mBottom;
+			if (tuple->mButton->pointInView(local_x, local_y) &&  tuple->mButton->getEnabled() && !tuple->mTabPanel->getVisible())
+			{
+				tuple->mButton->onCommit();
+			}
+		}
 		if( tab_rect.pointInRect( x, y ) )
 		{
 			
@@ -1925,8 +1936,7 @@ void LLTabContainer::commitHoveredButton(S32 x, S32 y)
 			if (tuple->mButton->pointInView(local_x, local_y) && tuple->mButton->getEnabled() && tuple->mButton->getVisible() && !tuple->mTabPanel->getVisible())
 			// </FS:Ansariel>
 			{
-				LL_INFOS() << " commitHoveredButton 1 " << tuple->mButton->getName() << LL_ENDL;
-				LL_INFOS() << " commitHoveredButton 1 " << tuple->mTabPanel->getName() << LL_ENDL;
+				
 //				tuple->mButton->onCommit();
 // [SL:KB] - Patch: UI-TabRearrange | Checked: 2010-06-05 (Catznip-2.5)
 				if ( (mAllowRearrange) && (mCurrentTabIdx >= 0) && (mTabList[mCurrentTabIdx]->mButton->hasFocus()) )
@@ -1961,7 +1971,6 @@ void LLTabContainer::commitHoveredButton(S32 x, S32 y)
 				}
 				else
 				{
-					LL_INFOS() << " commitHoveredButton 2 " << tuple->mButton->getName() << LL_ENDL;
 					tuple->mButton->onCommit();
 					tuple->mButton->setFocus(TRUE);
 // [SL:KB] - Patch: Control-TabContainer | Checked: 2012-08-10 (Catznip-3.3)

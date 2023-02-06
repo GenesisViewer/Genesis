@@ -14,7 +14,7 @@
       <text_editor enabled="false" follows="left|top" bg_readonly_color="transparent" left="3" max_length="65536" name="credits_editor" top="-1" bottom="0" width="443" word_wrap="true">
 Genesis is developed and maintained by MelanieCosti and Torric Rodas.
 We are grateful for the invaluable help of our QA testing team: Shep62, Illianna1, Coffeequeen68, Wolfgang Krautrauch, Bailey Saxmundham, LadyDeeFul.
-We are also grateful to our graphic designer Billy Arentire and to Kitty Barnet and Ansariel Hiller for some great coding ideas.
+We are also grateful to our graphic designer Billy Arentire, Shep62 for additional code and Kitty Barnet and Ansariel Hiller for some great coding ideas.
 
        
 Genesis Viewer was forked from Singularity, which was a fork from Ascent. It includes code from Phoenix Firestorm, Alchemy and other contributors to the TPV program. It is based on the original Snowglobe Viewer by Linden Lab. 

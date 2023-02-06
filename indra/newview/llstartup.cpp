@@ -939,6 +939,8 @@ bool idle_startup()
 		}
 		else
 		{
+			// Show the login dialog.
+			login_show();
 			LL_DEBUGS("AppInit") << "show_connect_box off, skipping to STATE_LOGIN_CLEANUP" << LL_ENDL;
 			// skip directly to message template verification
 			LLStartUp::setStartupState( STATE_LOGIN_CLEANUP );

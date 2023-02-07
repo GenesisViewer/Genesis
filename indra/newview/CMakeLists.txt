@@ -105,6 +105,7 @@ set(viewer_SOURCE_FILES
     floaterlocalassetbrowse.cpp
     generichandlers.cpp
     genxcontactset.cpp
+    genxlogfilemgr.cpp
     genxmembers.cpp
     genxprofilefloater.cpp
     genxtexturecache.cpp
@@ -664,6 +665,7 @@ set(viewer_HEADER_FILES
     floaterlocalassetbrowse.h
     generichandlers.h
     genxcontactset.h
+    genxlogfilemgr.h
     genxmembers.h
     genxprofilefloater.h
     genxtexturecache.h

@@ -218,6 +218,8 @@
 
 #include "llgroupactions.h"
 
+#include "genxlogfilemgr.h"
+
 #ifdef USE_CRASHPAD
 #pragma warning(disable:4265)
 
@@ -2151,14 +2153,10 @@ void LLAppViewer::initLoggingAndGetLastDuration()
 }
 void LLAppViewer::initLoggingInternal()
 {
-	// Remove the last ".old" log file.
-	std::string old_log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-								 OLD_LOG_FILE);
-	LLFile::remove(old_log_file);
-
-	// Get name of the log file
+	GenxLogFileMgr::instance().initLogs();
+	// // Get name of the last log file
 	std::string log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-								 LOG_FILE);
+	 							 GenxLogFileMgr::instance().getLastLogFile());
  	/*
 	 * Before touching any log files, compute the duration of the last run
 	 * by comparing the ctime of the previous start marker file with the ctime
@@ -2202,15 +2200,23 @@ void LLAppViewer::initLoggingInternal()
 		start_marker_file.close();
 	}
 
-	// Rename current log file to ".old"
-	LLFile::rename(log_file, old_log_file);
+	
 
-	// Set the log file to SecondLife.log
-	LLError::logToFile(log_file);
+	// Set a new log file
+	LLError::logToFile(gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
+	 							 GenxLogFileMgr::instance().addLogFile()));
 	if (!duration_log_msg.empty())
 	{
 		LL_WARNS("MarkerFile") << duration_log_msg << LL_ENDL;
 	}
+	//Cleaning log files to keep the 5 last ones
+	GenxLogFileMgr::instance().cleanLogFiles();
+
+	//deleting the old log  files if they still exists
+	LLAPRFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
+	 							 "Genesis.log"));
+	LLAPRFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
+	 							 "Genesis.old"));								 
 }
 
 bool LLAppViewer::loadSettingsFromDirectory(AIReadAccess<settings_map_type> const& settings_r,

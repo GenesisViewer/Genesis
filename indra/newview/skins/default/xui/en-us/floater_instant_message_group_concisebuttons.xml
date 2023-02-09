@@ -6,7 +6,7 @@
 	<string name="voice_icon">icn_voice-groupfocus.tga</string>
 	<string name="title_string">Instant Message with [NAME]</string>
 	<string name="typing_start_string">[NAME] is typing...</string>
-	<string name="session_start_string">Starting session with [NAME], please wait.</string>
+	<string name="session_start_string">Starting session with [NAME].</string>
 	<string name="default_text_label">Click here to instant message.</string>
 	<string name="moderated_chat_label">(Moderated: Voices off by default)</string>
 	<string name="muted_text_label">Your text chat has been disabled by a Group Moderator.</string>

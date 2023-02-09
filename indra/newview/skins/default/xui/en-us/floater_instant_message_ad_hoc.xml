@@ -6,7 +6,7 @@
 	<string name="voice_icon">icn_voice-groupfocus.tga</string>
 	<string name="title_string">Instant Message with [NAME]</string>
 	<string name="typing_start_string">[NAME] is typing...</string>
-	<string name="session_start_string">Starting session with [NAME], please wait.</string>
+	<string name="session_start_string">Starting session with [NAME].</string>
 	<string name="default_text_label">Click here to instant message.</string>
 	<layout_stack border="false" bottom="0" follows="left|top|right|bottom" height="180" left="0" orientation="horizontal" tab_group="1" width="496" name="panels">
 		<layout_panel border="false" bottom="0" default_tab_group="1" follows="left|top|bottom|right" height="195" left="0" min_width="115" name="im_contents_panel" width="495">

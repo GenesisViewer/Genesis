@@ -6,7 +6,7 @@
 	<string name="voice_icon">icn_voice-groupfocus.tga</string>
 	<string name="title_string">Instant Message an [NAME]</string>
 	<string name="typing_start_string">[NAME] tippt...</string>
-	<string name="session_start_string">Beginne Sitzung mit [NAME], bitte warten.</string>
+	<string name="session_start_string">Beginne Sitzung mit [NAME].</string>
 	<string name="default_text_label">Für Instant Message hier klicken.</string>
 	<flyout_button label="Verlauf" name="instant_message_flyout"/>
 	<button label="Anrufen" name="start_call_btn"/>

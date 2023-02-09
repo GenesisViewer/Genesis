@@ -7,7 +7,7 @@
 	<string name="voice_icon">icn_voice-pvtfocus.tga</string>
 	<string name="title_string">Instant Message an [NAME]</string>
 	<string name="typing_start_string">[NAME] tippt...</string>
-	<string name="session_start_string">Beginne Sitzung mit [NAME], bitte warten.</string>
+	<string name="session_start_string">Beginne Sitzung mit [NAME].</string>
 	<string name="default_text_label">Für Instant Message hier klicken.</string>
 	<string name="unavailable_text_label">Für diese Verbindung ist kein Text-Chat verfügbar.</string>
 	<string name="inventory_item_offered">Inventarobjekt angeboten</string>

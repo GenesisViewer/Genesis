@@ -257,9 +257,11 @@ U32 LLLogChat::getTimestampForLastHistoryLine(const std::string mLogLabel, const
 
 	if (timestamp == 0) {
 		auto p = LLLogChat::makeLogFileName(mLogLabel, id);
-		std::time_t time = boost::filesystem::last_write_time( p );
-		timestamp = time;
-		updateTimestampForLastHistoryLine(mLogLabel, timestamp);
+		if (boost::filesystem::exists(p)) {
+			std::time_t time = boost::filesystem::last_write_time( p );
+			timestamp = time;
+			updateTimestampForLastHistoryLine(mLogLabel, timestamp);
+		}
 	}
 	LL_INFOS() << "getTimestampForLastHistoryLine " << timestamp << LL_ENDL;
 	return timestamp;

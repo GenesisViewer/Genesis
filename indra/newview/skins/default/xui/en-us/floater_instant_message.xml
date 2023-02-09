@@ -7,7 +7,7 @@
 	<string name="voice_icon">icn_voice-pvtfocus.tga</string>
 	<string name="title_string">Instant Message with [NAME]</string>
 	<string name="typing_start_string">[NAME] is typing...</string>
-	<string name="session_start_string">Starting session with [NAME], please wait.</string>
+	<string name="session_start_string">Starting session with [NAME].</string>
 	<string name="default_text_label">Click here to instant message.</string>
 	<string name="unavailable_text_label">Text chat is not available for this call.</string>
 	<string name="inventory_item_offered">Inventory item offered</string>

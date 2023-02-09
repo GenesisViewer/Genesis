@@ -101,7 +101,7 @@ const std::string LL_IM_FROM_ID("from_id");
 //
 static std::string sTitleString = "Instant Message with [NAME]";
 static std::string sTypingStartString = "[NAME]: ...";
-static std::string sSessionStartString = "Starting session with [NAME] please wait.";
+static std::string sSessionStartString = "Starting session with [NAME].";
 
 void session_starter_helper(
 	const LLUUID& temp_session_id,

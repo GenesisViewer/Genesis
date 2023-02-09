@@ -36,7 +36,9 @@
 #include "llfloater.h"
 #include "lllogchat.h"
 #include "llmutelist.h"
-
+#include "llhttpclient.h"
+#include <mutex>
+struct LLCoroResponder;
 class LLAvatarName;
 class LLIMSpeakerMgr;
 class LLInventoryCategory;
@@ -45,6 +47,16 @@ class LLLineEditor;
 class LLParticipantList;
 class LLViewerTextEditor;
 class LLVoiceChannel;
+class HistoryLine {
+	public:
+		HistoryLine();
+		U32 timestamp;
+		std::string utf8msg;
+		LLColor4 incolor;
+		bool log_to_file; 
+		LLUUID source;
+		std::string name;
+};
 
 class LLFloaterIMPanel : public LLFloater, public LLFriendObserver, public LLMuteListObserver
 {
@@ -77,8 +89,9 @@ public:
 	// add target ids to the session. 
 	// Return TRUE if successful, otherwise FALSE.
 	bool inviteToSession(const uuid_vec_t& agent_ids);
-
+	void readHistoryLines();
 	void addHistoryLine(const std::string &utf8msg, 
+						U32 timestamp = 0,
 						LLColor4 incolor = LLColor4::white, 
 						bool log_to_file = true,
 						const LLUUID& source = LLUUID::null,
@@ -145,7 +158,7 @@ protected:
 	friend class LLViewerObjectList;
 	void addDynamicFocus();
 	void removeDynamicFocus();
-
+	void loadHistoryFromServer(const LLCoroResponder& responder, U32 fromTimestamp);
 private:
 	friend class LLSpeakerMgr;
 	// Called by UI methods.
@@ -188,7 +201,8 @@ private:
 private:
 	LLLineEditor* mInputEditor;
 	LLViewerTextEditor* mHistoryEditor;
-
+	std::string historyText;
+	std::mutex historyMutex;
 	bool mSessionInitialized;
 
 	// Where does the "Starting session..." line start and how long is it?
@@ -242,7 +256,10 @@ private:
 
 	bool mTextIMPossible;
 	bool mCallBackEnabled;
-
+	std::list<HistoryLine> historyWaitingLines;
+	std::list<HistoryLine> historyServerLines;
+	bool mLoadingHistory;
+	boost::mutex history_lines_mutex;
 	LLIMSpeakerMgr* mSpeakers;
 	LLParticipantList* mSpeakerPanel;
 	LLVoiceChannel*	mVoiceChannel;

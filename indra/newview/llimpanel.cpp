@@ -70,12 +70,14 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lambda/lambda.hpp>
 
+
 // [RLVa:KB] - Checked: 2013-05-10 (RLVa-1.4.9)
 #include "rlvactions.h"
 #include "rlvcommon.h"
 // [/RLVa:KB]
 
 #include "genxcontactset.h"
+#include "llcororesponder.h"
 BOOL is_agent_mappable(const LLUUID& agent_id); // For map stalkies
 
 class AIHTTPTimeoutPolicy;
@@ -88,6 +90,11 @@ const S32 LINE_HEIGHT = 16;
 const S32 MIN_WIDTH = 200;
 const S32 MIN_HEIGHT = 130;
 
+const std::string LL_IM_TIME("time");
+const std::string LL_IM_DATE_TIME("datetime");
+const std::string LL_IM_TEXT("message");
+const std::string LL_IM_FROM("from");
+const std::string LL_IM_FROM_ID("from_id");
 //
 // Statics
 //
@@ -274,7 +281,9 @@ bool send_start_session_messages(
 
 	return false;
 }
+HistoryLine::HistoryLine() {
 
+}
 
 //
 // LLFloaterIMPanel
@@ -314,7 +323,8 @@ LLFloaterIMPanel::LLFloaterIMPanel(
 	mSpeakerPanel(NULL),
 	mVoiceChannel(NULL),
 	mFirstKeystrokeTimer(),
-	mLastKeystrokeTimer()
+	mLastKeystrokeTimer(),
+	mLoadingHistory(TRUE)
 {
 	if (mOtherParticipantUUID.isNull())
 	{
@@ -376,9 +386,27 @@ LLFloaterIMPanel::LLFloaterIMPanel(
 	// enable line history support for instant message bar
 	mInputEditor->setEnableLineHistory(TRUE);
 
-	if ( gSavedPerAccountSettings.getBOOL("LogShowHistory") )
+	//mHistoryEditor->appendText("Loading History...",FALSE,TRUE);
+	U32 lasttimestamp = LLLogChat::getTimestampForLastHistoryLine(mLogLabel, mSessionType == P2P_SESSION ? mOtherParticipantUUID : mSessionUUID);
+	//loading group chat history
+	
+	if (gSavedPerAccountSettings.getBOOL("FetchGroupChatHistory"))
 	{
-		LLLogChat::loadHistory(mLogLabel, mSessionType == P2P_SESSION ? mOtherParticipantUUID : mSessionUUID, boost::bind(&LLFloaterIMPanel::chatFromLogFile, this, _1, _2));
+		std::string chat_url = gAgent.getRegion()->getCapability("ChatSessionRequest");
+		LL_INFOS() << "Requesting group chat history " << chat_url << LL_ENDL;
+		LLSD postData;
+		postData["method"] = "fetch history";
+		postData["session-id"] = mSessionUUID;
+		U32 lastLogTimestamp = LLLogChat::getTimestampForLastHistoryLine(mLogLabel,mSessionType == P2P_SESSION ? mOtherParticipantUUID : mSessionUUID);
+		LLHTTPClient::post(chat_url, postData,new LLCoroResponder(
+                    boost::bind(&LLFloaterIMPanel::loadHistoryFromServer,this,_1,lastLogTimestamp)));
+
+	} else {
+		if ( gSavedPerAccountSettings.getBOOL("LogShowHistory") )
+		{
+			LLLogChat::loadHistory(mLogLabel, mSessionType == P2P_SESSION ? mOtherParticipantUUID : mSessionUUID, boost::bind(&LLFloaterIMPanel::chatFromLogFile, this, _1, _2));
+			readHistoryLines();
+		}
 	}
 
 	if ( !mSessionInitialized )
@@ -403,6 +431,7 @@ LLFloaterIMPanel::LLFloaterIMPanel(
 
 			addHistoryLine(
 				session_start,
+				0,
 				gSavedSettings.getColor4("SystemChatColor"),
 				false);
 
@@ -410,7 +439,58 @@ LLFloaterIMPanel::LLFloaterIMPanel(
 		}
 	}
 }
+void LLFloaterIMPanel::loadHistoryFromServer(const LLCoroResponder& responder, U32 fromTimestamp)
+{
+	const auto& status = responder.getStatus();
+	
+    if (!responder.isGoodStatus(status))
+    {
+        LL_WARNS() << "HTTP status loadHistoryFromServer" << status << ": " << responder.getReason() <<
+            ". loadHistoryFromServer failed." << LL_ENDL;
+    }
+    else
+    {
+        {
+                     
+			LLSD history = responder.getContent();
+			if (history.isArray()) {
+				
+				for (LLSD::array_iterator cur_server_hist = history.beginArray(), endLists = history.endArray();
+					cur_server_hist != endLists;
+					cur_server_hist++)
+				{
+					if ((*cur_server_hist).isMap())
+					{   
+						//   {'from_id':u7aa8c222-8a81-450e-b3d1-9c28491ef717,'message':'Can you hear me now?','from':'Chat Tester','num':i86,'time':r1.66501e+09}
+						U32 timestamp = (U32) ((*cur_server_hist)[LL_IM_TIME].asInteger());
+						if (timestamp <= fromTimestamp) continue;
+						//tm* time = utc_to_pacific_time(timestamp, gPacificDaylightTime);
+						
+						std::string utf8_text = (*cur_server_hist)[LL_IM_DATE_TIME].asString() + " " + (*cur_server_hist)[LL_IM_TEXT].asString();
+						LLUUID fromID = (*cur_server_hist)[LL_IM_FROM_ID].asUUID();
+						std::string name = (*cur_server_hist)[LL_IM_FROM];
+						std::string histstr;
+						
+						HistoryLine historyLine = HistoryLine();
+						historyLine.incolor=LLColor4::white;
+						historyLine.log_to_file=TRUE;
+						historyLine.name=name;
+						historyLine.timestamp=timestamp;
+						historyLine.source=fromID;
+						historyLine.utf8msg=utf8_text;
+						historyServerLines.push_back(historyLine);
+						
+						
+					}
+				}
+ 
+			}
 
+		}
+	}
+	LLLogChat::loadHistory(mLogLabel, mSessionType == P2P_SESSION ? mOtherParticipantUUID : mSessionUUID, boost::bind(&LLFloaterIMPanel::chatFromLogFile, this, _1, _2));
+	readHistoryLines();
+}
 void LLFloaterIMPanel::onAvatarNameLookup(const LLAvatarName& avatar_name)
 {
 	setTitle(avatar_name.getNSName());
@@ -558,7 +638,7 @@ BOOL LLFloaterIMPanel::postBuild()
 
 		mHistoryEditor = getChild<LLViewerTextEditor>("im_history");
 		mHistoryEditor->setParseHTML(TRUE);
-
+		
 		sTitleString = getString("title_string");
 		sTypingStartString = getString("typing_start_string");
 		sSessionStartString = getString("session_start_string");
@@ -764,9 +844,50 @@ bool LLFloaterIMPanel::inviteToSession(const uuid_vec_t& ids)
 
 	return TRUE;
 }
-
-void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, LLColor4 incolor, bool log_to_file, const LLUUID& source, const std::string& name)
+void LLFloaterIMPanel::readHistoryLines()
 {
+	U32 first_message_timestamp = 0;
+	for (auto& it = historyWaitingLines.begin(); it != historyWaitingLines.end(); ++it) {
+		if (it->timestamp>0) {
+			first_message_timestamp = it->timestamp;
+			break;
+		}
+		
+	}
+	mLoadingHistory=FALSE;
+	for (auto& it = historyServerLines.begin(); it != historyServerLines.end(); ++it) {
+		if (first_message_timestamp>0 && it->timestamp>= first_message_timestamp) continue;
+		addHistoryLine(it->utf8msg,it->timestamp, it->incolor, it->log_to_file, it->source, it->name);
+
+	}
+	for (auto& it = historyWaitingLines.begin(); it != historyWaitingLines.end(); ++it) {
+		addHistoryLine(it->utf8msg,it->timestamp, it->incolor, it->log_to_file, it->source, it->name);
+
+	}
+	
+}
+void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, U32 timestamp,LLColor4 incolor, bool log_to_file, const LLUUID& source, const std::string& name)
+{
+
+	LL_INFOS() << "Message " << utf8msg << " timestamp " << timestamp << LL_ENDL;
+	{
+		
+		if (mLoadingHistory) {
+			HistoryLine line = HistoryLine();
+			if (timestamp > 0)	line.timestamp=timestamp;
+			else line.timestamp=LLTimer::getTotalSeconds();
+			line.incolor=incolor;
+			line.log_to_file=log_to_file;
+			line.name=name;
+			line.source=source;
+			line.utf8msg=utf8msg;
+			historyWaitingLines.push_back(line);
+			return;
+
+
+		}
+		
+	}
 	bool is_agent(gAgentID == source), from_user(source.notNull());
 	if (!is_agent)
 	{
@@ -810,7 +931,7 @@ void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, LLColor4 incol
 	bool prepend_newline = true;
 	if (gSavedSettings.getBOOL("IMShowTimestamps"))
 	{
-		mHistoryEditor->appendTime(prepend_newline);
+		mHistoryEditor->appendTime(prepend_newline, timestamp);
 		prepend_newline = false;
 	}
 
@@ -859,6 +980,7 @@ void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, LLColor4 incol
 	if (log_to_file
 		&& gSavedPerAccountSettings.getBOOL("LogInstantMessages") ) 
 	{
+		;
 		std::string histstr;
 		if (gSavedPerAccountSettings.getBOOL("IMLogTimestamp"))
 			histstr = LLLogChat::timestamp(gSavedPerAccountSettings.getBOOL("LogTimestampDate")) + show_name + utf8msg;
@@ -869,7 +991,7 @@ void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, LLColor4 incol
 		// Floater title contains display name -> bad idea to use that as filename
 		// mLogLabel, however, is the old legacy name
 		//LLLogChat::saveHistory(getTitle(),histstr);
-		LLLogChat::saveHistory(mLogLabel, mSessionType == P2P_SESSION ? mOtherParticipantUUID : mSessionUUID, histstr);
+		LLLogChat::saveHistory(mLogLabel, mSessionType == P2P_SESSION ? mOtherParticipantUUID : mSessionUUID, histstr,timestamp);
 		// [/Ansariel: Display name support]
 	}
 
@@ -1475,7 +1597,7 @@ void LLFloaterIMPanel::onSendMsg()
 
 					bool other_was_typing = mOtherTyping;
 					if (mOtherParticipantUUID != gAgentID)
-						addHistoryLine(utf8_text, gSavedSettings.getColor("UserChatColor"), true, gAgentID, name);
+						addHistoryLine(utf8_text, 0,gSavedSettings.getColor("UserChatColor"), true, gAgentID, name);
 					if (other_was_typing) addTypingIndicator(mOtherParticipantUUID);
 				}
 			}
@@ -1661,7 +1783,7 @@ Note: OTHER_TYPING_TIMEOUT must be > ME_TYPING_TIMEOUT for proper operation of t
 		mTypingLineStartIndex = mHistoryEditor->getWText().length();
 		LLUIString typing_start = sTypingStartString;
 		typing_start.setArg("[NAME]", mOtherTypingName);
-		addHistoryLine(typing_start, gSavedSettings.getColor4("SystemChatColor"), false);
+		addHistoryLine(typing_start, 0,gSavedSettings.getColor4("SystemChatColor"), false);
 
 		// Update speaker
 		LLIMSpeakerMgr* speaker_mgr = mSpeakers;
@@ -1692,13 +1814,21 @@ void LLFloaterIMPanel::removeTypingIndicator(const LLUUID& from_id)
 void LLFloaterIMPanel::chatFromLogFile(LLLogChat::ELogLineType type, const std::string& line)
 {
 	bool log_line = type == LLLogChat::LOG_LINE;
+	LL_INFOS() << "Adding line to history " << line << LL_ENDL;
 	if (log_line || gSavedPerAccountSettings.getBOOL("LogInstantMessages"))
 	{
 		LLStyleSP style(new LLStyle(true, gSavedSettings.getColor4("LogChatColor"), LLStringUtil::null));
-		mHistoryEditor->appendText(log_line ? line :
-			getString(type == LLLogChat::LOG_END ? "IM_end_log_string" : "IM_logging_string"),
-			false, true, style, false);
+		 mHistoryEditor->appendText(log_line ? line :
+		 	getString(type == LLLogChat::LOG_END ? "IM_end_log_string" : "IM_logging_string"),
+		 	false, true, style, false);
+		
+			
 	}
+	// if (type==LLLogChat::LOG_END) {
+	// 	LL_INFOS() << "Replacing Loading History..." << LL_ENDL;
+	// 	mHistoryEditor->replaceText("Loading History...", historyText,TRUE,FALSE);
+		
+	// }
 }
 
 void LLFloaterIMPanel::showSessionStartError(

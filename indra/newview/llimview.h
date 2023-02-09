@@ -66,7 +66,8 @@ public:
 					U32 parent_estate_id = 0,
 					const LLUUID& region_id = LLUUID::null,
 					const LLVector3& position = LLVector3::zero,
-					bool link_name = false);
+					bool link_name = false,
+					U32 timestamp = 0);
 
 	void addSystemMessage(const LLUUID& session_id, const std::string& message_name, const LLSD& args);
 

@@ -33,11 +33,12 @@
 #include "llviewerprecompiledheaders.h"
 
 #include <ctime>
+#include "boost/filesystem.hpp"
 #include "lllogchat.h"
 #include "llappviewer.h"
 #include "llfloaterchat.h"
 #include "llsdserialize.h"
-
+#include "llsqlmgr.h"
 static std::string get_log_dir_file(const std::string& filename)
 {
 	return gDirUtilp->getExpandedFilename(LL_PATH_PER_ACCOUNT_CHAT_LOGS, filename);
@@ -192,13 +193,8 @@ static void time_format(std::string& out, const char* fmt, const std::tm* time)
 	out.assign(charvector.data());
 }
 
-
-std::string LLLogChat::timestamp(bool withdate)
+std::string LLLogChat::timestamp(tm* time, bool withdate)
 {
-	// Convert to Pacific, based on server's opinion of whether
-	// it's daylight savings time there.
-	auto time = utc_to_pacific_time(time_corrected(), gPacificDaylightTime);
-
 	static const LLCachedControl<bool> withseconds("SecondsInLog");
 	static const LLCachedControl<std::string> date("ShortDateFormat");
 	static const LLCachedControl<std::string> shorttime("ShortTimeFormat");
@@ -211,10 +207,18 @@ std::string LLLogChat::timestamp(bool withdate)
 
 	return text;
 }
+std::string LLLogChat::timestamp(bool withdate)
+{
+	// Convert to Pacific, based on server's opinion of whether
+	// it's daylight savings time there.
+	auto time = utc_to_pacific_time(time_corrected(), gPacificDaylightTime);
+	return LLLogChat::timestamp(time,withdate);
+	
+}
 
 
 //static
-void LLLogChat::saveHistory(const std::string& name, const LLUUID& id, const std::string& line)
+void LLLogChat::saveHistory(const std::string& name, const LLUUID& id, const std::string& line, const U32 timestamp)
 {
 	if(name.empty() && id.isNull())
 	{
@@ -232,10 +236,45 @@ void LLLogChat::saveHistory(const std::string& name, const LLUUID& id, const std
 		fprintf(fp, "%s\n", line.c_str());
 		
 		fclose (fp);
+		updateTimestampForLastHistoryLine(name, timestamp>0?timestamp:LLTimer::getTotalSeconds());
 	}
 }
 
 static long const LOG_RECALL_BUFSIZ = 2048;
+U32 LLLogChat::getTimestampForLastHistoryLine(const std::string mLogLabel, const LLUUID& id) {
+	U32 timestamp = 0;
+	sqlite3 * db= LLSqlMgr::instance().getDB();
+	char* sql = "SELECT TIMESTAMP FROM LOG_HISTORY_TIMESTAMP WHERE ID = ?";
+	sqlite3_stmt *stmt;
+	sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+        
+    sqlite3_bind_text(stmt, 1,  mLogLabel.c_str(), strlen(mLogLabel.c_str()), 0);
+	while ( sqlite3_step(stmt) == SQLITE_ROW) {
+		timestamp = sqlite3_column_int(stmt, 0);
+
+	}
+	sqlite3_finalize(stmt);
+
+	if (timestamp == 0) {
+		auto p = LLLogChat::makeLogFileName(mLogLabel, id);
+		std::time_t time = boost::filesystem::last_write_time( p );
+		timestamp = time;
+		updateTimestampForLastHistoryLine(mLogLabel, timestamp);
+	}
+	LL_INFOS() << "getTimestampForLastHistoryLine " << timestamp << LL_ENDL;
+	return timestamp;
+}
+
+void LLLogChat::updateTimestampForLastHistoryLine(std::string mLogLabel, U32 timestamp) {
+	sqlite3 * db= LLSqlMgr::instance().getDB();
+	char* sql = "INSERT INTO LOG_HISTORY_TIMESTAMP (ID,TIMESTAMP) VALUES (?,?)  ON CONFLICT(ID) DO UPDATE SET TIMESTAMP = excluded.TIMESTAMP";
+	sqlite3_stmt *stmt;
+	sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+	sqlite3_bind_text(stmt, 1,  mLogLabel.c_str(), strlen(mLogLabel.c_str()), 0);
+	sqlite3_bind_int(stmt, 2, timestamp);
+	sqlite3_step(stmt);
+   	sqlite3_finalize(stmt);
+}
 
 void LLLogChat::loadHistory(const std::string& name, const LLUUID& id, std::function<void (ELogLineType, const std::string&)> callback)
 {
@@ -303,6 +342,7 @@ void LLLogChat::loadHistory(const std::string& name, const LLUUID& id, std::func
 
 		fclose(fptr);
 		callback(LOG_END, LLStringUtil::null);
+		
 		return;
 	}
 	callback(LOG_EMPTY, LLStringUtil::null);

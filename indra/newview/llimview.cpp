@@ -430,7 +430,8 @@ void LLIMMgr::addMessage(
 	U32 parent_estate_id,
 	const LLUUID& region_id,
 	const LLVector3& position,
-	bool link_name) // If this is true, then we insert the name and link it to a profile
+	bool link_name,
+	U32 timestamp) // If this is true, then we insert the name and link it to a profile
 {
 	LLUUID other_participant_id = target_id;
 
@@ -491,7 +492,7 @@ void LLIMMgr::addMessage(
 			//<< "*** region_id: " << region_id << std::endl
 			//<< "*** position: " << position << std::endl;
 
-			floater->addHistoryLine(bonus_info.str(), gSavedSettings.getColor4("SystemChatColor"));
+			floater->addHistoryLine(bonus_info.str(), timestamp,gSavedSettings.getColor4("SystemChatColor"));
 		}
 
 		make_ui_sound("UISndNewIncomingIMSession");
@@ -507,20 +508,20 @@ void LLIMMgr::addMessage(
 
 	if ( !link_name )
 	{
-		floater->addHistoryLine(msg,color); // No name to prepend, so just add the message normally
+		floater->addHistoryLine(msg,timestamp,color); // No name to prepend, so just add the message normally
 	}
 	else
 	{
 		if( other_participant_id == session_id )
 		{
 			// The name can be bogus on InWorldz
-			floater->addHistoryLine(msg, color, true, LLUUID::null, from);
+			floater->addHistoryLine(msg, timestamp,color, true, LLUUID::null, from);
 		}
 		else 
 		{
 			// Insert linked name to front of message
 			
-			floater->addHistoryLine(msg, color, true, other_participant_id, from);
+			floater->addHistoryLine(msg, timestamp,color, true, other_participant_id, from);
 		}
 	}
 
@@ -1101,7 +1102,7 @@ void LLIMMgr::noteOfflineUsers(
 	if(ids.empty())
 	{
 		const std::string& only_user = LLTrans::getString("only_user_message");
-		floater->addHistoryLine(only_user, gSavedSettings.getColor4("SystemChatColor"));
+		floater->addHistoryLine(only_user, 0,gSavedSettings.getColor4("SystemChatColor"));
 	}
 	else
 	{
@@ -1114,7 +1115,7 @@ void LLIMMgr::noteOfflineUsers(
 			{
 				auto offline(getOfflineMessage(id));
 				if (!offline.empty())
-					floater->addHistoryLine(offline, gSavedSettings.getColor4("SystemChatColor"));
+					floater->addHistoryLine(offline,0, gSavedSettings.getColor4("SystemChatColor"));
 			}
 		}
 	}

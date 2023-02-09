@@ -47,10 +47,13 @@ public:
 	};
 	static void initializeIDMap();
 	static std::string timestamp(bool withdate = false);
+	static std::string timestamp(tm* timestamp, bool withdate);
 	static std::string makeLogFileName(const std::string& name, const LLUUID& id);
-	static void saveHistory(const std::string& name, const LLUUID& id, const std::string& line);
+	static void saveHistory(const std::string& name, const LLUUID& id, const std::string& line, const U32 timestamp=0);
 	static void loadHistory(const std::string& name, const LLUUID& id,
 		                    std::function<void (ELogLineType, const std::string&)> callback);
+	static  U32 getTimestampForLastHistoryLine(const std::string mLogLabel, const LLUUID& id);	
+	static void LLLogChat::updateTimestampForLastHistoryLine(std::string mLogLabel, U32 timestamp);				
 private:
 	static std::string makeLogFileNameInternal(std::string filename);
 	static bool migrateFile(const std::string& old_name, const std::string& filename);

@@ -152,6 +152,16 @@ char LLSqlMgr::initAgentDB(std::string db_path) {
         LL_WARNS() << "Can't initialise Genesis COLOR_SETTINGS table " << zErrMsg << LL_ENDL;
         return rc;
     }
+
+    //timestamp of the last log history written in log history files
+    sql = "CREATE TABLE IF NOT EXISTS LOG_HISTORY_TIMESTAMP(" \
+        "ID TEXT PRIMARY KEY     NOT NULL," \
+        "TIMESTAMP       INTEGER NOT NULL);";
+    rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);  
+    if( rc ) {
+        LL_WARNS() << "Can't initialise Genesis COLOR_SETTINGS table " << zErrMsg << LL_ENDL;
+        return rc;
+    }
     ready = TRUE;
     
 }

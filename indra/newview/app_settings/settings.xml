@@ -19509,7 +19509,6 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <boolean>0</boolean>
     </map>
-    
   </map>
 
 </llsd>

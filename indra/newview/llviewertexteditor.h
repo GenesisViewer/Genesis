@@ -88,7 +88,7 @@ public:
 	
 	// Appends Second Life time, small font, grey.
 	// If this starts a line, you need to prepend a newline.
-	std::string appendTime(bool prepend_newline);
+	std::string appendTime(bool prepend_newline, U32 timestamp = 0);
 
 	void copyInventory(const LLInventoryItem* item, U32 callback_id = 0);
 

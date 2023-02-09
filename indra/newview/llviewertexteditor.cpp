@@ -1074,10 +1074,13 @@ std::string LLViewerTextEditor::getEmbeddedText()
 	return outtext;
 }
 
-std::string LLViewerTextEditor::appendTime(bool prepend_newline)
+std::string LLViewerTextEditor::appendTime(bool prepend_newline, U32 timestamp)
 {
 	time_t utc_time;
-	utc_time = time_corrected();
+	if (timestamp == 0)
+		utc_time = time_corrected();
+	else 
+		utc_time=timestamp;
 
 	// There's only one internal tm buffer.
 	struct tm* timep;

@@ -726,6 +726,17 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <key>FetchGroupChatHistory</key>
+    <map>
+      <key>Comment</key>
+      <string>Get the group chat history from LL servers</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <boolean>1</boolean>
+    </map>
     <key>VoiceEffectDefault</key>
     <map>
         <key>Comment</key>

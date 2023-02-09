@@ -788,7 +788,7 @@ static void on_avatar_name_cache_notify(const LLUUID& agent_id,
 		
 		std::string notify_msg = notification->getMessage();
 		if (!notify_msg.empty())
-			floater->addHistoryLine(notify_msg, gSavedSettings.getColor4("SystemChatColor"));
+			floater->addHistoryLine(notify_msg, 0,gSavedSettings.getColor4("SystemChatColor"));
 	}
 	if (!showChiclet) {
 		//we don't have the notif as chiclet but we need it on local chat

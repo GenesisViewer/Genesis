@@ -1545,7 +1545,8 @@ public:
 				message_params["parent_estate_id"].asInteger(),
 				message_params["region_id"].asUUID(),
 				ll_vector3_from_sd(message_params["position"]),
-				true);
+				true,
+				timestamp);
 
 			std::string prepend_msg;
 			if (group)

@@ -869,7 +869,6 @@ void LLFloaterIMPanel::readHistoryLines()
 void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, U32 timestamp,LLColor4 incolor, bool log_to_file, const LLUUID& source, const std::string& name)
 {
 
-	LL_INFOS() << "Message " << utf8msg << " timestamp " << timestamp << LL_ENDL;
 	{
 		
 		if (mLoadingHistory) {
@@ -1814,7 +1813,6 @@ void LLFloaterIMPanel::removeTypingIndicator(const LLUUID& from_id)
 void LLFloaterIMPanel::chatFromLogFile(LLLogChat::ELogLineType type, const std::string& line)
 {
 	bool log_line = type == LLLogChat::LOG_LINE;
-	LL_INFOS() << "Adding line to history " << line << LL_ENDL;
 	if (log_line || gSavedPerAccountSettings.getBOOL("LogInstantMessages"))
 	{
 		LLStyleSP style(new LLStyle(true, gSavedSettings.getColor4("LogChatColor"), LLStringUtil::null));

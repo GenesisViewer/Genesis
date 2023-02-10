@@ -531,6 +531,7 @@ void LLIMProcessing::processNewMessage(const LLUUID& from_id,
     LLHost &sender,
     const LLUUID& aux_id)
 {
+	LL_INFOS() << "processNewMessage " << message <<",dialog " <<dialog << LL_ENDL;
 	LLChat chat;
 	std::string buffer;
 

@@ -69,6 +69,8 @@ LLPrefsAscentVan::LLPrefsAscentVan()
     getChild<LLUICtrl>("custom_avatar_name_color")->setCommitCallback(boost::bind(&LLPrefsAscentVan::onAvatarNameColor, this, _1));
     mShowToolBar = gSavedSettings.getBOOL("ShowToolBar");
     mUiToolTipDelay = gSavedSettings.getF32("ToolTipDelay");
+    mSLBShowFPS = gSavedSettings.getBOOL("SLBShowFPS");
+    mGenxShowFpsTop = gSavedSettings.getBOOL("GenxShowFpsTop");
     mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
 
     // 'AlwaysRenderFriends' == 0, render below complexity limits.
@@ -217,6 +219,8 @@ void LLPrefsAscentVan::refreshValues()
     mShowFavBar = gSavedSettings.getBOOL("GenxFavBar");    
     mShowToolBar = gSavedSettings.getBOOL("ShowToolBar");
     mUiToolTipDelay = gSavedSettings.getF32("ToolTipDelay");
+    mSLBShowFPS = gSavedSettings.getBOOL("SLBShowFPS");
+    mGenxShowFpsTop = gSavedSettings.getBOOL("GenxShowFpsTop");
     mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
 }
 
@@ -319,6 +323,8 @@ void LLPrefsAscentVan::cancel()
     gSavedSettings.setBOOL("GenxFavBar",                      mShowFavBar);
     gSavedSettings.setBOOL("ShowToolBar",                     mShowToolBar);
     gSavedSettings.setF32("ToolTipDelay",                     mUiToolTipDelay);
+    gSavedSettings.setBOOL("SLBShowFPS",                      mSLBShowFPS);
+    gSavedSettings.setBOOL("GenxShowFpsTop",                  mGenxShowFpsTop);
     gSavedSettings.setU32("RenderAvatarMaxComplexity",        mRenderAvatarMaxComplexity);
 }
 

@@ -113,6 +113,8 @@ private:
 	bool mShowFavBar;
 	bool mShowToolBar;
 	F32 mUiToolTipDelay;
+	bool mSLBShowFPS;
+	bool mGenxShowFpsTop;
 	U32 mRenderAvatarMaxComplexity;
 };
 

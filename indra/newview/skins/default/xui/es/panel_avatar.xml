@@ -52,15 +52,33 @@
 			</text>
 			<drop_target name="drop_target_rect" label="Suelta aquí un ítem de tu inventario." tool_tip="Arrastra hasta aquí ítems del inventario para dárselos a esta persona."/>
 			<check_box label="Mostrar en la Búsqueda" name="allow_publish" tool_tip="Publicar información del Perfil en la búsqueda."/>
-			<button label="?" label_selected="?" name="?"/>
-			<button label="Localizar en Mapa" label_selected="Localizar en el Mapa" name="Find on Map" left="10" width="120"/>
-			<button label="Teleporte" label_selected="Teleporte" name="Offer Teleport..." left_delta="133" width="70"/>
-			<button label="Añadir Amigo" label_selected="Añadir Amigo" name="Add Friend..." left_delta="85" width="100"/>
-			<button label="Historial" name="Log" bottom="-452" left_delta="113" height="20"/>
-			<button label="Pagar..." label_selected="Pagar..." name="Pay..." bottom="-475" left="10"/>
-			<button label="Mensaje Instantáneo" label_selected="Mensaje Instantáneo" name="Instant Message..." tool_tip="Mensaje Instantáneo (IM)" bottom="-475" left_delta="75"/>
-			<button label="Ignorar" label_selected="No Ignorar" name="Mute" bottom="-475" left_delta="143" width="69"/>
-			<button label="Invitar al Grupo" label_selected="Invitar al Grupo" name="GroupInvite_Button" bottom="-475" left_delta="74" width="110"/>
+ 			<button label="?" label_selected="?" name="?"/>
+			<button bottom="-447" follows="left|top" font="SansSerif" halign="center" height="16"
+			     label="?" label_selected="?" left_delta="145" mouse_opaque="true" name="?"
+			     width="20" />
+			<button bottom="-472" font="SansSerif" halign="center" height="20" label="Localizar en Mapa"
+			     label_selected="Localizar en el Mapa" left="15" mouse_opaque="true"
+			     name="Find on Map" width="102" />
+			<button bottom="-472" font="SansSerif" halign="center" height="20"
+			     label="Teleporte" label_selected="Teleporte"
+			     left_delta="102" mouse_opaque="true" name="Offer Teleport..." width="82" />
+			<button bottom="-472" font="SansSerif" halign="center" height="20"
+			     label="Añadir Amigo" label_selected="Añadir Amigo" left_delta="82"
+			     mouse_opaque="true" name="Add Friend..." width="132" />
+			<button label="Historial" name="Log" bottom="-472" left_delta="132" height="20" width="70"/>
+			<button bottom="-490" font="SansSerif" halign="center" height="20" label="Pagar..."
+			     label_selected="Pagar..." left="15" mouse_opaque="true" name="Pay..."
+			     width="71" />
+			<button bottom="-490" font="SansSerif" halign="center" height="20"
+			     label="Mensaje Instantáneo" label_selected="Mensaje Instantáneo"
+			     left_delta="71" mouse_opaque="true" name="Instant Message..."
+			     tool_tip="Instant Message (IM)" width="141" />
+			<button bottom="-490" font="SansSerifSmall" halign="center" height="20" label="Ignorar" label_selected="No Ignorar" toggle="true"
+			     left_delta="141" mouse_opaque="true" name="Mute"
+			     width="61" />
+			<button bottom="-490" font="SansSerif" halign="center" height="20" label="Invitar al Grupo"
+			     label_selected="Invitar al Grupo" left_delta="61" mouse_opaque="true"
+			     name="GroupInvite_Button" width="113" />
 		</panel>
 		<!-- =========================== -->
 		<panel label="Web" name="WebProfile" width="400">

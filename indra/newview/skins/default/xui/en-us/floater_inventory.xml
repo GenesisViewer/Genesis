@@ -48,7 +48,7 @@
 	</combo_box>
 	<tab_container name="inventory filter tabs" follows="left|top|right|bottom"
 	     bottom_delta="-487" height="480" left="2" width="463"
-	     mouse_opaque="false" tab_position="top">
+	     mouse_opaque="false" tab_position="top" open_tabs_on_drag_and_drop="true">
 
 		<inventory_panel allow_multi_select="true" border="true" bottom="-507"
 		     follows="left|top|right|bottom" height="491" label="All Items" left="1"

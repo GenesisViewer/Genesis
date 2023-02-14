@@ -399,7 +399,7 @@ BOOL LLTabContainer::handleMouseDown( S32 x, S32 y, MASK mask )
 							  has_scroll_arrows ? mNextArrowBtn->getRect().mLeft : mJumpNextArrowBtn->getRect().mRight,
 							  firsttuple->mButton->getRect().mBottom );
 		}
-		//where we start drand and drop?
+		//where we start drag and drop?
 		for(tuple_list_t::iterator iter	= mTabList.begin();	iter !=	 mTabList.end(); ++iter)
 		{
 			LLTabTuple*	tuple =	*iter;

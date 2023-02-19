@@ -386,12 +386,13 @@ LLFloaterIMPanel::LLFloaterIMPanel(
 	// enable line history support for instant message bar
 	mInputEditor->setEnableLineHistory(TRUE);
 
-	//mHistoryEditor->appendText("Loading History...",FALSE,TRUE);
-	U32 lasttimestamp = LLLogChat::getTimestampForLastHistoryLine(mLogLabel, mSessionType == P2P_SESSION ? mOtherParticipantUUID : mSessionUUID);
-	//loading group chat history
 	
-	if (gSavedPerAccountSettings.getBOOL("FetchGroupChatHistory"))
+	
+	
+	if (gSavedPerAccountSettings.getBOOL("FetchGroupChatHistory") && (mSessionType != P2P_SESSION))
 	{
+		U32 lasttimestamp = LLLogChat::getTimestampForLastHistoryLine(mLogLabel, mSessionUUID);
+		//loading group chat history
 		std::string chat_url = gAgent.getRegion()->getCapability("ChatSessionRequest");
 		LL_INFOS() << "Requesting group chat history " << chat_url << LL_ENDL;
 		LLSD postData;
@@ -1771,7 +1772,7 @@ to type).
 Note: OTHER_TYPING_TIMEOUT must be > ME_TYPING_TIMEOUT for proper operation of the state machine
 
 */
-
+	
 	// We may have lost a "stop-typing" packet, don't add it twice
 	if (from_id.notNull() && !mOtherTyping)
 	{

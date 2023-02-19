@@ -1259,11 +1259,12 @@ bool LLTextureFetchWorker::doWork(S32 param)
 
 	if (mState == LOAD_FROM_NETWORK)
 	{
-		static LLCachedControl<bool> use_http(gSavedSettings,"ImagePipelineUseHTTP");
+		//static LLCachedControl<bool> use_http(gSavedSettings,"ImagePipelineUseHTTP");
+		//on SecondLife Grid, we force the usaage of http
 		bool is_sl = gHippoGridManager->getConnectedGrid()->isSecondLife();
 
 // 		if (mHost != LLHost::invalid) use_http = false;
-		if ((is_sl || use_http) && mCanUseHTTP && mUrl.empty())	// get http url.
+		if ((is_sl) && mCanUseHTTP && mUrl.empty())	// get http url.
 		{
 			LLViewerRegion* region = NULL;
 			if (mHost == LLHost::invalid)

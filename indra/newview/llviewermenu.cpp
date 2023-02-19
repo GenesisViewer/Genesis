@@ -1480,8 +1480,8 @@ void init_debug_rendering_menu(LLMenuGL* menu)
 	item = new LLMenuItemCheckGL("Disable Textures", menu_toggle_control, nullptr, menu_check_control, (void*)"TextureDisable");
 	menu->addChild(item);
 	
-	item = new LLMenuItemCheckGL("HTTP Get Textures", menu_toggle_control, nullptr, menu_check_control, (void*)"ImagePipelineUseHTTP");
-	menu->addChild(item);
+	// item = new LLMenuItemCheckGL("HTTP Get Textures", menu_toggle_control, nullptr, menu_check_control, (void*)"ImagePipelineUseHTTP");
+	// menu->addChild(item);
 	
 	item = new LLMenuItemCheckGL("Run Multiple Threads", menu_toggle_control, nullptr, menu_check_control, (void*)"RunMultipleThreads");
 	menu->addChild(item);

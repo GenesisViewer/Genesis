@@ -9582,6 +9582,8 @@ This should be as low as possible, but too low may break functionality</string>
     </map>
     <key>ImagePipelineUseHTTP</key>
     <map>
+      <key>HideFromEditor</key>
+      <integer>1</integer>
       <key>Comment</key>
       <string>If TRUE use HTTP GET to fetch textures from the server</string>
       <key>Persist</key>

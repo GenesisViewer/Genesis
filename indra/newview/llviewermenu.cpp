@@ -161,6 +161,8 @@
 
 #include "llfavoritesbar.h"
 
+#include "llavatarnamecache.h"
+
 using namespace LLOldEvents;
 using namespace LLAvatarAppearanceDefines;
 void init_client_menu(LLMenuGL* menu);
@@ -9631,8 +9633,15 @@ class ListAbuseReport final : public view_listener_t
 {
 	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
 	{
+		
 		if (LFIDBearer::getActiveType() == LFIDBearer::EXPERIENCE)
 			LLFloaterReporter::showFromExperience(LFIDBearer::getActiveSelectedID());
+		else if (LFIDBearer::getActiveType() == LFIDBearer::AVATAR){
+			std::string avatarName;
+			LLAvatarNameCache::getNSName(active_owner_or_id(userdata),avatarName);
+			LLFloaterReporter::showFromAvatar(active_owner_or_id(userdata),avatarName);
+		}
+			
 		else
 			LLFloaterReporter::showFromObject(active_owner_or_id(userdata));
 		return true;

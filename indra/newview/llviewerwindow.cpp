@@ -321,7 +321,7 @@ public:
 		const U32 y_inc = 20;
 
 		static const LLCachedControl<bool> slb_show_fps("SLBShowFPS");
-		if (slb_show_fps)
+		if (slb_show_fps	)
 		{
 			if (gSavedSettings.getBOOL("GenxShowFpsTop"))
 			{
@@ -826,6 +826,7 @@ public:
 
 	void draw()
 	{
+		if (!LLPipeline::sShowHUDAttachments) return;
 		for (line_list_t::iterator iter = mLineList.begin();
 			 iter != mLineList.end(); ++iter)
 		{

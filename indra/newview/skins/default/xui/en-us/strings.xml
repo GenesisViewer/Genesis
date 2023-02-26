@@ -39,11 +39,11 @@ Make sure you entered the correct Login URI. An example of a Login URI is: \"htt
 	<string name="StartupDetectingHardware">Detecting hardware...</string>
 	<string name="StartupLoading">Loading [APP_NAME]...</string>
 	<string name="StartupClearingCache">Nuking cache...</string>
-	<string name="StartupInitializingTextureCache0">Organizing shoes...</string>
-    <string name="StartupInitializingTextureCache1">Oiling the hingers...</string>
-    <string name="StartupInitializingTextureCache2">Filling the world with oxygen...</string>
-    <string name="StartupInitializingTextureCache3">Creating your reality...</string>
-    <string name="StartupInitializingTextureCache4">Hold on to your hat...</string>
+	<string name="StartupInitializingTextureCache0">Organizing shoes..</string>
+    <string name="StartupInitializingTextureCache1">Oiling the hinges..</string>
+    <string name="StartupInitializingTextureCache2">Let's rev the engine..</string>
+    <string name="StartupInitializingTextureCache3">Getting your ducks in a row..</string>
+    <string name="StartupInitializingTextureCache4">Hold on to your hat..</string>
 	<string name="StartupInitializingVFS">Initializing VFS...</string>
   <string name="StartupRequireDriverUpdate">Graphics Initialization Failed. Please Update Your Graphics Driver!</string>
 
@@ -72,13 +72,13 @@ Make sure you entered the correct Login URI. An example of a Login URI is: \"htt
 	<string name="LoginRetrySeedCapGrant">Requesting region capabilities, attempt [NUMBER]...</string>
 	<string name="LoginWaitingForRegionHandshake">Waiting for region handshake...</string>
 	<string name="LoginConnectingToRegion">Connecting to region...</string>
-	<string name="LoginDownloadingClothing">Dry cleaning clothing...</string>
+	<string name="LoginDownloadingClothing">Ironing your outfit...</string>
 
 	<string name="LoginFailed">Login failed.</string>
 	<string name="Quit">Quit</string>
 	<string name="LoginFailedViewerNotPermitted">
 The viewer you are using can no longer access Second Life. Please visit the following page to download a new viewer:
-http://secondlife.com/download
+https://genesisviewer.org
 
 For more information, see our FAQ below:
 http://secondlife.com/viewer-access-faq</string>
@@ -120,7 +120,7 @@ Your account is not accessible until
 [TIME] Pacific Time.
 If you feel this is an error, please contact support@secondlife.com.</string>
 	<string name="LoginFailedPendingLogoutFault">Request for logout responded with a fault from simulator.</string>
-	<string name="LoginFailedPendingLogout">The system is logging you out right now.
+	<string name="LoginFailedPendingLogout">The system is still logging you out of your previous session.
 Your Account will not be available until
 [TIME] Pacific Time.</string>
 	<string name="LoginFailedUnableToCreateSession">Unable to create valid session.</string>
@@ -190,8 +190,8 @@ Please try logging in again in a minute.</string>
 	<string name="TooltipLand">Land:</string>
 	<string name="TooltipMustSingleDrop">Only a single item can be dragged here</string>
 
-	<string name="TooltipOutboxDragToWorld">You can not rez items from the Marketplace Listings folder</string>
-	<string name="TooltipOutboxWorn">You can't put items you are wearing in the Marketplace Listings folder</string>
+	<string name="TooltipOutboxDragToWorld">You cannot rez items from the Marketplace Listings folder</string>
+	<string name="TooltipOutboxWorn">You cannot put items you are wearing in the Marketplace Listings folder</string>
 	<string name="TooltipOutboxFolderLevels">Depth of nested folders exceeds [AMOUNT]. Decrease the depth of folders-within-folders; box items if necessary.</string>
 	<string name="TooltipOutboxTooManyFolders">Subfolder count exceeds [AMOUNT]. Decrease the number of folders in your listing; box items if necessary.</string>
 	<string name="TooltipOutboxTooManyObjects">Item count exceeds [AMOUNT]. In order to sell more than [AMOUNT] items in one listing, you must box some of them.</string>
@@ -200,13 +200,13 @@ Please try logging in again in a minute.</string>
 	<string name="TooltipOutboxNoTransfer">One or more of these objects cannot be sold or transferred</string>
 	<string name="TooltipOutboxNotInInventory">You can only put items from your inventory on the marketplace</string>
 	<string name="TooltipOutboxLinked">You can't put linked items or folders on the marketplace</string>
-	<string name="TooltipOutboxCallingCard">You can't put calling cards on the marketplace</string>
-	<string name="TooltipOutboxDragActive">You can't move a listed listing</string>
-	<string name="TooltipOutboxCannotMoveRoot">You can't move the marketplace listings root folder</string>
+	<string name="TooltipOutboxCallingCard">You cannot put calling cards on the marketplace</string>
+	<string name="TooltipOutboxDragActive">You cannot move a listed listing</string>
+	<string name="TooltipOutboxCannotMoveRoot">You cannot move the marketplace listings root folder</string>
 	<string name="TooltipOutboxMixedStock">All items in a stock folder must have the same type and permission</string>
 	
-	<string name="TooltipDragOntoOwnChild">You can't move a folder into its child</string>
-	<string name="TooltipDragOntoSelf">You can't move a folder into itself</string>
+	<string name="TooltipDragOntoOwnChild">You cannot move a folder into its child</string>
+	<string name="TooltipDragOntoSelf">You cannot move a folder into itself</string>
 	
 	<!-- tooltips for Urls -->
 	<string name="TooltipHttpUrl">Click to view this web page</string>

@@ -47,6 +47,8 @@
         <combo_item name="month_first" value="default">MM/DD/YYYY</combo_item>
       </combo_box>
       <check_box bottom_delta="0" left="240" follows="top" control_name="SecondsInLog" label="Seconds in Log timestamps" name="seconds_in_log"/>
+      <text bottom_delta="-40" left="10" follows="top" >Replace Offer friendship message:</text>
+      <line_editor bevel_style="in" border_style="line" border_thickness="1" bottom_delta="6" follows="left" height="20" left="200" max_length="80" name="GenxReplaceAddFriendWithMessage" control_name="GenxReplaceAddFriendWithMessage" width="250"/>
       <check_box bottom_delta="-40" left="10" follows="top" control_name="GenxCmdLineSettingEnabled" label="Enable /setdebug" name="GenxCmdLineSettingEnabled"/>
   </panel>
 

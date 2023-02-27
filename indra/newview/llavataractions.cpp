@@ -62,6 +62,7 @@
 #include "llavatarname.h"
 #include "llagentui.h"
 #include "llviewerobjectlist.h"
+#include "llnotifications.h"
 // [RLVa:KB] - Checked: 2011-04-11 (RLVa-1.3.0)
 #include "rlvactions.h"
 #include "rlvcommon.h"
@@ -89,8 +90,14 @@ void LLAvatarActions::requestFriendshipDialog(const LLUUID& id, const std::strin
 	LLSD payload;
 	payload["id"] = id;
 	payload["name"] = name;
-
-	LLNotificationsUtil::add("AddFriendWithMessage", args, payload, &callbackAddFriendWithMessage);
+	
+	LLNotification::Params params = LLNotification::Params("AddFriendWithMessage").substitutions(args).payload(payload).functor(&callbackAddFriendWithMessage);
+	
+	LLNotificationPtr pNotif(new LLNotification(params));
+	if (!gSavedSettings.getString("GenxReplaceAddFriendWithMessage").empty())
+		pNotif->getForm()->replaceInputTypeText("message",gSavedSettings.getString("GenxReplaceAddFriendWithMessage"));
+	LLNotifications::instance().add(pNotif);
+	//LLNotificationsUtil::add("AddFriendWithMessage", args, payload, &callbackAddFriendWithMessage);
 
 	// add friend to recent people list
 	//LLRecentPeople::instance().add(id);

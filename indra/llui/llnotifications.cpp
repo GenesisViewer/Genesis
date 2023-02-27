@@ -380,7 +380,22 @@ void LLNotificationForm::append(const LLSD& sub_form)
 		}
 	}
 }
-
+void LLNotificationForm::replaceInputTypeText(std::string inputName, std::string newText)
+{
+	for (LLSD::array_iterator it = mFormData.beginArray();
+		it != mFormData.endArray();
+		++it)
+	{
+		
+		
+		if ((*it)["type"].asString() == "text" && (*it)["name"].asString() == inputName)
+		{
+			
+			(*it)["value"] = newText;
+		}
+		
+	}
+}
 void LLNotificationForm::formatElements(const LLSD& substitutions)
 {
 	for (LLSD::array_iterator it = mFormData.beginArray();
@@ -400,6 +415,7 @@ void LLNotificationForm::formatElements(const LLSD& substitutions)
 			LLStringUtil::format(value, substitutions);
 			(*it)["value"] = value;
 		}
+		
 	}
 }
 

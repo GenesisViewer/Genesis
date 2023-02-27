@@ -95,6 +95,7 @@ private:
 	S32 mProfileNames;
 	S32 mRadarNames;
 	S32 mSpeakerNames;
+	std::string mGenxReplaceAddFriendWithMessage;
 
 	//Autoresponse ------------------------------------------------------------------------
 	bool mIMResponseRepeat;

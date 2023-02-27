@@ -230,6 +230,7 @@ void LLPrefsAscentChat::refreshValues()
     mSecondsInChatAndIMs            = gSavedSettings.getBOOL("SecondsInChatAndIMs");
     mSecondsInLog                   = gSavedSettings.getBOOL("SecondsInLog");
 	mGenxCmdLineSettingEnabled      = gSavedSettings.getBOOL("GenxCmdLineSettingEnabled");
+	mGenxReplaceAddFriendWithMessage= gSavedSettings.getString("GenxReplaceAddFriendWithMessage");
 
     std::string format = gSavedSettings.getString("ShortTimeFormat");
     mTimeFormat = format == "%R" ? 0
@@ -266,7 +267,8 @@ void LLPrefsAscentChat::refreshValues()
 	mProfileNames			= gSavedSettings.getS32("ProfileNameSystem");
 	mRadarNames                     = gSavedSettings.getS32("RadarNameSystem");
 	mSpeakerNames                   = gSavedSettings.getS32("SpeakerNameSystem");
-
+	mGenxReplaceAddFriendWithMessage= getChild<LLLineEditor>("GenxReplaceAddFriendWithMessage")->getValue().asString();
+	gSavedSettings.setString("GenxReplaceAddFriendWithMessage",mGenxReplaceAddFriendWithMessage);
 	//Autoresponse ------------------------------------------------------------------------
 	mIMResponseRepeat            = gSavedPerAccountSettings.getBOOL("AscentInstantMessageResponseRepeat");
 	mIMResponseAway              = gSavedPerAccountSettings.getBOOL("AutoresponseOnlyIfAway");
@@ -424,6 +426,7 @@ void LLPrefsAscentChat::refresh()
     childSetValue("KeywordsSound",       mKeywordsSound);
 
 	childSetValue("GenxCmdLineSettingEnabled", mGenxCmdLineSettingEnabled);
+	childSetValue("GenxReplaceAddFriendWithMessage",mGenxReplaceAddFriendWithMessage);
 }
 
 // Reset settings to local copy
@@ -466,6 +469,7 @@ void LLPrefsAscentChat::cancel()
 	gSavedSettings.setS32("ProfileNameSystem",                     mProfileNames);
 	gSavedSettings.setS32("RadarNameSystem",                       mRadarNames);
 	gSavedSettings.setS32("SpeakerNameSystem",                     mSpeakerNames);
+	gSavedSettings.setString("GenxReplaceAddFriendWithMessage",       mGenxReplaceAddFriendWithMessage);
 
 	//Autoresponse ------------------------------------------------------------------------
 	gSavedPerAccountSettings.setBOOL("AscentInstantMessageResponseRepeat", mIMResponseRepeat);

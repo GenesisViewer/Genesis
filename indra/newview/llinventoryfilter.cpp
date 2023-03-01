@@ -49,6 +49,8 @@
 #include "llinventoryclipboard.h"
 #include "lltrans.h"
 
+#include "boost/algorithm/string.hpp"
+
 LLInventoryFilter::FilterOps::FilterOps(const Params& p)
 :	mFilterTypes(p.types),
 	mFilterObjectTypes(p.object_types),
@@ -94,6 +96,7 @@ bool LLInventoryFilter::check(LLFolderViewItem* item)
 	// Clipboard cut items are *always* filtered so we need this value upfront
 	const LLFolderViewEventListener* listener = item->getListener();
 	const LLUUID item_id = listener ? listener->getUUID() : LLUUID::null;
+	
 	const bool passed_clipboard = listener && item_id.notNull() ? checkAgainstClipboard(item_id) : true;
 
 	// If it's a folder and we're showing all folders, return automatically.
@@ -101,6 +104,27 @@ bool LLInventoryFilter::check(LLFolderViewItem* item)
 	if (is_folder && (mFilterOps.mShowFolderState == LLInventoryFilter::SHOW_ALL_FOLDERS))
 	{
 		return passed_clipboard;
+	}
+	
+
+	//Genesis, FIND_LINKS FORMULA?
+
+	if (boost::algorithm::starts_with(mFilterSubString, "=FINDLINKS(\"") && boost::algorithm::ends_with(mFilterSubString, "\")")) {
+		std::string sOriginFindLinksUUID = mFilterSubString.substr (12,mFilterSubString.length()-14);
+		boost::algorithm::to_upper(sOriginFindLinksUUID);
+		
+		const LLUUID& object_id = listener->getUUID();
+		const LLInventoryObject *object = gInventory.getObject(object_id);
+		if (object) {
+
+			const BOOL is_link = object->getIsLinkType();
+			std::string linkedId = object->getLinkedUUID().asString();
+			boost::algorithm::to_upper(linkedId);
+			
+			return is_link && linkedId == sOriginFindLinksUUID;
+		}
+
+		
 	}
 
 	mSubStringMatchOffset = mFilterSubString.size() ? item->getSearchableLabel().find(mFilterSubString) : std::string::npos;
@@ -480,6 +504,8 @@ bool LLInventoryFilter::checkAgainstFilterLinks(const LLFolderViewItem* item) co
 	if (!object) return TRUE;
 
 	const BOOL is_link = object->getIsLinkType();
+	
+	
 	if (is_link && (mFilterOps.mFilterLinks == FILTERLINK_EXCLUDE_LINKS))
 		return FALSE;
 	if (!is_link && (mFilterOps.mFilterLinks == FILTERLINK_ONLY_LINKS))
@@ -661,6 +687,7 @@ void LLInventoryFilter::setFilterSubString(const std::string& string)
 
 	if (mFilterSubString != filter_sub_string_new)
 	{
+		
 		// hitting BACKSPACE, for example
 		const BOOL less_restrictive = mFilterSubString.size() >= filter_sub_string_new.size()
 			&& !mFilterSubString.substr(0, filter_sub_string_new.size()).compare(filter_sub_string_new);

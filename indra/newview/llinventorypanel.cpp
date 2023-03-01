@@ -1350,6 +1350,7 @@ namespace LLInventoryAction
 
 void LLInventoryPanel::doToSelected(const LLSD& userdata)
 {
+	
 	LLInventoryAction::doToSelected(mFolderRoot.get(), userdata.asString());
 
 	return;

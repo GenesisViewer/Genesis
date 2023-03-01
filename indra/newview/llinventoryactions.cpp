@@ -55,8 +55,9 @@
 // [RLVa:KB] - Checked: 2013-05-08 (RLVa-1.4.9)
 #include "rlvactions.h"
 #include "rlvcommon.h"
-// [/RLVa:KB]
 
+// [/RLVa:KB]
+#include "llfiltereditor.h"
 extern LLUUID gAgentID;
 
 using namespace LLOldEvents;
@@ -206,7 +207,21 @@ bool LLInventoryAction::doToSelected(LLFolderView* root, std::string action, BOO
 	{	
 		LLInventoryClipboard::instance().reset();
 	}
-
+	
+	//Genesis - Links Management
+	if ("findlinks" == action) {
+		if (selected_items.size() > 0 ) {
+			auto set_iter = selected_items.begin();
+			LLFolderViewItem* item = root->getCurSelectedItem();
+			std::string name = item->getName();
+			
+			root->getParentPanel()->getParent()->getParent()->getChild<LLFilterEditor>("inventory search editor")->setText("=FINDLINKS(\"" + (*set_iter).asString() + "\")");
+			root->getParentPanel()->getParent()->getParent()->getChild<LLFilterEditor>("inventory search editor")->onCommit();
+			
+			
+		}
+		
+	}
 	LLMultiFloater* multi_floaterp = NULL;
 
 	if (("task_open" == action  || "open" == action) && selected_items.size() > 1)
@@ -692,6 +707,7 @@ void init_inventory_actions(LLPanelMainInventory *floater)
 {
 	(new LLBindMemberListener(floater, "Inventory.DoToSelected", boost::bind(&LLInventoryAction::doToSelected, boost::bind(&LLPanelMainInventory::getRootFolder, floater), _2, true)));
 	(new LLBindMemberListener(floater, "Inventory.CloseAllFolders", boost::bind(&LLInventoryPanel::closeAllFolders, boost::bind(&LLPanelMainInventory::getPanel, floater))));
+
 	(new LLBindMemberListener(floater, "Inventory.EmptyTrash", boost::bind(&LLInventoryModel::emptyFolderType, &gInventory, "", LLFolderType::FT_TRASH)));
 	(new LLBindMemberListener(floater, "Inventory.DoCreate", boost::bind(&do_create, &gInventory, boost::bind(&LLPanelMainInventory::getPanel, floater), _2, (LLFolderBridge*)0)));
 	(new LLNewWindow())->registerListener(floater, "Inventory.NewWindow");
@@ -705,6 +721,8 @@ void init_inventory_panel_actions(LLInventoryPanel *panel)
 {
 	(new LLBindMemberListener(panel, "Inventory.DoToSelected", boost::bind(&LLInventoryAction::doToSelected, boost::bind(&LLInventoryPanel::getRootFolder, panel), _2, true)));
 	(new LLAttachObject())->registerListener(panel, "Inventory.AttachObject");
+	
+	
 	(new LLBindMemberListener(panel, "Inventory.CloseAllFolders", boost::bind(&LLInventoryPanel::closeAllFolders, panel)));
 	(new LLBindMemberListener(panel, "Inventory.EmptyTrash", boost::bind(&LLInventoryModel::emptyFolderType, &gInventory, "ConfirmEmptyTrash", LLFolderType::FT_TRASH)));
 	(new LLBindMemberListener(panel, "Inventory.EmptyLostAndFound", boost::bind(&LLInventoryModel::emptyFolderType, &gInventory, "ConfirmEmptyLostAndFound", LLFolderType::FT_LOST_AND_FOUND)));

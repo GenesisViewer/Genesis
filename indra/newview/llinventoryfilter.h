@@ -287,6 +287,11 @@ public:
 	void 				toParams(Params& params) const;
 	void 				fromParams(const Params& p);
 
+	//
+	// Links Management
+	// 
+
+	
 	LLInventoryFilter& operator =(const LLInventoryFilter& other);
 
 private:

@@ -981,7 +981,7 @@ void LLInvFVBridge::addDeleteContextMenuOptions(menuentry_vec_t &items,
 	{
 		items.push_back(std::string("Delete"));
 	}
-
+	
 	if (!isItemRemovable())
 	{
 		disabled_items.push_back(std::string("Delete"));
@@ -997,6 +997,12 @@ void LLInvFVBridge::addOpenRightClickMenuOption(menuentry_vec_t &items)
 		items.push_back(std::string("Open Original"));
 	else
 		items.push_back(std::string("Open"));
+
+	//Find links and Replace Links operations
+	//Genesis : Links operations
+	if (!is_link ) {
+		items.push_back(std::string("Find Links"));
+	}	
 }
 
 void LLInvFVBridge::addMarketplaceContextMenuOptions(U32 flags,

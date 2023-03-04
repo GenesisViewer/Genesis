@@ -282,6 +282,10 @@
 	     name="Find Links" width="128">
 		<on_click filter="" function="Inventory.DoToSelected" userdata="findlinks" />
 	</menu_item_call>
+	<menu_item_call bottom_delta="-18" height="18" label="Replace Links" left="0" mouse_opaque="true"
+	     name="Replace Links" width="128">
+		<on_click filter="" function="Inventory.DoToSelected" userdata="replacelinks" />
+	</menu_item_call>
 	<menu_item_call bottom_delta="-18" height="18" label="Delete" left="0" mouse_opaque="true"
 	     name="Delete" width="128">
 		<on_click filter="" function="Inventory.DoToSelected" userdata="delete" />

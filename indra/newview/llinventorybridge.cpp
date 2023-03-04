@@ -1002,6 +1002,9 @@ void LLInvFVBridge::addOpenRightClickMenuOption(menuentry_vec_t &items)
 	//Genesis : Links operations
 	if (!is_link ) {
 		items.push_back(std::string("Find Links"));
+	}
+	if (is_link && gSavedSettings.getBOOL("GenxReplaceLinksFeature")) {
+		items.push_back(std::string("Replace Links"));
 	}	
 }
 
@@ -6205,8 +6208,12 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 					new_item->addListener(callback, "on_click", LLSD());
 				}
 			}
+			if (item->getIsLinkType() && gSavedSettings.getBOOL("GenxReplaceLinksFeature")) {
+				items.push_back(std::string("Replace Links"));
+			}
 		}
 	}
+	
 	hide_context_entries(menu, items, disabled_items);
 }
 
@@ -6525,6 +6532,7 @@ void LLWearableBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 			}
 		}
 	}
+	
 	hide_context_entries(menu, items, disabled_items);
 }
 
@@ -6746,6 +6754,9 @@ void LLLinkItemBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	{
 		items.push_back(std::string("Properties"));
 		addDeleteContextMenuOptions(items, disabled_items);
+	}
+	if (gSavedSettings.getBOOL("GenxReplaceLinksFeature")) {
+		items.push_back(std::string("Replace Links"));
 	}
 	hide_context_entries(menu, items, disabled_items);
 }

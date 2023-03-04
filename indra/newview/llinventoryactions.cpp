@@ -58,6 +58,7 @@
 
 // [/RLVa:KB]
 #include "llfiltereditor.h"
+#include "genxreplacelinksfloater.h"
 extern LLUUID gAgentID;
 
 using namespace LLOldEvents;
@@ -212,8 +213,6 @@ bool LLInventoryAction::doToSelected(LLFolderView* root, std::string action, BOO
 	if ("findlinks" == action) {
 		if (selected_items.size() > 0 ) {
 			auto set_iter = selected_items.begin();
-			LLFolderViewItem* item = root->getCurSelectedItem();
-			std::string name = item->getName();
 			
 			root->getParentPanel()->getParent()->getParent()->getChild<LLFilterEditor>("inventory search editor")->setText("=FINDLINKS(\"" + (*set_iter).asString() + "\")");
 			root->getParentPanel()->getParent()->getParent()->getChild<LLFilterEditor>("inventory search editor")->onCommit();
@@ -221,6 +220,13 @@ bool LLInventoryAction::doToSelected(LLFolderView* root, std::string action, BOO
 			
 		}
 		
+	}
+	if ("replacelinks" == action) {
+		if (selected_items.size() > 0 ) {
+			auto set_iter = selected_items.begin();
+			GenxFloaterReplaceLinks* floater = new GenxFloaterReplaceLinks(*set_iter);
+			if (floater) floater->open();
+		}
 	}
 	LLMultiFloater* multi_floaterp = NULL;
 

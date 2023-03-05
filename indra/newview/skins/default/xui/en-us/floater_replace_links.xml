@@ -1,0 +1,28 @@
+<floater can_close="true" can_drag_on_left="false" can_minimize="false"
+     can_resize="false" height="200" min_height="200" min_width="400"
+     name="floater_replace_links" title="Replace Links" width="400">
+     <line_editor bevel_style="in" border_style="line"
+	     border_thickness="1" bottom_delta="-50" follows="left|top"
+	     font="SansSerifSmall" height="16" left="10" max_length="128"
+	     mouse_opaque="true" name="link_name" enabled="false"
+	     width="380" />
+    <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-26" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="16"
+	     mouse_opaque="true" name="replace_by_text" v_pad="0" width="180">Replace by</text>     
+    <genx_drop_target bottom_delta="-30" height="20" left="10" width="380" fill_parent="false" name="drop_target_rect" label="Drop inventory item here." tool_tip="Drop the inventory item you want the links to be replaced by ." show_reset="false"/>  
+    <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-30" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="30"
+	     mouse_opaque="true" name="links_found_count" v_pad="0" width="300"></text>  
+    <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
+	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="30"
+	     mouse_opaque="true" name="status_text" v_pad="0" width="300"></text>     
+    <button bottom_delta="-30" enabled="true" follows="left|top" height="25" left="10" sound_flags="0" label="Close"
+                    mouse_opaque="true" name="close_button" toggle="false"
+                    tool_tip="Close this window" width="120"/> 
+    <button bottom_delta="0" enabled="false" follows="left|top" height="25" left="160" sound_flags="0" label="Replace"
+                    mouse_opaque="true" name="replacelinks_button" toggle="false"
+                    tool_tip="Replace the links" width="120" />                      
+</floater>

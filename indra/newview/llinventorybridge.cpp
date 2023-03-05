@@ -6456,7 +6456,9 @@ void LLWearableBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 			disabled_items.push_back(std::string("Wearable Add"));
 			disabled_items.push_back(std::string("Wearable Edit"));
 		}
-
+		if (item && item->getIsLinkType() && gSavedSettings.getBOOL("GenxReplaceLinksFeature")) {
+			items.push_back(std::string("Replace Links"));
+		}
 		// Disable wear and take off based on whether the item is worn.
 		if(item)
 		{

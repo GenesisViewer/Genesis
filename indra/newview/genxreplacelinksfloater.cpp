@@ -7,6 +7,7 @@
 #include "lllineeditor.h"
 #include "lltextbox.h"
 #include "genxdroptarget.h"
+#include "llappearancemgr.h"
 #include <sstream>
 GenxFloaterReplaceLinks::GenxFloaterReplaceLinks(const LLUUID& id)
 :	LLFloater("Replace Links")
@@ -33,14 +34,13 @@ BOOL GenxFloaterReplaceLinks::postBuild() {
     //search the original object
     LLViewerInventoryItem *itemOriginal = gInventory.getLinkedItem(link_uuid);
     if (itemOriginal) {
-        //search the number of links for this item;
-        LLInventoryModel::item_array_t links= gInventory.collectLinksTo(itemOriginal->getUUID());
-        std::stringstream str;
-        str << links.size() << " items found";
-        getChild<LLTextBox>("links_found_count")->setText(str.str());
+        
         getChild<GenxDropTarget>("drop_target_rect")->setCommitCallback(boost::bind(&GenxFloaterReplaceLinks::onInventoryItemDropped, this));
         mLinkedItemsToReplaceOriginalUUID = itemOriginal->getUUID();
-
+        //search the number of links for this item;
+        LLInventoryModel::item_array_t links= gInventory.collectLinksTo(mLinkedItemsToReplaceOriginalUUID);
+        mCounter = links.size();
+        countItemLinks();
         getChild<LLButton>("close_button")->setCommitCallback(boost::bind(&GenxFloaterReplaceLinks::onCloseButton, this));
         getChild<LLButton>("replacelinks_button")->setCommitCallback(boost::bind(&GenxFloaterReplaceLinks::onReplaceButton, this));
     }
@@ -51,6 +51,12 @@ BOOL GenxFloaterReplaceLinks::postBuild() {
     return true;
 
    
+}
+void GenxFloaterReplaceLinks::countItemLinks() {
+    
+    std::stringstream str;
+    str << mCounter << " items found";
+    getChild<LLTextBox>("links_found_count")->setText(str.str());
 }
 void GenxFloaterReplaceLinks::onCloseButton() {
     this->close();
@@ -83,10 +89,16 @@ void GenxFloaterReplaceLinks::onInventoryItemDropped() {
 }
 
 void GenxFloaterReplaceLinks::onReplaceButton() {
-     LLViewerInventoryItem* replaceitem = gInventory.getItem(mReplaceByOriginalUUID);
-     LLInventoryModel::item_array_t links= gInventory.collectLinksTo(mLinkedItemsToReplaceOriginalUUID);
-     
-     for (LLInventoryModel::item_array_t::iterator it = links.begin();
+    //<code from Firestorm viewer>
+    const LLUUID cof_folder_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_CURRENT_OUTFIT, false);
+	const LLUUID outfit_folder_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_MY_OUTFITS, false);
+    //</code from Firestorm viewer>
+    LLViewerInventoryItem* replaceitem = gInventory.getItem(mReplaceByOriginalUUID);
+    LLInventoryModel::item_array_t links= gInventory.collectLinksTo(mLinkedItemsToReplaceOriginalUUID);
+    mCounter=links.size();
+    const LLUUID baseoutfit_id = LLAppearanceMgr::instance().getBaseOutfitUUID();
+    //bool need_to_update_current_outfit = FALSE;
+    for (LLInventoryModel::item_array_t::iterator it = links.begin();
 		 it != links.end();
 		 ++it)
 	{
@@ -94,20 +106,59 @@ void GenxFloaterReplaceLinks::onReplaceButton() {
         LL_INFOS() << "running the replace process for " << link_id.asString() << LL_ENDL;
         LLViewerInventoryItem *item =  gInventory.getItem(link_id);
         
-        const LLViewerInventoryCategory *folder = gInventory.getFirstNondefaultParent (link_id);
-        
+        const LLViewerInventoryCategory *folder = gInventory.getCategory (item->getParentUUID());
+        if (folder->getUUID() == cof_folder_id) {
+            mCounter--;
+            countItemLinks();
+            continue;
+        }
         if (folder) 
         {
+            
             LL_INFOS() << "I have to replace " << item->getName() << " in folder " << folder->getName() << LL_ENDL;
             //creating a link
             LL_INFOS() << "Creating a link  for " << replaceitem->getName() << " in folder " << folder->getName() << LL_ENDL;
-            // LLConstPointer<LLInventoryObject> baseobj = gInventory.getObject(id);
-	        // link_inventory_object(category, baseobj, cb);
-            LL_INFOS() << "Deleting link  for " << item->getName() << " in folder " << folder->getName() << LL_ENDL;
+            LLConstPointer<LLInventoryObject> baseobj = gInventory.getObject(replaceitem->getUUID());
+            LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(&GenxFloaterReplaceLinks::createLinkCallback,getDerivedHandle<GenxFloaterReplaceLinks>(),link_id, folder->getUUID(), baseoutfit_id));
+            link_inventory_object(folder->getUUID(), baseobj, cb);
             
-
+            
         }
         
         
     }
+    
+        
+    
+}
+void GenxFloaterReplaceLinks::createLinkCallback(LLHandle<GenxFloaterReplaceLinks> floater_handle,const LLUUID& link_id,const LLUUID& outfit_folder_id,const LLUUID& baseoutfit_id)
+{
+    
+        LLPointer<LLInventoryCallback> cb2 = new LLBoostFuncInventoryCallback(boost::bind(&GenxFloaterReplaceLinks::itemRemovedCallback,floater_handle, outfit_folder_id, baseoutfit_id));
+        
+        remove_inventory_object(link_id,cb2);
+}
+// static
+//this is taken from Firestorm Viewer
+void GenxFloaterReplaceLinks::itemRemovedCallback(LLHandle<GenxFloaterReplaceLinks> floater_handle,const LLUUID& outfit_folder_id,const LLUUID& baseoutfit_id)
+{
+    LL_INFOS() << " itemRemovedCallback : Base outfit folder = " <<   baseoutfit_id.asString() << ", current folder = " << outfit_folder_id.asString() << LL_ENDL;
+	if (outfit_folder_id.notNull())
+	{
+        
+		LLAppearanceMgr::getInstance()->updateClothingOrderingInfo(outfit_folder_id);
+        
+	}
+    if (baseoutfit_id.notNull() && baseoutfit_id==outfit_folder_id) {
+        LLAppearanceMgr::instance().replaceCurrentOutfit(baseoutfit_id);
+        
+        
+    }
+    floater_handle.get()->decreaseCounter();
+    if (floater_handle.get()->getCounter() == 0) {
+        floater_handle.get()->getChild<LLTextBox>("links_found_count")->setText(std::string(""));
+        floater_handle.get()->getChild<LLTextBox>("status_text")->setText(std::string("Replacing links is done, you can close me"));
+    }
+    floater_handle.get()->countItemLinks();
+	
 }

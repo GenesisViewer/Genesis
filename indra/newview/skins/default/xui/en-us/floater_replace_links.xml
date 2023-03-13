@@ -1,15 +1,18 @@
 <floater can_close="true" can_drag_on_left="false" can_minimize="false"
-     can_resize="false" height="200" min_height="200" min_width="400"
+     can_resize="false" height="250" min_height="250" min_width="400"
      name="floater_replace_links" title="Replace Links" width="400">
      <line_editor bevel_style="in" border_style="line"
 	     border_thickness="1" bottom_delta="-50" follows="left|top"
 	     font="SansSerifSmall" height="16" left="10" max_length="128"
 	     mouse_opaque="true" name="link_name" enabled="false"
 	     width="380" />
+    <check_box bottom_delta="-26" left="16" follows="left|top" initial_value="false" 
+        label="Delete only?" name="delete_only"/>       
     <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
 	     bottom_delta="-26" drop_shadow_visible="true" follows="left|top"
 	     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="16"
-	     mouse_opaque="true" name="replace_by_text" v_pad="0" width="180">Replace by</text>     
+	     mouse_opaque="true" name="replace_by_text" v_pad="0" width="180">Replace by</text>  
+          
     <genx_drop_target bottom_delta="-30" height="20" left="10" width="380" fill_parent="false" name="drop_target_rect" label="Drop inventory item here." tool_tip="Drop the inventory item you want the links to be replaced by ." show_reset="false"/>  
     <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
 	     bottom_delta="-30" drop_shadow_visible="true" follows="left|top"

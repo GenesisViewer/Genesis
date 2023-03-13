@@ -13,6 +13,8 @@ public:
     void onInventoryItemDropped();
     void onCloseButton();
     void onReplaceButton();
+    void onDeleteOnly();
+    void checkCanStart();
     void decreaseCounter(){mCounter--;}
     int getCounter() {return mCounter;}
     void startModal();

@@ -89,6 +89,9 @@ void GenxFloaterReplaceLinks::onInventoryItemDropped() {
 }
 
 void GenxFloaterReplaceLinks::onReplaceButton() {
+    this->setCanClose(false);
+    getChild<LLTextBox>("status_text")->setText(std::string("Replacing links, please wait, it may be long!!"));
+    getChild<LLButton>("close_button")->setEnabled(false);
     //<code from Firestorm viewer>
     const LLUUID cof_folder_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_CURRENT_OUTFIT, false);
 	const LLUUID outfit_folder_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_MY_OUTFITS, false);
@@ -158,6 +161,8 @@ void GenxFloaterReplaceLinks::itemRemovedCallback(LLHandle<GenxFloaterReplaceLin
     if (floater_handle.get()->getCounter() == 0) {
         floater_handle.get()->getChild<LLTextBox>("links_found_count")->setText(std::string(""));
         floater_handle.get()->getChild<LLTextBox>("status_text")->setText(std::string("Replacing links is done, you can close me"));
+        floater_handle.get()->getChild<LLButton>("close_button")->setEnabled(true);
+        floater_handle.get()->setCanClose(true);
     }
     floater_handle.get()->countItemLinks();
 	

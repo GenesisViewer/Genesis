@@ -15,6 +15,10 @@ public:
     void onReplaceButton();
     void decreaseCounter(){mCounter--;}
     int getCounter() {return mCounter;}
+    void startModal();
+    void stopModal();
+    /*virtual*/ BOOL	handleMouseDown(S32 x, S32 y, MASK mask);
+    
     static void itemRemovedCallback(LLHandle<GenxFloaterReplaceLinks> floater_handle,const LLUUID& outfit_folder_id,const LLUUID& baseoutfit_id);
     static void createLinkCallback(LLHandle<GenxFloaterReplaceLinks> floater_handle,const LLUUID& link_id,const LLUUID& outfit_folder_id,const LLUUID& baseoutfit_id);
     static bool alreadyOpened(){return opened;}
@@ -26,5 +30,6 @@ private:
     void countItemLinks();
     int mCounter;
     static bool opened;
+    static bool running;
 };
 #endif

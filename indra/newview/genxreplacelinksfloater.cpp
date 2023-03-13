@@ -10,6 +10,7 @@
 #include "llappearancemgr.h"
 #include <sstream>
 bool GenxFloaterReplaceLinks::opened=false;
+bool GenxFloaterReplaceLinks::running=false;
 GenxFloaterReplaceLinks::GenxFloaterReplaceLinks(const LLUUID& id)
 :	LLFloater("Replace Links")
 {
@@ -49,11 +50,49 @@ BOOL GenxFloaterReplaceLinks::postBuild() {
     else {
        this->close();
     }
+    
     opened = true;
+    
     return true;
 
    
 }
+void GenxFloaterReplaceLinks::startModal()
+{
+	
+	
+		
+	gFocusMgr.setMouseCapture( this );
+	gFocusMgr.setTopCtrl( this );
+	setFocus(TRUE);
+
+		
+
+	setVisible( TRUE );
+}
+void GenxFloaterReplaceLinks::stopModal()
+{
+	
+	gFocusMgr.unlockFocus();
+	gFocusMgr.releaseFocusIfNeeded( this );
+}
+BOOL GenxFloaterReplaceLinks::handleMouseDown(S32 x, S32 y, MASK mask)
+{
+	if (running)
+	{
+		if (!LLFloater::handleMouseDown(x, y, mask))
+		{
+			// Click was outside the panel
+			make_ui_sound("UISndInvalidOp");
+		}
+	}
+	else
+	{
+		LLFloater::handleMouseDown(x, y, mask);
+	}
+	return TRUE;
+}
+
 void GenxFloaterReplaceLinks::onClose(bool app_quitting)
 {
 	opened=false;
@@ -97,6 +136,8 @@ void GenxFloaterReplaceLinks::onInventoryItemDropped() {
 
 void GenxFloaterReplaceLinks::onReplaceButton() {
     this->setCanClose(false);
+    running=true;
+    this->startModal();
     getChild<LLTextBox>("status_text")->setText(std::string("Replacing links, please wait, it may be long!!"));
     getChild<LLButton>("close_button")->setEnabled(false);
     //<code from Firestorm viewer>
@@ -106,6 +147,14 @@ void GenxFloaterReplaceLinks::onReplaceButton() {
     LLViewerInventoryItem* replaceitem = gInventory.getItem(mReplaceByOriginalUUID);
     LLInventoryModel::item_array_t links= gInventory.collectLinksTo(mLinkedItemsToReplaceOriginalUUID);
     mCounter=links.size();
+    if (mCounter ==0) {
+        this->getChild<LLTextBox>("links_found_count")->setText(std::string(""));
+        this->getChild<LLTextBox>("status_text")->setText(std::string("Replacing links is done, you can close me"));
+        this->getChild<LLButton>("close_button")->setEnabled(true);
+        this->setCanClose(true);
+        running=false;
+        this->stopModal();
+    }
     const LLUUID baseoutfit_id = LLAppearanceMgr::instance().getBaseOutfitUUID();
     //bool need_to_update_current_outfit = FALSE;
     for (LLInventoryModel::item_array_t::iterator it = links.begin();
@@ -170,6 +219,8 @@ void GenxFloaterReplaceLinks::itemRemovedCallback(LLHandle<GenxFloaterReplaceLin
         floater_handle.get()->getChild<LLTextBox>("status_text")->setText(std::string("Replacing links is done, you can close me"));
         floater_handle.get()->getChild<LLButton>("close_button")->setEnabled(true);
         floater_handle.get()->setCanClose(true);
+        running=false;
+        floater_handle.get()->stopModal();
     }
     floater_handle.get()->countItemLinks();
 	

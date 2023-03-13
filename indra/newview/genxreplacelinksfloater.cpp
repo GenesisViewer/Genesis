@@ -9,6 +9,7 @@
 #include "genxdroptarget.h"
 #include "llappearancemgr.h"
 #include <sstream>
+bool GenxFloaterReplaceLinks::opened=false;
 GenxFloaterReplaceLinks::GenxFloaterReplaceLinks(const LLUUID& id)
 :	LLFloater("Replace Links")
 {
@@ -20,6 +21,7 @@ GenxFloaterReplaceLinks::GenxFloaterReplaceLinks(const LLUUID& id)
     
 }
 BOOL GenxFloaterReplaceLinks::postBuild() {
+    if (opened) this->close();
     LLUUID link_uuid = LLUUID(link_id);
     LLViewerInventoryItem *item =  gInventory.getItem(link_uuid);
     LL_INFOS() << "replace links find item " << link_uuid.asString() << LL_ENDL;
@@ -47,10 +49,15 @@ BOOL GenxFloaterReplaceLinks::postBuild() {
     else {
        this->close();
     }
-
+    opened = true;
     return true;
 
    
+}
+void GenxFloaterReplaceLinks::onClose(bool app_quitting)
+{
+	opened=false;
+    LLFloater::onClose(app_quitting);
 }
 void GenxFloaterReplaceLinks::countItemLinks() {
     

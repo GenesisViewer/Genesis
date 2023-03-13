@@ -96,6 +96,7 @@
 #include "rlvlocks.h"
 // [/RLVa:KB]
 
+#include "genxreplacelinksfloater.h"
 typedef std::pair<LLUUID, LLUUID> two_uuids_t;
 typedef std::list<two_uuids_t> two_uuids_list_t;
 
@@ -1003,7 +1004,7 @@ void LLInvFVBridge::addOpenRightClickMenuOption(menuentry_vec_t &items)
 	if (!is_link ) {
 		items.push_back(std::string("Find Links"));
 	}
-	if (is_link && gSavedSettings.getBOOL("GenxReplaceLinksFeature")) {
+	if (is_link && gSavedSettings.getBOOL("GenxReplaceLinksFeature") && !GenxFloaterReplaceLinks::alreadyOpened()) {
 		items.push_back(std::string("Replace Links"));
 	}	
 }
@@ -6208,7 +6209,7 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 					new_item->addListener(callback, "on_click", LLSD());
 				}
 			}
-			if (item->getIsLinkType() && gSavedSettings.getBOOL("GenxReplaceLinksFeature")) {
+			if (item->getIsLinkType() && gSavedSettings.getBOOL("GenxReplaceLinksFeature") && !GenxFloaterReplaceLinks::alreadyOpened()) {
 				items.push_back(std::string("Replace Links"));
 			}
 		}
@@ -6456,7 +6457,7 @@ void LLWearableBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 			disabled_items.push_back(std::string("Wearable Add"));
 			disabled_items.push_back(std::string("Wearable Edit"));
 		}
-		if (item && item->getIsLinkType() && gSavedSettings.getBOOL("GenxReplaceLinksFeature")) {
+		if (item && item->getIsLinkType() && gSavedSettings.getBOOL("GenxReplaceLinksFeature") && !GenxFloaterReplaceLinks::alreadyOpened()) {
 			items.push_back(std::string("Replace Links"));
 		}
 		// Disable wear and take off based on whether the item is worn.
@@ -6757,7 +6758,7 @@ void LLLinkItemBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 		items.push_back(std::string("Properties"));
 		addDeleteContextMenuOptions(items, disabled_items);
 	}
-	if (gSavedSettings.getBOOL("GenxReplaceLinksFeature")) {
+	if (gSavedSettings.getBOOL("GenxReplaceLinksFeature") && !GenxFloaterReplaceLinks::alreadyOpened()) {
 		items.push_back(std::string("Replace Links"));
 	}
 	hide_context_entries(menu, items, disabled_items);

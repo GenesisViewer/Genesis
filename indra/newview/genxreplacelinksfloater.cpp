@@ -5,6 +5,7 @@
 #include "llwearable.h"
 #include "llinventorymodel.h"
 #include "lllineeditor.h"
+#include "llcheckboxctrl.h"
 #include "lltextbox.h"
 #include "genxdroptarget.h"
 #include "llappearancemgr.h"
@@ -46,6 +47,7 @@ BOOL GenxFloaterReplaceLinks::postBuild() {
         countItemLinks();
         getChild<LLButton>("close_button")->setCommitCallback(boost::bind(&GenxFloaterReplaceLinks::onCloseButton, this));
         getChild<LLButton>("replacelinks_button")->setCommitCallback(boost::bind(&GenxFloaterReplaceLinks::onReplaceButton, this));
+        getChild<LLCheckBoxCtrl>("delete_only")->setCommitCallback(boost::bind(&GenxFloaterReplaceLinks::onDeleteOnly, this));
     }
     else {
        this->close();
@@ -56,6 +58,32 @@ BOOL GenxFloaterReplaceLinks::postBuild() {
     return true;
 
    
+}
+void GenxFloaterReplaceLinks::onDeleteOnly()
+{
+	BOOL delete_only = getChild<LLCheckBoxCtrl>("delete_only")->get();
+    getChild<LLTextBox>("replace_by_text")->setVisible(!delete_only);
+    getChild<GenxDropTarget>("drop_target_rect")->setVisible(!delete_only);
+	checkCanStart();
+		
+}
+void GenxFloaterReplaceLinks::checkCanStart()
+{
+	bool can_replace=true;
+    BOOL delete_only = getChild<LLCheckBoxCtrl>("delete_only")->get();
+    if (!delete_only) {
+        if (mReplaceByOriginalUUID == mLinkedItemsToReplaceOriginalUUID) {
+            getChild<LLTextBox>("status_text")->setText(std::string("The items are the same, won't replace"));
+            can_replace=false;
+        }
+        //check type of items are the same
+        if (gInventory.getItem(mReplaceByOriginalUUID)->getType() != gInventory.getItem(mLinkedItemsToReplaceOriginalUUID)->getType()) {
+            getChild<LLTextBox>("status_text")->setText(std::string("The items are not the same type!"));
+            can_replace=false;
+        }
+    }
+    getChild<LLButton>("replacelinks_button")->setEnabled(can_replace);
+		
 }
 void GenxFloaterReplaceLinks::startModal()
 {
@@ -126,17 +154,13 @@ void GenxFloaterReplaceLinks::onInventoryItemDropped() {
     } else {
         mReplaceByOriginalUUID = item->getUUID();
     }   
-    bool can_replace=true;
-    if (mReplaceByOriginalUUID == mLinkedItemsToReplaceOriginalUUID) {
-        getChild<LLTextBox>("status_text")->setText(std::string("The items are the same, won't replace"));
-        can_replace=false;
-    }
-    getChild<LLButton>("replacelinks_button")->setEnabled(can_replace);
+    checkCanStart();
 }
 
 void GenxFloaterReplaceLinks::onReplaceButton() {
     this->setCanClose(false);
     running=true;
+    BOOL delete_only = getChild<LLCheckBoxCtrl>("delete_only")->get();
     this->startModal();
     getChild<LLTextBox>("status_text")->setText(std::string("Replacing links, please wait, it may be long!!"));
     getChild<LLButton>("close_button")->setEnabled(false);
@@ -166,21 +190,27 @@ void GenxFloaterReplaceLinks::onReplaceButton() {
         LLViewerInventoryItem *item =  gInventory.getItem(link_id);
         
         const LLViewerInventoryCategory *folder = gInventory.getCategory (item->getParentUUID());
-        if (folder->getUUID() == cof_folder_id) {
-            mCounter--;
-            countItemLinks();
-            continue;
-        }
+        
         if (folder) 
         {
-            
+            if (folder->getUUID() == cof_folder_id) {
+                mCounter--;
+                countItemLinks();
+                continue;
+            }
             LL_INFOS() << "I have to replace " << item->getName() << " in folder " << folder->getName() << LL_ENDL;
-            //creating a link
-            LL_INFOS() << "Creating a link  for " << replaceitem->getName() << " in folder " << folder->getName() << LL_ENDL;
-            LLConstPointer<LLInventoryObject> baseobj = gInventory.getObject(replaceitem->getUUID());
-            LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(&GenxFloaterReplaceLinks::createLinkCallback,getDerivedHandle<GenxFloaterReplaceLinks>(),link_id, folder->getUUID(), baseoutfit_id));
-            link_inventory_object(folder->getUUID(), baseobj, cb);
+           
             
+            if (delete_only) {
+                LLPointer<LLInventoryCallback> cb2 = new LLBoostFuncInventoryCallback(boost::bind(&GenxFloaterReplaceLinks::itemRemovedCallback,getDerivedHandle<GenxFloaterReplaceLinks>(), folder->getUUID(), baseoutfit_id));
+                remove_inventory_object(link_id,cb2);
+            } else {
+                 //creating a link
+                LL_INFOS() << "Creating a link  for " << replaceitem->getName() << " in folder " << folder->getName() << LL_ENDL;
+                LLConstPointer<LLInventoryObject> baseobj = gInventory.getObject(replaceitem->getUUID());
+                LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(&GenxFloaterReplaceLinks::createLinkCallback,getDerivedHandle<GenxFloaterReplaceLinks>(),link_id, folder->getUUID(), baseoutfit_id));
+                link_inventory_object(folder->getUUID(), baseobj, cb);
+            }
             
         }
         

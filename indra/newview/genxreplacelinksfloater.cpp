@@ -64,6 +64,7 @@ void GenxFloaterReplaceLinks::onDeleteOnly()
 	BOOL delete_only = getChild<LLCheckBoxCtrl>("delete_only")->get();
     getChild<LLTextBox>("replace_by_text")->setVisible(!delete_only);
     getChild<GenxDropTarget>("drop_target_rect")->setVisible(!delete_only);
+    
 	checkCanStart();
 		
 }
@@ -72,15 +73,23 @@ void GenxFloaterReplaceLinks::checkCanStart()
 	bool can_replace=true;
     BOOL delete_only = getChild<LLCheckBoxCtrl>("delete_only")->get();
     if (!delete_only) {
-        if (mReplaceByOriginalUUID == mLinkedItemsToReplaceOriginalUUID) {
-            getChild<LLTextBox>("status_text")->setText(std::string("The items are the same, won't replace"));
+        if (mReplaceByOriginalUUID.notNull()) {
+           
+            if (mReplaceByOriginalUUID == mLinkedItemsToReplaceOriginalUUID) {
+                
+                getChild<LLTextBox>("status_text")->setText(std::string("The items are the same, won't replace"));
+                can_replace=false;
+            }
+            //check type of items are the same
+            if (gInventory.getItem(mReplaceByOriginalUUID)->getType() != gInventory.getItem(mLinkedItemsToReplaceOriginalUUID)->getType()) {
+                
+                getChild<LLTextBox>("status_text")->setText(std::string("The items are not the same type!"));
+                can_replace=false;
+            }
+        } else {
             can_replace=false;
         }
-        //check type of items are the same
-        if (gInventory.getItem(mReplaceByOriginalUUID)->getType() != gInventory.getItem(mLinkedItemsToReplaceOriginalUUID)->getType()) {
-            getChild<LLTextBox>("status_text")->setText(std::string("The items are not the same type!"));
-            can_replace=false;
-        }
+        
     }
     getChild<LLButton>("replacelinks_button")->setEnabled(can_replace);
 		
@@ -162,7 +171,7 @@ void GenxFloaterReplaceLinks::onReplaceButton() {
     running=true;
     BOOL delete_only = getChild<LLCheckBoxCtrl>("delete_only")->get();
     this->startModal();
-    getChild<LLTextBox>("status_text")->setText(std::string("Replacing links, please wait, it may be long!!"));
+    getChild<LLTextBox>("status_text")->setText(std::string("Replacing links.  Please wait.. this process make take a while."));
     getChild<LLButton>("close_button")->setEnabled(false);
     //<code from Firestorm viewer>
     const LLUUID cof_folder_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_CURRENT_OUTFIT, false);

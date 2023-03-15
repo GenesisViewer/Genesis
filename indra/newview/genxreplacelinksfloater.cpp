@@ -167,8 +167,10 @@ void GenxFloaterReplaceLinks::onInventoryItemDropped() {
 }
 
 void GenxFloaterReplaceLinks::onReplaceButton() {
-    this->setCanClose(false);
+    if (running) return;
     running=true;
+    this->setCanClose(false);
+    
     BOOL delete_only = getChild<LLCheckBoxCtrl>("delete_only")->get();
     this->startModal();
     getChild<LLTextBox>("status_text")->setText(std::string("Replacing links.  Please wait.. this process make take a while."));

@@ -3,6 +3,7 @@ Instead, Responder classes are derived from one of:
 
 1. Responder base classes
 
+
 	ResponderHeadersOnly			-- Derived classes are used with HTTPClient::head or HTTPClient::getHeaderOnly.
 	ResponderWithCompleted			-- Derived classes implement completed(U32, std::string const&, LLSD const&),
 										or completedRaw(U32, std::string const&, LLChannelDescriptors const&, buffer_ptr_t const&)

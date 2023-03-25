@@ -46,6 +46,7 @@
 #include "llface.h"
 #include "llmeshrepository.h"
 #include "llsky.h"
+#include "llrender.h"
 #include "llviewercamera.h"
 #include "llviewerregion.h"
 #include "llperlin.h"
@@ -57,6 +58,7 @@
 #include "llrendersphere.h"
 #include "llviewerpartsim.h"
 #include "llviewercontrol.h" // for gSavedSettings
+#include "genxcontactset.h"
 
 static U32 sDataMask = LLDrawPoolAvatar::VERTEX_DATA_MASK;
 static U32 sBufferUsage = GL_STREAM_DRAW_ARB;
@@ -1101,7 +1103,7 @@ void LLDrawPoolAvatar::endDeferredSkinned()
 }
 
 static LLTrace::BlockTimerStatHandle FTM_RENDER_AVATARS("renderAvatars");
-
+bool mm_getMarkerColor(const LLUUID&, LLColor4&);
 void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 {
 	LL_RECORD_BLOCK_TIME(FTM_RENDER_AVATARS);
@@ -1144,7 +1146,101 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 	{
 		return;
 	}
+	//hitboxes
+	bool render_hitboxes = gSavedSettings.getBOOL("GenxRenderHitBoxes");
+	if (render_hitboxes && pass == 2)
+	{
+		LLGLSLShader* current_shader_program = NULL;
 
+		// load the debug output shader
+		if (LLGLSLShader::sNoFixedFunction)
+		{
+			current_shader_program = LLGLSLShader::sCurBoundShaderPtr;
+			gDebugProgram.bind();
+		}
+		LLGLEnable<GL_BLEND>blend;
+		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+		
+		static const LLCachedControl<LLColor4> avatar_name_color(gColors, "MapAvatarColor",LLColor4(0.98f, 0.69f, 0.36f, 1.f));
+		
+		LLColor4 avatar_color = avatar_name_color;
+		ContactSet contactSet = GenxContactSetMgr::instance().getAvatarContactSet(avatarp->getID().asString());
+		
+		if (!contactSet.getId().empty()) {
+			avatar_color = contactSet.getColor();
+		}
+		
+		LLColor4 tag_color;
+		if (mm_getMarkerColor(avatarp->getID(), tag_color)) {
+		
+			
+			avatar_color = tag_color;
+		}
+		
+		gGL.diffuseColor4f(avatar_color.mV[VRED], avatar_color.mV[VGREEN], avatar_color.mV[VBLUE], avatar_color.mV[VALPHA]);
+		gGL.setLineWidth(2.0f);
+
+		LLQuaternion rot = avatarp->getRotationRegion();
+		LLVector3 pos = avatarp->getPositionAgent();
+		LLVector3 size = avatarp->getScale();
+		
+		//<code from FS Viewer>
+
+		// set up and rotate hitbox to avatar orientation, half the avatar scale in either direction
+		LLVector3 v1 = size.scaledVec(LLVector3( 0.5f, 0.5f, 0.5f)) * rot;
+		LLVector3 v2 = size.scaledVec(LLVector3(-0.5f, 0.5f, 0.5f)) * rot;
+		LLVector3 v3 = size.scaledVec(LLVector3(-0.5f,-0.5f, 0.5f)) * rot;
+		LLVector3 v4 = size.scaledVec(LLVector3( 0.5f,-0.5f, 0.5f)) * rot;
+
+		// render the box
+		gGL.begin(LLRender::LINES);
+
+		//top
+		gGL.vertex3fv((pos + v1).mV);
+		gGL.vertex3fv((pos + v2).mV);
+		gGL.vertex3fv((pos + v2).mV);
+		gGL.vertex3fv((pos + v3).mV);
+		gGL.vertex3fv((pos + v3).mV);
+		gGL.vertex3fv((pos + v4).mV);
+		gGL.vertex3fv((pos + v4).mV);
+		gGL.vertex3fv((pos + v1).mV);
+		
+		//bottom
+		gGL.vertex3fv((pos - v1).mV);
+		gGL.vertex3fv((pos - v2).mV);
+		gGL.vertex3fv((pos - v2).mV);
+		gGL.vertex3fv((pos - v3).mV);
+		gGL.vertex3fv((pos - v3).mV);
+		gGL.vertex3fv((pos - v4).mV);
+		gGL.vertex3fv((pos - v4).mV);
+		gGL.vertex3fv((pos - v1).mV);
+		
+		//right
+		gGL.vertex3fv((pos + v1).mV);
+		gGL.vertex3fv((pos - v3).mV);
+				
+		gGL.vertex3fv((pos + v4).mV);
+		gGL.vertex3fv((pos - v2).mV);
+
+		//left
+		gGL.vertex3fv((pos + v2).mV);
+		gGL.vertex3fv((pos - v4).mV);
+
+		gGL.vertex3fv((pos + v3).mV);
+		gGL.vertex3fv((pos - v1).mV);
+
+		gGL.end();
+		// unload debug shader
+		if (LLGLSLShader::sNoFixedFunction)
+		{
+			gDebugProgram.unbind();
+			if (current_shader_program)
+			{
+				current_shader_program->bind();
+			}
+		}
+		//</code from FS Viewer>	
+	}
 	if (!single_avatar && !avatarp->isFullyLoaded() )
 	{
 		if (pass==0 && (!gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_PARTICLES) || LLViewerPartSim::getMaxPartCount() <= 0))

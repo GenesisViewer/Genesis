@@ -8725,6 +8725,13 @@ class LLViewToggleFavoritesBar  final : public view_listener_t
 		return true;
 	}
 };
+class LLViewToggleHitboxes  final : public view_listener_t
+{
+	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
+	{
+		gSavedSettings.setBOOL("GenxRenderHitBoxes", !gSavedSettings.getBOOL("GenxRenderHitBoxes"));
+	}
+};
 class LLEditEnableTakeOff final : public view_listener_t
 {
 	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
@@ -10161,6 +10168,7 @@ void initialize_menus()
 	addMenu(new LLViewCheckRenderType(), "View.CheckRenderType");
 	addMenu(new LLViewCheckHUDAttachments(), "View.CheckHUDAttachments");
 	addMenu(new LLViewToggleFavoritesBar(), "View.ToggleFavoritesBar");
+	addMenu(new LLViewToggleHitboxes(), "View.ToggleHitboxes");
 	// World menu
 	addMenu(new LLWorldSitOnGround(), "World.SitOnGround");
 	addMenu(new LLWorldEnableSitOnGround(), "World.EnableSitOnGround");

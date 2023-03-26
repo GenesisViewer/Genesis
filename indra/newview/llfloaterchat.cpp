@@ -117,6 +117,7 @@ void LLFloaterChat::draw()
 {
 	mChatPanel->refresh();
 	mPanel->refreshSpeakers();
+	gSavedSettings.setBOOL("GenxActiveSpeakerOpened",mPanel->getVisible());
 	LLFloater::draw();
 }
 
@@ -126,9 +127,12 @@ BOOL LLFloaterChat::postBuild()
 
 // [RLVa:KB] - Checked: 2009-07-08 (RLVa-1.0.0e)
 	getChild<LLUICtrl>("toggle_active_speakers_btn")->setCommitCallback(boost::bind(&LLView::setVisible, mPanel, boost::bind(std::logical_and<bool>(), _2, !boost::bind(&RlvHandler::hasBehaviour, boost::ref(gRlvHandler), RLV_BHVR_SHOWNAMES))));
+	
 // [/RLVa:KB]
 	//getChild<LLUICtrl>("toggle_active_speakers_btn")->setCommitCallback(boost::bind(&LLView::setVisible, mPanel, _2));
-
+	if (gSavedSettings.getBOOL("GenxActiveSpeakerOpened") && !(gRlvHandler.hasBehaviour(RLV_BHVR_SHOWNAMES))) {
+		mPanel->setVisible(TRUE);
+	}
 	mChatPanel.connect(this,"chat_panel");
 	mChatPanel->setGestureCombo(getChild<LLComboBox>( "Gesture"));
 	return TRUE;

@@ -19566,6 +19566,17 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <boolean>0</boolean>
     </map>
+    <key>GenxGroupNotifyPos</key>
+    <map>
+      <key>Comment</key>
+      <string>Set the position of group notifications (0->top right, 1 -> top left, 2 top middle)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>S32</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
   </map>
 
 </llsd>

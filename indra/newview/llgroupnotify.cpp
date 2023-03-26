@@ -413,14 +413,32 @@ void LLGroupNotifyBox::moveToBack()
 // static
 LLRect LLGroupNotifyBox::getGroupNotifyRect()
 {
+	
+	
 	S32 notify_height = gSavedSettings.getS32("GroupNotifyBoxHeight");
 	const S32 NOTIFY_WIDTH = gSavedSettings.getS32("GroupNotifyBoxWidth");
-
+	if (gSavedSettings.getS32("GenxGroupNotifyPos") == 1 ) {
+		//Group notifications goes top left
+		const S32 TOP = gNotifyBoxView->getRect().getHeight();
+		const S32 RIGHT = NOTIFY_WIDTH;
+		const S32 LEFT = 0;
+		return LLRect(LEFT, TOP, RIGHT, TOP-notify_height);
+	}
+	if (gSavedSettings.getS32("GenxGroupNotifyPos") == 2 ) {
+		//Group notifications goes top left
+		const S32 TOP = gNotifyBoxView->getRect().getHeight();
+		
+		const S32 LEFT =(gNotifyBoxView->getRect().getWidth() - NOTIFY_WIDTH)/2;
+		const S32 RIGHT = LEFT + NOTIFY_WIDTH;
+		return LLRect(LEFT, TOP, RIGHT, TOP-notify_height);
+	}
+	//Group notifications goes top right
 	const S32 TOP = gNotifyBoxView->getRect().getHeight();
 	const S32 RIGHT = gNotifyBoxView->getRect().getWidth();
 	const S32 LEFT = RIGHT - NOTIFY_WIDTH;
-
 	return LLRect(LEFT, TOP, RIGHT, TOP-notify_height);
+
+	
 }
 
 

@@ -73,6 +73,9 @@ LLPrefsAscentVan::LLPrefsAscentVan()
     mGenxShowFpsTop = gSavedSettings.getBOOL("GenxShowFpsTop");
     mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
 
+    LLComboBox* GenxGroupNotifyPos_combobox = getChild<LLComboBox>("GenxGroupNotifyPos_combobox");
+    GenxGroupNotifyPos_combobox->setCurrentByIndex(gSavedSettings.getS32("GenxGroupNotifyPos"));
+
     // 'AlwaysRenderFriends' == 0, render below complexity limits.
     // 1 always render friends, 2 render only friends, 3 render only yourself
     std::string render_radio;
@@ -99,6 +102,7 @@ LLPrefsAscentVan::LLPrefsAscentVan()
         childSetEnabled("Always_Render_Note", true);
     }
     childSetValue("Render_Radio_Options", render_radio);
+
     refreshValues();
     refresh();
 }
@@ -333,8 +337,8 @@ void LLPrefsAscentVan::apply()
 {
     gColors.saveColorSettings("AvatarNameColor", gColors.getColor4("AvatarNameColor"));
     SHClientTagMgr::instance().resetAvatarTags();
-
     getRootView()->getChild<LLPanel>("favoritestoolbar",TRUE)->setVisible(gSavedSettings.getBOOL("GenxFavBar"));
+    gSavedSettings.setS32("GenxGroupNotifyPos", getChild<LLComboBox>("GenxGroupNotifyPos_combobox")->getCurrentIndex());
 
     std::string radioOpt = childGetValue("Render_Radio_Options");
     S32 radioSet;

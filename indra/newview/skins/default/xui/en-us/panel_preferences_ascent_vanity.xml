@@ -83,6 +83,12 @@
       <spinner bottom_delta="-18" follows="top" decimal_digits="1" height="16" increment="0.1" initial_val="0.7" label="UI tooltip delay (secs) :" width="220" label_width="140" left="150" max_val="10" min_val="0" control_name="ToolTipDelay" name="Tool_Tip_Delay" tool_tip="Seconds before displaying tooltip when mouse stops over UI element"/>
       <check_box bottom_delta="-20" left="150" control_name="SLBShowFPS" follows="top" height="16" initial_value="true" label="Display the FPS on the screen" tool_tip="Display the FPS on screen" name="ShowFPS"/>
       <check_box enabled_control="SLBShowFPS" bottom_delta="0" left="340" control_name="GenxShowFpsTop" follows="top" height="16" initial_value="false" label="Show near the top" tool_tip="Display the FPS at top of the screen" name="FPStop"/>
+      <text bottom_delta="-20" follows="top" height="16" left="150" name="GenxGroupNotifyPos__textbox">Set the position of Group Notifications :</text>
+      <combo_box bottom_delta="0" follows="top" height="18" left="370" name="GenxGroupNotifyPos_combobox" width="111">
+        <combo_item name="top right" value="0">Top Right</combo_item>
+        <combo_item name="top left" value="1">Top Left</combo_item>
+        <combo_item name="top middle" value="2">Top Middle</combo_item>
+      </combo_box>
 
       <text bottom_delta="-30" follows="top" height="16" left="15" name="RenderOptions">Render options :</text>
       <text bottom_delta="0" follows="top" left="150" height="16" name="AvatarRender">Avatar Rendering option :</text>

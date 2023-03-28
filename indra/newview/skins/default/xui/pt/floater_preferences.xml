@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<floater name="Preferences" title="Preferências" min_width="332" width="628">
+<floater name="Preferences" title="Preferências"  can_close="true" can_drag_on_left="false" can_minimize="true"
+     can_resize="false" can_tear_off="true" default_tab_group="1" enabled="true"
+     height="494" left="330" min_height="213" min_width="350"
+     mouse_opaque="true" width="700">
 	<button label="OK" label_selected="OK" name="OK"/>
 	<button label="Cancelar" label_selected="Cancelar" name="Cancel"/>
 	<button label="Aplicar" label_selected="Aplicar" name="Apply"/>
 	<button label="Sobre" label_selected="Sobre" name="About..."/>
 	<button label="Ajuda" label_selected="Ajuda" name="Help"/>
-	<tab_container name="pref core" tab_width="128" width="628" />
+  <tab_container bottom="-466" enabled="true" follows="left|top|right|bottom" height="445"
+	     left="0" mouse_opaque="false" name="pref core" tab_group="1"
+	     tab_position="left" tab_width="120" width="700" />
 </floater>

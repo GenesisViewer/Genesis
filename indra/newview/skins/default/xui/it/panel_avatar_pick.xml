@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <panel name="Pick" title="Seleziona">
-	<button label="Imposta luogo" name="set_location_btn" left="235"/>
-	<button label="Teleportati" name="pick_teleport_btn" width="95"/>
-	<button label="Mostra sulla mappa" name="pick_map_btn" width="130" left="105"/>
+	<button label="Imposta luogo" name="set_location_btn" left="225"/>
+	<button label="Teleportati" name="pick_teleport_btn" width="80"/>
+	<button label="Mostra sulla mappa" name="pick_map_btn" width="120" left="95"/>
+  <button label="foto aperta" width="90" left="10" name="open_picture_btn"/>
 </panel>

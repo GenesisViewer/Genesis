@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<panel name="Panel Avatar" width="470">
-	<tab_container name="tab" width="459">
-		<panel label="2ème vie" name="2nd Life" width="458">
+<panel name="Panel Avatar" bottom="-600" height="525" left="350" width="430=">
+  <tab_container bottom="-525" height="525" left="0" mouse_opaque="false" name="tab"
+	     tab_min_width="48" tab_position="top" width="420">
+		<panel label="2ème vie" name="2nd Life" width="418">
 			<string name="CaptionTextAcctInfo">
 				[ACCTTYPE]
 [PAYMENTINFO]
@@ -13,11 +14,11 @@
 			<text name="label">
 				Né(e) le:
 			</text>
-			<line_editor name="born" width="161" />
+			<line_editor name="born" width="137" />
 			<text name="label2">
 				Compte:
 			</text>
-			<view_border name="acct_border" width="161" />
+			<view_border name="acct_border" width="137" />
 			<text name="acct" width="161" />
 			<text name="partner_label" tool_tip="Partenaire sur Second Life. Pour en savoir plus, allez sur www.secondlife.com/partner">
 				Partenaire:
@@ -31,36 +32,59 @@
 			<text name="Groups:">
 				Groupes:
 			</text>
-			<scroll_list name="groups" width="361" />
+			<scroll_list name="groups" width="321" />
 			<text name="About:">
 				À propos:
 			</text>
 			<text name="(500 chars)">
 				(500 car.)
 			</text>
-			<text_editor name="about" width="361"/>
+			<text_editor name="about" width="321"/>
 			<text name="Give item:" height="20" bottom="-397">
 				Donner des 
 objets :
 			</text>
-			<view_border name="drop_target_rect" width="449" />
-			<view_border name="drop_target_rect_vis" width="361" />
-			<text name="Give inventory" tool_tip="Mettez les objets de l&apos;inventaire ici pour les donner à cette personne." width="361">
+			<view_border name="drop_target_rect" width="321" />
+			<view_border name="drop_target_rect_vis" width="321" />
+			<text name="Give inventory" tool_tip="Mettez les objets de l&apos;inventaire ici pour les donner à cette personne." width="321">
 				Faire glisser les objets à transférer ici.
 			</text>
 			<check_box label="Afficher dans la recherche" name="allow_publish" tool_tip="Publiez des infos suplémentaires telles qu'une description et une image dans la Recherche."/>
 			<button label="?" label_selected="?" left_delta="160" name="?"/>
-			<button label="Localiser" label_selected="Localiser" name="Find on Map"/>
+			<!--<button label="Localiser" label_selected="Localiser" name="Find on Map"/>
 			<button label="Proposer téléportation" label_selected="Proposer téléportation" name="Offer Teleport..." left_delta="117" width="150"/>
 			<button label="Devenir amis" label_selected="Devenir amis" name="Add Friend..." left_delta="167"/>
 			<button label="Payer" label_selected="Payer" name="Pay..."/>
 			<button label="IM" label_selected="IM" left_delta="80" name="Instant Message..." tool_tip="Message instantané (IM)" width="70"/>
 			<button label="Mute/Ignorer" label_selected="UnMuter" left_delta="85" name="Mute" tool_tip="ATTENTION VOUS ALLEZ MUTER LA PERSONNE" width="110"/>
-			<button label="Invit. Groupe" label_selected="Invit. Groupe" left_delta="120" name="GroupInvite_Button" width="130"/>
+			<button label="Invit. Groupe" label_selected="Invit. Groupe" left_delta="120" name="GroupInvite_Button" width="130"/>-->
 
+      <button bottom="-472" font="SansSerif" halign="center" height="20" label="Localiser"
+			     label_selected="Localiser" left="15" mouse_opaque="true"
+			     name="Find on Map" width="82" />
+      <button bottom="-472" font="SansSerif" halign="center" height="20"
+			     label="Proposer téléportation" label_selected="Proposer téléportation"
+			     left_delta="82" mouse_opaque="true" name="Offer Teleport..." width="122" />
+      <button bottom="-472" font="SansSerif" halign="center" height="20"
+			     label="Devenir amis" label_selected="Devenir amis" left_delta="122"
+			     mouse_opaque="true" name="Add Friend..." width="112" />
+      <button label="histoire" label_selected="histoire" name="Log" bottom="-472" left_delta="112" height="20" width="70"/>
+      <button bottom="-492" font="SansSerif" halign="center" height="20" label="Payer"
+			     label_selected="Payer" left="15" mouse_opaque="true" name="Pay..."
+			     width="71" />
+      <button bottom="-492" font="SansSerif" halign="center" height="20"
+			     label="IM" label_selected="IM"
+			     left_delta="71" mouse_opaque="true" name="Instant Message..."
+			     tool_tip="Instant Message (IM)" width="111" />
+      <button bottom="-492" font="SansSerifSmall" halign="center" height="20" label="Mute/Ignorer" label_selected="UnMuter" toggle="true"
+			     left_delta="111" mouse_opaque="true" name="Mute"
+			     width="91" />
+      <button bottom="-492" font="SansSerif" halign="center" height="20" label="Invit. Groupe"
+			     label_selected="Invit. Groupe" left_delta="91" mouse_opaque="true"
+			     name="GroupInvite_Button" width="113" />
 		</panel>
-		<panel label="Web" name="WebProfile" width="458">
-		  <line_editor name="url_edit" width="440" />
+		<panel label="Web" name="WebProfile" width="418">
+		  <line_editor name="url_edit" width="400" />
 			<flyout_button label="Charger" label_selected="Charger" name="load" tool_tip="Charge cette page du profil avec le navigateur web incorporé.">
 				<flyout_button_item name="open_item">
 					Dans un navigateur externe
@@ -85,7 +109,7 @@ objets :
 			<check_box label="Acheter" left_delta="160" name="chk4"/>
 			<check_box label="Vendre" left_delta="-160" name="chk5"/>
 			<check_box label="Recruter" left_delta="160" name="chk7"/>
-			<line_editor name="want_to_edit" width="360" />
+			<line_editor name="want_to_edit" width="321" />
 			<text left="2" name="Skills:">
 				Mes talents :
 			</text>
@@ -95,19 +119,22 @@ objets :
 			<check_box label="Modèle" left_delta="-160" name="schk3"/>
 			<check_box label="Scripter" name="schk4"/>
 			<check_box label="Customiser des avatars" left_delta="160" name="schk5"/>
-			<line_editor name="skills_edit" width="360"/>
+			<line_editor name="skills_edit" width="321"/>
 			<text left="2" name="Languages:">
 				Langues :
 			</text>
-			<line_editor name="languages_edit" width="360"/>
+			<line_editor name="languages_edit" width="321"/>
 		</panel>
-		<panel label="Favoris" name="Picks" width="458">
-			<text left="10" name="Tell everyone about your favorite places in Second Life." width="412">
+		<panel label="Favoris" name="Picks" border="true" bottom="-482" follows="left|top|right|bottom" height="466" left="1" mouse_opaque="true"  width="418">
+			<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom="-20" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="114"
+			     mouse_opaque="true" name="Tell everyone about your favorite places in Second Life." width="302">
 				Faites connaître aux autres résidents vos endroits favoris dans Second Life.
 			</text>
 			<button label="Créer" label_selected="Créer" name="New..."/>
 			<button label="Supprimer" label_selected="Supprimer" name="Delete..." width="85"/>
-			<tab_container name="picks tab" width="452" />
+      <tab_container bottom="-411" follows="left|top" height="363" left="4" mouse_opaque="false" name="picks tab" tab_position="left" width="412" />
 			<text name="loading_text">
 				Chargement...
 			</text>
@@ -134,26 +161,28 @@ objets :
 			<text name="(250 chars)">
 				(250 car.)
 			</text>
-			<text_editor name="about" width="370" />
+			<text_editor name="about" width="321" />
 		</panel>
 		<panel label="Mes notes" name="My Notes" width="458">
 			<string name="Loading">
 				Chargement...
 			</string>
-			<text name="label" width="452">
+			<text name="label" width="321">
 				Dans cet espace, vous pouvez enregistrer vos remarques au sujet de ce résident ou
 prendre des notes sur certains projets. Vous êtes le seul à pouvoir accéder à cette
 page et même le résident dont vous consultez le profil ne pourra pas voir ce que
 vous avez écrit.
 			</text>
-			<text_editor bottom_delta="-260" height="240" name="notes edit" width="430"/>
-
+			<text_editor bottom_delta="-280" embedded_items="false" enabled="true" follows="left|top"
+			     font="SansSerif" height="256" is_unicode="false" left="10"
+			     max_length="1023" mouse_opaque="true" name="notes edit" width="400"
+			     word_wrap="true" spell_check="true" />
 			<flyout_button name="copy_flyout" label="Copy :"/>
 			<name_editor bevel_style="in" bg_readonly_color="0, 0, 0, 0" border_style="line"
 			     border_thickness="1" bottom_delta="1" enabled="false" follows="left|top"
 			     font="SansSerifSmall" height="18" is_unicode="false" left_delta="95"
 			     max_length="48" mouse_opaque="false" name="avatar_key"
-			     text_readonly_color="1, 1, 1, 1" width="250" />
+			     text_readonly_color="1, 1, 1, 1" width="400" />
 
 		</panel>
 	</tab_container>

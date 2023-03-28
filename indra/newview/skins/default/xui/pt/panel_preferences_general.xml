@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<panel label="Geral" name="general_panel">
-	<radio_group name="default_start_location">
+<panel border="true" bottom="-409" height="408" label="Geral" left="102" name="general_panel" width="517">
+	<radio_group bottom="-44" height="40" left="109" name="default_start_location"  width="250">
 		<radio_item name="home" tool_tip="Como padrão, registrar na minha casa.">
 			Minha Casa
 		</radio_item>
@@ -9,7 +9,7 @@
 		</radio_item>
 	</radio_group>
 	<check_box label="Mostrar Posição Inicial na Tela de Login" name="show_location_checkbox"/>
-	<combo_box name="fade_out_combobox" width="166">
+  <combo_box bottom_delta="-27" follows="top" height="18" left="103" name="fade_out_combobox" width="111">
 		<combo_item name="Never">
 			Nunca
 		</combo_item>
@@ -34,14 +34,15 @@
 	<check_box label="Usar escala independente da resolução" name="ui_auto_scale"/>
 	<spinner label="Tempo para ficar Ausente:" name="afk_timeout_spinner"/>
 	<check_box label="Avisar quando receber ou gastar Linden dollars (L$)" name="notify_money_change_checkbox"/>
-	<text name="maturity_desired_label" bottom="-312">
+  <check_box bottom="-257" height="16" label="without filling up the corner" left="300" name="no_transaction_clutter_checkbox" tool_tip="Ainda apresente as notificações, mas faça-as aparecer momentaneamente no canto inferior direito e, em seguida, saia, para que a transação chame a atenção, mas não atrapalhe."/>
+  <text name="maturity_desired_label" bottom="-280">
 		Classificação:
 	</text>
-	<text name="maturity_desired_prompt" bottom="-312">
+	<text name="maturity_desired_prompt" bottom="-280">
 		Eu quero acessar
 conteúdo classificado:
 	</text>
-	<combo_box name="maturity_desired_combobox" bottom="-330" left="278">
+	<combo_box name="maturity_desired_combobox" bottom="-297" left="278">
 		<combo_item name="Desired_Adult">
 			PG, Mature e Adult
 		</combo_item>
@@ -73,13 +74,13 @@ conteúdo classificado:
 	<text name="language_textbox">
 		Linguagem:
 	</text>
-	<text left_delta="313" name="language_textbox2">
+  <text bottom_delta="0" follows="top" height="18" left_delta="263" name="language_textbox2">
 		(Precisa de reinício para efetivar)
 	</text>
 	<string name="region_name_prompt">
 		Digite o nome da Região
 	</string>
-	<combo_box name="crash_behavior_combobox" width="166">
+  <combo_box bottom="-328" height="18" left="153" name="crash_behavior_combobox" width="166">
 		<combo_item name="Askbeforesending">
 			Perguntar antes de enviar
 		</combo_item>

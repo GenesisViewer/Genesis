@@ -13,17 +13,17 @@
 		 <view_border bevel_style="none" border_thickness="1" bottom_delta="0" follows="top|left" height="75"
 		left="235" name="CmdDivisor" width="0"/>
 	  -->
-      <text name="objects_link_text_box2">Chat</text>
+      <text bottom="-15" left="370" name="objects_link_text_box2" width="300">Chat</text>
       <check_box label="Tippgeräusche erzeugen" tool_tip="Unterdrückt die Tippgeräusche" name="play_typing_sound_check"/>
       <check_box label="Hinweise nicht im Chat anzeigen und protokollieren" name="hide_notifications_in_chat_check"/>
       <check_box label="Gruppennamen im Chat zeigen" tool_tip="Der name der Gruppe word angezeigt wenn die Nachricht aus dem Gruppenchat stammt." name="append_group_name_check"/>
       <check_box label="Displaynamen im Chat zeigen" tool_tip="Wenn aktiviert, wird immer wenn sich jemandes Anzeige-Namen ändert, eine Mitteilung im Chat angezeigt." name="display_name_change"/>
       <check_box label="Bentze Sprechblasen als Tippen-Indikator" name="use_typing_bubbles"/>
       <text name="objects_link_text_box3">Zeige Linka von chattenden Objektnamen im Caht-Verlauf für:</text>
-      <radio_group tool_tip="Generiert einen Link auf den Besitzer eines sprechenden Objekts" name="objects_link">
-        <radio_item name="no_object">Kein Objekt</radio_item>
-        <radio_item name="others_objects">Objekte anderer Personen</radio_item>
-        <radio_item name="anyones_objects">Alle Objekte</radio_item>
+      <radio_group tool_tip="Generiert einen Link auf den Besitzer eines sprechenden Objekts" follows="top" height="20" left="20" name="objects_link" width="400">
+        <radio_item bottom_delta="0" left_delta="5" name="no_object">Kein Objekt</radio_item>
+        <radio_item bottom_delta="0" left_delta="50" name="others_objects">Objekte anderer Personen</radio_item>
+        <radio_item bottom_delta="0" left_delta="90" name="anyones_objects">Alle Objekte</radio_item>
       </radio_group>
       <text name="time_format_text_box">Zeitformat:</text>
       <combo_box tool_tip="Zeige Zeit entweder im 12 oder im 24 Stunden Format." name="time_format_combobox">
@@ -129,9 +129,9 @@ auf ein falsches wort und wähle ein anderes Wort aus.</text>
       <text name="keyword_txt1">(durch Komma getrennt)</text>
       
       <text name="EmKeyw">Wurde gefunden in:</text>
-      <check_box label="Local Chat Floater" name="KeywordsInChat"/>
-      <check_box label="Instant Message Floater" name="KeywordsInIM"/>
-      <check_box label="Nachricht in dieser Farbe markieren:" name="KeywordsChangeColor"/>
+      <check_box bottom_delta="3" follows="top" height="16" left_delta="120" label="Local Chat Floater" name="KeywordsInChat"/>
+      <check_box bottom_delta="0" left_delta="140" follows="left|top" height="16" label="Instant Message Floater" name="KeywordsInIM"/>
+      <check_box bottom_delta="-24" follows="top" height="16" label="Nachricht in dieser Farbe markieren:" name="KeywordsChangeColor"/>
       <color_swatch name="KeywordsColor" tool_tip="Klicken, um die Farbauswahl zu öffnen"/>
       <check_box label="Diesen Ton spielen (UUID)" name="KeywordsPlaySound"/>
       

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<panel name="Panel Avatar" width="470">
-	<tab_container name="tab" width="459">
-		<panel label="2nd Life" name="2nd Life" width="458">
+<panel bottom="-600" height="525" left="350" name="Panel Avatar" width="430">
+  <tab_container bottom="-525" height="525" left="0" mouse_opaque="false" name="tab"
+	     tab_min_width="48" tab_position="top" width="420">
+    <panel border="true" bottom="-600" follows="left|top|right|bottom" height="545"
+		     label="2nd Life" left="1" mouse_opaque="true" name="2nd Life" width="418">
 			<string name="AcctTypeResident">
 				Residente
 			</string>
@@ -32,54 +34,131 @@
 			<text name="Name:">
 				Nome:
 			</text>
-			<text name="online_yes" width="151">
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom="-48" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="185"
+			     mouse_opaque="true" name="online_yes" v_pad="0" width="136">
 				Online in questo istante
 			</text>
-			<text name="label">
+			<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
+			     mouse_opaque="true" name="label" v_pad="0" width="136">
 				Nato:
 			</text>
-			<line_editor name="born" width="161" />
-			<text name="label2">
+      <line_editor bevel_style="in" border_style="line"
+			     border_thickness="1" bottom_delta="-16" enabled="true" follows="left|top"
+			     font="SansSerifSmall" height="16" is_unicode="false" left_delta="0"
+			     max_length="254" mouse_opaque="false" name="born"
+			     width="137" />
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
+			     mouse_opaque="true" name="label2" v_pad="0" width="136">
 				Conto:
 			</text>
-			<view_border name="acct_border" width="161" />
-			<text name="acct" width="161" />
-			<text name="partner_label" tool_tip="Partner in Second Life. Per maggiori informazioni sulla partnership leggi www.secondlife.com/partner">
+      <view_border bevel_style="in" bottom_delta="-48" follows="left|top" height="48" left_delta="0"
+                 mouse_opaque="false" name="acct_border" width="136" />
+      <text bg_visible="false" border_drop_shadow_visible="false"
+			     border_visible="true" bottom_delta="0" drop_shadow_visible="true"
+			     follows="left|top" font="SansSerifSmall" height="48" left_delta="0"
+			     mouse_opaque="true" name="acct" width="136" />
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
+			     mouse_opaque="true" name="partner_label"
+			     tool_tip="Second Life partner. For more info on how to set, see www.secondlife.com/partner"
+			     v_pad="0" width="135">
 				Partner:
 			</text>
-			<button label="?" label_selected="?" name="partner_help"/>
-			<name_editor name="partner_edit" width="161"/>
-			<text name="Photo:">
+      <button bottom_delta="0" follows="left|top" font="SansSerif" halign="center"
+			     height="18" label="?" label_selected="?" left_delta="119"
+			     mouse_opaque="true" name="partner_help" width="18" />
+      <name_editor bevel_style="in" border_style="line"
+			     border_thickness="1" bottom_delta="-16" enabled="true" follows="left|top"
+			     font="SansSerifSmall" height="16" left_delta="-119"
+			     max_length="1024" mouse_opaque="true" name="partner_edit"
+			     width="137"/>
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom="-68" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="right" height="16" left="4"
+			     mouse_opaque="true" name="Photo:" v_pad="0" width="70">
 				Foto:
 			</text>
-			<texture_picker label="" name="img" tool_tip="Clicca per scegliere una fotografia"/>
-			<text name="Groups:">
-				Gruppi:
+      <texture_picker allow_no_texture="true" bottom_delta="-135" can_apply_immediately="false"
+			     default_image_name="None" follows="left|top" height="151" label=""
+			     left="79" mouse_opaque="true" name="img"
+			     tool_tip="Clicca per scegliere una fotografia" width="180" />			
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom_delta="23" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="right" height="16" left="4"
+			     mouse_opaque="true" name="Groups:" v_pad="0" width="70">				Gruppi:
 			</text>
-			<scroll_list name="groups" width="361" />
-			<text name="About:">
+      <scroll_list background_visible="true" bottom_delta="-80" column_padding="5" draw_border="true"
+			     follows="left|top" height="95" left="79" mouse_opaque="false"
+			     multi_select="false" name="groups" width="321" menu_num="1"/>
+      <string name="None">None</string>
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom_delta="-18" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="right" height="16" left="4"
+			     mouse_opaque="true" name="About:" v_pad="0" width="70">
 				Informazioni:
 			</text>
-			<text name="(500 chars)">
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom_delta="-16" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="right" height="16" left="0"
+			     mouse_opaque="true" name="(500 chars)" v_pad="0" width="70">
 				500 carat.
 			</text>
-			<text_editor name="about" width="361"/>
-			<text name="Give item:">
+      <text_editor bottom_delta="-88" embedded_items="false"
+			     enabled="true" follows="left|top" font="SansSerifSmall" height="119"
+			     left="79" max_length="511" mouse_opaque="true" hide_scrollbar="true"
+			     name="about" width="321" word_wrap="true" spell_check="true" />
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom="-427" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="right" height="16" left="0"
+			     mouse_opaque="true" name="Give item:" v_pad="0" width="75">
 				Regala:
 			</text>
-			<drop_target name="drop_target_rect" width="361" label="Rilascia un oggetto dell&apos;inventario qui." tool_tip="Trascina e lascia uno o più oggetti dell&apos;inventario qui, per regalarli a questa persona."/>
+      <drop_target bottom="-428" height="17" left_delta="79" width="321" fill_parent="true" show_reset="false" name="drop_target_rect" label="Rilascia un oggetto dell&apos;inventario qui." tool_tip="Trascina e lascia uno o più oggetti dell&apos;inventario qui, per regalarli a questa persona."/>
 			<check_box label="Mostra nella ricerca" name="allow_publish" tool_tip="Pubblica informazioni descrizioni o immagini aggiuntive del profilo nella ricerca."/>
-			<button label="?" label_selected="?" name="?"/>
-			<button label="Trova sulla mappa" label_selected="Trova sulla mappa" name="Find on Map" left="60"/>
-			<button label="Offri teletrasporto..." label_selected="Offri teletrasporto..." name="Offer Teleport..."/>
-			<button label="Aggiungi come amico..." label_selected="Aggiungi come amico..." name="Add Friend..." width="140"/>
-			<button label="Paga..." label_selected="Paga..." name="Pay..." left="60"/>
-			<button label="Instant Message..." label_selected="Instant Message..." name="Instant Message..." tool_tip="Instant Message (IM)"/>
-			<button label="Ignora" label_selected="Ignora" name="Mute"/>
+
+      <button bottom="-447" follows="left|top" font="SansSerif" halign="center" height="16"
+     label="?" label_selected="?" left_delta="145" mouse_opaque="true" name="?"
+     width="20" />
+      <button bottom="-472" font="SansSerif" halign="center" height="20" label="Trova sulla mappa"
+			     label_selected="Trova sulla mappa" left="15" mouse_opaque="true"
+			     name="Find on Map" width="102" />
+      <button bottom="-472" font="SansSerif" halign="center" height="20"
+			     label="Offri teletrasporto..." label_selected="Offri teletrasporto..."
+			     left_delta="102" mouse_opaque="true" name="Offer Teleport..." width="82" />
+      <button bottom="-472" font="SansSerif" halign="center" height="20"
+			     label="Aggiungi come amico..." label_selected="Aggiungi come amico..." left_delta="82"
+			     mouse_opaque="true" name="Add Friend..." width="132" />
+      <button label="Storia" name="Log" bottom="-472" left_delta="132" height="20" width="70"/>
+      <button bottom="-490" font="SansSerif" halign="center" height="20" label="Paga..."
+			     label_selected="Paga..." left="15" mouse_opaque="true" name="Pay..."
+			     width="71" />
+      <button bottom="-490" font="SansSerif" halign="center" height="20"
+			     label="Instant Message..." label_selected="Instant Message..."
+			     left_delta="71" mouse_opaque="true" name="Instant Message..."
+			     tool_tip="Instant Message (IM)" width="141" />
+      <button bottom="-490" font="SansSerifSmall" halign="center" height="20" label="Ignora" label_selected="Ignora" toggle="true"
+			     left_delta="141" mouse_opaque="true" name="Mute"
+			     width="61" />
+      <button bottom="-490" font="SansSerif" halign="center" height="20" label="Invita al gruppo"
+			     label_selected="Invita al gruppo" left_delta="61" mouse_opaque="true"
+			     name="GroupInvite_Button" width="113" />
 		</panel>
-		<panel label="Web" name="WebProfile" width="458">
-		  <line_editor name="url_edit" width="440" />
-			<flyout_button label="Carica" label_selected="Carica" name="load" tool_tip="Carica questa pagina del profilo con il browser web interno.">
+    <panel border="true" bottom="-482" follows="left|top|right|bottom" height="466"
+		       label="Web" left="1" mouse_opaque="true" name="WebProfile" width="418">
+      <line_editor bevel_style="in" border_style="line"
+			     border_thickness="1" bottom_delta="-18" enabled="false" follows="left|top"
+			     font="SansSerifSmall" height="16" is_unicode="false" left="10"
+			     max_length="254" mouse_opaque="true" name="url_edit"
+			     width="400" />
+      <flyout_button bottom_delta="-22" follows="left|top" font="SansSerifSmall" halign="center"
+			     height="18" label="Carica" label_selected="Carica" name="load"  left="10" width="80" mouse_opaque="true" enabled="false" tool_tip="Carica questa pagina del profilo con il browser web interno.">
 				<flyout_button_item name="open_item">
 					Usa browser esterno
 				</flyout_button_item>
@@ -103,7 +182,11 @@
 			<check_box label="Comprare" name="chk4"/>
 			<check_box label="Vendere" name="chk5"/>
 			<check_box label="Assumere" name="chk7"/>
-			<line_editor name="want_to_edit" width="360" />
+      <line_editor bevel_style="in" border_style="line"
+			     border_thickness="1" bottom_delta="-20" enabled="true" follows="left|top"
+			     font="SansSerifSmall" height="16" is_unicode="false" left="74"
+			     max_length="254" mouse_opaque="true" name="want_to_edit"
+			     width="330" spell_check="true" />
 			<text name="Skills:">
 				Capacità:
 			</text>
@@ -113,15 +196,30 @@
 			<check_box label="Modellazione" name="schk3"/>
 			<check_box label="Scripting" name="schk4"/>
 			<check_box label="Personalizzazione avatar" name="schk5"/>
-			<line_editor name="skills_edit" width="360" />
+      <line_editor bevel_style="in" border_style="line"
+			     border_thickness="1" bottom_delta="-20" enabled="true" follows="left|top"
+			     font="SansSerifSmall" height="16" is_unicode="false" left="74"
+			     max_length="254" mouse_opaque="true" name="skills_edit"
+			     width="330" spell_check="true" />
 			<text name="Languages:">
 				Lingue:
 			</text>
-			<line_editor name="languages_edit" width="360" />
+      <line_editor bevel_style="in" border_style="line"
+			     border_thickness="1" bottom_delta="0" enabled="true" follows="left|top"
+			     font="SansSerifSmall" height="16" is_unicode="false" left="74"
+			     max_length="254" mouse_opaque="true" name="languages_edit"
+			     width="330" />
 		</panel>
-		<panel label="Preferiti" name="Picks" width="458">
-			<tab_container name="picks tab" width="452" />
-			<text name="Tell everyone about your favorite places in Second Life.">
+    <panel border="true" bottom="-482" follows="left|top|right|bottom" height="466"
+       label="Preferiti" left="1" mouse_opaque="true" name="Picks" width="418">  
+		<!--<panel label="Preferiti" name="Picks" width="458">-->
+			<tab_container name="picks tab" width="418" />
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom="-20" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="left" height="16" left="114"
+			     mouse_opaque="true"
+			     name="Tell everyone about your favorite places in Second Life." v_pad="0"
+			     width="302">
 				Comunica a tutti i tuoi posti preferiti in Second Life.
 			</text>
 			<button label="Nuovo..." label_selected="Nuovo..." name="New..."/>
@@ -130,8 +228,8 @@
 				In caricamento...
 			</text>
 		</panel>
-		<panel label="Inserzioni" name="Classified" width="458">
-			<tab_container name="classified tab" width="452" />
+		<panel label="Inserzioni" name="Classified" width="418">
+			<tab_container name="classified tab" width="418" />
 			<text name="Place an ad in Second Life&apos;s classified listings.">
 				Inserisci una pubblicità nelle liste delle inserzioni di Second Life.
 			</text>
@@ -141,26 +239,44 @@
 				In caricamento...
 			</text>
 		</panel>
-		<panel label="First Life" name="1st Life" width="458">
+		<panel label="First Life" name="1st Life" width="418">
 			<text_editor name="about" width="370" />
 			<text name="Photo:">
 				Foto:
 			</text>
-			<texture_picker label="" name="img" tool_tip="Clicca per scegliere un&apos;immagine"/>
-			<text name="Info:">
+      <texture_picker allow_no_texture="true" bottom="-171" can_apply_immediately="false"
+			     default_image_name="None" follows="left|top" height="151" label=""
+			     left="70" mouse_opaque="true" name="img" tool_tip="Clicca per scegliere un&apos;immagine"  width="135" />
+      <button bottom_delta="18" follows="left|top" font="SansSerif" halign="center"
+			     height="32" label="" left="30" width="32"
+			 	 image_selected="tool_zoom.tga"
+				 image_unselected="tool_zoom.tga"
+				 image_hover_selected="tool_zoom_active.tga"
+				 image_hover_unselected="tool_zoom_active.tga"
+				 mouse_opaque="true"
+			  	 name="flbigimg"/>
+      <text name="Info:">
 				Info:
 			</text>
-			<text name="(250 chars)">
-				(250
-caratteri)
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom_delta="-16" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="right" height="16" left="0"
+			     mouse_opaque="true" name="(250 chars)" v_pad="0" width="65">
+				(250 caratteri)
 			</text>
 		</panel>
-		<panel label="Le mie note" name="My Notes" width="458">
-			<text_editor name="notes edit" width="430"/>
+    <panel border="true" bottom="-482" follows="left|top|right|bottom" height="466" label="Le mie note" left="1" mouse_opaque="true" name="My Notes" width="418">
+      <text_editor bottom_delta="-260" embedded_items="false" enabled="true" follows="left|top"
+			     font="SansSerif" height="256" is_unicode="false" left="10"
+			     max_length="1023" mouse_opaque="true" name="notes edit" width="400"
+			     word_wrap="true" spell_check="true" />
 			<string name="Loading">
 				In caricamento...
 			</string>
-			<text name="label" width="452">
+      <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+			     bottom="-52" drop_shadow_visible="true" follows="left|top"
+			     font="SansSerifSmall" h_pad="0" halign="left" height="48" left="10"
+			     mouse_opaque="true" name="label" v_pad="0" width="412">
 				Usa questo spazio per registrare le tue note su questa persona. Appunta qui
 affari in corso, progetti in comune, ecc. Solo tu puoi leggere queste note.
 Nè questa persona né nessun altro possono vederle.

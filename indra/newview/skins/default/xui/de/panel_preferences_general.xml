@@ -31,7 +31,7 @@
 	<text name="maturity_desired_label">Einstuf.:</text>
 	<text name="maturity_desired_prompt">Ich möchte auf Inhalt mit folgender
 Alterseinstufung zugreifen:</text>
-	<combo_box name="maturity_desired_combobox">
+	<combo_box bottom="-297" follows="left|top" height="18" left="300" name="maturity_desired_combobox">
 		<combo_item name="Desired_Adult">PG, Mature und Adult</combo_item>
 		<combo_item name="Desired_Mature">PG und Mature</combo_item>
 		<combo_item name="Desired_PG">Nur PG</combo_item>

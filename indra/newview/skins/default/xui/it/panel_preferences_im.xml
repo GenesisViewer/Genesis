@@ -24,6 +24,6 @@
 	<check_box label="Mostra l&apos;orario nei registri della chat locale" name="log_chat_timestamp"/>
 	<check_box label="Mostra gli IM entranti nel registro della chat locale" name="log_chat_IM"/>
 	<check_box label="Includi la data nell&apos;orario" name="log_date_timestamp"/>
-	<button label="Cambia percorso" label_selected="Cambia percorso" name="log_path_button" left="30" width="130"/>
+	<button bottom="-351" follows="right|bottom" height="20" label="Cambia percorso" label_selected="Cambia percorso" left="330" name="log_path_button" width="120"/>
 	<line_editor name="log_path_string"/>
 </panel>

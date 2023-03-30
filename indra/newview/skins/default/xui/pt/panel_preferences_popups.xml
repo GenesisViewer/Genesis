@@ -3,13 +3,18 @@
 	<text name="dont_show_label">
 		Não mostrar estas popups:
 	</text>
-	<button label="Habilitar esta popup" label_selected="Habilitar este popup" name="enable_popup"/>
-	<button label="Habilitar todas as popups..." label_selected="Reiniciar Dialogos que serão mostrados na próxima vez..." name="reset_dialogs_btn" tool_tip="Habilitar todas as popups opcionais e notificações de “primeiro uso”." width="200"/>
+	<!--<button label="Habilitar esta popup" label_selected="Habilitar este popup" name="enable_popup"/>
+	<button label="Habilitar todas as popups..." label_selected="Reiniciar Dialogos que serão mostrados na próxima vez..." name="reset_dialogs_btn" tool_tip="Habilitar todas as popups opcionais e notificações de “primeiro uso”." width="200"/>-->
 	<text name="show_label">
 		Mostrar estas popups:
 	</text>
-	<button label="Desabilitar todas estas popups..." name="skip_dialogs_btn" tool_tip="Desabilitar todas as popups opcionais e notificações de “primeiro uso”." width="200"/>
-	<text name="text_box2">
+	<!--<button label="Desabilitar todas estas popups..." name="skip_dialogs_btn" tool_tip="Desabilitar todas as popups opcionais e notificações de “primeiro uso”." width="200"/>-->
+  <button follows="top" height="20" label="Enable all" left="25" name="reset_dialogs_btn" tool_tip="Ative todos os pop-ups opcionais e as notificações de 'primeira utilização'." width="100"/>
+  <button follows="top" height="20" label="" image_overlay="arrow_up.tga" left_delta="105" name="enable_popup" width="30" bottom_delta="0"/>
+  <button follows="top" height="20" label="Disable first time popups..." left_delta="35" name="skip_frst_btn" tool_tip="Desative todas as notificações de uso pela primeira vez." width="175" bottom_delta="0"/>
+  <button follows="top" height="20" label="" image_overlay="arrow_down.tga" left_delta="180" name="disable_popup" width="30" bottom_delta="0"/>
+  <button bottom_delta="0" follows="top" height="20" label="Disable all" left_delta="35" name="skip_dialogs_btn" tool_tip="Desative todos os pop-ups opcionais e as notificações de 'primeira utilização'." width="100"/>
+  <text name="text_box2">
 		Ofertas de notecards, texturas e landmarks:
 	</text>
 	<check_box label="Aceitar automaticamente" name="accept_new_inventory"/>

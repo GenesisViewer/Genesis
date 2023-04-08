@@ -107,7 +107,7 @@ public:
 		Optional<CommitCallbackParam>	mouseenter_callback,
 										mouseleave_callback;
 
-		Optional<std::string>			control_name;
+		Optional<std::string>			control_name,highlighted_control_id;
 		Optional<EnableControls>		enabled_controls;
 		Optional<ControlVisibility>		controls_visibility;
 
@@ -115,6 +115,7 @@ public:
 		Optional<const LLFontGL*>		font;
 		Optional<LLFontGL::HAlign>		font_halign;
 		Optional<LLFontGL::VAlign>		font_valign;
+										
 
 		// cruft from LLXMLNode implementation
 		Ignored							type,
@@ -225,7 +226,11 @@ public:
 	virtual // Singu Note: focusFirstItem is overridden for our old chat ui to prevent focusing on topmost uictrls.
 	BOOL 	focusFirstItem(BOOL prefer_text_fields = FALSE, BOOL focus_flash = TRUE );
 	BOOL	focusLastItem(BOOL prefer_text_fields = FALSE);
-
+	void 	setHighlighted(bool highlight){mHighlighted = highlight;}
+	bool	isHighlighted() {return mHighlighted;}
+	std::string getHighLightControlID() {return mHighLightControlID;}
+	void setHighLightControlID(std::string highlighted_control_id) {mHighLightControlID = highlighted_control_id;}
+	BOOL hasHighLightControlID() {return !mHighLightControlID.empty();}
 	// Non Virtuals
 	LLHandle<LLUICtrl> getHandle() const { return getDerivedHandle<LLUICtrl>(); }
 	BOOL			getIsChrome() const;
@@ -323,7 +328,8 @@ private:
 	ETypeTransparency mTransparencyType;
 
 	bool			mCommitOnReturn;
-
+	bool			mHighlighted = false;
+	std::string 	mHighLightControlID;
 	class DefaultTabGroupFirstSorter;
 };
 

@@ -78,6 +78,7 @@ LLUICtrl::Params::Params()
 	font("font", LLFontGL::getFontSansSerif()),
 	font_halign("halign"),
 	font_valign("valign"),
+	highlighted_control_id("highlighted_control_id"),
 	length("length"), 	// ignore LLXMLNode cruft
 	type("type")   		// ignore LLXMLNode cruft
 {
@@ -201,6 +202,8 @@ void LLUICtrl::initFromParams(const Params& p)
 	{
 		setMouseLeaveCallback(initCommitCallback(p.mouseleave_callback));
 	}
+	if (p.highlighted_control_id.isProvided())
+		setHighLightControlID(p.highlighted_control_id);
 }
 
 LLUICtrl::LLUICtrl(const std::string& name, const LLRect rect, BOOL mouse_opaque,
@@ -899,7 +902,11 @@ void LLUICtrl::initFromXML(LLXMLNodePtr node, LLView* parent)
 	std::string name;
 	if(node->getAttributeString("name", name))
 		setName(name);
-
+	std::string highlighted_control_id;
+	if (node->getAttributeString("highlighted_control_id", highlighted_control_id))
+	{
+		setHighLightControlID(highlighted_control_id);
+	}
 	BOOL has_tab_stop = hasTabStop();
 	node->getAttributeBOOL("tab_stop", has_tab_stop);
 

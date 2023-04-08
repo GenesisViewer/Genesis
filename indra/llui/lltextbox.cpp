@@ -57,6 +57,7 @@ LLTextBox::LLTextBox(const std::string& name, const std::string& text, F32 max_w
 	setWrappedText(text, max_width);
 	reshapeToFitText();
 	setTabStop(FALSE);
+	
 }
 
 LLTextBox::LLTextBox(const std::string& name_and_label, const LLRect& rect) :
@@ -89,6 +90,7 @@ void LLTextBox::initDefaults()
 	mHAlign = LLFontGL::LEFT;
 	mVAlign = LLFontGL::TOP;
 	mClickedCallback = NULL;
+	
 }
 
 BOOL LLTextBox::handleMouseDown(S32 x, S32 y, MASK mask)
@@ -354,9 +356,11 @@ void LLTextBox::reshape(S32 width, S32 height, BOOL called_from_parent)
 
 void LLTextBox::drawText( S32 x, S32 y, const LLColor4& color )
 {
+	LLColor4 temp_color = color;
+	if (isHighlighted()) temp_color=LLColor4::green;
 	if( mLineLengthList.empty() )
 	{
-		mFontGL->render(mText.getWString(), 0, (F32)x, (F32)y, color,
+		mFontGL->render(mText.getWString(), 0, (F32)x, (F32)y, temp_color,
 						mHAlign, mVAlign, 
 						mFontStyle,
 						mFontShadow,
@@ -369,7 +373,7 @@ void LLTextBox::drawText( S32 x, S32 y, const LLColor4& color )
 			iter != mLineLengthList.end(); ++iter)
 		{
 			S32 line_length = *iter;
-			mFontGL->render(mText.getWString(), cur_pos, (F32)x, (F32)y, color,
+			mFontGL->render(mText.getWString(), cur_pos, (F32)x, (F32)y, temp_color,
 							mHAlign, mVAlign,
 							mFontStyle,
 							mFontShadow,

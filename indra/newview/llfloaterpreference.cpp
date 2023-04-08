@@ -370,7 +370,7 @@ BOOL LLFloaterPreference::postBuild()
 	getChild<LLUICtrl>("Apply")->setCommitCallback(boost::bind(&LLFloaterPreference::onBtnApply, this));
 	getChild<LLUICtrl>("Cancel")->setCommitCallback(boost::bind(&LLFloaterPreference::onBtnCancel, this));
 	getChild<LLUICtrl>("OK")->setCommitCallback(boost::bind(&LLFloaterPreference::onBtnOK, this));
-
+	getChild<LLLineEditor>("search_text")->setKeystrokeCallback(boost::bind(&LLFloaterPreference::onsearch,this,_1));
 	mPreferenceCore = new LLPreferenceCore(getChild<LLTabContainer>("pref core"), getChild<LLButton>("OK"));
 
 	sInstance = this;
@@ -384,7 +384,157 @@ LLFloaterPreference::~LLFloaterPreference()
 	sInstance = NULL;
 	delete mPreferenceCore;
 }
+void LLFloaterPreference::onsearch(LLLineEditor *searchCtrl)
+{
+	std::string search = searchCtrl->getText();
+	if (search.empty()) {
+		clearSearch();
+	} else {
+		doSearch(search);
+	}
+}
+void LLFloaterPreference::clearSearch()
+{
+	int nbTabPanels = mPreferenceCore->getTabContainer()->getTabCount();
+	for (int i = nbTabPanels-1; i>=0;i--) {
+		LLPanel * tabPanel = mPreferenceCore->getTabContainer()->getPanelByIndex(i);
+		mPreferenceCore->getTabContainer()->enableTabButton(i,true);
+		
+		clearSearch(tabPanel);
 
+	}
+}
+void LLFloaterPreference::clearSearch(LLPanel * tabPanel)
+{
+	LLView::child_list_const_iter_t	end(tabPanel->endChild());
+	for (LLView::child_list_const_iter_t i = tabPanel->beginChild(); i != end; ++i)
+	{
+		//what is the type of this child?
+		LLPanel *pPanel = dynamic_cast< LLPanel *>( (*i));
+		LLTabContainer *pTabContainer = dynamic_cast< LLTabContainer *>( (*i) );
+		LLUICtrl *pCtrl = dynamic_cast< LLUICtrl *>( (*i) );
+
+		if (pTabContainer) {
+			int nbTabPanels = pTabContainer->getTabCount();
+			for (int i = nbTabPanels-1; i>=0;i--) {
+				LLPanel * nextTabPanel = pTabContainer->getPanelByIndex(i);
+				clearSearch(nextTabPanel);
+				pTabContainer->enableTabButton(i,true);
+			}
+		}
+		if (pCtrl) {
+			pCtrl->setHighlighted(false);
+			LLView::child_list_const_iter_t	end(pCtrl->endChild());
+			for (LLView::child_list_const_iter_t i = pCtrl->beginChild(); i != end; ++i)
+			{
+				LLUICtrl *nextCtrl = dynamic_cast< LLUICtrl *>( (*i) );
+				if (nextCtrl)
+					nextCtrl->setHighlighted(false);
+			}
+		}
+	}
+}
+void LLFloaterPreference::doSearch(std::string search)
+{
+	int nbTabPanels = mPreferenceCore->getTabContainer()->getTabCount();
+	
+	for (int i = nbTabPanels-1; i>=0;i--) {
+		LLPanel * tabPanel = mPreferenceCore->getTabContainer()->getPanelByIndex(i);
+		
+		bool visible = doSearch(search,tabPanel);
+		//tabPanel->setVisible(visible);
+		mPreferenceCore->getTabContainer()->enableTabButton(i,visible);
+	}
+}
+bool LLFloaterPreference::doSearch(std::string search,LLPanel * tabPanel)
+{
+	bool visible = false;
+	LLView::child_list_const_iter_t	end(tabPanel->endChild());
+	for (LLView::child_list_const_iter_t i = tabPanel->beginChild(); i != end; ++i)
+	{
+		//what is the type of this child?
+		LLPanel *pPanel = dynamic_cast< LLPanel *>( (*i));
+		LLTabContainer *pTabContainer = dynamic_cast< LLTabContainer *>( (*i) );
+		LLUICtrl *pCtrl = dynamic_cast< LLUICtrl *>( (*i) );
+		if (pPanel) {
+			visible = doSearch(search,pPanel) || visible;
+		}
+		if (pTabContainer) {
+			bool tabVisible = false;
+			int nbTabPanels = pTabContainer->getTabCount();
+			for (int j = nbTabPanels-1; j>=0;j--) {
+				LLPanel * nextTabPanel = pTabContainer->getPanelByIndex(j);
+				tabVisible =  doSearch(search,nextTabPanel);
+				pTabContainer->enableTabButton(j,tabVisible);
+			}
+			visible = tabVisible || visible;
+			
+		}
+		if (pCtrl) {
+			visible = doSearch(search,tabPanel,pCtrl) || visible;
+		}
+		
+	}
+	return visible;
+}
+bool LLFloaterPreference::doSearch(std::string search,LLPanel * parent, LLUICtrl * ctrl)
+{
+	bool visible = false;
+	if (ctrl->isHighlighted()) {
+		return true;
+	}
+	
+	LLWString value = utf8str_to_wstring(ctrl->getControlName());
+	
+	LLWString searchString =  utf8str_to_wstring(search);
+	LLWStringUtil::toLower( value );
+	LLWStringUtil::toLower( searchString );
+	if (value.find(searchString) != std::string::npos) {
+		visible=true;
+	} 
+	
+	value = utf8str_to_wstring(ctrl->getToolTip());
+	LLWStringUtil::toLower( value );
+	if (value.find(searchString) != std::string::npos) {
+		visible=true;
+	} 
+	LLTextBox *pText = dynamic_cast< LLTextBox *>( (ctrl) );
+	if (pText) {
+		value = utf8str_to_wstring(pText->getText());
+		LLWStringUtil::toLower( value );
+		if (value.find(searchString) != std::string::npos) {
+			visible=true;
+			pText->setHighlighted(true);
+		} 
+	}
+	LLCheckBoxCtrl *pCheckbox = dynamic_cast< LLCheckBoxCtrl *>( (ctrl) );
+	if (pCheckbox) {
+		
+		value = utf8str_to_wstring(pCheckbox->getLabel());
+		LLWStringUtil::toLower( value );
+		if (value.find(searchString) != std::string::npos) {
+			visible=true;
+			pCheckbox->setHighlighted(true);
+			
+		} 
+	}
+	LLView::child_list_const_iter_t	end(ctrl->endChild());
+	for (LLView::child_list_const_iter_t i = ctrl->beginChild(); i != end; ++i)
+	{
+		LLUICtrl *nextCtrl = dynamic_cast< LLUICtrl *>( (*i) );
+		if (nextCtrl)
+			visible = doSearch(search,parent,nextCtrl) || visible;
+	}
+	if (ctrl->hasHighLightControlID()) {
+		
+		//ok, this ctrl must be hightlighted but we have chosen to highlight another one in this case
+		LLUICtrl * otherCtrl = parent->getChild<LLUICtrl>(ctrl->getHighLightControlID());
+		otherCtrl->setHighlighted(visible);
+	} else {
+		ctrl->setHighlighted(visible);
+	}
+	return  visible;
+}
 void LLFloaterPreference::apply()
 {
 	mPreferenceCore->apply();

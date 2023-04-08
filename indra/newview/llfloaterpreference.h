@@ -128,7 +128,12 @@ protected:
 	void		onBtnOK();
 	void		onBtnCancel();
 	void		onBtnApply();
-
+	void 		onsearch(LLLineEditor* searchCtrl);
+	void 		doSearch(std::string search);
+	bool 		doSearch(std::string search,LLPanel * tabPanel);
+	bool 		doSearch(std::string search,LLPanel * parent,LLUICtrl * ctrl);
+	void		clearSearch();
+	void		clearSearch(LLPanel * tabPanel);
 	static LLFloaterPreference* sInstance;
 };
 

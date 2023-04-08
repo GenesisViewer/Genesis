@@ -178,6 +178,7 @@ void LLCheckBoxCtrl::setEnabled(BOOL b)
 	}
 }
 
+
 void LLCheckBoxCtrl::clear()
 {
 	setValue( FALSE );
@@ -224,6 +225,15 @@ LLSD LLCheckBoxCtrl::getValue() const
 void LLCheckBoxCtrl::setTentative(BOOL b)
 {
 	mButton->setTentative(b);
+}
+//virtual
+void LLCheckBoxCtrl::draw()
+{
+	mButton->setHighlighted(isHighlighted());
+	
+	mLabel->setHighlighted(isHighlighted());
+	
+	LLUICtrl::draw();
 }
 
 //virtual

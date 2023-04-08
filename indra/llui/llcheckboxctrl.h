@@ -96,7 +96,7 @@ public:
 
 	virtual void		clear();
 	virtual void		onCommit();
-
+	virtual void		draw();
 	// LLCheckBoxCtrl interface
 	virtual BOOL		toggle()				{ return mButton->toggleState(); }		// returns new state
 

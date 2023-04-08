@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <floater can_close="true" can_drag_on_left="false" can_minimize="true"
      can_resize="false" can_tear_off="true" default_tab_group="1" enabled="true"
-     height="494" left="330" min_height="213" min_width="350"
+     height="520" left="330" min_height="213" min_width="350"
      mouse_opaque="true" name="Preferences" title="Preferences" width="800">
+	 <text type="string" length="1" bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
+	     bottom="-40" drop_shadow_visible="true" enabled="true" follows="left|top"
+	     font="SansSerif" h_pad="0" halign="left" height="19" left="40"
+	     mouse_opaque="true" name="desc txt" v_pad="0" width="80">
+		Search:
+	</text>
+	<line_editor bevel_style="in" border_style="line" border_thickness="1" bottom="-37"
+	     enabled="true" follows="left|top" font="SansSerifSmall"
+	     handle_edit_keys_directly="false" height="16" left="125" max_length="254"
+	     mouse_opaque="true" name="search_text" select_all_on_focus_received="false"
+	     select_on_focus="false" width="350" />
 	<button bottom="4" enabled="true" follows="right|bottom" font="SansSerif"
 	     halign="center" height="20" label="OK" label_selected="OK" left="335"
 	     mouse_opaque="true" name="OK" scale_image="true" width="90" />
@@ -22,7 +33,7 @@
 	     help_url="http://secondlife.com/app/help/technical/preferences.php"
 	     label="Help" label_selected="Help" left_delta="93" mouse_opaque="true"
 	     name="Help" scale_image="true" width="90" />
-	<tab_container bottom="-466" enabled="true" follows="left|top|right|bottom" height="445"
-	     left="0" mouse_opaque="false" name="pref core" tab_group="1"
+	<tab_container bottom="-490" enabled="true" follows="left|top|right|bottom" height="445"
+	     left="2" mouse_opaque="false" name="pref core" tab_group="1"
 	     tab_position="left" tab_width="120" width="800" />
 </floater>

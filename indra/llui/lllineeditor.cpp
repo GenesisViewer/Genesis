@@ -1817,7 +1817,7 @@ void LLLineEditor::draw()
 	{
 		text_color = mReadOnlyFgColor;
 	}
-
+	
 	text_color %= alpha;
 	LLColor4 label_color = mTentativeFgColor % alpha;
 

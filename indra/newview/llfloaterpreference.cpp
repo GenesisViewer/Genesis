@@ -390,6 +390,7 @@ void LLFloaterPreference::onsearch(LLLineEditor *searchCtrl)
 	if (search.empty()) {
 		clearSearch();
 	} else {
+		clearSearch();
 		doSearch(search);
 	}
 }
@@ -423,15 +424,18 @@ void LLFloaterPreference::clearSearch(LLPanel * tabPanel)
 			}
 		}
 		if (pCtrl) {
-			pCtrl->setHighlighted(false);
-			LLView::child_list_const_iter_t	end(pCtrl->endChild());
-			for (LLView::child_list_const_iter_t i = pCtrl->beginChild(); i != end; ++i)
-			{
-				LLUICtrl *nextCtrl = dynamic_cast< LLUICtrl *>( (*i) );
-				if (nextCtrl)
-					nextCtrl->setHighlighted(false);
-			}
+			clearSearch(pCtrl);
 		}
+	}
+}
+void LLFloaterPreference::clearSearch(LLUICtrl * ctrl) {
+	ctrl->setHighlighted(false);
+	LLView::child_list_const_iter_t	end(ctrl->endChild());
+	for (LLView::child_list_const_iter_t i = ctrl->beginChild(); i != end; ++i)
+	{
+		LLUICtrl *nextCtrl = dynamic_cast< LLUICtrl *>( (*i) );
+		if (nextCtrl)
+			clearSearch(nextCtrl);
 	}
 }
 void LLFloaterPreference::doSearch(std::string search)

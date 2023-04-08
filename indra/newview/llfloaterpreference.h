@@ -134,6 +134,7 @@ protected:
 	bool 		doSearch(std::string search,LLPanel * parent,LLUICtrl * ctrl);
 	void		clearSearch();
 	void		clearSearch(LLPanel * tabPanel);
+	void		clearSearch(LLUICtrl * ctrl);
 	static LLFloaterPreference* sInstance;
 };
 

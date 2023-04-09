@@ -42,6 +42,7 @@
 
 #include "llbutton.h"
 #include "llcheckboxctrl.h"
+#include "llcombobox.h"
 #include "lldir.h"
 #include "llfocusmgr.h"
 #include "llscrollbar.h"
@@ -481,7 +482,7 @@ bool LLFloaterPreference::doSearch(std::string search,LLPanel * tabPanel)
 	}
 	return visible;
 }
-bool LLFloaterPreference::doSearch(std::string search,LLPanel * parent, LLUICtrl * ctrl)
+bool LLFloaterPreference::doSearch(std::string search,LLPanel * parent, LLUICtrl* ctrl)
 {
 	bool visible = false;
 	if (ctrl->isHighlighted()) {
@@ -522,6 +523,23 @@ bool LLFloaterPreference::doSearch(std::string search,LLPanel * parent, LLUICtrl
 			
 		} 
 	}
+	LLComboBox* pCombo = dynamic_cast<LLComboBox*>(ctrl);
+	if (pCombo) {
+		std::vector<LLScrollListItem*> data_list = pCombo->getAllData();
+		
+		
+		for (std::vector<LLScrollListItem*>::iterator itr = data_list.begin(); itr != data_list.end(); ++itr)
+	 	{
+			LLScrollListItem* item = *itr;
+			value = utf8str_to_wstring(item->getColumn(0)->getValue().asString());
+			LLWStringUtil::toLower( value );
+			if (value.find(searchString) != std::string::npos) {
+				visible=true;
+				break;
+			}
+		}
+		 
+	}
 	LLView::child_list_const_iter_t	end(ctrl->endChild());
 	for (LLView::child_list_const_iter_t i = ctrl->beginChild(); i != end; ++i)
 	{
@@ -533,7 +551,7 @@ bool LLFloaterPreference::doSearch(std::string search,LLPanel * parent, LLUICtrl
 		
 		//ok, this ctrl must be hightlighted but we have chosen to highlight another one in this case
 		LLUICtrl * otherCtrl = parent->getChild<LLUICtrl>(ctrl->getHighLightControlID());
-		otherCtrl->setHighlighted(visible);
+		otherCtrl->setHighlighted(otherCtrl->isHighlighted() || visible);
 	} else {
 		ctrl->setHighlighted(visible);
 	}

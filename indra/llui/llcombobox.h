@@ -186,6 +186,7 @@ public:
 	void			setSuppressAutoComplete(bool suppress);
 
 	void			updateSelection();
+	std::vector<LLScrollListItem*> getAllData() {return mList->getAllData();}
 	virtual void	showList();
 	virtual void	hideList();
 

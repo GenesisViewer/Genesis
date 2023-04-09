@@ -95,7 +95,7 @@
       <check_box bottom_delta="-20" control_name="PrivateLookAt" follows="top" initial_value="false" label="Do not Look At objects and/or avatars" tool_tip="Disables headturns and lookat beacons, causing your avatar to look straight ahead (unless scripted to do otherwise)." name="private_look_at_check"/>
       <check_box bottom_delta="-20" control_name="AlchemyLookAtHideSelf" follows="top" initial_value="false" label="Don't show me my LookAt beacon" tool_tip="Don't show me my own camera crosshairs" name="LookAtHideOwn"/>
       <check_box bottom_delta="-20" control_name="AscentShowLookAt" follows="top" initial_value="false" label="Show LookAt beacons" tool_tip="Shows you where people are looking." name="show_look_at_check"/>
-      <combo_box bottom_delta="-1" left_delta="200" follows="top" height="18" control_name="LookAtNameSystem" name="lookat_namesystem_combobox" width="130" tool_tip="Style for displaying names on LookAt beacons">
+      <combo_box bottom_delta="-1" left_delta="200" follows="top" height="18" control_name="LookAtNameSystem" name="lookat_namesystem_combobox" width="130" tool_tip="Style for displaying names on LookAt beacons" highlighted_control_id="show_look_at_check">
         <combo_item name="No Names" value="-1">No Names</combo_item>
         <combo_item name="Old Names" value="0">Old Names</combo_item>
         <combo_item name="Display Names (with Username)" value="1">Display Names (w/Username)</combo_item>
@@ -133,7 +133,7 @@
       <spinner bottom_delta="-20" decimal_digits="5" follows="left|top" height="16" increment="0.0005" label="Y size" label_width="40" max_val="10" min_val="0.0001" name="Y size" width="110" control_name="BuildPrefs_Ysize"/>
       <spinner bottom_delta="-20" decimal_digits="5" follows="left|top" height="16" increment="0.0005" label="Z size" label_width="40" max_val="10" min_val="0.0001" name="Z size" width="110" control_name="BuildPrefs_Zsize"/>
       <text bottom_delta="-15" left_delta="-6" follows="top" name="Material">Material:</text>
-      <combo_box bottom_delta="-5" left_delta="48" follows="top" height="18" name="material" width="74" control_name="BuildPrefs_Material">
+      <combo_box bottom_delta="-5" left_delta="48" follows="top" height="18" name="material" width="74" control_name="BuildPrefs_Material" highlighted_control_id="Material">
         <combo_item name="Stone" value="Stone">Stone</combo_item>
         <combo_item name="Metal" value="Metal">Metal</combo_item>
         <combo_item name="Glass" value="Glass">Glass</combo_item>
@@ -160,7 +160,7 @@
       <spinner bottom_delta="-20" decimal_digits="2" follows="top" height="16" increment="0.05" label="Glow" label_width="45" max_val="1" min_val="0" name="glow" width="97" control_name="EmeraldBuildPrefs_Glow"/>
       <check_box follows="top" height="16" label="Full Bright" name="EmFBToggle" control_name="EmeraldBuildPrefs_FullBright"/>
       <text name="shine" follows="top">Shine</text>
-      <combo_box bottom_delta="-5" follows="top" left_delta="33" height="18" name="combobox shininess" tool_tip="Set the amount of shine for the object" width="64" control_name="EmeraldBuildPrefs_Shiny">
+      <combo_box bottom_delta="-5" follows="top" left_delta="33" height="18" name="combobox shininess" tool_tip="Set the amount of shine for the object" width="64" control_name="EmeraldBuildPrefs_Shiny" highlighted_control_id="shine">
         <combo_item name="None" value="None">None</combo_item>
         <combo_item name="Low" value="Low">Low</combo_item>
         <combo_item name="Medium" value="Medium">Medium</combo_item>

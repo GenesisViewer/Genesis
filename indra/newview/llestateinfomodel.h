@@ -59,7 +59,7 @@ public:
 	U32					getID()						const { return mID; }
 	F32					getSunHour()				const { return mSunHour; }
 	bool				getGlobalTime()				const { return !(mSunHour || getUseFixedSun()); }
-	void setDenyScriptedAgents(bool val);
+	
 	// setters
 	void setUseFixedSun(bool val);
 	void setIsExternallyVisible(bool val);

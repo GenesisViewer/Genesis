@@ -2536,10 +2536,13 @@ bool LLAppViewer::initConfiguration()
 
 	// Handle initialization from settings.
 	// Start up the debugging console before handling other options.
-	if (gSavedSettings.getBOOL("ShowConsoleWindow"))
-	{
-		initConsole();
-	}
+
+	//Genx we don't want the console anymore
+	gSavedSettings.setBOOL("ShowConsoleWindow",FALSE);
+	// if (gSavedSettings.getBOOL("ShowConsoleWindow"))
+	// {
+	// 	initConsole();
+	// }
 
 	if(clp.hasOption("help"))
 	{

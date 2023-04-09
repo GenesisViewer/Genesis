@@ -71,6 +71,7 @@ bool LLEstateInfoModel::getAllowDirectTeleport()	const {	return getFlag(REGION_F
 bool LLEstateInfoModel::getDenyAnonymous()			const {	return getFlag(REGION_FLAGS_DENY_ANONYMOUS); 		}
 bool LLEstateInfoModel::getDenyAgeUnverified()		const {	return getFlag(REGION_FLAGS_DENY_AGEUNVERIFIED);	}
 bool LLEstateInfoModel::getAllowVoiceChat()			const {	return getFlag(REGION_FLAGS_ALLOW_VOICE);			}
+bool LLEstateInfoModel::getDenyScriptedAgents()     const { return getFlag(REGION_FLAGS_DENY_BOTS); }
 
 void LLEstateInfoModel::setUseFixedSun(bool val)			{ setFlag(REGION_FLAGS_SUN_FIXED, 				val);	}
 void LLEstateInfoModel::setIsExternallyVisible(bool val)	{ setFlag(REGION_FLAGS_EXTERNALLY_VISIBLE,		val);	}
@@ -78,6 +79,7 @@ void LLEstateInfoModel::setAllowDirectTeleport(bool val)	{ setFlag(REGION_FLAGS_
 void LLEstateInfoModel::setDenyAnonymous(bool val)			{ setFlag(REGION_FLAGS_DENY_ANONYMOUS,			val);	}
 void LLEstateInfoModel::setDenyAgeUnverified(bool val)		{ setFlag(REGION_FLAGS_DENY_AGEUNVERIFIED,		val);	}
 void LLEstateInfoModel::setAllowVoiceChat(bool val)			{ setFlag(REGION_FLAGS_ALLOW_VOICE,				val);	}
+void LLEstateInfoModel::setDenyScriptedAgents(bool val)     { setFlag(REGION_FLAGS_DENY_BOTS, val); }
 
 void LLEstateInfoModel::update(const strings_t& strings)
 {

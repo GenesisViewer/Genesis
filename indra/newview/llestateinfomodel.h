@@ -52,13 +52,14 @@ public:
 	bool				getDenyAnonymous()			const;
 	bool				getDenyAgeUnverified()		const;
 	bool				getAllowVoiceChat()			const;
+	bool                getDenyScriptedAgents()     const;
 
 	const std::string&	getName()					const { return mName; }
 	const LLUUID&		getOwnerID()				const { return mOwnerID; }
 	U32					getID()						const { return mID; }
 	F32					getSunHour()				const { return mSunHour; }
 	bool				getGlobalTime()				const { return !(mSunHour || getUseFixedSun()); }
-
+	void setDenyScriptedAgents(bool val);
 	// setters
 	void setUseFixedSun(bool val);
 	void setIsExternallyVisible(bool val);
@@ -66,6 +67,7 @@ public:
 	void setDenyAnonymous(bool val);
 	void setDenyAgeUnverified(bool val);
 	void setAllowVoiceChat(bool val);
+	void setDenyScriptedAgents(bool val);
 
 	void setSunHour(F32 sun_hour) { mSunHour = sun_hour; }
 

@@ -1841,6 +1841,8 @@ void LLPanelEstateInfo::refreshFromEstate()
 	getChild<LLUICtrl>("allow_direct_teleport")->setValue(estate_info.getAllowDirectTeleport());
 	getChild<LLUICtrl>("limit_payment")->setValue(estate_info.getDenyAnonymous());
 	getChild<LLUICtrl>("limit_age_verified")->setValue(estate_info.getDenyAgeUnverified());
+	getChild<LLUICtrl>("limit_bots")->setValue(estate_info.getDenyScriptedAgents());
+
 
 	// Ensure appropriate state of the management UI
 	updateControls(gAgent.getRegion());
@@ -1906,6 +1908,7 @@ bool LLPanelEstateInfo::callbackChangeLindenEstate(const LLSD& notification, con
 			estate_info.setDenyAnonymous(getChild<LLUICtrl>("limit_payment")->getValue().asBoolean());
 			estate_info.setDenyAgeUnverified(getChild<LLUICtrl>("limit_age_verified")->getValue().asBoolean());
 			estate_info.setAllowVoiceChat(getChild<LLUICtrl>("voice_chat_check")->getValue().asBoolean());
+			estate_info.setDenyScriptedAgents(getChild<LLUICtrl>("limit_bots")->getValue().asBoolean());
 
 			// send the update to sim
 			estate_info.sendEstateInfo();

@@ -13,7 +13,7 @@
   </text>
   <combo_box max_chars="20" allow_text_entry="false" name="grid_selector"
 		height="18" width="200" left="120" bottom_delta="-4"
-		follows="left|top" mouse_opaque="true" />
+		follows="left|top" mouse_opaque="true" highlighted_control_id="grid_selector_label"/>
   <button label="Default" label_selected="Default" enabled="true" name="btn_default"
   height="18" width="75" left_delta="210" bottom_delta="0"
   halign="center"
@@ -81,7 +81,7 @@
   </text>
   <combo_box max_chars="20" allow_text_entry="false" name="platform"
 		height="18" width="200" left="120" bottom_delta="-4"
-		follows="left|top" mouse_opaque="true" />
+		follows="left|top" mouse_opaque="true" highlighted_control_id="platform_label"/>
   <!-- Grid Name -->
   <text type="string" length="1" enabled="true" name="gridname_label"
 		height="10" width="100" left="12" bottom_delta="-20"

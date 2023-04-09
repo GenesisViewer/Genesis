@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel border="true" bottom="-409" height="408" label="Skins" left="102" name="Skins panel" width="517">
           <text bottom_delta="-20" follows="top" height="16" left="200" name="Skin_txt1">Selected Skin</text>
-          <combo_box bottom_delta="-20" left_delta="-110" follows="top" height="18" max_chars="200" name="custom_skin_combo" width="300" control_name="custom_skin_combo"/>
+          <combo_box bottom_delta="-20" left_delta="-110" follows="top" height="18" max_chars="200" name="custom_skin_combo" width="300" control_name="custom_skin_combo" highlighted_control_id="Skin_txt1"/>
           <text bottom_delta="-22" follows="top" height="16" left_delta="20" name="Skin_txt2">Primary Author</text>
 		<view_border blevel_style="in" bottom_delta="-18" follows="top" height="16" name="custom_box1" width="260"/>
           <text bottom_delta="-0" follows="top" height="16" left_delta="3" name="custom_skin_author">skin author</text>

@@ -5,12 +5,12 @@
     <radio_item bottom="-20" height="20" left="93" name="last" tool_tip="Log into my last location by default.">My Last Location</radio_item>
   </radio_group>
   <check_box bottom="-42" height="16" initial_value="true" label="Show Start Location on Login Screen" name="show_location_checkbox"/>
-	<combo_box bottom_delta="-27" follows="top" height="18" left="103" name="fade_out_combobox" width="111">
+	<combo_box bottom_delta="-27" follows="top" height="18" left="103" name="fade_out_combobox" width="111" highlighted_control_id="show_names_textbox">
 		<combo_item name="Never" value="Never">Never</combo_item>
 		<combo_item name="Show Temporarily" value="Show Temporarily">Show Temporarily</combo_item>
 		<combo_item name="Always" value="Always">Always</combo_item>
 	</combo_box>
-	<combo_box bottom_delta="0" follows="top" height="18" left="220" name="namesystem_combobox" width="166">
+	<combo_box bottom_delta="0" follows="top" height="18" left="220" name="namesystem_combobox" width="166" highlighted_control_id="show_names_textbox">
 		<combo_item name="Old Names" value="0">Old Names</combo_item>
 		<combo_item name="Display Names (with Username)" value="1">Display Names (w/Username)</combo_item>
 		<combo_item name="Display Names only" value="2">Display Names only</combo_item>
@@ -31,7 +31,7 @@
 	<check_box bottom="-257" height="16" label="without filling up the corner" left="280" name="no_transaction_clutter_checkbox" tool_tip="Still present the notifications, but have them pop up in the bottom right momentarily, then leave, so the transaction draws attention but doesn't get in the way."/>
 	<text bottom="-291" height="10" left="10" name="maturity_desired_label">Rating:</text>
 	<text bottom="-291" height="10" left="101" name="maturity_desired_prompt">I want to access content rated:</text>
-	<combo_box bottom="-297" follows="left|top" height="18" left="267" name="maturity_desired_combobox" width="120" control_name="PreferredMaturity">
+	<combo_box bottom="-297" follows="left|top" height="18" left="267" name="maturity_desired_combobox" width="120" control_name="PreferredMaturity" highlighted_control_id="maturity_desired_prompt">
 		<combo_item name="Desired_Adult" value="42">PG, Mature &amp; Adult</combo_item>
 		<combo_item name="Desired_Mature" value="21">PG &amp; Mature</combo_item>
 		<combo_item name="Desired_PG" value="13">PG only</combo_item>
@@ -44,7 +44,7 @@
 	<text bottom="-363" height="18" name="language_textbox">Language:</text>
 	<text bottom_delta="6" follows="top" height="18" left_delta="243" name="language_textbox2">(Requires restart for full effect)
           *Uses English UI</text>
-	<combo_box allow_text_entry="true" bottom="-361" follows="top" height="16" left="103" name="language_combobox" max_chars="32" width="140">
+	<combo_box allow_text_entry="true" bottom="-361" follows="top" height="16" left="103" name="language_combobox" max_chars="32" width="140" highlighted_control_id="language_textbox">
 		<combo_item name="System Default Language" value="default">System Default</combo_item>
 		<combo_item name="English" value="en-us">English</combo_item>		
 		<!-- After "System Default" and "English", please keep the rest of these combo_items in alphabetical order by the first character in the string.-->
@@ -66,7 +66,7 @@
 		<combo_item name="(Korean)" value="ko">한국어(Korean)*</combo_item>
 	</combo_box>
 	<string name="region_name_prompt">&lt;Type region name&gt;</string>
-	<combo_box bottom="-328" height="18" left="103" name="crash_behavior_combobox" width="140">
+	<combo_box bottom="-328" height="18" left="103" name="crash_behavior_combobox" width="140" highlighted_control_id="crash_report_textbox">
 		<combo_item name="Neversend" value="0">Never send</combo_item>
 		<combo_item name="Alwayssend" value="1">Always send</combo_item>
 	</combo_box>

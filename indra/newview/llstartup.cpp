@@ -1815,7 +1815,9 @@ bool idle_startup()
 			display_startup();
 			
 			// set initial visibility of debug console
-			gDebugView->mDebugConsolep->setVisible(gSavedSettings.getBOOL("ShowDebugConsole"));
+			//Genx we don't want to perist this one
+			gDebugView->mDebugConsolep->setVisible(FALSE);
+			//gDebugView->mDebugConsolep->setVisible(gSavedSettings.getBOOL("ShowDebugConsole"));
 			display_startup();
 			if (gSavedSettings.getBOOL("ShowDebugStats"))
 			{

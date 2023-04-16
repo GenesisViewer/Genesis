@@ -123,6 +123,7 @@ void LLFloaterMove::onOpen()
 F32 LLFloaterMove::getYawRate( F32 time )
 {
 	F32 factor = gSavedSettings.getF32("GenxTurnAroundSpeedFactor");
+	factor=llclamp(factor,0.1f,3.0f);
 	if( time < NUDGE_TIME )
 	{
 		F32 rate = YAW_NUDGE_RATE + time * (1 - YAW_NUDGE_RATE)/ NUDGE_TIME;

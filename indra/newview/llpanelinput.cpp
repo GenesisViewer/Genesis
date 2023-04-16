@@ -58,6 +58,7 @@ BOOL LLPanelInput::postBuild()
 	mPreAdjustFOV = gSavedSettings.getF32("CameraAngle");
 	mPreAdjustCameraOffsetScale = gSavedSettings.getF32("CameraOffsetScale");
 	mArrowKeysMoveAvatar = gSavedSettings.getBOOL("ArrowKeysMoveAvatar");
+	mTurnAroundSpeed = gSavedSettings.getF32("GenxTurnAroundSpeedFactor");
 	
 	childSetValue("mouse_sensitivity", gSavedSettings.getF32("MouseSensitivity"));
 	childSetValue("automatic_fly", gSavedSettings.getBOOL("AutomaticFly"));
@@ -88,6 +89,7 @@ void LLPanelInput::apply()
 	// any cancel after this point will use these new values
 	mPreAdjustFOV = childGetValue("camera_fov").asReal();
 	mPreAdjustCameraOffsetScale = childGetValue("camera_offset_scale").asReal();
+	mTurnAroundSpeed = childGetValue("GenxTurnAroundSpeedFactor").asReal();
 	mArrowKeysMoveAvatar = gSavedSettings.getBOOL("ArrowKeysMoveAvatar");
 
 	gSavedSettings.setF32("MouseSensitivity", childGetValue("mouse_sensitivity").asReal());
@@ -106,6 +108,7 @@ void LLPanelInput::cancel()
 	LLViewerCamera::getInstance()->setDefaultFOV(mPreAdjustFOV);
 	gSavedSettings.setF32("CameraAngle", LLViewerCamera::getInstance()->getView());
 	gSavedSettings.setF32("CameraOffsetScale", mPreAdjustCameraOffsetScale);
+	gSavedSettings.setF32("GenxTurnAroundSpeedFactor",mTurnAroundSpeed);
 	gSavedSettings.setBOOL("ArrowKeysMoveAvatar", mArrowKeysMoveAvatar);
 }
 

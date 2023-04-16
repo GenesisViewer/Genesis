@@ -22,6 +22,8 @@
 	<check_box bottom_delta="-18" follows="top" height="16" label="Use azerty layout instead of qwerty layout" name="azerty_keys" control_name="LiruUseZQSDKeys"/>
       <check_box bottom_delta="-18" follows="top" height="16" initial_value="false" label="Arrow keys always move avatar when chatting" control_name="ArrowKeysMoveAvatar"/>
       <check_box bottom_delta="-18" follows="top" height="16" label="WASD to control movement" name="letter_keys_start_local_chat" tool_tip="With WASD disabled, typing letters opens the bottom chat bar.  For those of you who do not use the bottom chat, leave WASD enabled, you can still use arrow keys to move."/>
+	<text bottom_delta="-18" follows="top" height="10" left="148" name="Turn around speed:" width="128">Turn around speed:</text>  
+	<slider bottom_delta="-6" can_edit_text="true" decimal_digits="1" follows="top" width="128" height="16" increment=".1" initial_val="1" left="276" max_val="3" min_val="0.1" name="GenxTurnAroundSpeedFactor" value="1" control_name="GenxTurnAroundSpeedFactor"/>  
     </panel>
     <panel border="true" left="1" bottom="-190" height="180" width="600" label="Camera Options" name="CameraOptions">
       <text bottom_delta="-20" follows="top" height="10" left="10" name=" Camera Options:">Camera Options:</text>

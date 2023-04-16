@@ -108,7 +108,19 @@ static bool handleRenderAvatarMouselookChanged(const LLSD& newvalue)
 	LLVOAvatar::sVisibleInFirstPerson = newvalue.asBoolean();
 	return true;
 }
+// <FS:Zi> Run Prio 0 default bento pose in the background to fix splayed hands, open mouths, etc.
+void handlePlayBentoIdleAnimationChanged(const LLSD& newValue)
+{
+	EAnimRequest startStop = ANIM_REQUEST_STOP;
 
+	if (newValue.asBoolean())
+	{
+		startStop = ANIM_REQUEST_START;
+	}
+
+	gAgent.sendAnimationRequest(ANIM_AGENT_BENTO_IDLE, startStop);
+}
+// </FS:Zi>
 static bool handleRenderFarClipChanged(const LLSD& newvalue)
 {
 	F32 draw_distance = (F32) newvalue.asReal();
@@ -890,6 +902,9 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("DoubleClickAutoPilot")->getSignal()->connect(boost::bind(handleDoubleClickActionChanged, AUTOPILOT, _2));
 	gSavedSettings.getControl("DoubleClickTeleport")->getSignal()->connect(boost::bind(handleDoubleClickActionChanged, TELEPORT, _2));
 	gSavedSettings.getControl("HighResSnapshot")->getSignal()->connect(boost::bind(&handleHighResChanged, _2));
+
+	// <FS:Zi> Run Prio 0 default bento pose in the background to fix splayed hands, open mouths, etc.
+	gSavedSettings.getControl("FSPlayDefaultBentoAnimation")->getSignal()->connect(boost::bind(&handlePlayBentoIdleAnimationChanged, _2));
 }
 
 void onCommitControlSetting_gSavedSettings(LLUICtrl* ctrl, void* name)

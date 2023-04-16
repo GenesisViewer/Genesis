@@ -19588,6 +19588,17 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <integer>1.0</integer>
     </map>
+    <key>FSPlayDefaultBentoAnimation</key>
+    <map>
+      <key>Comment</key>
+      <string>If enabled, the viewer will run a default, priority 0 bento animation that poses hands, wings, mouth and tail in a natural position when no other bento animation is running.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
   </map>
 
 </llsd>

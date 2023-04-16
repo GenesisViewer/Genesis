@@ -83,7 +83,7 @@
 #include "lldrawpoolbump.h"
 #include "aicurl.h"
 #include "aihttptimeoutpolicy.h"
-
+#include "llanimationstates.h"
 void load_default_bindings(bool zqsd);
 
 #ifdef TOGGLE_HACKED_GODLIKE_VIEWER

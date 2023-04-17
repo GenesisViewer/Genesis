@@ -114,6 +114,7 @@
          tool_tip="If enabled, the viewer will run a default, priority 0 bento animation that poses hands, wings, mouth and tail in a natural position when no other bento animation is running."
          width="270"
          control_name="FSPlayDefaultBentoAnimation"/>
+		 <check_box bottom_delta="-24" control_name="GenxRenderHitBoxes" follows="top" height="16" initial_value="true" label="Render avatar Hit-Boxes" left="150" name="Genx_Render_Hit_Boxes"/>
     </panel>
   </tab_container>
 </panel>

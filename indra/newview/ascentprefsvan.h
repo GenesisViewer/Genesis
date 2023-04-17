@@ -116,6 +116,7 @@ private:
 	bool mSLBShowFPS;
 	bool mGenxShowFpsTop;
 	U32 mRenderAvatarMaxComplexity;
+	bool mGenxRenderHitBoxes;
 };
 
 #endif

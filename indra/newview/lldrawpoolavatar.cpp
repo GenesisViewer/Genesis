@@ -1148,7 +1148,8 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 	}
 	//hitboxes
 	bool render_hitboxes = gSavedSettings.getBOOL("GenxRenderHitBoxes");
-	if (render_hitboxes && pass == 2)
+	bool own_avatar = avatarp->getID() == gAgent.getID();
+	if (render_hitboxes && !own_avatar && pass == 2)
 	{
 		LLGLSLShader* current_shader_program = NULL;
 

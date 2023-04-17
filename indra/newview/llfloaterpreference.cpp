@@ -498,11 +498,7 @@ bool LLFloaterPreference::doSearch(std::string search,LLPanel * parent, LLUICtrl
 		visible=true;
 	} 
 	
-	value = utf8str_to_wstring(ctrl->getToolTip());
-	LLWStringUtil::toLower( value );
-	if (value.find(searchString) != std::string::npos) {
-		visible=true;
-	} 
+	
 	LLTextBox *pText = dynamic_cast< LLTextBox *>( (ctrl) );
 	if (pText) {
 		value = utf8str_to_wstring(pText->getText());

@@ -103,6 +103,7 @@ LLPrefsAscentVan::LLPrefsAscentVan()
     }
     childSetValue("Render_Radio_Options", render_radio);
 
+    mGenxRenderHitBoxes = gSavedSettings.getBOOL("GenxRenderHitBoxes");
     refreshValues();
     refresh();
 }
@@ -226,6 +227,7 @@ void LLPrefsAscentVan::refreshValues()
     mSLBShowFPS = gSavedSettings.getBOOL("SLBShowFPS");
     mGenxShowFpsTop = gSavedSettings.getBOOL("GenxShowFpsTop");
     mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
+    mGenxRenderHitBoxes = gSavedSettings.getBOOL("GenxRenderHitBoxes");
 }
 
 // Update controls based on current settings
@@ -330,6 +332,7 @@ void LLPrefsAscentVan::cancel()
     gSavedSettings.setBOOL("SLBShowFPS",                      mSLBShowFPS);
     gSavedSettings.setBOOL("GenxShowFpsTop",                  mGenxShowFpsTop);
     gSavedSettings.setU32("RenderAvatarMaxComplexity",        mRenderAvatarMaxComplexity);
+    gSavedSettings.setBOOL("GenxRenderHitBoxes",              mGenxRenderHitBoxes);
 }
 
 // Update local copy so cancel has no effect

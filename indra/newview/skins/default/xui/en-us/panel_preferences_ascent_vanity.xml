@@ -104,17 +104,10 @@
       <spinner bottom_delta="0" follows="top" decimal_digits="0" height="16" increment="1000" initial_val="0" label="" width="100" label_width="0" left="300" max_val="500000" min_val="0" control_name="RenderAvatarMaxComplexity" name="Render_Max_Comp" tool_tip="Set to zero to disable the max complexity limit"/>
       <text bottom_delta="-18" follows="top" height="16" left="150" name="Always_Render_Note">(Note: Set to 0 [zero] to disable the 'Avatar Max Complexity' render limit)</text>
       
-        <check_box
-         top_pad="3"
-         left="10"
-         follows="top"
-         height="16"
-         label="Fix Bento Idle Animation"
-         name="play_default_bento_idle_animation_toggle"
+        <check_box bottom_delta="-24" left="150" follows="top" height="16" label="Fix Bento Idle Animation" name="play_default_bento_idle_animation_toggle"
          tool_tip="If enabled, the viewer will run a default, priority 0 bento animation that poses hands, wings, mouth and tail in a natural position when no other bento animation is running."
-         width="270"
-         control_name="FSPlayDefaultBentoAnimation"/>
-		 <check_box bottom_delta="-24" control_name="GenxRenderHitBoxes" follows="top" height="16" initial_value="true" label="Render avatar Hit-Boxes" left="150" name="Genx_Render_Hit_Boxes"/>
+         width="270" control_name="FSPlayDefaultBentoAnimation"/>
+		 <check_box bottom_delta="-20" control_name="GenxRenderHitBoxes" follows="top" height="16" initial_value="true" label="Render avatar Hit-Boxes" left="150" name="Genx_Render_Hit_Boxes"/>
     </panel>
   </tab_container>
 </panel>

@@ -177,6 +177,7 @@ private:
 	struct LSLFunctionProps
 	{
 		std::string mName;
+		std::string tooltip;
 		F32 mSleepTime;
 		bool mGodOnly;
 	};

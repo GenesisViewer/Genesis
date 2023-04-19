@@ -420,7 +420,9 @@ void LLScriptEdCore::parseFunctions(const std::string& filename)
 			for (LLSD::map_const_iterator it = function_list.beginMap(); it != function_list.endMap(); ++it)
 			{
 				LSLFunctionProps fn;
+
 				fn.mName = it->first;
+				fn.tooltip=it->second["tooltip"].asString();
 				fn.mSleepTime = it->second["sleep_time"].asFloat();
 				fn.mGodOnly = it->second["god_only"].asBoolean();
 
@@ -558,9 +560,7 @@ BOOL LLScriptEdCore::postBuild()
 			std::string name = i->mName;
 			funcs.push_back(name);
 
-			std::string desc_name = "LSLTipText_";
-			desc_name += name;
-			std::string desc = LLTrans::getString(desc_name);
+			std::string desc = i->tooltip;
 
 			F32 sleep_time = i->mSleepTime;
 			if( sleep_time )

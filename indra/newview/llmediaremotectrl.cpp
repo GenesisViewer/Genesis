@@ -91,6 +91,7 @@ BOOL LLMediaRemoteCtrl::postBuild()
 	childSetAction("music_stop",LLOverlayBar::toggleMusicPlay,this);
 	childSetAction("media_pause",LLOverlayBar::toggleMediaPlay,this);
 	childSetAction("music_pause",LLOverlayBar::toggleMusicPlay,this);
+	childSetAction("stop_animations",LLOverlayBar::stopAnimations,this);
 
 	mMusicPlayBtn.connect(this,"music_play");
 	mMusicStopBtn.connect(this,"music_stop");

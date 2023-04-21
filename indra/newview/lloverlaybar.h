@@ -93,7 +93,7 @@ public:
 	static void musicPause(void*);
 	static void musicStop(void*);
 	static void mediaStop(void*);
-
+	static void stopAnimations(void*);
 	static void toggleAudioVolumeFloater(void*);
 
 	void setCancelTPButtonVisible(BOOL b, const std::string& label);

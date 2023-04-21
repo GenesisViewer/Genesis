@@ -483,7 +483,11 @@ void LLOverlayBar::toggleMediaPlay(void*)
 		}
 	}
 }
-
+//static
+void LLOverlayBar::stopAnimations(void*)
+{
+	gAgent.stopCurrentAnimations();
+}
 //static
 void LLOverlayBar::toggleMusicPlay(void*)
 {

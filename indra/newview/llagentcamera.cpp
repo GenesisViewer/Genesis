@@ -1002,51 +1002,19 @@ void LLAgentCamera::cameraOrbitIn(const F32 meters)
 			// No need to animate, camera is already there.
 			changeCameraToMouselook(FALSE);
 		}
-
-		mCameraZoomFraction = llclamp(mCameraZoomFraction, MIN_ZOOM_FRACTION, MAX_ZOOM_FRACTION);
+		static const LLCachedControl<bool> disable_camera_constraints("DisableCameraConstraints");
+		if (disable_camera_constraints) {
+			mCameraZoomFraction = llmax(mCameraZoomFraction, MIN_ZOOM_FRACTION);
+		} else {
+			mCameraZoomFraction = llclamp(mCameraZoomFraction, MIN_ZOOM_FRACTION, MAX_ZOOM_FRACTION);
+		}
 	}
 	else
 	{
 		LLVector3d	camera_offset_unit(mCameraFocusOffsetTarget);
 		F32 current_distance = (F32)camera_offset_unit.normalize();
 		F32 new_distance = current_distance - meters;
-		/*
-		F32 min_zoom = LAND_MIN_ZOOM;
 		
-		// Don't move through focus point
-		if (mFocusObject.notNull())
-		{
-			if (mFocusObject->isAvatar())
-			{
-				min_zoom = AVATAR_MIN_ZOOM;
-			}
-			else
-			{
-				min_zoom = OBJECT_MIN_ZOOM;
-			}
-		}
-
-		new_distance = llmax(new_distance, min_zoom);
-
-		// Don't zoom too far back
-		const F32 DIST_FUDGE = 16.f; // meters
-		F32 max_distance = llmin(mDrawDistance - DIST_FUDGE, 
-								 LLWorld::getInstance()->getRegionWidthInMeters() - DIST_FUDGE );
-
-		if (new_distance > max_distance)
-		{
-			// Unless camera is unlocked
-			if (!gSavedSettings.getBOOL("DisableCameraConstraints"))
-			{
-				return;
-			}
-		}
-
-		if( CAMERA_MODE_CUSTOMIZE_AVATAR == getCameraMode() )
-		{
-			new_distance = llclamp( new_distance, APPEARANCE_MIN_ZOOM, APPEARANCE_MAX_ZOOM );
-		}
-		*/
 		// Compute new camera offset
 		mCameraFocusOffsetTarget = new_distance * camera_offset_unit;
 		cameraZoomIn(1.f);

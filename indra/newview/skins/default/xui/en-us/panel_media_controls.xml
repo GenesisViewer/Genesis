@@ -59,11 +59,7 @@
 	     label="" left_delta="20"
 	     mouse_opaque="true" name="media_stop" scale_image="true" toggle="false"
 	     tool_tip="Stop streaming media" width="20" />
-	<button bottom="-22" height="22" label=""
-             image_overlay="icn_stop_animations.tga"
-			 image_selected="toolbar_btn_selected.tga" image_unselected="toolbar_btn_enabled.tga"
-	     left_delta="19" name="stop_animations" scale_image="true" toggle="true"
-	     tool_tip="Stop avatar animations" width="22" />	 
+		 
 	<volume_slider bottom="-23" control_name="AudioLevelMaster" height="22" increment="0.05"
 	     initial_val="0.5" left_delta="15" max_val="1" min_val="0"
 	     mouse_opaque="true" name="volume_slider" tool_tip="Master Volume"
@@ -75,7 +71,11 @@
 	<button bottom="-22" control_name="ShowVolumeSettingsPopup" height="22" label=""
 	     left_delta="19" name="expand" scale_image="true" toggle="true"
 	     tool_tip="Adjust individual volume levels" width="22" />
-        
+    <button bottom="-22" height="22" label=""
+             image_overlay="icn_stop_animations.tga"
+			 image_selected="toolbar_btn_selected.tga" image_unselected="toolbar_btn_enabled.tga"
+	     left_delta="19" name="stop_animations" scale_image="true" toggle="true"
+	     tool_tip="Stop avatar animations" width="22" />    
 	<string name="play_label">
 		Play
 	</string>

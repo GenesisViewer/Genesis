@@ -121,6 +121,7 @@ class ViewerManifest(LLManifest):
                 self.path("NotoSansDisplay*.ttf")
                 self.path("SourceHanSans*.otf")
                 self.path("Roboto*.ttf")
+                self.path("Inter*.ttf")
 
             # Include our font licenses
             with self.prefix(src_dst="fonts"):

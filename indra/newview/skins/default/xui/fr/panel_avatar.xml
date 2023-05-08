@@ -163,7 +163,7 @@ objets :
 			</text>
 			<text_editor name="about" width="321" />
 		</panel>
-		<panel label="Mes notes" name="My Notes" width="458">
+		<panel label="Notes" name="Notes" width="458">
 			<string name="Loading">
 				Chargement...
 			</string>

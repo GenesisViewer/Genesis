@@ -60,6 +60,7 @@ public:
 	/*virtual*/ void draw();
 	/*virtual*/ void onClose(bool app_quitting);
 	/*virtual*/ void onOpen();
+	/*virtual*/ void reshape(S32 width, S32 height, BOOL called_from_parent = TRUE);
 	/*virtual*/ BOOL handleKeyHere(KEY key, MASK mask);
 	/*virtual*/ BOOL handleMouseDown(S32 x, S32 y, MASK mask);
 	/*virtual*/ BOOL handleMouseUp(S32 x, S32 y, MASK mask);
@@ -79,7 +80,7 @@ public:
 
 	static void updateControls();
 	static void resetFeedAndPostcardAspect();
-
+	static LLFloaterSnapshot* getInstance() {return sInstance;}
 	class Impl;
 
 private:
@@ -89,6 +90,7 @@ private:
 	static S32    sUIWinHeightLong ;
 	static S32    sUIWinHeightShort ;
 	static S32    sUIWinWidth ;
+	bool hasBeenReshaped=false;
 };
 
 class LLSnapshotFloaterView : public LLFloaterView

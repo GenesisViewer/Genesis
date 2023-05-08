@@ -39,8 +39,8 @@
         mouse_opaque="true" name="active_speakers_pause" scale_image="true" toggle="false"
         tool_tip="Pause Active Speakers refresh" width="20" />
       <slider bottom="5" follows="left|bottom" height="15" increment="0.05" initial_val="0.5"
-       left="44" max_val="1.0" min_val="0.0" name="speaker_volume" show_text="true" can_edit_text="true" val_width="28" decimal_digits="2"
-       width="145" />
+       left="44" max_val="1.0" min_val="0.0" name="speaker_volume" show_text="true" can_edit_text="true" val_width="30" decimal_digits="2"
+       width="147" />
       <button bottom_delta="0" height="20" image_selected="icn_speaker-muted_dark.tga"
 			       image_unselected="icn_speaker_dark.tga" label="" left_delta="149"
 			       name="mute_btn" toggle="true" tool_tip="Mute voice for this resident"

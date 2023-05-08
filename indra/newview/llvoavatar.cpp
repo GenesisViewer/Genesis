@@ -4112,7 +4112,8 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		}
 		if (!isSelf() && gSavedSettings.getBOOL("GenxDisplayDistanceInTag")) {
 			
-			LLVector3 position = this->getPosition();
+			LLVector3 position = this->getCharacterPosition();
+			
 			LLVector3 delta = position - gAgent.getPositionAgent();
 			F32 fdelta = (F32)delta.magVec();
 			char temp[32];

@@ -739,6 +739,7 @@ void LLSnapshotLivePreview::reshape(S32 width, S32 height, BOOL called_from_pare
 	LLView::reshape(width, height, called_from_parent);
 	if (old_rect.getWidth() != width || old_rect.getHeight() != height)
 	{
+		
 		updateSnapshot(FALSE, TRUE);
 	}
 }
@@ -753,11 +754,16 @@ BOOL LLSnapshotLivePreview::setThumbnailImageSize()
 	S32 window_height = gViewerWindow->getWindowHeightRaw() ;
 
 	F32 window_aspect_ratio = ((F32)window_width) / ((F32)window_height);
-
+	S32 max_width=0;
+	S32 max_height=0;
 	// UI size for thumbnail
-	S32 max_width =  THUMBHEIGHT * 4 / 3; // == LLFloaterSnapshot::getUIWinWidth() - 7;
-	S32 max_height = THUMBHEIGHT;
-
+	if (gSavedSettings.getBOOL("GenxSnapshotFloater")) {
+		max_width=LLFloaterSnapshot::getInstance()->getThumbnailAreaRect().getWidth();
+		max_height=-LLFloaterSnapshot::getInstance()->getThumbnailAreaRect().getHeight();
+	} else {
+		max_width =  THUMBHEIGHT * 4 / 3; // == LLFloaterSnapshot::getUIWinWidth() - 7;
+		max_height = THUMBHEIGHT;
+	}
 	if (window_aspect_ratio > (F32)max_width / max_height)
 	{
 		// image too wide, shrink to width
@@ -770,7 +776,16 @@ BOOL LLSnapshotLivePreview::setThumbnailImageSize()
 		mThumbnailHeight = max_height;
 		mThumbnailWidth = ll_round((F32)max_height * window_aspect_ratio);
 	}
-	
+	if (mThumbnailHeight > max_height) {
+		
+		mThumbnailWidth=mThumbnailWidth - (mThumbnailHeight-max_height) * window_aspect_ratio;
+		mThumbnailHeight=max_height;
+	}
+	if (mThumbnailWidth > max_width) {
+		
+		mThumbnailHeight=mThumbnailHeight - (mThumbnailWidth-max_width) * window_aspect_ratio;
+		mThumbnailWidth=max_width;
+	}
 	if(mThumbnailWidth > window_width || mThumbnailHeight > window_height)
 	{
 		return FALSE ;//if the window is too small, ignore thumbnail updating.
@@ -1632,7 +1647,17 @@ void LLFloaterSnapshot::Impl::setAspect(LLFloaterSnapshot* floater, const std::s
 	combo->setVisible(TRUE);
 	updateAspect(combo, floater, update_controls); 		// to sync spinner with combo
 }
-
+void LLFloaterSnapshot::reshape(S32 width, S32 height, BOOL called_from_parent)
+{
+	if (gSavedSettings.getBOOL("GenxSnapshotFloater")) {
+		// LLSnapshotLivePreview* previewp = impl.getPreviewView();
+		// if (previewp)
+		// 	previewp->updateSnapshot(TRUE);
+		hasBeenReshaped=true;
+		
+	}
+	LLFloater::reshape(width,height,called_from_parent);
+}
 //static
 void LLFloaterSnapshot::Impl::resetFeedAndPostcardAspect(LLFloaterSnapshot* floaterp)
 {
@@ -2197,7 +2222,9 @@ void LLFloaterSnapshot::Impl::onClickMore(void* data)
 		updateLayout(view) ;
 		if (getPreviewView())
 		{
+			
 			getPreviewView()->setThumbnailImageSize() ;
+			
 		}
 	}
 }
@@ -2978,13 +3005,20 @@ BOOL LLFloaterSnapshot::postBuild()
 LLRect LLFloaterSnapshot::getThumbnailAreaRect()
 {
 	// getRect() includes shadows and the title bar, therefore the real corners are as follows:
-	return LLRect(1, getRect().getHeight() - 17, getRect().getWidth() - 1, getRect().getHeight() - 17 - THUMBHEIGHT);
+	//return LLRect(1, getRect().getHeight() - 17, getRect().getWidth() - 1, getRect().getHeight() - 17 - THUMBHEIGHT);
+	if (gSavedSettings.getBOOL("GenxSnapshotFloater"))
+		return LLRect(200,20,getRect().getWidth()-5,getRect().getHeight()-20);
+	else 
+		return LLRect(1, getRect().getHeight() - 17, getRect().getWidth() - 1, getRect().getHeight() - 17 - THUMBHEIGHT);	
 }
 
 void LLFloaterSnapshot::draw()
 {
 	LLSnapshotLivePreview* previewp = impl.getPreviewView();
-
+	if (previewp && hasBeenReshaped) {
+		previewp->updateSnapshot(FALSE,TRUE);
+		hasBeenReshaped=false;
+	}
 	if (previewp && (previewp->isSnapshotActive() || previewp->getThumbnailLock()))
 	{
 		// don't render snapshot window in snapshot, even if "show ui" is turned on
@@ -3000,7 +3034,11 @@ void LLFloaterSnapshot::draw()
 			LLRect const thumb_area = getThumbnailAreaRect();
 			// The offset needed to center the thumbnail is: center - thumbnailSize/2 =
 			S32 offset_x = (thumb_area.mLeft + thumb_area.mRight - previewp->getThumbnailWidth()) / 2;
-			S32 offset_y = (thumb_area.mBottom + thumb_area.mTop - previewp->getThumbnailHeight()) / 2;
+			S32 offset_y=0;
+			if (gSavedSettings.getBOOL("GenxSnapshotFloater"))
+				offset_y = (thumb_area.mBottom- previewp->getThumbnailHeight());
+			else 
+				offset_y = (thumb_area.mBottom + thumb_area.mTop - previewp->getThumbnailHeight()) / 2;	
 
 			gGL.matrixMode(LLRender::MM_MODELVIEW);
 			gl_rect_2d(thumb_area, LLColor4::transparent, true);
@@ -3034,7 +3072,10 @@ void LLFloaterSnapshot::show(void*)
 	if (!sInstance)
 	{
 		sInstance = new LLFloaterSnapshot();
-		LLUICtrlFactory::getInstance()->buildFloater(sInstance, "floater_snapshot.xml", NULL, FALSE);	// "Snapshot" floater.
+		if (gSavedSettings.getBOOL("GenxSnapshotFloater"))
+			LLUICtrlFactory::getInstance()->buildFloater(sInstance, "genx_snapshot_floater.xml", NULL, FALSE);	// Genx "Snapshot" floater.
+		else	
+			LLUICtrlFactory::getInstance()->buildFloater(sInstance, "floater_snapshot.xml", NULL, FALSE);	// "Snapshot" floater.
 		// Make snapshot floater a child of (full screen) gSnapshotFloaterView.
 		// So that the structure is:
 		// "root" -->

@@ -97,7 +97,7 @@
 			<text name="(250 chars)">250 Zeichen</text>
 			
 		</panel>
-		<panel label="Meine Notizen" name="My Notes">
+		<panel label="Notizen" name="Notes">
 			<string name="Loading">Wird geladen...</string>
 			<text name="label">Hier können Sie Notizen über diese Person machen.  Notieren Sie Geschäfte,
 gemeinsame Projekte usw. Nur Sie können diese Notizen sehen.

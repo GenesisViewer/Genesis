@@ -2,6 +2,7 @@
 <fonts>
 
   <font name="default" comment="default font files (global fallbacks)">
+    <file>Inter-Regular.ttf</file>
     <file>Roboto-Regular.ttf</file>
     <file>DejaVuSansCondensed.ttf</file>
     <file>NotoSansDisplay-Regular.ttf</file>
@@ -33,6 +34,7 @@
   <font name="SansSerifBold" 
 	comment="Name of bold sans-serif font" 
 	font_style="Bold">
+    <file>Inter-Bold.ttf</file>
     <file>Roboto-Bold.ttf</file>
 	  <file>DroidSans-Bold.ttf</file>
     <file>DejaVuSansCondensed-Bold.ttf</file>
@@ -45,6 +47,7 @@
   </font>
   
   <font name="SansSerif" comment="Name of san-serif font (Truetype file name)">
+    <file>Inter-Regular.ttf</file>
     <file>Roboto-Regular.ttf</file>
     <file>DroidSans.ttf</file>
   </font>
@@ -52,6 +55,7 @@
   <font name="SansSerif"
 	comment="Name of bold sans-serif font" 
 	font_style="BOLD">
+    <file>Inter-Bold.ttf</file>
     <file>Roboto-Bold.ttf</file>
 	  <file>DroidSans-Bold.ttf</file>
     <file>DejaVuSansCondensed-Bold.ttf</file>

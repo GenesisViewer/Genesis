@@ -380,18 +380,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b0172c35f6a8ac385c71604398966f80</string>
+              <string>e384ca15a4fd13d2593cc763ea9c4711</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///C:/temp/fonts-20190402.1-common-190922141.tar.bz2</string>
+              <string>http://pkg.genesisviewer.org/fonts-20230507.1-common-190922141.tar.bz2</string>
             </map>
             <key>name</key>
             <string>common</string>
           </map>
         </map>
         <key>version</key>
-        <string>20190402.1</string>
+        <string>20230507.1</string>
       </map>
       <key>freeglut</key>
       <map>

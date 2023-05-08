@@ -265,7 +265,7 @@
 				(250 caratteri)
 			</text>
 		</panel>
-    <panel border="true" bottom="-482" follows="left|top|right|bottom" height="466" label="Le mie note" left="1" mouse_opaque="true" name="My Notes" width="418">
+    <panel border="true" bottom="-482" follows="left|top|right|bottom" height="466" label="Nnote" left="1" mouse_opaque="true" name="Notes" width="418">
       <text_editor bottom_delta="-260" embedded_items="false" enabled="true" follows="left|top"
 			     font="SansSerif" height="256" is_unicode="false" left="10"
 			     max_length="1023" mouse_opaque="true" name="notes edit" width="400"

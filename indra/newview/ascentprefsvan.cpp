@@ -67,6 +67,7 @@ LLPrefsAscentVan::LLPrefsAscentVan()
 
 	getChild<LLUICtrl>("update_clientdefs")->setCommitCallback(boost::bind(LLPrefsAscentVan::onManualClientUpdate));
     getChild<LLUICtrl>("custom_avatar_name_color")->setCommitCallback(boost::bind(&LLPrefsAscentVan::onAvatarNameColor, this, _1));
+    getChild<LLUICtrl>("show_avatar_distance")->setCommitCallback(boost::bind(&LLPrefsAscentVan::onAvatarDistance, this, _1));
     mShowToolBar = gSavedSettings.getBOOL("ShowToolBar");
     mUiToolTipDelay = gSavedSettings.getF32("ToolTipDelay");
     mSLBShowFPS = gSavedSettings.getBOOL("SLBShowFPS");
@@ -143,6 +144,12 @@ void LLPrefsAscentVan::onAvatarNameColor(LLUICtrl* ctrl)
     SHClientTagMgr::instance().resetAvatarTags();
     
 }
+void LLPrefsAscentVan::onAvatarDistance(LLUICtrl* ctrl)
+{
+    
+    SHClientTagMgr::instance().resetAvatarTags();
+    
+}
 //static
 void LLPrefsAscentVan::onManualClientUpdate()
 {
@@ -194,6 +201,7 @@ void LLPrefsAscentVan::refreshValues()
     mShowOthersTag          = gSavedSettings.getBOOL("AscentShowOthersTag");
     mShowOthersTagColor     = gSavedSettings.getBOOL("AscentShowOthersTagColor");
     mShowIdleTime           = gSavedSettings.getBOOL("AscentShowIdleTime");
+    mShowDistance           = gSavedSettings.getBOOL("GenxDisplayDistanceInTag");
     mUseStatusColors        = gSavedSettings.getBOOL("AscentUseStatusColors");
     mUpdateTagsOnLoad       = gSavedSettings.getBOOL("AscentUpdateTagsOnLoad");
     mEffectColor			= gSavedSettings.getColor4("EffectColor");
@@ -296,6 +304,7 @@ void LLPrefsAscentVan::cancel()
     gSavedSettings.setBOOL("AscentShowOthersTag",        mShowOthersTag);
     gSavedSettings.setBOOL("AscentShowOthersTagColor",   mShowOthersTagColor);
     gSavedSettings.setBOOL("AscentShowIdleTime",         mShowIdleTime);
+    
     gSavedSettings.setBOOL("AscentUseStatusColors",      mUseStatusColors);
     gSavedSettings.setBOOL("AscentUpdateTagsOnLoad",     mUpdateTagsOnLoad);
     gSavedSettings.setColor4("EffectColor",              mEffectColor);
@@ -323,7 +332,10 @@ void LLPrefsAscentVan::cancel()
          gSavedSettings.setBOOL("ShowContactSetOnAvatarTag",       mShowContactSetOnAvatarTag);
          SHClientTagMgr::instance().resetAvatarTags();
     }
-   
+    if (mShowDistance != gSavedSettings.getBOOL("GenxDisplayDistanceInTag")) {
+         gSavedSettings.setBOOL("GenxDisplayDistanceInTag",       mShowDistance);
+         SHClientTagMgr::instance().resetAvatarTags();
+    }
     gSavedSettings.setBOOL("ShowContactSetOnLocalChat",       mShowContactSetOnLocalChat);
     gSavedSettings.setBOOL("ShowContactSetOnRadar",           mShowContactSetOnRadar);
     gSavedSettings.setBOOL("GenxFavBar",                      mShowFavBar);
@@ -359,6 +371,7 @@ void LLPrefsAscentVan::apply()
         childSetEnabled("Render_Max_Comp_label", false);
         childSetEnabled("Always_Render_Note", false);
     }
+   
     refreshValues();
     refresh();
 }

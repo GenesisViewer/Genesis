@@ -167,7 +167,7 @@
 			<text_editor name="about"/>
 		</panel>
 		<!-- =========================== -->
-		<panel label="Mis Notas" name="My Notes">
+		<panel label="Notas" name="Notes">
 			<string name="Loading">
 				Cargando...
 			</string>

@@ -1195,7 +1195,7 @@ LLPanelAvatar::LLPanelAvatar(
 	factory_map["Picks"] = LLCallbackMap(createPanelAvatarPicks, this);
 	factory_map["Classified"] = LLCallbackMap(createPanelAvatarClassified, this);
 	factory_map["1st Life"] = LLCallbackMap(createPanelAvatarFirstLife, this);
-	factory_map["My Notes"] = LLCallbackMap(createPanelAvatarNotes, this);
+	factory_map["Notes"] = LLCallbackMap(createPanelAvatarNotes, this);
 	
 	mCommitCallbackRegistrar.add("Profile.Web", boost::bind(LLAvatarActions::showProfile, boost::bind(&LLPanelAvatar::getAvatarID, this), true));
 	mCommitCallbackRegistrar.add("Profile.TeleportRequest", boost::bind(LLAvatarActions::teleportRequest, boost::bind(&LLPanelAvatar::getAvatarID, this)));
@@ -1642,6 +1642,6 @@ void* LLPanelAvatar::createPanelAvatarFirstLife(void* data)
 void* LLPanelAvatar::createPanelAvatarNotes(void* data)
 {
 	LLPanelAvatar* self = (LLPanelAvatar*)data;
-	self->mPanelNotes = new LLPanelAvatarNotes("My Notes", LLRect(),self);
+	self->mPanelNotes = new LLPanelAvatarNotes("Notes", LLRect(),self);
 	return self->mPanelNotes;
 }

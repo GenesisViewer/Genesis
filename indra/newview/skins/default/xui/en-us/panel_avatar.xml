@@ -369,7 +369,7 @@
 			     name="about" width="330" word_wrap="true" spell_check="true" />
 		</panel>
 		<panel border="true" bottom="-482" follows="left|top|right|bottom" height="466"
-		     label="My Notes" left="1" mouse_opaque="true" name="My Notes" width="418">
+		     label="Notes" left="1" mouse_opaque="true" name="Notes" width="418">
 			<string name="Loading">
 				Loading...
 			</string>

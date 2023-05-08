@@ -1642,6 +1642,6 @@ void* LLPanelAvatar::createPanelAvatarFirstLife(void* data)
 void* LLPanelAvatar::createPanelAvatarNotes(void* data)
 {
 	LLPanelAvatar* self = (LLPanelAvatar*)data;
-	self->mPanelNotes = new LLPanelAvatarNotes("My Notes", LLRect(),self);
+	self->mPanelNotes = new LLPanelAvatarNotes("Notes", LLRect(),self);
 	return self->mPanelNotes;
 }

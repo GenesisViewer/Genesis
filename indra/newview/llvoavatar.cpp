@@ -3120,7 +3120,16 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, LLWorld &world, const F64 &time)
 		idleUpdateBelowWater();	// wind effect uses this
 		idleUpdateWindEffect();
 	}
-
+	//Render distance of the avatar
+	if (gSavedSettings.getBOOL("GenxDisplayDistanceInTag")) {
+		if (isSelf() && isChanged(TRANSLATED)) {
+			SHClientTagMgr::instance().resetAvatarTags();
+		}
+		if (!isSelf() && isChanged(TRANSLATED)) {
+			this->clearNameTag();
+		}
+	}
+	
 	idleUpdateNameTag(mLastRootPos);
 	idleUpdateRenderComplexity();
 }
@@ -4100,6 +4109,15 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		if (!contactSetId.empty() && gSavedSettings.getBOOL("ShowContactSetOnAvatarTag")) {
 			LLColor4 contactSetColor = contactSet.getColor();
 			addNameTagLine(contactSetName, contactSetColor, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
+		}
+		if (!isSelf() && gSavedSettings.getBOOL("GenxDisplayDistanceInTag")) {
+			
+			LLVector3 position = this->getPosition();
+			LLVector3 delta = position - gAgent.getPositionAgent();
+			F32 fdelta = (F32)delta.magVec();
+			char temp[32];
+			snprintf(temp, sizeof(temp), "%.2f", fdelta);
+			addNameTagLine(temp + std::string(" m"),name_tag_color,LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall() );
 		}
 		mNameAway = is_away;
 		mNameBusy = is_busy;

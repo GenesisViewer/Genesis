@@ -42,6 +42,7 @@
       <check_box bottom_delta="-8" control_name="AscentShowOthersTag" follows="top" height="16" initial_value="true" label="Display client tag for others" left_delta="-205" tool_tip="Enabling this will show client tag names on others' avatar names." name="show_other_tag_check"/>
       <check_box bottom_delta="-20" control_name="AscentShowOthersTagColor" follows="top" height="16" initial_value="true" label="Display client tag color for others" left_delta="0" tool_tip="Enabling this sets others' avatar name color to their client's color." name="show_client_tag_color_check"/>
       <check_box bottom_delta="-20" control_name="AscentShowIdleTime" follows="top" height="16" initial_value="true" label="Show Idle Time" tool_tip="Enabling this will show the amount of time an avatar has been idle." name="show_idle_time_check"/>
+      <check_box bottom_delta="-20" control_name="GenxDisplayDistanceInTag" follows="top" height="16" initial_value="false"  label="Show Avatar Distance" tool_tip="Enabling this will show the distance between you and another avatar." name="show_avatar_distance"/>
       
       <!-- End of Client Tag settings -->
       <text bottom_delta="-35" follows="top" height="10" left="20" name="effects_color_textbox">Color For My Effects:</text>

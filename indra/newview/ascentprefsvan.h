@@ -50,7 +50,7 @@ protected:
 	void onCommitClientTag(LLUICtrl* ctrl);
 	static void onManualClientUpdate();
 	void onAvatarNameColor(LLUICtrl* ctrl);
-
+	void onAvatarDistance(LLUICtrl* ctrl);
 private:
 	//Main
 	bool mUseAccountSettings;
@@ -83,6 +83,7 @@ private:
 	bool mShowOthersTag;
 	bool mShowOthersTagColor;
 	bool mShowIdleTime;
+	bool mShowDistance;
 	bool mUseStatusColors;
 	bool mUpdateTagsOnLoad;
 	LLColor4 mEffectColor;

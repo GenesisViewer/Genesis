@@ -107,10 +107,10 @@
       <radio_item bottom="-31" height="16" name="2" width="315">High</radio_item>
     </radio_group>
   </panel>
-  <panel border="true" bottom="-400" height="244" left="50" name="Hardware" label="Hardware" width="500">
+  <panel border="true" bottom="-400" height="244" left="50" name="Hardware" label="Hardware" width="600">
     <check_box bottom="-22" control_name="RenderAnisotropic" height="16" label="Anisotropic Filtering (slower when enabled)" left="5" name="ani" width="256"/>
     <text bottom="-37" height="12" left="10" name="Antialiasing:" width="128">Antialiasing:</text>
-    <combo_box bottom="-41" height="16" initial_value="false" label="Antialiasing" left="148" name="fsaa" width="64" highlighted_control_id="Antialiasing:">
+    <combo_box bottom="-41" height="16" initial_value="false" label="Antialiasing" left="148" name="fsaa" width="84" highlighted_control_id="Antialiasing:">
       <combo_item name="FSAADisabled" value="0">Disabled</combo_item>
       <combo_item name="2x" value="2">2x</combo_item>
       <combo_item name="4x" value="4">4x</combo_item>
@@ -118,7 +118,7 @@
       <combo_item name="16x" value="16">16x</combo_item>
     </combo_box>
     <text bottom="-57" height="12" left="10" name="VSync:" width="128">VSync:</text>
-    <combo_box bottom="-61" height="16" initial_value="false" label="VSync" left="148" name="vsync" width="64" highlighted_control_id="VSync:">
+    <combo_box bottom="-61" height="16" initial_value="false" label="VSync" left="148" name="vsync" width="84" highlighted_control_id="VSync:">
       <combo_item name="VSyncDisabled" value="0">Disabled</combo_item>
       <combo_item name="VSyncStandard" value="1">Standard</combo_item>
       <combo_item name="VSyncAdaptive" value="-1">Adaptive</combo_item>
@@ -134,7 +134,7 @@
      tool_tip="Enabling this on modern hardware can provide a performance gain. However, enabling this when combined with antialiasing on AMD GPUs may cause edge artifacts. This setting is required for deferred rendering."/>
     <spinner bottom="-41" control_name="RenderGamma" decimal_digits="2" height="16" increment="0.01" initial_val="1" label="Gamma:" label_width="138" left="250" max_val="2" min_val="0.0" name="gamma" width="202" tool_tip="(brightness, lower is brighter)"/>
     <spinner bottom_delta="70" control_name="RenderFogRatio" decimal_digits="1" height="16" increment="0.1" initial_val="4" label="Fog Distance Ratio:" label_width="138" max_val="10" min_val="0.5" name="fog" width="202"/>
-    <text bottom_delta="-50" height="40" name="note">
+    <text bottom_delta="-50" height="40" left="290" name="note">
 Note: The Gamma and Fog Distance Ratio
 settings are unavailable (since useless)
 when the Atmospheric Shaders are enabled.
@@ -142,27 +142,27 @@ when the Atmospheric Shaders are enabled.
   </panel>
   <panel border="true" bottom="-400" height="244" left="50" name="DoF" label="Depth of Field" width="500">
     <check_box bottom="-22" left="5" follows="top|left" control_name="RenderDepthOfField" label="Enable Depth of Field" tool_tip="Toggles a camera like Depth of Field effect on or off, often used to blur out distance or things that shouldnt be in focus" name="RenderDepthOfField"/>
-    <slider bottom_delta="-18" left_delta="6" follows="top|left" height="16" width="298" control_name="CameraFNumber" can_edit_text="true" decimal_digits="1" increment="0.1" label_width="110" max_val="128" min_val="0.50" name="CameraFNum" label="F-Number:" tool_tip="Camera f-number value for Depth of Field effect"/>
+    <slider bottom_delta="-18" left_delta="6" follows="top|left" height="16" width="298" control_name="CameraFNumber" can_edit_text="true" decimal_digits="1" increment="0.1" label_width="110" val_width="40" max_val="128" min_val="0.50" name="CameraFNum" label="F-Number:" tool_tip="Camera f-number value for Depth of Field effect"/>
     <button bottom_delta="-1" left_delta="300" follows="top|left" height="18" width="60" name="reset_f_num" label="Reset">
       <button.commit_callback function="Prefs.Reset" parameter="CameraFNumber"/>
     </button>
-    <slider bottom_delta="-17" left_delta="-300" follows="top|left" height="16" width="298" control_name="CameraFocalLength" can_edit_text="true" decimal_digits="1" increment="0.1" label_width="110" max_val="300" min_val="0" name="CameraFocal" label="Focal Length(mm):" tool_tip="Camera focal length for Depth of Field effect (in millimeters)"/>
+    <slider bottom_delta="-17" left_delta="-300" follows="top|left" height="16" width="298" control_name="CameraFocalLength" can_edit_text="true" decimal_digits="1" increment="0.1" label_width="110" val_width="40" max_val="300" min_val="0" name="CameraFocal" label="Focal Length(mm):" tool_tip="Camera focal length for Depth of Field effect (in millimeters)"/>
     <button bottom_delta="-1" left_delta="300" follows="top|left" height="18" width="60" name="reset_focal_length" label="Reset">
       <button.commit_callback function="Prefs.Reset" parameter="CameraFocalLength"/>
     </button>
-    <slider bottom_delta="-17" left_delta="-300" follows="top|left" height="16" width="298" control_name="CameraMaxCoF" can_edit_text="true" decimal_digits="1" increment="0.1" label_width="110" max_val="100" min_val="0" name="CameraCoF" label="Circle of Confusion:" tool_tip="Set the Camera circle of confusion"/>
+    <slider bottom_delta="-17" left_delta="-300" follows="top|left" height="16" width="298" control_name="CameraMaxCoF" can_edit_text="true" decimal_digits="1" increment="0.1" label_width="110" val_width="40" max_val="100" min_val="0" name="CameraCoF" label="Circle of Confusion:" tool_tip="Set the Camera circle of confusion"/>
     <button bottom_delta="-1" left_delta="300" follows="top|left" height="18" width="60" name="reset_max_cof" label="Reset">
       <button.commit_callback function="Prefs.Reset" parameter="CameraMaxCoF"/>
     </button>
-    <slider bottom_delta="-17" left_delta="-300" follows="top|left" height="16" width="298" control_name="CameraFocusTransitionTime" can_edit_text="true" decimal_digits="2" increment="0.01" label_width="110" max_val="20" min_val="0.01" name="CameraFocusTrans" label="Transition Time(secs):" tool_tip="Time taken to alter focus from one place to the next"/>
+    <slider bottom_delta="-17" left_delta="-300" follows="top|left" height="16" width="298" control_name="CameraFocusTransitionTime" can_edit_text="true" decimal_digits="2" increment="0.01" label_width="110" val_width="40" max_val="20" min_val="0.01" name="CameraFocusTrans" label="Transition Time(secs):" tool_tip="Time taken to alter focus from one place to the next"/>
     <button bottom_delta="-1" left_delta="300" follows="top|left" height="18" width="60" name="reset_trans_time" label="Reset">
       <button.commit_callback function="Prefs.Reset" parameter="CameraFocusTransitionTime"/>
     </button>
-    <slider bottom_delta="-17" left_delta="-300" follows="top|left" height="16" width="298" control_name="CameraDoFResScale" can_edit_text="true" decimal_digits="2" increment="0.01" label_width="110" val_width="35" max_val="1" min_val="0.25" name="CameraDoFRes" label="Resolution:" tool_tip="Set the Resolution (Quality) of each DoF pixel"/>
+    <slider bottom_delta="-17" left_delta="-300" follows="top|left" height="16" width="298" control_name="CameraDoFResScale" can_edit_text="true" decimal_digits="2" increment="0.01" label_width="110" val_width="40" max_val="1" min_val="0.25" name="CameraDoFRes" label="Resolution:" tool_tip="Set the Resolution (Quality) of each DoF pixel"/>
     <button bottom_delta="-1" left_delta="300" follows="top|left" height="18" width="60" name="reset_res_scale" label="Reset">
       <button.commit_callback function="Prefs.Reset" parameter="CameraDoFResScale"/>
     </button>
-    <button bottom_delta="-23" left_delta="-300" follows="top|left" height="20" width="298" name="reset_dof" label="Reset All Depth of Field Settings">
+    <button bottom_delta="-35" left_delta="-300" follows="top|left" height="20" width="298" name="reset_dof" label="Reset All Depth of Field Settings">
       <button.commit_callback function="Graphics.ResetTab" parameter="DoF"/>
     </button>
   </panel>

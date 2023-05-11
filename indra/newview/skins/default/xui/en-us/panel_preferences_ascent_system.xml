@@ -4,7 +4,7 @@
 
     <panel border="true" left="1" bottom="-408" height="408" width="500" label="General" name="User Interface">
       <text left="12" bottom_delta="-20" follows="top" name="double_click_text" value="Enable double-click"/>
-      <check_box left_delta="105" bottom_delta="-5" control_name="DoubleClickTeleport" follows="top"
+      <check_box left_delta="110" bottom_delta="-5" control_name="DoubleClickTeleport" follows="top"
         label="teleport" tool_tip="Double-clicking on an object/person will teleport you to that location." name="double_click_teleport_check"/>
       <check_box left_delta="67" bottom_delta="0" control_name="DoubleClickAutoPilot" follows="top" label="autopilot" tool_tip="Double-clicking on something will make you walk to that location." name="double_click_autopilot_check"/>
       <check_box enabled_control="DoubleClickTeleport" left="20" bottom_delta="-18" control_name="OptionRotateCamAfterLocalTP" follows="top" initial_value="false"

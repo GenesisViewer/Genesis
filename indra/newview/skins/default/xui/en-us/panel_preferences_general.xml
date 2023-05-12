@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel border="true" bottom="-409" height="408" label="General" left="102" name="general_panel" width="517">
-  <radio_group bottom="-44" height="40" left="109" name="default_start_location" width="220">
+  <radio_group bottom="-44" height="40" left="109" name="default_start_location" width="260">
     <radio_item bottom="-20" height="20" name="home" tool_tip="Log into my home location by default.">My Home</radio_item>
     <radio_item bottom="-20" height="20" left="93" name="last" tool_tip="Log into my last location by default.">My Last Location</radio_item>
   </radio_group>
   <check_box bottom="-42" height="16" initial_value="true" label="Show Start Location on Login Screen" name="show_location_checkbox"/>
-	<combo_box bottom_delta="-27" follows="top" height="18" left="103" name="fade_out_combobox" width="111" highlighted_control_id="show_names_textbox">
+	<combo_box bottom_delta="-27" follows="top" height="18" left="103" name="fade_out_combobox" width="125" highlighted_control_id="show_names_textbox">
 		<combo_item name="Never" value="Never">Never</combo_item>
 		<combo_item name="Show Temporarily" value="Show Temporarily">Show Temporarily</combo_item>
 		<combo_item name="Always" value="Always">Always</combo_item>
 	</combo_box>
-	<combo_box bottom_delta="0" follows="top" height="18" left="220" name="namesystem_combobox" width="166" highlighted_control_id="show_names_textbox">
+	<combo_box bottom_delta="0" follows="top" height="18" left="240" name="namesystem_combobox" width="190" highlighted_control_id="show_names_textbox">
 		<combo_item name="Old Names" value="0">Old Names</combo_item>
 		<combo_item name="Display Names (with Username)" value="1">Display Names (w/Username)</combo_item>
 		<combo_item name="Display Names only" value="2">Display Names only</combo_item>
 		<combo_item name="Old Names (with Display Names)" value="3">Old Names (w/Display)</combo_item>
 	</combo_box>
-	<check_box bottom_delta="0" follows="top" height="16" label="Show 'Resident'" left_delta="174" name="show_resident_checkbox" tool_tip="Enabled will show Resident as the last name on screen for legacy accounts.  It determines how the IM chat log is saved, eg:  Alice Resident.txt or Alice.txt and is included for backward capability of importing chats from other viewers."/>
+	<check_box bottom_delta="0" follows="top" height="16" label="Show 'Resident'" left_delta="205" name="show_resident_checkbox" tool_tip="Enabled will show Resident as the last name on screen for legacy accounts.  It determines how the IM chat log is saved, eg:  Alice Resident.txt or Alice.txt and is included for backward capability of importing chats from other viewers."/>
 	<check_box bottom_delta="-25" follows="top" height="16" initial_value="true" label="Small Avatar Names" left="101" name="small_avatar_names_checkbox"/>
 	<check_box bottom_delta="-18" follows="top" height="16" initial_value="false" label="Hide My Name On My Screen" name="show_my_name_checkbox"/>
 	<text bottom_delta="-24" follows="top" height="16" left="10" name="group_titles_textbox">Group Titles:</text>
@@ -31,7 +31,7 @@
 	<check_box bottom="-257" height="16" label="without filling up the corner" left="280" name="no_transaction_clutter_checkbox" tool_tip="Still present the notifications, but have them pop up in the bottom right momentarily, then leave, so the transaction draws attention but doesn't get in the way."/>
 	<text bottom="-291" height="10" left="10" name="maturity_desired_label">Rating:</text>
 	<text bottom="-291" height="10" left="101" name="maturity_desired_prompt">I want to access content rated:</text>
-	<combo_box bottom="-297" follows="left|top" height="18" left="267" name="maturity_desired_combobox" width="120" control_name="PreferredMaturity" highlighted_control_id="maturity_desired_prompt">
+	<combo_box bottom="-297" follows="left|top" height="18" left="280" name="maturity_desired_combobox" width="140" control_name="PreferredMaturity" highlighted_control_id="maturity_desired_prompt">
 		<combo_item name="Desired_Adult" value="42">PG, Mature &amp; Adult</combo_item>
 		<combo_item name="Desired_Mature" value="21">PG &amp; Mature</combo_item>
 		<combo_item name="Desired_PG" value="13">PG only</combo_item>

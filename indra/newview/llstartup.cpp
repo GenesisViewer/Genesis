@@ -66,6 +66,7 @@
 #include "lldir.h"
 //#include "llenvironment.h"
 #include "llerrorcontrol.h"
+#include "genxareasearch.h"
 #include "llfiltersd2xmlrpc.h"
 #include "llfocusmgr.h"
 #include "llhttpsender.h"
@@ -3025,6 +3026,7 @@ void pass_processObjectPropertiesFamily(LLMessageSystem *msg, void**)
 	// Send the result to the corresponding requesters.
 	LLSelectMgr::processObjectPropertiesFamily(msg, NULL);
 	JCFloaterAreaSearch::processObjectPropertiesFamily(msg, NULL);
+	GenxFloaterAreaSearch::processObjectPropertiesFamily(msg, NULL);
 }
 
 void process_script_running_reply(LLMessageSystem* msg, void** v)

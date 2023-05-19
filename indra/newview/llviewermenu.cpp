@@ -140,6 +140,7 @@
 
 // <edit>
 #include "jcfloaterareasearch.h"
+#include "genxareasearch.h"
 #include "lltexteditor.h" // Initialize the text editor menu listeners in here
 #include "llfloatermessagelog.h"
 #include "shfloatermediaticker.h"

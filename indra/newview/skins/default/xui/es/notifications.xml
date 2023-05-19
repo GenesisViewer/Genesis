@@ -1086,7 +1086,7 @@ Podría ser [VALIDS]
   </notification>	
   
 	<notification name="SoundFileInvalidTooLong">
-		El archivo de audio es demasiado largo (10 segundos como máximo):
+		El archivo de audio es demasiado largo (30 segundos como máximo):
 [FILE]
 	</notification>
 	

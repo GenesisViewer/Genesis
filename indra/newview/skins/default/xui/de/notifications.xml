@@ -548,7 +548,7 @@ Erwartet wurde [VALIDS]<usetemplate name="okbutton" yestext="OK"/></notification
   <notification name="SoundFileInvalidChunkSize">Falsche Teilgr&#xFC;sse in WAV Datei:
 [FILE]</notification>
 
-  <notification name="SoundFileInvalidTooLong">Audiodatei ist zu lang (max. 10 Sekunden):
+  <notification name="SoundFileInvalidTooLong">Audiodatei ist zu lang (max. 30 Sekunden):
 [FILE]</notification>
 
   <notification name="ProblemWithFile">Problem mit Datei [FILE]:

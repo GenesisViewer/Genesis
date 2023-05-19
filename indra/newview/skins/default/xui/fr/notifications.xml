@@ -715,7 +715,7 @@ Impossible de trouver les données dans l'en-tête WAV :
 	</notification>
 
 	<notification name="SoundFileInvalidTooLong">
-Le fichier audio est trop long (10 secondes maximum) :
+Le fichier audio est trop long (30 secondes maximum) :
 [FILE]
 	</notification>
 

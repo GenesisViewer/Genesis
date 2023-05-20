@@ -88,7 +88,7 @@ void chat_notification(const LLNotificationPtr notification)
 //static 
 void LLNotifyBox::initClass()
 {
-	sFont = LLFontGL::getFontSansSerif();
+	sFont = LLFontGL::getFontSansSerifSmall();
 	LLNotificationChannel::buildChannel("Notifications", "Visible", LLNotificationFilters::filterBy<std::string>(&LLNotification::getType, "notify"));
 	LLNotificationChannel::buildChannel("NotificationTips", "Visible", LLNotificationFilters::filterBy<std::string>(&LLNotification::getType, "notifytip"));
 

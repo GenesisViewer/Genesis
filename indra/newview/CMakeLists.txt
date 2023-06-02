@@ -642,6 +642,7 @@ set(viewer_SOURCE_FILES
     shfloatermediaticker.cpp
     wlfPanel_AdvSettings.cpp
     genxmotd.cpp
+    noise.cpp
     )
 
 set(viewer_HEADER_FILES
@@ -1213,6 +1214,7 @@ set(viewer_HEADER_FILES
     shupdatechecker.h
     wlfPanel_AdvSettings.h
     genxmotd.h
+    noise.h
     )
 
 source_group("CMake Rules" FILES ViewerInstall.cmake)

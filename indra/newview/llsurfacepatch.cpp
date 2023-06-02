@@ -41,13 +41,13 @@
 #include "llviewerregion.h"
 #include "llvlcomposition.h"
 #include "lldrawpool.h"
-#include "llperlin.h"
+#include "noise.h"
 
 extern bool gShiftFrame;
 extern U64MicrosecondsImplicit gFrameTime;
 extern LLPipeline gPipeline;
 
-LLSurfacePatch::LLSurfacePatch(LLSurface* surface, U32 side)
+LLSurfacePatch::LLSurfacePatch()
 :	mHasReceivedData(FALSE),
 	mSTexUpdate(TRUE),
 	mDirty(FALSE),
@@ -70,12 +70,17 @@ LLSurfacePatch::LLSurfacePatch(LLSurface* surface, U32 side)
 	// set to non-zero values by higher classes.  
 	mConnectedEdge(NO_EDGE),
 	mLastUpdateTime(0),
-	mSurfacep(NULL),
-	mNeighborPatches{ 0,0,0,0,0,0,0,0 },
-	mNormalsInvalid{ 1,1,1,1,1,1,1,1,1 },
-	mSide(side)
-{
-	setSurface(surface);
+	mSurfacep(NULL)
+{	
+	S32 i;
+	for (i = 0; i < 8; i++)
+	{
+		setNeighborPatch(i, NULL);
+	}
+	for (i = 0; i < 9; i++)
+	{
+		mNormalsInvalid[i] = TRUE;
+	}
 }
 
 
@@ -85,7 +90,7 @@ LLSurfacePatch::~LLSurfacePatch()
 }
 
 
-bool LLSurfacePatch::dirty()
+void LLSurfacePatch::dirty()
 {
 	// These are outside of the loop in case we're still waiting for a dirty from the
 	// texture being updated...
@@ -104,9 +109,9 @@ bool LLSurfacePatch::dirty()
 	if (!mDirty)
 	{
 		mDirty = TRUE;
-		return true;
+		mSurfacep->dirtySurfacePatch(this);
 	}
-	return false;
+	
 }
 
 
@@ -129,31 +134,33 @@ void LLSurfacePatch::disconnectNeighbor(LLSurface *surfacep)
 	U32 i;
 	for (i = 0; i < 8; i++)
 	{
-		const auto& patch = getNeighborPatch(i);
-		if (patch)
+		
+		if (auto patch = getNeighborPatch(i))
 		{
 			if (patch->mSurfacep == surfacep)
 			{
-				if (EAST == i)
+				// Clean up connected edges
+				switch(i)
 				{
-					mConnectedEdge &= EAST_EDGE;
-				}
-				else if (NORTH == i)
-				{
-					mConnectedEdge &= NORTH_EDGE;
-				}
-				else if (WEST == i)
-				{
-					mConnectedEdge &= WEST_EDGE;
-				}
-				else if (SOUTH == i)
-				{
-					mConnectedEdge &= SOUTH_EDGE;
+					case EAST:
+						mConnectedEdge &= ~EAST_EDGE;
+						break;
+					case NORTH:
+						mConnectedEdge &= ~NORTH_EDGE;
+						break;
+					case WEST:
+						mConnectedEdge &= ~WEST_EDGE;
+						break;
+					case SOUTH:
+						mConnectedEdge &= ~SOUTH_EDGE;
+						break;
 				}
 				setNeighborPatch(i, NULL);
+				mNormalsInvalid[i] = TRUE;
 			}
 		}
 	}
+	
 }
 
 LLVector3 LLSurfacePatch::getPointAgent(const U32 x, const U32 y) const
@@ -186,7 +193,7 @@ LLVector2 LLSurfacePatch::getTexCoords(const U32 x, const U32 y) const
 void LLSurfacePatch::eval(const U32 x, const U32 y, const U32 stride, LLVector3 *vertex, LLVector3 *normal,
 						  LLVector2 *tex0, LLVector2 *tex1)
 {
-	if (!mSurfacep || !mSurfacep->getRegion() || !mSurfacep->getGridsPerEdge())
+	if (!mSurfacep || !mSurfacep->getRegion() || !mSurfacep->getGridsPerEdge() || !mVObjp)
 	{
 		return; // failsafe
 	}
@@ -212,11 +219,12 @@ void LLSurfacePatch::eval(const U32 x, const U32 y, const U32 stride, LLVector3 
 	const F32 xyScale = 4.9215f*7.f; //0.93284f;
 	const F32 xyScaleInv = (1.f / xyScale)*(0.2222222222f);
 
-	LLVector2 vec(
-		(F32)fmod((F32)(mOriginGlobal.mdV[0] + x)*xyScaleInv, 256.f), // <FS:ND/> Added (F32) for proper array initialization
-		(F32)fmod((F32)(mOriginGlobal.mdV[1] + y)*xyScaleInv, 256.f) // <FS:ND/> Added (F32) for proper array initialization
-		);
-	F32 rand_val = llclamp(LLPerlinNoise::noise(vec)* 0.75f + 0.5f, 0.f, 1.f);
+	F32 vec[3] = {
+                    (F32)fmod((F32)(mOriginGlobal.mdV[0] + x)*xyScaleInv, 256.f),
+                    (F32)fmod((F32)(mOriginGlobal.mdV[1] + y)*xyScaleInv, 256.f),
+					0.f
+				};
+	F32 rand_val = llclamp(noise2(vec)* 0.75f + 0.5f, 0.f, 1.f);
 	tex1->mV[1] = rand_val;
 
 
@@ -261,69 +269,68 @@ void LLSurfacePatch::calcNormal(const U32 x, const U32 y, const U32 stride)
 	ppatches[1][1] = this;
 
 	U32 i, j;
-	for (i = 0; i < 2; i++)
+		for (i = 0; i < 2; i++)
 	{
 		for (j = 0; j < 2; j++)
 		{
-			LLSurfacePatch* patch;
 			if (poffsets[i][j][0] < 0)
 			{
-				if (patch = ppatches[i][j]->getNeighborPatch(WEST))
+				if (!ppatches[i][j]->getNeighborPatch(WEST))
 				{
-					// <FS:CR> Aurora Sim
-					ppatches[i][j] = patch;
-					poffsets[i][j][0] += patch_width;
-					poffsets[i][j][2] = patch->getSurface()->getGridsPerEdge();
-// </FS:CR> Aurora Sim
+					poffsets[i][j][0] = 0;
 				}
 				else
 				{
-					poffsets[i][j][0] = 0;
+// <FS:CR> Aurora Sim
+					ppatches[i][j] = ppatches[i][j]->getNeighborPatch(WEST);
+					poffsets[i][j][0] += patch_width;
+					poffsets[i][j][2] = ppatches[i][j]->getSurface()->getGridsPerEdge();
+// </FS:CR> Aurora Sim
 				}
 			}
 			if (poffsets[i][j][1] < 0)
 			{
-				if (patch = ppatches[i][j]->getNeighborPatch(SOUTH))
+				if (!ppatches[i][j]->getNeighborPatch(SOUTH))
 				{
-// <FS:CR> Aurora Sim
-					ppatches[i][j] = patch;
-					poffsets[i][j][1] += patch_width;
-					poffsets[i][j][2] = patch->getSurface()->getGridsPerEdge();
-// </FS>CR> Aurora Sim
+					poffsets[i][j][1] = 0;
 				}
 				else
 				{
-					poffsets[i][j][1] = 0;
+// <FS:CR> Aurora Sim
+					ppatches[i][j] = ppatches[i][j]->getNeighborPatch(SOUTH);
+					poffsets[i][j][1] += patch_width;
+					poffsets[i][j][2] = ppatches[i][j]->getSurface()->getGridsPerEdge();
+// </FS>CR> Aurora Sim
 				}
 			}
 			if (poffsets[i][j][0] >= (S32)patch_width)
 			{
-				if (patch = ppatches[i][j]->getNeighborPatch(EAST))
+				if (!ppatches[i][j]->getNeighborPatch(EAST))
 				{
-// <FS:CR> Aurora Sim
-					ppatches[i][j] = patch;
-					poffsets[i][j][0] -= patch_width;
-					poffsets[i][j][2] = patch->getSurface()->getGridsPerEdge();
-// </FS:CR> Aurora Sim
+					poffsets[i][j][0] = patch_width - 1;
 				}
 				else
 				{
-					poffsets[i][j][0] = patch_width - 1;
+// <FS:CR> Aurora Sim
+					ppatches[i][j] = ppatches[i][j]->getNeighborPatch(EAST);
+					poffsets[i][j][0] -= patch_width;
+					poffsets[i][j][2] = ppatches[i][j]->getSurface()->getGridsPerEdge();
+// </FS:CR> Aurora Sim
 				}
 			}
 			if (poffsets[i][j][1] >= (S32)patch_width)
 			{
-				if (patch = ppatches[i][j]->getNeighborPatch(NORTH))
+				if (!ppatches[i][j]->getNeighborPatch(NORTH))
 				{
-// <FS:CR> Aurora Sim
-					ppatches[i][j] = patch;
-					poffsets[i][j][1] -= patch_width;
-					poffsets[i][j][2] = patch->getSurface()->getGridsPerEdge();
-// </FS:CR> Aurora Sim
+					poffsets[i][j][1] = patch_width - 1;
 				}
 				else
 				{
-					poffsets[i][j][1] = patch_width - 1;
+// <FS:CR> Aurora Sim
+					ppatches[i][j] = ppatches[i][j]->getNeighborPatch(NORTH);
+					poffsets[i][j][1] -= patch_width;
+					poffsets[i][j][2] = ppatches[i][j]->getSurface()->getGridsPerEdge();
+// </FS:CR> Aurora Sim
 				}
 			}
 		}
@@ -457,11 +464,11 @@ void LLSurfacePatch::updateVerticalStats()
 }
 
 
-bool LLSurfacePatch::updateNormals() 
+void LLSurfacePatch::updateNormals() 
 {
 	if (mSurfacep->mType == 'w')
 	{
-		return false;
+		return;
 	}
 	U32 grids_per_patch_edge = mSurfacep->getGridsPerPatchEdge();
 	U32 grids_per_edge = mSurfacep->getGridsPerEdge();
@@ -485,6 +492,7 @@ bool LLSurfacePatch::updateNormals()
 	// update the north edge
 	if (mNormalsInvalid[NORTHEAST] || mNormalsInvalid[NORTH] || mNormalsInvalid[NORTHWEST])
 	{
+		
 		for (i = 0; i <= grids_per_patch_edge; i++)
 		{
 			calcNormal(i, grids_per_patch_edge, 2);
@@ -498,12 +506,13 @@ bool LLSurfacePatch::updateNormals()
 	// update the west edge
 	if (mNormalsInvalid[NORTHWEST] || mNormalsInvalid[WEST] || mNormalsInvalid[SOUTHWEST])
 	{
-		LLSurfacePatch* northwest_patchp = getNeighborPatch(NORTHWEST);
-		LLSurfacePatch* north_patchp = getNeighborPatch(NORTH);
 // <FS:CR> Aurora Sim
-		if (!north_patchp && northwest_patchp && northwest_patchp->getHasReceivedData())
+		if(!getNeighborPatch(NORTH) && getNeighborPatch(NORTHWEST))
 		{
-			*(mDataZ + grids_per_patch_edge*grids_per_edge) = *(northwest_patchp->mDataZ + grids_per_patch_edge);
+			if(getNeighborPatch(NORTHWEST)->getHasReceivedData())
+			{
+				*(mDataZ + grids_per_patch_edge*grids_per_edge) = *(getNeighborPatch(NORTHWEST)->mDataZ + grids_per_patch_edge);
+			}
 		}
 // </FS:CR> Aurora Sim
 
@@ -518,13 +527,14 @@ bool LLSurfacePatch::updateNormals()
 	// update the south edge
 	if (mNormalsInvalid[SOUTHWEST] || mNormalsInvalid[SOUTH] || mNormalsInvalid[SOUTHEAST])
 	{
-		LLSurfacePatch* southeast_patchp = getNeighborPatch(SOUTHEAST);
-		LLSurfacePatch* east_patchp = getNeighborPatch(EAST);
 // <FS:CR> Aurora Sim
-		if (!east_patchp && southeast_patchp && southeast_patchp->getHasReceivedData())
+		if(!getNeighborPatch(EAST) && getNeighborPatch(SOUTHEAST))
 		{
-			*(mDataZ + grids_per_patch_edge) = *(southeast_patchp->mDataZ + grids_per_patch_edge * southeast_patchp->getSurface()->getGridsPerEdge());
-		}
+			if(getNeighborPatch(SOUTHEAST)->getHasReceivedData())
+			{
+				*(mDataZ + grids_per_patch_edge) = 
+				*(getNeighborPatch(SOUTHEAST)->mDataZ + grids_per_patch_edge * getNeighborPatch(SOUTHEAST)->getSurface()->getGridsPerEdge());
+			}
 // </FS:CR> Aurora Sim
 
 		for (i = 0; i < grids_per_patch_edge; i++)
@@ -533,20 +543,17 @@ bool LLSurfacePatch::updateNormals()
 			calcNormal(i, 1, 2);
 		}
 		dirty_patch = TRUE;
+		}
 	}
-
 	// Invalidating the northeast corner is different, because depending on what the adjacent neighbors are,
 	// we'll want to do different things.
-	if (mNormalsInvalid[NORTHEAST])
+		if (mNormalsInvalid[NORTHEAST])
 	{
-		LLSurfacePatch* northeast_patchp = getNeighborPatch(NORTHEAST);
-		LLSurfacePatch* north_patchp = getNeighborPatch(NORTH);
-		LLSurfacePatch* east_patchp = getNeighborPatch(EAST);
-		if (!northeast_patchp)
+		if (!getNeighborPatch(NORTHEAST))
 		{
-			if (!north_patchp)
+			if (!getNeighborPatch(NORTH))
 			{
-				if (!east_patchp)
+				if (!getNeighborPatch(EAST))
 				{
 					// No north or east neighbors.  Pull from the diagonal in your own patch.
 					*(mDataZ + grids_per_patch_edge + grids_per_patch_edge*grids_per_edge) =
@@ -554,13 +561,13 @@ bool LLSurfacePatch::updateNormals()
 				}
 				else
 				{
-					if (east_patchp->getHasReceivedData())
+					if (getNeighborPatch(EAST)->getHasReceivedData())
 					{
 						// East, but not north.  Pull from your east neighbor's northwest point.
 						*(mDataZ + grids_per_patch_edge + grids_per_patch_edge*grids_per_edge) =
 // <FS:CR> Aurora Sim
 							//*(getNeighborPatch(EAST)->mDataZ + (grids_per_patch_edge - 1)*grids_per_edge);
-							*(east_patchp->mDataZ + (east_patchp->getSurface()->getGridsPerPatchEdge() - 1)* east_patchp->getSurface()->getGridsPerEdge());
+							*(getNeighborPatch(EAST)->mDataZ + (getNeighborPatch(EAST)->getSurface()->getGridsPerPatchEdge() - 1)*getNeighborPatch(EAST)->getSurface()->getGridsPerEdge());
 // </FS:CR> Aurora Sim
 					}
 					else
@@ -573,7 +580,7 @@ bool LLSurfacePatch::updateNormals()
 			else
 			{
 				// We have a north.
-				if (east_patchp)
+				if (getNeighborPatch(EAST))
 				{
 					// North and east neighbors, but not northeast.
 					// Pull from diagonal in your own patch.
@@ -582,13 +589,13 @@ bool LLSurfacePatch::updateNormals()
 				}
 				else
 				{
-					if (north_patchp->getHasReceivedData())
+					if (getNeighborPatch(NORTH)->getHasReceivedData())
 					{
 						// North, but not east.  Pull from your north neighbor's southeast corner.
 						*(mDataZ + grids_per_patch_edge + grids_per_patch_edge*grids_per_edge) =
 // <FS:CR> Aurora Sim
 							//*(getNeighborPatch(NORTH)->mDataZ + (grids_per_patch_edge - 1));
-							*(north_patchp->mDataZ + (north_patchp->getSurface()->getGridsPerPatchEdge() - 1));
+							*(getNeighborPatch(NORTH)->mDataZ + (getNeighborPatch(NORTH)->getSurface()->getGridsPerPatchEdge() - 1));
 // </FS:CR> Aurora Sim
 					}
 					else
@@ -599,25 +606,30 @@ bool LLSurfacePatch::updateNormals()
 				}
 			}
 		}
-		else if (northeast_patchp->mSurfacep != mSurfacep)
+		else if (getNeighborPatch(NORTHEAST)->mSurfacep != mSurfacep)
 		{
 			if (
-				(!north_patchp || (north_patchp->mSurfacep != mSurfacep))
+				(!getNeighborPatch(NORTH) || (getNeighborPatch(NORTH)->mSurfacep != mSurfacep))
 				&&
-				(!east_patchp || (east_patchp->mSurfacep != mSurfacep)))
+				(!getNeighborPatch(EAST) || (getNeighborPatch(EAST)->mSurfacep != mSurfacep)))
 			{
 // <FS:CR> Aurora Sim
 				U32 own_xpos, own_ypos, neighbor_xpos, neighbor_ypos;
 				S32 own_offset = 0, neighbor_offset = 0;
 				from_region_handle(mSurfacep->getRegion()->getHandle(), &own_xpos, &own_ypos);
-				from_region_handle(northeast_patchp->mSurfacep->getRegion()->getHandle(), &neighbor_xpos, &neighbor_ypos);
-				if (own_ypos >= neighbor_ypos)
+				from_region_handle(getNeighborPatch(NORTHEAST)->mSurfacep->getRegion()->getHandle(), &neighbor_xpos, &neighbor_ypos);
+				if(own_ypos >= neighbor_ypos) {
 					neighbor_offset = own_ypos - neighbor_ypos;
-				else
+				}
+				else {
 					own_offset = neighbor_ypos - own_ypos;
-
+				}
+// </FS:CR> Aurora Sim
 				*(mDataZ + grids_per_patch_edge + grids_per_patch_edge*grids_per_edge) =
-					*(northeast_patchp->mDataZ + (grids_per_edge + neighbor_offset - own_offset - 1) * northeast_patchp->getSurface()->getGridsPerEdge());
+										*(getNeighborPatch(NORTHEAST)->mDataZ + 
+// <FS:CR> Aurora Sim
+											(grids_per_edge + neighbor_offset - own_offset - 1) * 
+											getNeighborPatch(NORTHEAST)->getSurface()->getGridsPerEdge() );
 // </FS:CR> Aurora Sim
 			}
 		}
@@ -632,7 +644,6 @@ bool LLSurfacePatch::updateNormals()
 		calcNormal(grids_per_patch_edge - 1, grids_per_patch_edge - 1, 2);
 		dirty_patch = TRUE;
 	}
-
 	// update the middle normals
 	if (mNormalsInvalid[MIDDLE])
 	{
@@ -645,13 +656,14 @@ bool LLSurfacePatch::updateNormals()
 		}
 		dirty_patch = TRUE;
 	}
-
+	if (dirty_patch)
+	{
+		mSurfacep->dirtySurfacePatch(this);
+	}
 	for (i = 0; i < 9; i++)
 	{
 		mNormalsInvalid[i] = FALSE;
 	}
-
-	return dirty_patch;
 }
 
 void LLSurfacePatch::updateEastEdge()
@@ -702,12 +714,9 @@ void LLSurfacePatch::updateNorthEdge()
 {
 	U32 grids_per_patch_edge = mSurfacep->getGridsPerPatchEdge();
 	U32 grids_per_edge = mSurfacep->getGridsPerEdge();
-
 	U32 i;
 	F32 *south_surface, *north_surface;
-
-	LLSurfacePatch* patchp = getNeighborPatch(NORTH);
-	if (!patchp)
+	if (!getNeighborPatch(NORTH))
 	{
 		south_surface = mDataZ + grids_per_patch_edge*grids_per_edge;
 		north_surface = mDataZ + (grids_per_patch_edge - 1) * grids_per_edge;
@@ -715,13 +724,12 @@ void LLSurfacePatch::updateNorthEdge()
 	else if (mConnectedEdge & NORTH_EDGE)
 	{
 		south_surface = mDataZ + grids_per_patch_edge*grids_per_edge;
-		north_surface = patchp->mDataZ;
+		north_surface = getNeighborPatch(NORTH)->mDataZ;
 	}
 	else
 	{
 		return;
 	}
-
 	// Update patchp's north edge ...
 	for (i = 0; i<grids_per_patch_edge; i++)
 	{
@@ -802,50 +810,31 @@ void LLSurfacePatch::updateGL()
 	}
 }
 
-bool LLSurfacePatch::dirtyZ()
+void LLSurfacePatch::dirtyZ()
 {
 	mSTexUpdate = TRUE;
-
 	// Invalidate all normals in this patch
 	U32 i;
 	for (i = 0; i < 9; i++)
 	{
 		mNormalsInvalid[i] = TRUE;
 	}
-
 	// Invalidate normals in this and neighboring patches
 	for (i = 0; i < 8; i++)
 	{
-		if (mNeighborPatches[i] == nullptr)
+		if (getNeighborPatch(i))
 		{
-			continue;
-		}
-		if (mNeighborPatches[i]->expired())
-		{
-			LL_WARNS() << "Expired neighbor patch detected. Side " << i << LL_ENDL;
-			delete mNeighborPatches[i];
-			mNeighborPatches[i] = nullptr;
-			continue;
-		}
-		const surface_patch_ref& patchp = mNeighborPatches[i]->lock();
-		if (patchp)
-		{
-			patchp->mNormalsInvalid[gDirOpposite[i]] = TRUE;
-			if (patchp->dirty())
-			{
-				patchp->getSurface()->dirtySurfacePatch(patchp);
-			}
+			getNeighborPatch(i)->mNormalsInvalid[gDirOpposite[i]] = TRUE;
+			getNeighborPatch(i)->dirty();
 			if (i < 4)
 			{
-				patchp->mNormalsInvalid[gDirAdjacent[gDirOpposite[i]][0]] = TRUE;
-				patchp->mNormalsInvalid[gDirAdjacent[gDirOpposite[i]][1]] = TRUE;
+				getNeighborPatch(i)->mNormalsInvalid[gDirAdjacent[gDirOpposite[i]][0]] = TRUE;
+				getNeighborPatch(i)->mNormalsInvalid[gDirAdjacent[gDirOpposite[i]][1]] = TRUE;
 			}
 		}
 	}
-
+	dirty();
 	mLastUpdateTime = gFrameTime;
-	
-	return dirty();
 }
 
 
@@ -882,29 +871,32 @@ void LLSurfacePatch::setOriginGlobal(const LLVector3d &origin_global)
 	
 }
 
-void LLSurfacePatch::connectNeighbor(const surface_patch_ref& neighbor_patchp, const U32 direction)
+void LLSurfacePatch::connectNeighbor(LLSurfacePatch *neighbor_patchp, const U32 direction)
 {
 	llassert(neighbor_patchp);
-	if (!neighbor_patchp) return;
 	mNormalsInvalid[direction] = TRUE;
-
+	neighbor_patchp->mNormalsInvalid[gDirOpposite[direction]] = TRUE;
 	setNeighborPatch(direction, neighbor_patchp);
-
+	neighbor_patchp->setNeighborPatch(gDirOpposite[direction], this);
 	if (EAST == direction)
 	{
 		mConnectedEdge |= EAST_EDGE;
+		neighbor_patchp->mConnectedEdge |= WEST_EDGE;
 	}
 	else if (NORTH == direction)
 	{
 		mConnectedEdge |= NORTH_EDGE;
+		neighbor_patchp->mConnectedEdge |= SOUTH_EDGE;
 	}
 	else if (WEST == direction)
 	{
 		mConnectedEdge |= WEST_EDGE;
+		neighbor_patchp->mConnectedEdge |= EAST_EDGE;
 	}
 	else if (SOUTH == direction)
 	{
 		mConnectedEdge |= SOUTH_EDGE;
+		neighbor_patchp->mConnectedEdge |= NORTH_EDGE;
 	}
 }
 
@@ -1074,21 +1066,9 @@ F32 LLSurfacePatch::getMaxComposition() const
 	return mMaxComposition;
 }
 
-void LLSurfacePatch::setNeighborPatch(const U32 direction, const surface_patch_ref& neighborp)
+void LLSurfacePatch::setNeighborPatch(const U32 direction, LLSurfacePatch *neighborp)
 {
-	if (!neighborp)
-	{
-		delete mNeighborPatches[direction];
-		mNeighborPatches[direction] = nullptr;
-	}
-	else
-	{
-		if (mNeighborPatches[direction] == nullptr)
-		{
-			mNeighborPatches[direction] = new surface_patch_weak_ref();
-		}
-		*mNeighborPatches[direction] = neighborp;
-	}
+	mNeighborPatches[direction] = neighborp;
 	mNormalsInvalid[direction] = TRUE;
 	if (direction < 4)
 	{
@@ -1099,15 +1079,7 @@ void LLSurfacePatch::setNeighborPatch(const U32 direction, const surface_patch_r
 
 LLSurfacePatch *LLSurfacePatch::getNeighborPatch(const U32 direction) const
 {
-	if (mNeighborPatches[direction] == nullptr)
-	{
-		return nullptr;
-	}
-	else if (mNeighborPatches[direction]->expired())
-	{
-		LL_WARNS() << "Expired neighbor patch detected. Side " << direction << LL_ENDL;
-	}
-	return mNeighborPatches[direction]->lock().get();
+	return mNeighborPatches[direction];
 }
 
 void LLSurfacePatch::clearVObj()

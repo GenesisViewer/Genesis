@@ -205,7 +205,7 @@ LLNotifyBox::LLNotifyBox(LLNotificationPtr notification)
 		const S32 MAX_LENGTH = 512 + 20 + DB_FIRST_NAME_BUF_SIZE + DB_LAST_NAME_BUF_SIZE + DB_INV_ITEM_NAME_BUF_SIZE;  // For script dialogs: add space for title.
 		const auto height = mIsTip ? BOTTOM : BTN_TOP+16;
 
-		mText = new LLTextEditor(std::string("box"), LLRect(x, y, getRect().getWidth()-2, height), MAX_LENGTH, LLStringUtil::null, sFont, FALSE, true);
+		mText = new LLTextEditor(std::string("box"), LLRect(x, y, getRect().getWidth()-2, height+16), MAX_LENGTH, LLStringUtil::null, sFont, FALSE, true);
 
 		mText->setWordWrap(TRUE);
 		mText->setMouseOpaque(TRUE);

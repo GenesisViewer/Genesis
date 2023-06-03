@@ -72,6 +72,7 @@ LLPrefsAscentVan::LLPrefsAscentVan()
     mUiToolTipDelay = gSavedSettings.getF32("ToolTipDelay");
     mSLBShowFPS = gSavedSettings.getBOOL("SLBShowFPS");
     mGenxShowFpsTop = gSavedSettings.getBOOL("GenxShowFpsTop");
+    mFontScreenDPI = gSavedSettings.getF32("FontScreenDPI");
     mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
 
     LLComboBox* GenxGroupNotifyPos_combobox = getChild<LLComboBox>("GenxGroupNotifyPos_combobox");
@@ -234,6 +235,7 @@ void LLPrefsAscentVan::refreshValues()
     mUiToolTipDelay = gSavedSettings.getF32("ToolTipDelay");
     mSLBShowFPS = gSavedSettings.getBOOL("SLBShowFPS");
     mGenxShowFpsTop = gSavedSettings.getBOOL("GenxShowFpsTop");
+    mFontScreenDPI = gSavedSettings.getF32("FontScreenDPI");
     mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
     mGenxRenderHitBoxes = gSavedSettings.getBOOL("GenxRenderHitBoxes");
 }
@@ -343,6 +345,7 @@ void LLPrefsAscentVan::cancel()
     gSavedSettings.setF32("ToolTipDelay",                     mUiToolTipDelay);
     gSavedSettings.setBOOL("SLBShowFPS",                      mSLBShowFPS);
     gSavedSettings.setBOOL("GenxShowFpsTop",                  mGenxShowFpsTop);
+    gSavedSettings.setF32("FontScreenDPI",                    mFontScreenDPI);
     gSavedSettings.setU32("RenderAvatarMaxComplexity",        mRenderAvatarMaxComplexity);
     gSavedSettings.setBOOL("GenxRenderHitBoxes",              mGenxRenderHitBoxes);
 }

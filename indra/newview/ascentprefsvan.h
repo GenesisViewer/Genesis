@@ -116,6 +116,7 @@ private:
 	F32 mUiToolTipDelay;
 	bool mSLBShowFPS;
 	bool mGenxShowFpsTop;
+	F32 mFontScreenDPI;
 	U32 mRenderAvatarMaxComplexity;
 	bool mGenxRenderHitBoxes;
 };

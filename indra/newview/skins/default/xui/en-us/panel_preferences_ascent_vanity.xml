@@ -90,6 +90,8 @@
         <combo_item name="top left" value="1">Top Left</combo_item>
         <combo_item name="top middle" value="2">Top Middle</combo_item>
       </combo_box>
+      <spinner bottom_delta="-18" follows="top" decimal_digits="0" height="16" increment="4" initial_val="104" label="Screen font DPI (104) :" width="220" label_width="140" left="150" max_val="132" min_val="80" control_name="FontScreenDPI" name="FontScreen_DPI" tool_tip="Font Resolution in pixels per inch, Default 104 ; incremental in 4's"/>
+      <text bottom_delta="0" follows="top" height="16" left="385" name="FontDpi_Note">(Requires a Restart to take effect)</text>
 
       <text bottom_delta="-30" follows="top" height="16" left="15" name="RenderOptions">Render options :</text>
       <text bottom_delta="0" follows="top" left="150" height="16" name="AvatarRender">Avatar Rendering option :</text>

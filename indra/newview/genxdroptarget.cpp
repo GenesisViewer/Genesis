@@ -28,6 +28,7 @@ GenxDropTarget::GenxDropTarget(const GenxDropTarget::Params& p)
 	mText->setFollows(FOLLOWS_NONE);
 	mText->setMouseOpaque(false);
 	mText->setVPad(1);
+	mText->setHAlign(LLFontGL::HCENTER);
 
 	mBorder = new LLViewBorder("drop_border", LLRect(), LLViewBorder::BEVEL_IN);
 	addChild(mBorder);

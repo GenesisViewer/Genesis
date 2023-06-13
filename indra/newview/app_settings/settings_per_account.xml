@@ -919,5 +919,29 @@
       <key>Value</key>
       <string/>
     </map>
+    <key>GenxAOSets</key>
+    <map>
+      <key>Comment</key>
+      <string>List of user defined AO sets</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>LLSD</string>
+			<key>Value</key>
+			<map/>
+				
+    </map>
+    <key>GenxAOUsed</key>
+    <map>
+      <key>Comment</key>
+      <string>The UUID of Genx AO Set used</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+			<key>Value</key>
+			<map/>
+				
+    </map>
   </map>
 </llsd>

@@ -19621,6 +19621,18 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <key>GenxAOMgr</key>
+    <map>
+      <key>Comment</key>
+      <string>If enabled, will use the Genesis AO system.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    
   </map>
 
 </llsd>

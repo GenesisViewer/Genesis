@@ -81,7 +81,7 @@
   <check_box bottom_delta="0" left="173" control_name="RememberPassword" follows="left|bottom" height="16" label="Save password" name="remember_check" width="158"/>
 
   <icon name="fmod_logo" bottom="10" height="40" left="-341" width="152" follows="right|bottom" image_name="FMOD_Logo"/>
-  <text name="fmod_text" value="Powered By" bottom_delta="40" height="16" left_delta="36" width="84" follows="right|bottom" font="SansSerif" font_style="BOLD" font_size="Large"/>
+  <text name="fmod_text" value="Powered By" bottom_delta="40" height="16" left_delta="36" width="84" follows="right|bottom" font="SansSerif" font_style="BOLD" font_size="Small"/>
 
 	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
 	     bottom="45" drop_shadow_visible="true" follows="right|bottom"

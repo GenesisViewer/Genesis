@@ -250,9 +250,9 @@ void GenxFloaterAO::onComboBoxCommit(LLUICtrl* ctrl) const
         
         const std::string ctrlName = ctrl->getName();
         genxAO.setDefaultAnim(ctrlName,stranim);
-        LL_INFOS() << "Inserting default anim " << ctrlName << " " << stranim << LL_ENDL;
+        
         GenxAOMgr::getInstance()->updateAOSet(genxAO);
-        LL_INFOS() << " default anim " << ctrlName << " updated " << LL_ENDL;
+        
         if (mapCombosToControlNames.count(ctrlName)) {
             std::string controlName = mapCombosToControlNames.at(ctrlName);
 		    gSavedPerAccountSettings.setString(controlName, stranim);
@@ -304,9 +304,9 @@ void GenxFloaterAO::onSelectAOSet()
         getChild<LLButton>("viewcard")->setVisible(true);
         getChild<LLButton>("reload")->setVisible(true);
         getChild<LLButton>("newcard")->setVisible(false);
-        LL_INFOS() << "in OnSelectAO reset AO System  " << LL_ENDL;
+        
         AOSystem::instance().initSingleton();
-        LL_INFOS() << "in OnSelectAO after reset AO System  " << LL_ENDL;
+        
     } else {
         getChild<GenxDropTarget>("ao_notecard")->setValue(LLUUID());
         getChild<LLButton>("viewcard")->setVisible(false);
@@ -325,17 +325,17 @@ void GenxFloaterAO::onSelectAOSet()
 
         //default anims
         std::map<std::string, std::string> defaultAnims = genxAO.getDefaultAnims();
-        LL_INFOS() << "in OnSelectAO before seeting default Anims  " << LL_ENDL;
+        
         for (auto const& defaultanim_iter : genxAO.getDefaultAnims() )
         {
             getChild<LLComboBox>(defaultanim_iter.first)->setValue(defaultanim_iter.second);
             if (mapCombosToControlNames.count(defaultanim_iter.first)){
-                LL_INFOS() << "in OnSelectAO setting " <<  mapCombosToControlNames[defaultanim_iter.first] << " to " << defaultanim_iter.second << LL_ENDL;
+        
                 gSavedPerAccountSettings.setString(mapCombosToControlNames[defaultanim_iter.first],defaultanim_iter.second);
             }    
         }  
         AOSystem::instance().initSingleton();
-        LL_INFOS() << "in OnSelectAO after seeting default Anims  " << LL_ENDL;
+        
     }
     
 }

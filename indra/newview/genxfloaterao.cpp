@@ -290,7 +290,7 @@ void GenxFloaterAO::onSelectAOSet()
 {
     LLComboBox *aosets_combo = getChild<LLComboBox>("genxaosettings");
     LLUUID id = aosets_combo->getSelectedValue();
-    
+    gSavedPerAccountSettings.setString("GenxAOUsed",id.asString());
     getChild<LLButton>("rename_ao_set")->setVisible(true);
     getChild<LLLineEditor>("new_ao_set_name")->setVisible(false);
     getChild<LLButton>("new_ao_set_name_ok")->setVisible(false);

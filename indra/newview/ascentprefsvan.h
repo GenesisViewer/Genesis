@@ -65,6 +65,8 @@ private:
 	bool mAnnounceStreamMetadata;
 	F32 mInactiveFloaterTransparency, mActiveFloaterTransparency;
 	S32  mBackgroundYieldTime;
+	bool mGenesisShowOnlineNotificationChiclet;
+	bool mEnableAORemote;
 	bool mScriptErrorsStealFocus;
 	bool mConnectToNeighbors;
 	bool mRestartMinimized;

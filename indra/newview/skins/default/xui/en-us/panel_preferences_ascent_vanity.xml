@@ -22,6 +22,7 @@
 
       <slider bottom_delta="-20" left_delta="-222" follows="top" control_name="BackgroundYieldTime"  increment="1" label="Background Yield Time:" label_width="150" max_val="200" min_val="10" name="BackgroundYieldTime" show_text="true" width="400" tool_tip="A higher value will release more CPU time when the viewer is not in focus.  Setting this option too high on slower computers could cause the viewer to stall"/>
       <check_box bottom_delta="-25" follows="top" label="Show friends online/offline chiclet indicators" name="online_offline_indicators" control_name="GenesisShowOnlineNotificationChiclet" tool_tip="Display or not a notification on bottom right when friend comes offline/online"/>
+      <check_box bottom_delta="-20" follows="top" label="Use the built-in AO" name="EnableAORemote" control_name="EnableAORemote" tool_tip="Enable the built-in AO on/off button"/>
     </panel>
     <panel border="true" left="1" bottom="-190" height="180" width="600" label="Tags/Colors" name="TagsColors">
       <!-- Client tag options -->

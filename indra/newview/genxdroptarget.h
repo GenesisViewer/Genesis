@@ -57,6 +57,8 @@ protected:
 	class LLButton* mReset;
 	class LLUICtrl* mCtrl;
 	//LLUICtrl::commit_signal_t*		mCommitSignal;
+private: 
+	std::string mLabel;	
 };
 
 #endif // GENXDROPTARGET_H

@@ -87,6 +87,7 @@ void GenxDropTarget::initFromXML(LLXMLNodePtr node, LLView* parent)
 		std::string label;
 		node->getAttributeString("label", label);
 		mText->setText(label);
+		mLabel=label;
 	}
 
 	if (node->hasAttribute("fill_parent"))
@@ -145,6 +146,7 @@ void GenxDropTarget::setValue(const LLSD& value)
 {
 	const LLUUID& id(value.asUUID());
 	setItem(id.isNull() ? NULL : gInventory.getItem(id));
+	
 }
 
 void GenxDropTarget::setItem(LLInventoryItem* item)
@@ -153,7 +155,7 @@ void GenxDropTarget::setItem(LLInventoryItem* item)
 	if (item) 
 		mText->setText(item->getName());
 	else	
-		mText->setText(std::string(""));
+		mText->setText(mLabel);
 	this->mItem=item;	
 }
 

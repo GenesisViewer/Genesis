@@ -304,8 +304,7 @@ void GenxFloaterAO::onSelectAOSet()
         getChild<LLButton>("viewcard")->setVisible(true);
         getChild<LLButton>("reload")->setVisible(true);
         getChild<LLButton>("newcard")->setVisible(false);
-        
-        AOSystem::instance().initSingleton();
+        (gSavedSettings.getBOOL("AOEnabled")) ? AOSystem::instance().initSingleton():AOSystem::requestConfigNotecard(false);
         
     } else {
         getChild<GenxDropTarget>("ao_notecard")->setValue(LLUUID());
@@ -334,7 +333,7 @@ void GenxFloaterAO::onSelectAOSet()
                 gSavedPerAccountSettings.setString(mapCombosToControlNames[defaultanim_iter.first],defaultanim_iter.second);
             }    
         }  
-        AOSystem::instance().initSingleton();
+        (gSavedSettings.getBOOL("AOEnabled")) ? AOSystem::instance().initSingleton():AOSystem::requestConfigNotecard(false);
         
     }
     

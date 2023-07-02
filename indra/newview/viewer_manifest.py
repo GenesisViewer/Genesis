@@ -133,6 +133,7 @@ class ViewerManifest(LLManifest):
                 self.path("default/xui/*/*.xml")
                 self.package_skin("Default.xml", "default")
                 self.package_skin("Genx.xml", "Genx")
+                self.package_skin("Genx2.xml", "Genx2")
                 self.package_skin("dark.xml", "dark")
                 self.package_skin("Gemini.xml", "gemini")
                 self.package_skin("Dazzle.xml", "Dazzle_MC")

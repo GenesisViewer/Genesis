@@ -1,0 +1,14 @@
+<llsd>
+    <map>
+    <key>skin_name</key>
+        <string>Genx2</string>
+    <key>author_name</key>
+        <string>Torric</string>
+    <key>additional_author_names</key>
+        <string>Linden Lab</string>
+    <key>skin_info</key>
+        <string>2nd Theme for the Genesis viewer.</string>
+    <key>folder_name</key>
+        <string>Genx2</string>
+    </map>
+</llsd>

@@ -7,6 +7,7 @@
 #include "llviewerobjectlist.h"
 #include "llagent.h"
 #include "llscrolllistctrl.h"
+#include "llfiltereditor.h"
 GenxFloaterAreaSearch::GenxFloaterAreaSearch(const LLSD& data) :
 	LLFloater(),
     LLEventTimer(F32 (3.0f))
@@ -50,6 +51,21 @@ BOOL GenxFloaterAreaSearch::postBuild()
     "LI INTEGER,"\
     "DISTANCE REAL"\
     ")";
+    
+    sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);
+    sql = "CREATE TABLE AREASEARCH_VIEW (" \
+    "UUID TEXT PRIMARY KEY," \
+    "STATUS INTEGER,"\
+    "OWNER_ID TEXT ," \
+    "GROUP_ID TEXT," \
+    "NAME TEXT ," \
+    "DESCRIPTION TEXT ," \
+    "OWNER_NAME TEXT  ," \
+    "GROUP_NAME TEXT  ," \
+    "PRICE REAL," \
+    "LI INTEGER,"\
+    "DISTANCE REAL"\
+    ")";
     sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);
     rc = sqlite3_create_function(db, "areasearch_compute_groupname", 1, SQLITE_UTF8, NULL, &areasearch_compute_groupname, NULL, NULL);
     if (rc != SQLITE_OK) {
@@ -64,11 +80,26 @@ BOOL GenxFloaterAreaSearch::postBuild()
     if (rc != SQLITE_OK) {
         LL_WARNS() << "can't define areasearch_compute_distance" << LL_ENDL;
     }
+    //search by name or description
+    LLFilterEditor *name_filter = getChild<LLFilterEditor>("areasearch_lineedit");
+    name_filter->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByName,this,_1,_2));
     return TRUE;
 }
 void GenxFloaterAreaSearch::onOpen()
 {
     
+}
+void GenxFloaterAreaSearch::onSearchByName(LLUICtrl* caller, const LLSD& value)
+{
+	std::string text = value.asString();
+	LLStringUtil::toLower(text);
+	caller->setValue(text);
+ 	
+    
+    mSearchByName=text;
+    filterEdited=true;
+    tick();
+	
 }
 void GenxFloaterAreaSearch::cleanDB() {
     char *zErrMsg = 0;
@@ -257,8 +288,12 @@ static void areasearch_compute_distance(sqlite3_context *context, int argc, sqli
 /*virtual*/
 BOOL GenxFloaterAreaSearch::tick()
 {
+    // if the floater has been closed, no need to refresh datas
+    GenxFloaterAreaSearch* floater = findInstance();
+	if(!floater)
+		return TRUE;
     LLViewerRegion* our_region = gAgent.getRegion();
-    if (our_region != mLastRegion ) {
+    if (our_region != mLastRegion || filterEdited) {
         LLScrollListCtrl *result_list =  getChild<LLScrollListCtrl>("result_list");
         result_list->clearRows();
         cleanDB();
@@ -282,14 +317,32 @@ BOOL GenxFloaterAreaSearch::tick()
     sql = "UPDATE OBJECTS SET DISTANCE=areasearch_compute_distance(UUID) WHERE UUID IS NOT NULL";
     rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg); 
     LL_INFOS() << "GenxFloaterAreaSearch::tick() 4" << LL_ENDL;
-    sql = "SELECT UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE FROM OBJECTS WHERE UUID IS NOT NULL AND STATUS IS NOT NULL";
+    sql ="DELETE FROM AREASEARCH_VIEW";
+    rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg); 
+    sql = "INSERT INTO AREASEARCH_VIEW(UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE) " \
+    "SELECT UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE FROM OBJECTS WHERE UUID IS NOT NULL AND STATUS IS NOT NULL";
+    
+    int indexFilter=1;
+    if (!mSearchByName.empty()) {
+        
+        const char* newsql = (std::string(sql) + " AND (instr(lower(NAME),?)>0 OR instr(lower(DESCRIPTION),?)>0) ").c_str();
+        sql = (char*)newsql;
 
-   /* Execute SQL statement */
-   rc = sqlite3_exec(db, sql, areasearch_callback, NULL, &zErrMsg);
-//    sql = "SELECT * FROM OBJECTS WHERE UUID IS NOT NULL AND STATUS IS NOT NULL";
-
-//    /* Execute SQL statement */
-//    rc = sqlite3_exec(db, sql, areasearch_callback, NULL, &zErrMsg);
+    }
+    LL_INFOS()<< sql << LL_ENDL;
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (!mSearchByName.empty()) {
+        sqlite3_bind_text(stmt,indexFilter,mSearchByName.c_str(), strlen(mSearchByName.c_str()),SQLITE_TRANSIENT ) ;    
+        sqlite3_bind_text(stmt,indexFilter+1,mSearchByName.c_str(), strlen(mSearchByName.c_str()),SQLITE_TRANSIENT ) ; 
+        indexFilter=3;
+    }
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    LL_INFOS() << "GenxFloaterAreaSearch::tick() 5" << LL_ENDL;
+    sql = "SELECT UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE FROM AREASEARCH_VIEW";
+    /* Execute SQL statement */
+    rc = sqlite3_exec(db, sql, areasearch_callback, NULL, &zErrMsg);
+    filterEdited=false;
    return FALSE;
 }
 
@@ -300,57 +353,44 @@ int GenxFloaterAreaSearch::callback(int argc, char **argv, char **azColName){
         LL_INFOS() << azColName[i] <<  (argv[i] ? argv[i] : "NULL") <<LL_ENDL;
       }
     } else {
-   LLScrollListCtrl *result_list =  getChild<LLScrollListCtrl>("result_list");
-  
-    std::string strUUID = argv[0];
-    
-    LLUUID uuid (strUUID);
-    
-   if (result_list->getItemIndex(uuid)>=0) {
-        int i;
-        LLScrollListItem *row = result_list->getItem(LLSD(uuid));
-        if (row) {
-            for (i=1; i< argc; i++) {
-                LLScrollListColumn *column = result_list->getColumn(azColName[i]);
-                if (column) {
-                    LLScrollListCell *cell = row->getColumn(column->mIndex);
-                    cell->setValue(LLSD((argv[i] ? argv[i] : "")));
+        LLScrollListCtrl *result_list =  getChild<LLScrollListCtrl>("result_list");
+        
+            std::string strUUID = argv[0];
+            
+            LLUUID uuid (strUUID);
+            
+        if (result_list->getItemIndex(uuid)>=0) {
+                int i;
+                LLScrollListItem *row = result_list->getItem(LLSD(uuid));
+                if (row) {
+                    for (i=1; i< argc; i++) {
+                        LLScrollListColumn *column = result_list->getColumn(azColName[i]);
+                        if (column) {
+                            LLScrollListCell *cell = row->getColumn(column->mIndex);
+                            cell->setValue(LLSD((argv[i] ? argv[i] : "")));
 
+                        }
+                    }
                 }
-            }
+                
+        } else {
+                LL_INFOS() << "callback line not found " << strUUID << LL_ENDL;
+                //line not found, we have to create it
+                LLScrollListCell::Params cell_params;
+                LLScrollListItem::Params row_params;
+                row_params.value = strUUID;
+                //read the colums, the sql query columns must match the scolllist colums names
+                int i;
+                for (i=1; i< argc; i++) {
+                    cell_params.column = azColName[i];
+                    cell_params.value = (argv[i] ? argv[i] : "");
+                    
+                    row_params.columns.add(cell_params);
+                }
+
+                result_list->addRow(row_params);
         }
         
-   } else {
-        LL_INFOS() << "callback line not found " << strUUID << LL_ENDL;
-        //line not found, we have to create it
-        LLScrollListCell::Params cell_params;
-        LLScrollListItem::Params row_params;
-        row_params.value = strUUID;
-        //read the colums, the sql query columns must match the scolllist colums names
-        int i;
-        for (i=1; i< argc; i++) {
-            cell_params.column = azColName[i];
-            cell_params.value = (argv[i] ? argv[i] : "");
-            
-            row_params.columns.add(cell_params);
-        }
-
-        result_list->addRow(row_params);
-   }
-   //fprintf(stderr, "%s: ", (const char*)data);
-   //LLSD row;
-		// row["columns"][0]["value"] = notification->getName();
-		// row["columns"][0]["column"] = "name";
-
-		// row["columns"][1]["value"] = notification->getMessage();
-		// row["columns"][1]["column"] = "content";
-
-		// row["columns"][2]["value"] = notification->getDate();
-		// row["columns"][2]["column"] = "date";
-		// row["columns"][2]["type"] = "date";
-//    for(i = 0; i<argc; i++){
-//       LL_INFOS() << azColName[i] <<  (argv[i] ? argv[i] : "NULL") <<LL_ENDL;
-//    }
    
    }
    return 0;

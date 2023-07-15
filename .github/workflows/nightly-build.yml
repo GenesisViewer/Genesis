@@ -15,19 +15,18 @@ jobs:
   download-artefacts :
     runs-on: ubuntu-latest
     steps:
-      - name:  upgrade-tools
-        run: sudo apt-get install libnss3*
+      
       - name: downloading-private-fmod
         env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-        run: mkdir -p /tmp/deps/ && curl --connect-timeout 5   --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.02.09-windows64-11102022.tar.bz2 --output /tmp/deps/fmodstudio-2.02.09-windows64-11102022.tar.bz2
+        run: mkdir -p /tmp/deps/ && curl -k --connect-timeout 5   --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/private/fmodstudio-2.02.09-windows64-11102022.tar.bz2 --output /tmp/deps/fmodstudio-2.02.09-windows64-11102022.tar.bz2
         
       - name: downloading-public-deps
         env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-        run: mkdir -p /tmp/publicdeps/ && curl --connect-timeout 5  --retry 5 --retry-delay 0 --retry-max-time 40 https://londoncitysl.com/genesis/dependencies/public/public_depencies.zip --output /tmp/publicdeps/public_depencies.zip
+        run: mkdir -p /tmp/publicdeps/ && curl -k --connect-timeout 5  --retry 5 --retry-delay 0 --retry-max-time 40 https://londoncitysl.com/genesis/dependencies/public/public_depencies.zip --output /tmp/publicdeps/public_depencies.zip
         
       - name: decompressing-public-deps
         run: unzip /tmp/publicdeps/public_depencies.zip -d /tmp/deps/
@@ -36,22 +35,22 @@ jobs:
         env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-        run: mkdir -p /tmp/nsis/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/INetC.dll --output /tmp/nsis/INetC.dll 
+        run: mkdir -p /tmp/nsis/ && curl -k --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/INetC.dll --output /tmp/nsis/INetC.dll 
       - name: downloading-7z
         env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-        run: mkdir -p /tmp/nsis/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/nsis7z.dll --output /tmp/nsis/nsis7z.dll
+        run: mkdir -p /tmp/nsis/ && curl -k --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/nsis7z.dll --output /tmp/nsis/nsis7z.dll
       - name: downloading-stdutil-dll
         env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-        run: mkdir -p /tmp/nsis/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/StdUtils.dll --output /tmp/nsis/StdUtils.dll
+        run: mkdir -p /tmp/nsis/ && curl -k --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/StdUtils.dll --output /tmp/nsis/StdUtils.dll
       - name: downloading-stdutil-nsh
         env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-        run: mkdir -p /tmp/nsis/ && curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/StdUtils.nsh --output /tmp/nsis/StdUtils.nsh
+        run: mkdir -p /tmp/nsis/ && curl -k --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://londoncitysl.com/genesis/dependencies/nsis/StdUtils.nsh --output /tmp/nsis/StdUtils.nsh
         
       - uses: actions/upload-artifact@v3
         with:

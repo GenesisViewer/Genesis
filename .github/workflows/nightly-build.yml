@@ -20,7 +20,7 @@ jobs:
         env:
          dep_pass: ${{ secrets.DEP_PASS}}
          dep_user: ${{secrets.DEP_USER}}
-        
+        run: mkdir -p /tmp/deps/ && curl --connect-timeout 5   --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://genesisviewer.org/dependencies/private/fmodstudio-2.02.09-windows64-11102022.tar.bz2 --output /tmp/deps/fmodstudio-2.02.09-windows64-11102022.tar.bz2
       - name: downloading-public-deps
         env:
          dep_pass: ${{ secrets.DEP_PASS}}

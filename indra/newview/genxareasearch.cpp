@@ -87,6 +87,8 @@ BOOL GenxFloaterAreaSearch::postBuild()
     name_filter->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByName,this,_1,_2));
     LLComboBox *owner_combo = getChild<LLComboBox>("owner_filter");
     owner_combo->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByOwner,this));
+    LLComboBox *group_combo = getChild<LLComboBox>("group_filter");
+    group_combo->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByGroup,this));
     return TRUE;
 }
 void GenxFloaterAreaSearch::onOpen()
@@ -108,6 +110,14 @@ void GenxFloaterAreaSearch::onSearchByName(LLUICtrl* caller, const LLSD& value)
 void GenxFloaterAreaSearch::onSearchByOwner()
 {
 	mSearchByOwner = getChild<LLComboBox>("owner_filter")->getValue().asUUID();
+	
+    filterEdited=true;
+    tick();
+	
+}
+void GenxFloaterAreaSearch::onSearchByGroup()
+{
+	mSearchByGroup = getChild<LLComboBox>("group_filter")->getValue().asUUID();
 	
     filterEdited=true;
     tick();
@@ -186,8 +196,28 @@ static int areasearch_callback_owner_combo(void *param, int argc, char **argv, c
 	GenxFloaterAreaSearch* floater = GenxFloaterAreaSearch::findInstance();
 	if(!floater)
 		return 1;
+    LLComboBox *owner_combo = floater->getChild<LLComboBox>("owner_filter");
+    std::string strUUID = argv[0];
+        
+    LLUUID uuid (strUUID);
+   
+    owner_combo->addSimpleElement(argv[1],ADD_BOTTOM,uuid);
+    return 0;
     
-    return floater->callback_owner_combo(argc, argv, azColName);
+}
+static int areasearch_callback_group_combo(void *param, int argc, char **argv, char **azColName)
+{
+	GenxFloaterAreaSearch* floater = GenxFloaterAreaSearch::findInstance();
+	if(!floater)
+		return 1;
+    LLComboBox *owner_combo = floater->getChild<LLComboBox>("group_filter");
+    std::string strUUID = argv[0];
+        
+    LLUUID uuid (strUUID);
+    
+    owner_combo->addSimpleElement(argv[1],ADD_BOTTOM,uuid);
+    return 0;
+    
 }
 void GenxFloaterAreaSearch::processObjectPropertiesFamily(LLMessageSystem* msg, void** user_data)
 {
@@ -365,6 +395,11 @@ BOOL GenxFloaterAreaSearch::tick()
     sql="SELECT DISTINCT OWNER_ID, OWNER_NAME FROM OBJECTS  WHERE OWNER_ID IS NOT NULL AND OWNER_NAME IS NOT NULL ORDER BY OWNER_NAME";
     rc = sqlite3_exec(db, sql, areasearch_callback_owner_combo, NULL, &zErrMsg);
 
+    getChild<LLComboBox>("group_filter")->clearRows();
+    getChild<LLComboBox>("group_filter")->addSimpleElement("",ADD_BOTTOM,LLUUID());
+    sql="SELECT DISTINCT GROUP_ID, GROUP_NAME FROM OBJECTS  WHERE GROUP_ID IS NOT NULL AND GROUP_NAME IS NOT NULL ORDER BY GROUP_NAME";
+    rc = sqlite3_exec(db, sql, areasearch_callback_group_combo, NULL, &zErrMsg);
+
     // sql = "UPDATE OBJECTS SET DISTANCE=areasearch_compute_distance(UUID) WHERE UUID IS NOT NULL";
     // rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg); 
     sql ="DELETE FROM AREASEARCH_VIEW";
@@ -383,15 +418,23 @@ BOOL GenxFloaterAreaSearch::tick()
          const char* newsql = (std::string(sql) + " AND OWNER_ID=? ").c_str();
          sql = (char*)newsql;
     }
-    LL_INFOS()<< sql << LL_ENDL;
+    if(!mSearchByGroup.isNull()) {
+         const char* newsql = (std::string(sql) + " AND GROUP_ID=? ").c_str();
+         sql = (char*)newsql;
+    }
+    
     rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     if (!mSearchByName.empty()) {
         sqlite3_bind_text(stmt,indexFilter,mSearchByName.c_str(), strlen(mSearchByName.c_str()),SQLITE_TRANSIENT ) ;    
         sqlite3_bind_text(stmt,indexFilter+1,mSearchByName.c_str(), strlen(mSearchByName.c_str()),SQLITE_TRANSIENT ) ; 
         indexFilter=3;
     }
-     if(!mSearchByOwner.isNull()) {
+    if(!mSearchByOwner.isNull()) {
          sqlite3_bind_text(stmt,indexFilter,mSearchByOwner.asString().c_str(), strlen(mSearchByOwner.asString().c_str()),SQLITE_TRANSIENT ) ; 
+         indexFilter++;
+    }
+    if(!mSearchByGroup.isNull()) {
+         sqlite3_bind_text(stmt,indexFilter,mSearchByGroup.asString().c_str(), strlen(mSearchByGroup.asString().c_str()),SQLITE_TRANSIENT ) ; 
          indexFilter++;
     }
     rc = sqlite3_step(stmt);
@@ -403,15 +446,7 @@ BOOL GenxFloaterAreaSearch::tick()
     filterEdited=false;
    return FALSE;
 }
-int GenxFloaterAreaSearch::callback_owner_combo(int argc, char **argv, char **azColName){
-    LLComboBox *owner_combo = getChild<LLComboBox>("owner_filter");
-    std::string strUUID = argv[0];
-        
-    LLUUID uuid (strUUID);
-    LL_INFOS() << "Adding into combo " << argv[1] <<"," << argv[0] << LL_ENDL;
-    owner_combo->addSimpleElement(argv[1],ADD_BOTTOM,uuid);
-    return 0;
-}
+
 int GenxFloaterAreaSearch::callback(int argc, char **argv, char **azColName){
     
     LLScrollListCtrl *result_list =  getChild<LLScrollListCtrl>("result_list");

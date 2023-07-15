@@ -27,11 +27,12 @@ public:
 	/*virtual*/ void onOpen();
 	/*virtual*/ BOOL tick() override;
 	int callback(int argc, char **argv, char **azColName);
-	int callback_owner_combo(int argc, char **argv, char **azColName);
+
 	void updateObject(GenxFloaterAreaSearchObject *data);
 	static void processObjectPropertiesFamily(LLMessageSystem* msg, void** user_data);
 	std::string mSearchByName;
 	LLUUID mSearchByOwner;
+	LLUUID mSearchByGroup;
 	sqlite3	*db;
 private:
 	
@@ -41,6 +42,7 @@ private:
 	
 	void onSearchByName(LLUICtrl* caller, const LLSD& value);
 	void onSearchByOwner();
+	void onSearchByGroup();
 	bool filterEdited;
 };
 static void areasearch_compute_groupname(sqlite3_context *context, int argc, sqlite3_value **argv);
@@ -48,4 +50,5 @@ static void areasearch_compute_ownername(sqlite3_context *context, int argc, sql
 static void areasearch_compute_distance(sqlite3_context *context, int argc, sqlite3_value **argv);
 static int areasearch_callback(void *param, int argc, char **argv, char **azColName);
 static int areasearch_callback_owner_combo(void *param, int argc, char **argv, char **azColName);
+static int areasearch_callback_group_combo(void *param, int argc, char **argv, char **azColName);
 #endif

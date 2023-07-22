@@ -9,6 +9,7 @@
 #include "llscrolllistctrl.h"
 #include "llcombobox.h"
 #include "llfiltereditor.h"
+#include "llsliderctrl.h"
 #include <boost/thread.hpp>
 GenxFloaterAreaSearch::GenxFloaterAreaSearch(const LLSD& data) :
 	LLFloater(),
@@ -90,6 +91,12 @@ BOOL GenxFloaterAreaSearch::postBuild()
     owner_combo->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByOwner,this));
     LLComboBox *group_combo = getChild<LLComboBox>("group_filter");
     group_combo->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByGroup,this));
+    LLSliderCtrl *min_distance_slider = getChild<LLSliderCtrl>("min_dist");
+    min_distance_slider->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByDistance,this));
+    mMinDistance=0;
+    LLSliderCtrl *max_distance_slider = getChild<LLSliderCtrl>("max_dist");
+    max_distance_slider->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByDistance,this));
+    mMaxDistance=256;
     requestPropertiesSent=false;
     tick();
     return TRUE;
@@ -106,6 +113,14 @@ void GenxFloaterAreaSearch::onSearchByName(LLUICtrl* caller, const LLSD& value)
  	
     
     mSearchByName=text;
+    filterEdited=true;
+    refreshList();
+	
+}
+void GenxFloaterAreaSearch::onSearchByDistance()
+{
+	mMinDistance=getChild<LLSliderCtrl>("min_dist")->getValue().asInteger();
+    mMaxDistance=getChild<LLSliderCtrl>("max_dist")->getValue().asInteger();
     filterEdited=true;
     refreshList();
 	
@@ -163,27 +178,7 @@ void GenxFloaterAreaSearch::initDB() {
     }
     sqlite3_finalize(stmt);  
     
-    // //reading the objects
-    // sql = "SELECT UUID FROM OBJECTS WHERE STATUS IS NULL";
     
-    // sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-    // while ( sqlite3_step(stmt) == SQLITE_ROW) {
-        
-    //     const unsigned char *text = sqlite3_column_text(stmt, 0);
-    //     std::string strUUID = std::string(reinterpret_cast<const char*>(text));
-    //     LLUUID uuid (strUUID);
-    //     LLMessageSystem* msg = gMessageSystem;
-	// 	msg->newMessageFast(_PREHASH_RequestObjectPropertiesFamily);
-	// 	msg->nextBlockFast(_PREHASH_AgentData);
-	// 	msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
-	// 	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-	// 	msg->nextBlockFast(_PREHASH_ObjectData);
-	// 	msg->addU32Fast(_PREHASH_RequestFlags, 0 );
-	// 	msg->addUUIDFast(_PREHASH_ObjectID, uuid);
-	// 	gAgent.sendReliableMessage();
-
-    // }
-    // sqlite3_finalize(stmt);
     if (!requestPropertiesSent)
         requestObjectProperties();  
     
@@ -491,9 +486,10 @@ void GenxFloaterAreaSearch::refreshList() {
     sql ="DELETE FROM AREASEARCH_VIEW";
     rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg); 
     sql = "INSERT INTO AREASEARCH_VIEW(UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE) " \
-    "SELECT UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE FROM OBJECTS WHERE UUID IS NOT NULL AND STATUS IS NOT NULL";
+    "SELECT UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE FROM OBJECTS WHERE UUID IS NOT NULL AND STATUS IS NOT NULL AND DISTANCE BETWEEN ? AND ?";
     
     int indexFilter=1;
+
     if (!mSearchByName.empty()) {
         
         const char* newsql = (std::string(sql) + " AND (instr(lower(NAME),?)>0 OR instr(lower(DESCRIPTION),?)>0) ").c_str();
@@ -510,6 +506,10 @@ void GenxFloaterAreaSearch::refreshList() {
     }
     
     rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_bind_int(stmt,indexFilter,mMinDistance);
+    indexFilter++;
+    sqlite3_bind_int(stmt,indexFilter,mMaxDistance);
+
     if (!mSearchByName.empty()) {
         sqlite3_bind_text(stmt,indexFilter,mSearchByName.c_str(), strlen(mSearchByName.c_str()),SQLITE_TRANSIENT ) ;    
         sqlite3_bind_text(stmt,indexFilter+1,mSearchByName.c_str(), strlen(mSearchByName.c_str()),SQLITE_TRANSIENT ) ; 

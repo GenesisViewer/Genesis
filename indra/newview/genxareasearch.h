@@ -34,6 +34,8 @@ public:
 	std::string mSearchByName;
 	LLUUID mSearchByOwner;
 	LLUUID mSearchByGroup;
+	int mMinDistance;
+	int mMaxDistance;
 	sqlite3	*db;
 private:
 	
@@ -44,6 +46,7 @@ private:
 	void onSearchByName(LLUICtrl* caller, const LLSD& value);
 	void onSearchByOwner();
 	void onSearchByGroup();
+	void onSearchByDistance();
 	bool filterEdited;
 	void refreshList();
 	bool requestPropertiesSent;

@@ -14,7 +14,7 @@ public:
 	std::string name;
 	std::string description;
 	std::string group;
-	F32 price;
+	S32 price;
 	S32 li; 
 };
 class GenxFloaterAreaSearch : public LLFloater, public LLFloaterSingleton<GenxFloaterAreaSearch>,public LLEventTimer
@@ -27,9 +27,10 @@ public:
 	/*virtual*/ void onOpen();
 	/*virtual*/ BOOL tick() override;
 	int callback(int argc, char **argv, char **azColName);
-
+	void requestObjectProperties();
 	void updateObject(GenxFloaterAreaSearchObject *data);
 	static void processObjectPropertiesFamily(LLMessageSystem* msg, void** user_data);
+	static void processObjectProperties(LLMessageSystem* msg);
 	std::string mSearchByName;
 	LLUUID mSearchByOwner;
 	LLUUID mSearchByGroup;
@@ -44,6 +45,8 @@ private:
 	void onSearchByOwner();
 	void onSearchByGroup();
 	bool filterEdited;
+	void refreshList();
+	bool requestPropertiesSent;
 };
 static void areasearch_compute_groupname(sqlite3_context *context, int argc, sqlite3_value **argv);
 static void areasearch_compute_ownername(sqlite3_context *context, int argc, sqlite3_value **argv);

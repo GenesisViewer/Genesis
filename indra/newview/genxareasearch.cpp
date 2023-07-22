@@ -42,6 +42,7 @@ BOOL GenxFloaterAreaSearch::postBuild()
         LL_INFOS () << sqlite3_errmsg(db) <<LL_ENDL;
     const char * sql = "CREATE TABLE OBJECTS (" \
     "UUID TEXT PRIMARY KEY," \
+    "LOCAL_ID INTEGER,"\
     "STATUS INTEGER,"\
     "OWNER_ID TEXT ," \
     "GROUP_ID TEXT," \
@@ -89,6 +90,8 @@ BOOL GenxFloaterAreaSearch::postBuild()
     owner_combo->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByOwner,this));
     LLComboBox *group_combo = getChild<LLComboBox>("group_filter");
     group_combo->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByGroup,this));
+    requestPropertiesSent=false;
+    tick();
     return TRUE;
 }
 void GenxFloaterAreaSearch::onOpen()
@@ -104,7 +107,7 @@ void GenxFloaterAreaSearch::onSearchByName(LLUICtrl* caller, const LLSD& value)
     
     mSearchByName=text;
     filterEdited=true;
-    tick();
+    refreshList();
 	
 }
 void GenxFloaterAreaSearch::onSearchByOwner()
@@ -112,7 +115,7 @@ void GenxFloaterAreaSearch::onSearchByOwner()
 	mSearchByOwner = getChild<LLComboBox>("owner_filter")->getValue().asUUID();
 	
     filterEdited=true;
-    tick();
+    refreshList();
 	
 }
 void GenxFloaterAreaSearch::onSearchByGroup()
@@ -120,7 +123,7 @@ void GenxFloaterAreaSearch::onSearchByGroup()
 	mSearchByGroup = getChild<LLComboBox>("group_filter")->getValue().asUUID();
 	
     filterEdited=true;
-    tick();
+    refreshList();
 	
 }
 void GenxFloaterAreaSearch::cleanDB() {
@@ -134,7 +137,7 @@ void GenxFloaterAreaSearch::initDB() {
     sqlite3_stmt *stmt;
     
  
-    const char * sql = "INSERT INTO OBJECTS (UUID) VALUES (?) ON CONFLICT(UUID) DO NOTHING";
+    const char * sql = "INSERT INTO OBJECTS (UUID,LOCAL_ID) VALUES (?,?) ON CONFLICT(UUID) DO NOTHING";
     rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     S32 total = gObjectList.getNumObjects();
 
@@ -151,36 +154,38 @@ void GenxFloaterAreaSearch::initDB() {
                 
                 
                 sqlite3_bind_text(stmt,1,object_id.asString().c_str(), strlen(object_id.asString().c_str()),SQLITE_STATIC) ;
+                sqlite3_bind_int(stmt,2,objectp->mLocalID) ;
                 rc = sqlite3_step(stmt);
-                if  (rc) 
-                    LL_INFOS () << sqlite3_errmsg(db) <<LL_ENDL;
+                
                 sqlite3_reset(stmt);
             }
         }
     }
     sqlite3_finalize(stmt);  
     
-    //reading the objects
-    sql = "SELECT UUID FROM OBJECTS WHERE STATUS IS NULL";
+    // //reading the objects
+    // sql = "SELECT UUID FROM OBJECTS WHERE STATUS IS NULL";
     
-    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-    while ( sqlite3_step(stmt) == SQLITE_ROW) {
+    // sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    // while ( sqlite3_step(stmt) == SQLITE_ROW) {
         
-        const unsigned char *text = sqlite3_column_text(stmt, 0);
-        std::string strUUID = std::string(reinterpret_cast<const char*>(text));
-        LLUUID uuid (strUUID);
-        LLMessageSystem* msg = gMessageSystem;
-		msg->newMessageFast(_PREHASH_RequestObjectPropertiesFamily);
-		msg->nextBlockFast(_PREHASH_AgentData);
-		msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
-		msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-		msg->nextBlockFast(_PREHASH_ObjectData);
-		msg->addU32Fast(_PREHASH_RequestFlags, 0 );
-		msg->addUUIDFast(_PREHASH_ObjectID, uuid);
-		gAgent.sendReliableMessage();
+    //     const unsigned char *text = sqlite3_column_text(stmt, 0);
+    //     std::string strUUID = std::string(reinterpret_cast<const char*>(text));
+    //     LLUUID uuid (strUUID);
+    //     LLMessageSystem* msg = gMessageSystem;
+	// 	msg->newMessageFast(_PREHASH_RequestObjectPropertiesFamily);
+	// 	msg->nextBlockFast(_PREHASH_AgentData);
+	// 	msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+	// 	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+	// 	msg->nextBlockFast(_PREHASH_ObjectData);
+	// 	msg->addU32Fast(_PREHASH_RequestFlags, 0 );
+	// 	msg->addUUIDFast(_PREHASH_ObjectID, uuid);
+	// 	gAgent.sendReliableMessage();
 
-    }
-    sqlite3_finalize(stmt);  
+    // }
+    // sqlite3_finalize(stmt);
+    if (!requestPropertiesSent)
+        requestObjectProperties();  
     
 }
 static int areasearch_callback(void *param, int argc, char **argv, char **azColName)
@@ -253,17 +258,19 @@ void GenxFloaterAreaSearch::updateObject(GenxFloaterAreaSearchObject *data) {
     int rc;
     sqlite3_stmt *stmt;
     
-    const char *sql = "UPDATE OBJECTS SET OWNER_ID = ? , GROUP_ID = ?, NAME = ?, DESCRIPTION = ?,STATUS = 1 WHERE UUID = ?";
+    const char *sql = "UPDATE OBJECTS SET OWNER_ID = ? , GROUP_ID = ?, NAME = ?, DESCRIPTION = ?,PRICE=?,LI=?,STATUS = 1 WHERE UUID = ?";
     rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     if  (rc) 
         LL_INFOS () << sqlite3_errmsg(db) <<LL_ENDL;
     
     
-    sqlite3_bind_text(stmt,5,data->uuid.asString().c_str(), strlen(data->uuid.asString().c_str()),SQLITE_TRANSIENT ) ;    
+    sqlite3_bind_text(stmt,7,data->uuid.asString().c_str(), strlen(data->uuid.asString().c_str()),SQLITE_TRANSIENT ) ;    
     sqlite3_bind_text(stmt,1,data->owner_id.asString().c_str(), strlen(data->owner_id.asString().c_str()),SQLITE_TRANSIENT ) ;    
     sqlite3_bind_text(stmt,2,data->group_id.asString().c_str(), strlen(data->group_id.asString().c_str()),SQLITE_TRANSIENT ) ;    
     sqlite3_bind_text(stmt,3,data->name.c_str(), strlen(data->name.c_str()),SQLITE_TRANSIENT ) ;  
     sqlite3_bind_text(stmt,4,data->description.c_str(), strlen(data->description.c_str()),SQLITE_TRANSIENT ) ;
+    sqlite3_bind_int(stmt,5,data->price ) ;
+    sqlite3_bind_int(stmt,6,data->li ) ;
     rc = sqlite3_step(stmt);
     if  (rc != SQLITE_OK) 
         LL_INFOS () << sqlite3_errmsg(db) <<LL_ENDL;
@@ -284,6 +291,109 @@ void GenxFloaterAreaSearch::updateObject(GenxFloaterAreaSearchObject *data) {
     if  (rc != SQLITE_OK) 
         LL_INFOS () << sqlite3_errmsg(db) <<LL_ENDL;
     sqlite3_finalize(stmt);  
+    sql = "UPDATE OBJECTS SET OWNER_NAME=areasearch_compute_ownername(OWNER_ID) WHERE OWNER_NAME IS NULL AND OWNER_ID IS NOT NULL";
+    char *zErrMsg = 0;
+    sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);
+    sql = "UPDATE OBJECTS SET GROUP_NAME=areasearch_compute_groupname(GROUP_ID) WHERE GROUP_NAME IS NULL AND GROUP_ID IS NOT NULL";
+    
+    sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);
+    //prepare the combo filters
+    getChild<LLComboBox>("owner_filter")->clearRows();
+    getChild<LLComboBox>("owner_filter")->addSimpleElement("All Owners",ADD_BOTTOM,LLUUID());
+    sql="SELECT DISTINCT OWNER_ID, OWNER_NAME FROM OBJECTS  WHERE OWNER_ID IS NOT NULL AND OWNER_NAME IS NOT NULL ORDER BY OWNER_NAME";
+    rc = sqlite3_exec(db, sql, areasearch_callback_owner_combo, NULL, &zErrMsg);
+    getChild<LLComboBox>("owner_filter")->setValue(mSearchByOwner);
+    getChild<LLComboBox>("group_filter")->clearRows();
+    getChild<LLComboBox>("group_filter")->addSimpleElement("All Groups",ADD_BOTTOM,LLUUID());
+    sql="SELECT DISTINCT GROUP_ID, GROUP_NAME FROM OBJECTS  WHERE GROUP_ID IS NOT NULL AND GROUP_NAME IS NOT NULL ORDER BY GROUP_NAME";
+    rc = sqlite3_exec(db, sql, areasearch_callback_group_combo, NULL, &zErrMsg);
+    getChild<LLComboBox>("group_filter")->setValue(mSearchByGroup);
+}
+void GenxFloaterAreaSearch::requestObjectProperties() {
+    int rc;
+    sqlite3_stmt *stmt;
+    
+    const char *sql;
+    //reading the objects
+    sql = "SELECT UUID,LOCAL_ID FROM OBJECTS WHERE STATUS IS NULL";
+    
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    bool new_message = true;
+    bool send_message=false;
+    int count = 0;
+    LLMessageSystem* msg = gMessageSystem;
+    while ( sqlite3_step(stmt) == SQLITE_ROW) {
+        if (new_message) {
+            msg->newMessageFast(_PREHASH_ObjectSelect);
+            msg->nextBlockFast(_PREHASH_AgentData);
+            msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+            msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+            count++;
+            new_message=false; 
+        }
+            
+        send_message=true;
+        
+        int local_id = sqlite3_column_int(stmt,1);
+       
+        msg->nextBlockFast(_PREHASH_ObjectData);
+        msg->addU32Fast(_PREHASH_ObjectLocalID, local_id);
+        count++;
+        if (msg->isSendFull(NULL) || count >= 255)
+		{
+			
+			gAgent.sendReliableMessage(); 
+			count = 0;
+			new_message = true;
+		}
+
+    }
+    sqlite3_finalize(stmt); 
+    if (!new_message)
+	{
+		gAgent.sendReliableMessage(); 
+	}
+        
+}
+void GenxFloaterAreaSearch::processObjectProperties(LLMessageSystem* msg)
+{
+    
+    GenxFloaterAreaSearch* floater = findInstance();
+	if(!floater)
+		return;
+    S32 count = msg->getNumberOfBlocksFast(_PREHASH_ObjectData);
+    for (S32 i = 0; i < count; i++)
+	{
+		LLUUID object_id;
+		msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_ObjectID, object_id, i);
+		if (object_id.isNull())
+		{
+			LL_WARNS() << "Got Object Properties with NULL id" << LL_ENDL;
+			continue;
+		}
+
+		LLViewerObject* objectp = gObjectList.findObject(object_id);
+		if (!objectp)
+		{
+			continue;
+		}
+        GenxFloaterAreaSearchObject *data = new GenxFloaterAreaSearchObject();
+        data->uuid=object_id;
+        msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_OwnerID, data->owner_id, i);
+		msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_GroupID, data->group_id, i);
+        msg->getStringFast(_PREHASH_ObjectData, _PREHASH_Name, data->name, i);
+		msg->getStringFast(_PREHASH_ObjectData, _PREHASH_Description, data->description, i);
+        U8 sale_type;
+	    msg->getU8Fast(_PREHASH_ObjectData, _PREHASH_SaleType, sale_type, i);
+        msg->getS32Fast(_PREHASH_ObjectData, _PREHASH_SalePrice, data->price, i);
+        if (sale_type==0) data->price=-1; // not for sale
+        data->li=objectp->getLinksetCost();
+        if (data->li<1) data->li=1;
+        floater->updateObject(data);
+        delete data;
+    }
+    floater->requestPropertiesSent=false;
+    floater->requestObjectProperties();
 }
 static void areasearch_compute_groupname(sqlite3_context *context, int argc, sqlite3_value **argv) {
     const unsigned char *text = sqlite3_value_text(argv[0]);
@@ -346,62 +456,38 @@ BOOL GenxFloaterAreaSearch::tick()
         cleanDB();
         mLastRegion=our_region;
     }
-    if (filterEdited) {
-        LLScrollListCtrl *result_list =  getChild<LLScrollListCtrl>("result_list");
-        result_list->clearRows(); 
-    }
+    
     initDB();
+    
+    
+    
+    // sql = "UPDATE OBJECTS SET GROUP_NAME=areasearch_compute_groupname(GROUP_ID) WHERE GROUP_NAME IS NULL AND GROUP_ID IS NOT NULL";
+    // rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg); 
+    
+    //compute the distance
+    
+    char *sql = "UPDATE OBJECTS SET DISTANCE=areasearch_compute_distance(UUID) WHERE UUID IS NOT NULL";
+    char *zErrMsg = 0;
+    sqlite3_exec (floater->db, sql, NULL, NULL, &zErrMsg);
+    
+    
+     refreshList();
+
+    
+   return FALSE;
+}
+void GenxFloaterAreaSearch::refreshList() {
     char *zErrMsg = 0;
     int rc;
     char *sql;
     sqlite3_stmt *stmt;
     
-     boost::thread *t1= new boost::thread([floater]()
-//                                 
-        {
-            char *sql = "UPDATE OBJECTS SET OWNER_NAME=areasearch_compute_ownername(OWNER_ID) WHERE OWNER_NAME IS NULL AND OWNER_ID IS NOT NULL";
-            char *zErrMsg = 0;
-            sqlite3_exec (floater->db, sql, NULL, NULL, &zErrMsg);
-        }
-     );
-     boost::thread *t2 = new boost::thread([floater]()
-//                                 
-        {
-            char *sql = "UPDATE OBJECTS SET GROUP_NAME=areasearch_compute_groupname(GROUP_ID) WHERE GROUP_NAME IS NULL AND GROUP_ID IS NOT NULL";
-            char *zErrMsg = 0;
-            sqlite3_exec (floater->db, sql, NULL, NULL, &zErrMsg);
-        }
-     );
-    // sql = "UPDATE OBJECTS SET GROUP_NAME=areasearch_compute_groupname(GROUP_ID) WHERE GROUP_NAME IS NULL AND GROUP_ID IS NOT NULL";
-    // rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg); 
+    if (filterEdited) {
+        LLScrollListCtrl *result_list =  getChild<LLScrollListCtrl>("result_list");
+        result_list->clearRows(); 
+    }
+
     
-    //compute the distance
-    boost::thread *t3 = new boost::thread([floater]()
-//                                 
-        {
-            char *sql = "UPDATE OBJECTS SET DISTANCE=areasearch_compute_distance(UUID) WHERE UUID IS NOT NULL";
-            char *zErrMsg = 0;
-            sqlite3_exec (floater->db, sql, NULL, NULL, &zErrMsg);
-        }
-     );
-     t1->join();
-     t2->join();
-     t3->join();
-     
-
-    //prepare the combo filters
-    getChild<LLComboBox>("owner_filter")->clearRows();
-    getChild<LLComboBox>("owner_filter")->addSimpleElement("",ADD_BOTTOM,LLUUID());
-    sql="SELECT DISTINCT OWNER_ID, OWNER_NAME FROM OBJECTS  WHERE OWNER_ID IS NOT NULL AND OWNER_NAME IS NOT NULL ORDER BY OWNER_NAME";
-    rc = sqlite3_exec(db, sql, areasearch_callback_owner_combo, NULL, &zErrMsg);
-
-    getChild<LLComboBox>("group_filter")->clearRows();
-    getChild<LLComboBox>("group_filter")->addSimpleElement("",ADD_BOTTOM,LLUUID());
-    sql="SELECT DISTINCT GROUP_ID, GROUP_NAME FROM OBJECTS  WHERE GROUP_ID IS NOT NULL AND GROUP_NAME IS NOT NULL ORDER BY GROUP_NAME";
-    rc = sqlite3_exec(db, sql, areasearch_callback_group_combo, NULL, &zErrMsg);
-
-    // sql = "UPDATE OBJECTS SET DISTANCE=areasearch_compute_distance(UUID) WHERE UUID IS NOT NULL";
-    // rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg); 
     sql ="DELETE FROM AREASEARCH_VIEW";
     rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg); 
     sql = "INSERT INTO AREASEARCH_VIEW(UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE) " \
@@ -440,13 +526,11 @@ BOOL GenxFloaterAreaSearch::tick()
     rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
     
-    sql = "SELECT UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE FROM AREASEARCH_VIEW";
+    sql = "SELECT UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,IIF(PRICE<0,'',PRICE) AS PRICE,LI,DISTANCE FROM AREASEARCH_VIEW WHERE DISTANCE>=0";
     /* Execute SQL statement */
     rc = sqlite3_exec(db, sql, areasearch_callback, NULL, &zErrMsg);
     filterEdited=false;
-   return FALSE;
 }
-
 int GenxFloaterAreaSearch::callback(int argc, char **argv, char **azColName){
     
     LLScrollListCtrl *result_list =  getChild<LLScrollListCtrl>("result_list");

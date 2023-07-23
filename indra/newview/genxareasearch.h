@@ -29,6 +29,7 @@ public:
 	int callback(int argc, char **argv, char **azColName);
 	void requestObjectProperties();
 	void updateObject(GenxFloaterAreaSearchObject *data);
+	void updateObjectsInfos();
 	static void processObjectPropertiesFamily(LLMessageSystem* msg, void** user_data);
 	static void processObjectProperties(LLMessageSystem* msg);
 	std::string mSearchByName;
@@ -45,6 +46,7 @@ private:
 	
 	void initDB();
 	void cleanDB();
+	
 	LLViewerRegion* mLastRegion;
 	
 	void onSearchByName(LLUICtrl* caller, const LLSD& value);

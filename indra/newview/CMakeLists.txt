@@ -105,8 +105,10 @@ set(viewer_SOURCE_FILES
     floaterlocalassetbrowse.cpp
     generichandlers.cpp
     genxareasearch.cpp
+    genxaomgr.cpp
     genxcontactset.cpp
     genxdroptarget.cpp
+    genxfloaterao.cpp
     genxlogfilemgr.cpp
     genxmembers.cpp
     genxprofilefloater.cpp
@@ -643,6 +645,7 @@ set(viewer_SOURCE_FILES
     shfloatermediaticker.cpp
     wlfPanel_AdvSettings.cpp
     genxmotd.cpp
+    noise.cpp
     )
 
 set(viewer_HEADER_FILES
@@ -668,8 +671,10 @@ set(viewer_HEADER_FILES
     floaterlocalassetbrowse.h
     generichandlers.h
     genxareasearch.h
+    genxaomgr.h
     genxcontactset.h
     genxdroptarget.h
+    genxfloaterao.h
     genxlogfilemgr.h
     genxmembers.h
     genxprofilefloater.h
@@ -1215,6 +1220,7 @@ set(viewer_HEADER_FILES
     shupdatechecker.h
     wlfPanel_AdvSettings.h
     genxmotd.h
+    noise.h
     )
 
 source_group("CMake Rules" FILES ViewerInstall.cmake)

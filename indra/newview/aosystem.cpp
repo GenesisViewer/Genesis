@@ -383,6 +383,10 @@ int AOSystem::cycleStand(bool next, bool random)
 		if (auto floater = LLFloaterAO::findInstance())
 			if (auto combo = floater->getComboFromState(STATE_AGENT_IDLE))
 				combo->selectNthItem(stand_iterator);
+		if (auto floater = GenxFloaterAO::findInstance())
+			if (auto combo = floater->getComboFromState(STATE_AGENT_IDLE))
+				combo->selectNthItem(stand_iterator);
+						
 //		LL_INFOS() << "changing stand to " << mAOStands[stand_iterator].anim_name << LL_ENDL;
 	}
 	updateStand();
@@ -473,6 +477,7 @@ void AOSystem::parseNotecard(LLVFS *vfs, const LLUUID& asset_uuid, LLAssetType::
 				if (self && reload) self->stopAllOverrides();
 
 				auto floater = LLFloaterAO::findInstance();
+				auto floaterGenx = GenxFloaterAO::findInstance();
 				if (floater)
 				for (auto& combo : floater->mCombos)
 				{
@@ -482,7 +487,15 @@ void AOSystem::parseNotecard(LLVFS *vfs, const LLUUID& asset_uuid, LLAssetType::
 						combo->removeall();
 					}
 				}
-
+				if (floaterGenx)
+				for (auto& combo : floaterGenx->mCombos)
+				{
+					if (combo)
+					{
+						combo->clear();
+						combo->removeall();
+					}
+				}
 				typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
 				boost::char_separator<char> sep("\n");
 				tokenizer tokline(nc.getText(), sep);
@@ -502,7 +515,8 @@ void AOSystem::parseNotecard(LLVFS *vfs, const LLUUID& asset_uuid, LLAssetType::
 							continue;
 						}
 //						LL_INFOS() << "type: " << strtoken << LL_ENDL;
-						LLComboBox* combo = floater ? floater->getComboFromState(state) : nullptr;
+						LLComboBox* combo = floater ? floater->getComboFromState(state) : (floaterGenx ? floaterGenx->getComboFromState(state): nullptr);
+						
 						auto aop = (reload && self) ? self->mAOOverrides[state] : nullptr;
 //						LL_INFOS() << "anims in type: " << boost::regex_replace(strline, type, "") << LL_ENDL;
 
@@ -537,7 +551,7 @@ void AOSystem::parseNotecard(LLVFS *vfs, const LLUUID& asset_uuid, LLAssetType::
 
 				if (self)
 				{
-					if (auto combo = floater ? floater->getComboFromState(STATE_AGENT_IDLE) : nullptr)
+					if (auto combo = floater ? floater->getComboFromState(STATE_AGENT_IDLE) : (floaterGenx ? floaterGenx->getComboFromState(STATE_AGENT_IDLE): nullptr))
 						combo->selectNthItem(self->stand_iterator);
 
 					for (U8 i = STATE_AGENT_IDLE+1; i < STATE_AGENT_END; ++i)
@@ -551,7 +565,7 @@ void AOSystem::parseNotecard(LLVFS *vfs, const LLUUID& asset_uuid, LLAssetType::
 						if (defaultanim.empty()) continue;
 						const LLUUID& ao_id = getAssetIDByName(defaultanim);
 						if (reload && ao_id.notNull()) ao.ao_id = ao_id;
-						if (LLComboBox* combo = floater ? floater->getComboFromState(i) : nullptr)
+						if (LLComboBox* combo = floater ? floater->getComboFromState(i) : (floaterGenx ? floaterGenx->getComboFromState(i): nullptr))
 							if (!combo->selectByValue(defaultanim))
 								combo->add(defaultanim, ADD_BOTTOM, true);
 					}

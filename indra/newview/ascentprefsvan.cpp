@@ -68,10 +68,15 @@ LLPrefsAscentVan::LLPrefsAscentVan()
 	getChild<LLUICtrl>("update_clientdefs")->setCommitCallback(boost::bind(LLPrefsAscentVan::onManualClientUpdate));
     getChild<LLUICtrl>("custom_avatar_name_color")->setCommitCallback(boost::bind(&LLPrefsAscentVan::onAvatarNameColor, this, _1));
     getChild<LLUICtrl>("show_avatar_distance")->setCommitCallback(boost::bind(&LLPrefsAscentVan::onAvatarDistance, this, _1));
+
+    mGenesisShowOnlineNotificationChiclet = gSavedSettings.getBOOL("GenesisShowOnlineNotificationChiclet");
+    mEnableAORemote = gSavedSettings.getBOOL("EnableAORemote");
+
     mShowToolBar = gSavedSettings.getBOOL("ShowToolBar");
     mUiToolTipDelay = gSavedSettings.getF32("ToolTipDelay");
     mSLBShowFPS = gSavedSettings.getBOOL("SLBShowFPS");
     mGenxShowFpsTop = gSavedSettings.getBOOL("GenxShowFpsTop");
+    mFontScreenDPI = gSavedSettings.getF32("FontScreenDPI");
     mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
 
     LLComboBox* GenxGroupNotifyPos_combobox = getChild<LLComboBox>("GenxGroupNotifyPos_combobox");
@@ -186,6 +191,8 @@ void LLPrefsAscentVan::refreshValues()
 	mConnectToNeighbors = gSavedSettings.getBOOL("AlchemyConnectToNeighbors");
 	mRestartMinimized		= gSavedSettings.getBOOL("LiruRegionRestartMinimized");
 	mRestartSound			= gSavedSettings.getString("UISndRestart");
+    mGenesisShowOnlineNotificationChiclet = gSavedSettings.getBOOL("GenesisShowOnlineNotificationChiclet");
+    mEnableAORemote         = gSavedSettings.getBOOL("EnableAORemote");
 
     //Tags\Colors ----------------------------------------------------------------------------
     mAscentBroadcastTag     = gSavedSettings.getBOOL("AscentBroadcastTag");
@@ -234,6 +241,7 @@ void LLPrefsAscentVan::refreshValues()
     mUiToolTipDelay = gSavedSettings.getF32("ToolTipDelay");
     mSLBShowFPS = gSavedSettings.getBOOL("SLBShowFPS");
     mGenxShowFpsTop = gSavedSettings.getBOOL("GenxShowFpsTop");
+    mFontScreenDPI = gSavedSettings.getF32("FontScreenDPI");
     mRenderAvatarMaxComplexity = gSavedSettings.getU32("RenderAvatarMaxComplexity");
     mGenxRenderHitBoxes = gSavedSettings.getBOOL("GenxRenderHitBoxes");
 }
@@ -289,6 +297,8 @@ void LLPrefsAscentVan::cancel()
 	gSavedSettings.setBOOL("AlchemyConnectToNeighbors",     mConnectToNeighbors);
 	gSavedSettings.setBOOL("LiruRegionRestartMinimized", mRestartMinimized);
 	gSavedSettings.setString("UISndRestart", mRestartSound);
+    gSavedSettings.setBOOL("GenesisShowOnlineNotificationChiclet", mGenesisShowOnlineNotificationChiclet);
+    gSavedSettings.setBOOL("EnableAORemote", mEnableAORemote);
 
     //Tags\Colors ----------------------------------------------------------------------------
     gSavedSettings.setBOOL("AscentBroadcastTag",         mAscentBroadcastTag);
@@ -343,6 +353,7 @@ void LLPrefsAscentVan::cancel()
     gSavedSettings.setF32("ToolTipDelay",                     mUiToolTipDelay);
     gSavedSettings.setBOOL("SLBShowFPS",                      mSLBShowFPS);
     gSavedSettings.setBOOL("GenxShowFpsTop",                  mGenxShowFpsTop);
+    gSavedSettings.setF32("FontScreenDPI",                    mFontScreenDPI);
     gSavedSettings.setU32("RenderAvatarMaxComplexity",        mRenderAvatarMaxComplexity);
     gSavedSettings.setBOOL("GenxRenderHitBoxes",              mGenxRenderHitBoxes);
 }

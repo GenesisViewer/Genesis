@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <floater bottom="-359" can_close="true" can_drag_on_left="false" can_minimize="true"
-     can_resize="false" follows="left|top" height="550" 
+     can_resize="false" follows="left|top" height="570" 
      left="308" min_height="100" min_width="100" mouse_opaque="true"
      name="toolbox floater" rect_control="ToolboxRect" sound_flags="0" title=""
      short_title="Build" width="272">
@@ -321,9 +321,9 @@
 	     font="SansSerifSmall" height="16" initial_value="true" label="Center"
 	     left_delta="18" mouse_opaque="true" name="checkbox copy centers"
 	     width="134" />
-	<check_box bottom_delta="-16" control_name="CreateToolCopyRotates" follows="left|top"
+	<check_box bottom_delta="0" control_name="CreateToolCopyRotates" follows="left|top"
 	     font="SansSerifSmall" height="16" initial_value="false" label="Rotate"
-	     left_delta="0" mouse_opaque="true" name="checkbox copy rotates" width="134" />
+	     left_delta="120" mouse_opaque="true" name="checkbox copy rotates" width="134" />
 
 <!-- Land panel -->
 
@@ -407,22 +407,22 @@
 	     	function="BuildTool.LandBrushForce"/>
     	</volume_slider>
 	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-         bottom="-160" left="140" drop_shadow_visible="true" follows="left|top"
-         font="SansSerifSmall" h_pad="0" halign="right" height="16" visible="false" 
+         bottom="-183" left="6" drop_shadow_visible="true" follows="left|top"
+         font="SansSerifSmall" h_pad="0" halign="left" height="16" visible="false" 
          mouse_opaque="true" name="link_num_obj_count" v_pad="0" width="121">
 		[DESC] [NUM]
 	</text>
     <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-       bottom="-170" left="118" drop_shadow_visible="true" follows="left|top"
-       halign="right" height="16" mouse_opaque="true" name="selection_empty" width="143">Nothing selected.</text>
+       bottom="-183" left="6" drop_shadow_visible="true" follows="left|top"
+       halign="left" height="16" mouse_opaque="true" name="selection_empty" width="143">Nothing selected.</text>
 	<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-       bottom="-170" left="140" drop_shadow_visible="true" follows="left|top"
+       bottom="-183" left="120" drop_shadow_visible="true" follows="left|top"
        font="SansSerifSmall" halign="right" height="16" font-style="UNDERLINE"
-       mouse_opaque="true" name="selection_count" v_pad="0" width="121"/>
+       mouse_opaque="true" name="selection_count" v_pad="0" width="140"/>
 
 <!-- Sub-tabs -->
 
-	<tab_container bottom="-550" follows="left|top" height="384" left="0" mouse_opaque="false"
+	<tab_container bottom="-570" follows="left|top" height="384" left="0" mouse_opaque="false"
 	     name="Object Info Tabs" tab_max_width="52" tab_min_width="40"
 	     tab_position="top" width="272">
 		<panel border="true" bottom="-383" follows="left|top|right|bottom" height="367"
@@ -499,8 +499,8 @@
 			    name="Group Name Proxy"
 			    width="142" id_type="1"/>
 			<button bottom="-126" follows="top|right" font="SansSerifSmall" halign="center"
-			    height="16" label="Set" label_selected="Set..." left_delta="142"
-			    mouse_opaque="true" name="button set group" scale_image="TRUE" width="30" />
+			    height="16" label="Set" label_selected="Set..." left_delta="136"
+			    mouse_opaque="true" name="button set group" scale_image="TRUE" width="36" />
 			<text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
 			    bottom_delta="-20" drop_shadow_visible="true" follows="left|top"
 			    font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"

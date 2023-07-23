@@ -72,6 +72,7 @@ LLSurface::LLSurface(U32 type, LLViewerRegion *regionp) :
 	mGridsPerEdge(0),
 	mOOGridsPerEdge(0.f),
 	mPatchesPerEdge(0),
+	mNumberOfPatches(0),	
 	mType(type),
 	mDetailTextureScale(0.f),
 	mOriginGlobal(0.0, 0.0, 0.0),
@@ -85,7 +86,8 @@ LLSurface::LLSurface(U32 type, LLViewerRegion *regionp) :
 	// Surface data
 	mSurfaceZ = NULL;
 	mNorm = NULL;
-
+	// Patch data
+	mPatchList = NULL;
 	// One of each for each camera
 	mVisiblePatchCount = 0;
 
@@ -116,6 +118,7 @@ LLSurface::~LLSurface()
 	mGridsPerEdge = 0;
 	mGridsPerPatchEdge = 0;
 	mPatchesPerEdge = 0;
+	mNumberOfPatches = 0;
 	destroyPatchData();
 
 	LLDrawPoolTerrain *poolp = (LLDrawPoolTerrain*) gPipeline.findPool(LLDrawPool::POOL_TERRAIN, mSTexturep);
@@ -163,11 +166,21 @@ void LLSurface::create(const S32 grids_per_edge,
 	mGridsPerEdge = grids_per_edge + 1;  // Add 1 for the east and north buffer
 	mOOGridsPerEdge = 1.f / mGridsPerEdge;
 	mGridsPerPatchEdge = grids_per_patch_edge;
-	mPatchesPerEdge = grids_per_edge / mGridsPerPatchEdge;
-	mMetersPerGrid = width / (F32)grids_per_edge;
-	mMetersPerEdge = mMetersPerGrid * grids_per_edge;
+	
+	mPatchesPerEdge = (mGridsPerEdge - 1) / mGridsPerPatchEdge;
+	mNumberOfPatches = mPatchesPerEdge * mPatchesPerEdge;
+	mMetersPerGrid = width / ((F32)(mGridsPerEdge - 1));
+	mMetersPerEdge = mMetersPerGrid * (mGridsPerEdge - 1);
 // <FS:CR> Aurora Sim
 	sTextureSize = width;
+	// Trap non-power of 2 widths to avoid GLtexture issues.
+	if ((sTextureSize & (sTextureSize - 1)) != 0)
+	{
+		// Not a power of 2, find the next power of 2
+		sTextureSize = 1 << static_cast<S32>( ceil(log2(sTextureSize)) ) ;
+	}
+	// Clamp to maximum limit
+	sTextureSize = std::min(sTextureSize, 1024);	
 // </FS:CR> Aurora Sim
 
 	mOriginGlobal.setVec(origin_global);
@@ -305,13 +318,14 @@ void LLSurface::setOriginGlobal(const LLVector3d &origin_global)
 {
 	LLVector3d new_origin_global;
 	mOriginGlobal = origin_global;
+	LLSurfacePatch *patchp;
 	S32 i, j;
 	// Need to update the southwest corners of the patches
 	for (j=0; j<mPatchesPerEdge; j++) 
 	{
 		for (i=0; i<mPatchesPerEdge; i++) 
 		{
-			const auto& patchp = getPatch(i, j);
+			patchp = getPatch(i, j);
 
 			new_origin_global = patchp->getOriginGlobal();
 			
@@ -366,7 +380,7 @@ void LLSurface::getNeighboringRegionsStatus( std::vector<S32>& regions )
 void LLSurface::connectNeighbor(LLSurface *neighborp, U32 direction)
 {
 	S32 i;
-	surface_patch_ref patchp, neighbor_patchp;
+	LLSurfacePatch *patchp, *neighbor_patchp;
 // <FS:CR> Aurora Sim
 	S32 neighborPatchesPerEdge = neighborp->mPatchesPerEdge;
 // </FS:CR> Aurora Sim
@@ -689,28 +703,33 @@ void LLSurface::connectNeighbor(LLSurface *neighborp, U32 direction)
 	}		
 }
 
-void LLSurface::disconnectNeighbor(LLSurface* surfacep, U32 direction)
+void LLSurface::disconnectNeighbor(LLSurface *surfacep)
 {
-	if (surfacep && surfacep == mNeighbors[direction])
+	S32 i;
+	for (i = 0; i < 8; i++)
 	{
-		mNeighbors[direction] = NULL;
-		for (auto& patchp : mPatchList)
+		if (surfacep == mNeighbors[i])
 		{
-			patchp->disconnectNeighbor(surfacep);
+			mNeighbors[i] = NULL;
 		}
+	}
+	// Iterate through surface patches, removing any connectivity to removed surface.
+	for (i = 0; i < mNumberOfPatches; i++)
+	{
+		(mPatchList + i)->disconnectNeighbor(surfacep);
 	}
 }
 
 
 void LLSurface::disconnectAllNeighbors()
 {
-	for (size_t i = 0; i < mNeighbors.size(); ++i)
+	S32 i;
+	for (i = 0; i < 8; i++)
 	{
-		auto& neighbor = mNeighbors[i];
-		if (neighbor)
+		if (mNeighbors[i])
 		{
-			neighbor->disconnectNeighbor(this, gDirOpposite[i]);
-			neighbor = NULL;
+			mNeighbors[i]->disconnectNeighbor(this);
+			mNeighbors[i] = NULL;
 		}
 	}
 }
@@ -766,9 +785,13 @@ void LLSurface::updatePatchVisibilities(LLAgent &agent)
 
 	LLVector3 pos_region = mRegionp->getPosRegionFromGlobal(gAgentCamera.getCameraPositionGlobal());
 
+	LLSurfacePatch *patchp;
+	
 	mVisiblePatchCount = 0;
-	for (auto& patchp : mPatchList)
+	for (S32 i=0; i<mNumberOfPatches; i++) 
 	{
+		patchp = mPatchList + i;
+
 		patchp->updateVisibility();
 		if (patchp->getVisible())
 		{
@@ -792,29 +815,20 @@ BOOL LLSurface::idleUpdate(F32 max_update_time)
 
 	// If the Z height data has changed, we need to rebuild our
 	// property line vertex arrays.
-	if (!mDirtyPatchList.empty())
+	if (mDirtyPatchList.size() > 0)
 	{
 		getRegion()->dirtyHeights();
 	}
 
 	// Always call updateNormals() / updateVerticalStats()
 	//  every frame to avoid artifacts
-	for (auto it = mDirtyPatchList.cbegin(); it != mDirtyPatchList.cend();)
+	for(std::set<LLSurfacePatch *>::iterator iter = mDirtyPatchList.begin();
+		iter != mDirtyPatchList.end(); )
 	{
-		if (it->second.expired())
-		{
-			LL_WARNS() << "Expired dirty patch detected. Side " << it->first << LL_ENDL;
-		}
-		surface_patch_ref patchp = it->second.lock();
-		if (!patchp)
-		{
-			it = mDirtyPatchList.erase(it);
-			continue;
-		}
-		if (patchp->updateNormals())
-		{
-			patchp->getSurface()->dirtySurfacePatch(patchp);
-		}
+		std::set<LLSurfacePatch *>::iterator curiter = iter++;
+		LLSurfacePatch *patchp = *curiter;
+		patchp->updateNormals();
+
 		patchp->updateVerticalStats();
 		if (max_update_time == 0.f || update_timer.getElapsedTimeF32() < max_update_time)
 		{
@@ -822,11 +836,9 @@ BOOL LLSurface::idleUpdate(F32 max_update_time)
 			{
 				did_update = TRUE;
 				patchp->clearDirty();
-				it = mDirtyPatchList.erase(it);
-				continue;
+				mDirtyPatchList.erase(curiter);
 			}
 		}
-		++it;
 	}
 	return did_update;
 }
@@ -837,7 +849,7 @@ void LLSurface::decompressDCTPatch(LLBitPack &bitpack, LLGroupHeader *gopp, BOOL
 	LLPatchHeader  ph;
 	S32 j, i;
 	S32 patch[LARGE_PATCH_SIZE*LARGE_PATCH_SIZE];
-
+	LLSurfacePatch *patchp;
 	init_patch_decompressor(gopp->patch_size);
 	gopp->stride = mGridsPerEdge;
 	set_group_of_patch_header(gopp);
@@ -883,7 +895,7 @@ void LLSurface::decompressDCTPatch(LLBitPack &bitpack, LLGroupHeader *gopp, BOOL
 			return;
 		}
 
-		const surface_patch_ref& patchp = mPatchList[j * mPatchesPerEdge + i];
+		patchp = &mPatchList[j*mPatchesPerEdge + i];
 
 		decode_patch(bitpack, patch);
 		decompress_patch(patchp->getDataZ(), patch, &ph);
@@ -891,26 +903,21 @@ void LLSurface::decompressDCTPatch(LLBitPack &bitpack, LLGroupHeader *gopp, BOOL
 		// Update edges for neighbors.  Need to guarantee that this gets done before we generate vertical stats.
 		patchp->updateNorthEdge();
 		patchp->updateEastEdge();
-		LLSurfacePatch* neighborPatch;
-		if (neighborPatch = patchp->getNeighborPatch(WEST))
+		if (patchp->getNeighborPatch(WEST))
 		{
-			neighborPatch->updateEastEdge();
+			patchp->getNeighborPatch(WEST)->updateEastEdge();
 		}
-		if (neighborPatch = patchp->getNeighborPatch(SOUTHWEST))
+		if (patchp->getNeighborPatch(SOUTHWEST))
 		{
-			neighborPatch->updateEastEdge();
-			neighborPatch->updateNorthEdge();
+			patchp->getNeighborPatch(SOUTHWEST)->updateEastEdge();
+			patchp->getNeighborPatch(SOUTHWEST)->updateNorthEdge();
 		}
-		if (neighborPatch = patchp->getNeighborPatch(SOUTH))
+		if (patchp->getNeighborPatch(SOUTH))
 		{
-			neighborPatch->updateNorthEdge();
+			patchp->getNeighborPatch(SOUTH)->updateNorthEdge();
 		}
-
 		// Dirty patch statistics, and flag that the patch has data.
-		if (patchp->dirtyZ())
-		{
-			dirtySurfacePatch(patchp);
-		}
+		patchp->dirtyZ();
 		patchp->setHasReceivedData();
 	}
 }
@@ -1063,13 +1070,9 @@ LLVector3 LLSurface::resolveNormalGlobal(const LLVector3d& pos_global) const
 
 }
 
-const surface_patch_ref& LLSurface::resolvePatchRegion(const F32 x, const F32 y) const
+LLSurfacePatch *LLSurface::resolvePatchRegion(const F32 x, const F32 y) const
 {
-	if (mPatchList.empty()) {
-		LL_WARNS() << "No patches for current region!" << LL_ENDL;
-		static surface_patch_ref empty;
-		return empty;
-	}
+	
 // x and y should be region-local coordinates. 
 // If x and y are outside of the surface, then the returned
 // index will be for the nearest boundary patch.
@@ -1120,24 +1123,29 @@ const surface_patch_ref& LLSurface::resolvePatchRegion(const F32 x, const F32 y)
 
 	// *NOTE: Super paranoia code follows.
 	S32 index = i + j * mPatchesPerEdge;
-	if((index < 0) || (index >= mPatchList.size()))
+	if((index < 0) || (index >= mNumberOfPatches))
 	{
+		if(0 == mNumberOfPatches)
+		{
+			LL_WARNS() << "No patches for current region!" << LL_ENDL;
+			return NULL;
+		}
 		S32 old_index = index;
-		index = llclamp(old_index, 0, ((S32)mPatchList.size() - 1));
+		index = llclamp(old_index, 0, (mNumberOfPatches - 1));
 		LL_WARNS() << "Clamping out of range patch index " << old_index
 				<< " to " << index << LL_ENDL;
 	}
-	return mPatchList[index];
+	return &(mPatchList[index]);
 }
 
 
-const surface_patch_ref& LLSurface::resolvePatchRegion(const LLVector3 &pos_region) const
+LLSurfacePatch *LLSurface::resolvePatchRegion(const LLVector3 &pos_region) const
 {
 	return resolvePatchRegion(pos_region.mV[VX], pos_region.mV[VY]);
 }
 
 
-const surface_patch_ref& LLSurface::resolvePatchGlobal(const LLVector3d &pos_global) const
+LLSurfacePatch *LLSurface::resolvePatchGlobal(const LLVector3d &pos_global) const
 {
 	llassert(mRegionp);
 	LLVector3 pos_region = mRegionp->getPosRegionFromGlobal(pos_global);
@@ -1166,22 +1174,26 @@ void LLSurface::createPatchData()
 	// Assumes mGridsPerEdge, mGridsPerPatchEdge, and mPatchesPerEdge have been properly set
 	// TODO -- check for create() called when surface is not empty
 	S32 i, j;
-
+	LLSurfacePatch *patchp;
 	// Allocate memory
-	mPatchList.resize(mPatchesPerEdge * mPatchesPerEdge);
-	for (S32 i = 0; i < mPatchList.size(); ++i)
-	{
-		mPatchList[i] = std::make_shared<LLSurfacePatch>(this, i);
-	}
-
+	mPatchList = new LLSurfacePatch[mNumberOfPatches];
 	// One of each for each camera
-	mVisiblePatchCount = mPatchList.size();
-
+	mVisiblePatchCount = mNumberOfPatches;
 	for (j=0; j<mPatchesPerEdge; j++) 
 	{
 		for (i=0; i<mPatchesPerEdge; i++) 
 		{
-			const auto& patchp = getPatch(i, j);
+			patchp = getPatch(i, j);
+			patchp->setSurface(this);
+		}
+	}
+	for (j=0; j<mPatchesPerEdge; j++) 
+	{
+		for (i=0; i<mPatchesPerEdge; i++) 
+		{
+			patchp = getPatch(i, j);
+			patchp->mHasReceivedData = FALSE;
+			patchp->mSTexUpdate = TRUE;
 
 			S32 data_offset = i * mGridsPerPatchEdge + j * mGridsPerPatchEdge * mGridsPerEdge;
 
@@ -1275,9 +1287,8 @@ void LLSurface::createPatchData()
 
 void LLSurface::destroyPatchData()
 {
-	// Delete all of the cached patch data for these patches.
-	mPatchList.clear();
-	mVisiblePatchCount = 0;
+	delete [] mPatchList;
+	mPatchList = NULL;
 }
 
 
@@ -1299,50 +1310,35 @@ U32 LLSurface::getRenderStride(const U32 render_level) const
 }
 
 
-const surface_patch_ref& LLSurface::getPatch(const S32 x, const S32 y) const
+LLSurfacePatch *LLSurface::getPatch(const S32 x, const S32 y) const
 {
-	static surface_patch_ref empty(nullptr);
 	if ((x < 0) || (x >= mPatchesPerEdge))
 	{
-		LL_WARNS() << "Asking for patch out of bounds" << LL_ENDL;
-		return empty;
+		LL_ERRS() << "Asking for patch out of bounds" << LL_ENDL;
+		return NULL;
 	}
 	if ((y < 0) || (y >= mPatchesPerEdge))
 	{
-		LL_WARNS() << "Asking for patch out of bounds" << LL_ENDL;
-		return empty;
+		LL_ERRS() << "Asking for patch out of bounds" << LL_ENDL;
+		return NULL;
 	}
-
-	return mPatchList[x + y*mPatchesPerEdge];
+	return mPatchList + x + y*mPatchesPerEdge;
 }
 
 
 void LLSurface::dirtyAllPatches()
 {
-	for (auto& patchp : mPatchList)
+	S32 i;
+	for (i = 0; i < mNumberOfPatches; i++)
 	{
-		if (patchp->dirtyZ())
-		{
-			dirtySurfacePatch(patchp);
-		}
+		mPatchList[i].dirtyZ();
 	}
 }
 
-void LLSurface::dirtySurfacePatch(const surface_patch_ref& patchp)
+void LLSurface::dirtySurfacePatch(LLSurfacePatch *patchp)
 {
-	if (!patchp)
-	{
-		return;
-	}
-
 	// Put surface patch on dirty surface patch list
-	if (std::find_if(mDirtyPatchList.begin(), mDirtyPatchList.end(), 
-		[&patchp](std::pair<U32, std::weak_ptr<LLSurfacePatch > >& entry) -> bool {
-			return entry.second.lock().get() == patchp.get();
-		}) == mDirtyPatchList.end())
-	{
-		mDirtyPatchList.push_back(std::make_pair(patchp->getSide(), patchp));
-	}
+	mDirtyPatchList.insert(patchp);
 }
 
 

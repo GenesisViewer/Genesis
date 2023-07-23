@@ -65,6 +65,8 @@ private:
 	bool mAnnounceStreamMetadata;
 	F32 mInactiveFloaterTransparency, mActiveFloaterTransparency;
 	S32  mBackgroundYieldTime;
+	bool mGenesisShowOnlineNotificationChiclet;
+	bool mEnableAORemote;
 	bool mScriptErrorsStealFocus;
 	bool mConnectToNeighbors;
 	bool mRestartMinimized;
@@ -116,6 +118,7 @@ private:
 	F32 mUiToolTipDelay;
 	bool mSLBShowFPS;
 	bool mGenxShowFpsTop;
+	F32 mFontScreenDPI;
 	U32 mRenderAvatarMaxComplexity;
 	bool mGenxRenderHitBoxes;
 };

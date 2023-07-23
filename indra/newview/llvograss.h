@@ -108,7 +108,7 @@ public:
 	F32				mBladeSizeX;
 	F32				mBladeSizeY;
 	
-	std::weak_ptr<LLSurfacePatch>           mPatch;			//  Stores the land patch where the grass is centered
+	LLSurfacePatch           *mPatch;			//  Stores the land patch where the grass is centered
 
 	U64 mLastPatchUpdateTime;
 

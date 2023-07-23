@@ -118,6 +118,8 @@
 // [/RLVa:LF]
 #include "shfloatermediaticker.h"
 
+#include "genxfloaterao.h"
+
 void handle_debug_avatar_textures(void*);
 template<typename T> void handle_singleton_toggle(void*);
 void show_outfit_dialog() { new LLMakeOutfitDialog(false); }
@@ -214,8 +216,11 @@ struct MenuFloaterDict final : public LLSingleton<MenuFloaterDict>
 		registerFloater<LLFloaterLand>					("about land");
 		registerFloater<LLFloaterRegionInfo>			("about region");
 		registerFloater<LLFloaterActiveSpeakers>		("active speakers");
-		registerFloater<LLFloaterAO>					("ao");
 		registerFloater<GenxFloaterAreaSearch>			("areasearch");
+		if (gSavedSettings.getBOOL("GenxAOMgr"))
+			registerFloater<GenxFloaterAO>					("ao");
+		else
+			registerFloater<LLFloaterAO>					("ao");
 		registerFloater<LLFloaterAutoReplaceSettings>	("autoreplace");
 		registerFloater<LLFloaterAvatar>				("avatar");
 		registerFloater<LLFloaterBeacons>				("beacons");

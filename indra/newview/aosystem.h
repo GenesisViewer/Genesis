@@ -3,12 +3,14 @@
 #include "aostate.h"
 #include "llcontrol.h"
 #include "lleventtimer.h"
+#include "genxfloaterao.h"
 
 class AOSystem final : public LLSingleton<AOSystem>
 {
 	friend class LLSingleton<AOSystem>;
 	friend class AOInvTimer;
 	friend class LLFloaterAO;
+	friend class GenxFloaterAO;
 	AOSystem();
 	~AOSystem();
 public:

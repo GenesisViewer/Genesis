@@ -2,8 +2,13 @@
 <panel bg_visible="false" border="false" border_visible="false" bottom="1"
      enabled="true" follows="right|bottom" height="20" left="0"
      name="media_controls" width="280">
+	<button bottom="-22" height="22" label=""
+             image_overlay="icn_stop_animations.tga"
+			 image_selected="toolbar_btn_selected.tga" image_unselected="toolbar_btn_enabled.tga"
+	     left_delta="2" name="stop_animations" scale_image="true" toggle="true"
+	     tool_tip="Stop avatar animations" width="22" />  
 	<icon bottom="-22" enabled="true" follows="left|top" height="22"
-	     image_name="icn_label_music.tga" label="" left_delta="2" mouse_opaque="true"
+	     image_name="icn_label_music.tga" label="" left_delta="20" mouse_opaque="true"
 	     name="music_icon" scale_image="true" tool_tip="Play/pause streaming music"
 	     width="20" />
 	<button bottom="-21" enabled="true" follows="left|top" height="20"
@@ -71,11 +76,7 @@
 	<button bottom="-22" control_name="ShowVolumeSettingsPopup" height="22" label=""
 	     left_delta="19" name="expand" scale_image="true" toggle="true"
 	     tool_tip="Adjust individual volume levels" width="22" />
-    <button bottom="-22" height="22" label=""
-             image_overlay="icn_stop_animations.tga"
-			 image_selected="toolbar_btn_selected.tga" image_unselected="toolbar_btn_enabled.tga"
-	     left_delta="19" name="stop_animations" scale_image="true" toggle="true"
-	     tool_tip="Stop avatar animations" width="22" />    
+       
 	<string name="play_label">
 		Play
 	</string>

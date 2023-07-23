@@ -36,6 +36,10 @@ public:
 	LLUUID mSearchByGroup;
 	int mMinDistance;
 	int mMaxDistance;
+	int mMinPrice;
+	int mMaxPrice;
+	BOOL mIncludePriceless;
+	BOOL mParcelOnly;
 	sqlite3	*db;
 private:
 	
@@ -47,6 +51,7 @@ private:
 	void onSearchByOwner();
 	void onSearchByGroup();
 	void onSearchByDistance();
+	void onSearchByPrice();
 	bool filterEdited;
 	void refreshList();
 	bool requestPropertiesSent;
@@ -54,6 +59,7 @@ private:
 static void areasearch_compute_groupname(sqlite3_context *context, int argc, sqlite3_value **argv);
 static void areasearch_compute_ownername(sqlite3_context *context, int argc, sqlite3_value **argv);
 static void areasearch_compute_distance(sqlite3_context *context, int argc, sqlite3_value **argv);
+static void areasearch_in_parcel(sqlite3_context *context, int argc, sqlite3_value **argv);
 static int areasearch_callback(void *param, int argc, char **argv, char **azColName);
 static int areasearch_callback_owner_combo(void *param, int argc, char **argv, char **azColName);
 static int areasearch_callback_group_combo(void *param, int argc, char **argv, char **azColName);

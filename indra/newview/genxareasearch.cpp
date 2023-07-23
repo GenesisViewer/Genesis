@@ -10,6 +10,8 @@
 #include "llcombobox.h"
 #include "llfiltereditor.h"
 #include "llsliderctrl.h"
+#include "llcheckboxctrl.h"
+#include "llviewerparcelmgr.h"
 #include <boost/thread.hpp>
 GenxFloaterAreaSearch::GenxFloaterAreaSearch(const LLSD& data) :
 	LLFloater(),
@@ -53,7 +55,8 @@ BOOL GenxFloaterAreaSearch::postBuild()
     "GROUP_NAME TEXT  ," \
     "PRICE REAL," \
     "LI INTEGER,"\
-    "DISTANCE REAL"\
+    "DISTANCE REAL,"\
+    "IN_PARCEL INTEGER"\
     ")";
     
     sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);
@@ -84,6 +87,10 @@ BOOL GenxFloaterAreaSearch::postBuild()
     if (rc != SQLITE_OK) {
         LL_WARNS() << "can't define areasearch_compute_distance" << LL_ENDL;
     }
+    rc = sqlite3_create_function(db, "areasearch_in_parcel", 1, SQLITE_UTF8, NULL, &areasearch_in_parcel, NULL, NULL);
+    if (rc != SQLITE_OK) {
+        LL_WARNS() << "can't define areasearch_in_parcel" << LL_ENDL;
+    }
     //search by name or description
     LLFilterEditor *name_filter = getChild<LLFilterEditor>("areasearch_lineedit");
     name_filter->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByName,this,_1,_2));
@@ -97,6 +104,18 @@ BOOL GenxFloaterAreaSearch::postBuild()
     LLSliderCtrl *max_distance_slider = getChild<LLSliderCtrl>("max_dist");
     max_distance_slider->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByDistance,this));
     mMaxDistance=256;
+    LLCheckBoxCtrl *parcel_only_checkbox=getChild<LLCheckBoxCtrl>("parcel_only");
+    parcel_only_checkbox->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByDistance,this));
+    mParcelOnly=FALSE;
+    LLSliderCtrl *min_price_slider = getChild<LLSliderCtrl>("min_price");
+    min_price_slider->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByPrice,this));
+    mMinPrice=0;
+    LLSliderCtrl *max_price_slider = getChild<LLSliderCtrl>("max_price");
+    max_price_slider->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByPrice,this));
+    mMaxPrice=S32_MAX;
+    LLCheckBoxCtrl *include_priceless_checkbox=getChild<LLCheckBoxCtrl>("include_priceless");
+    include_priceless_checkbox->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByPrice,this));
+    mIncludePriceless=TRUE;
     requestPropertiesSent=false;
     tick();
     return TRUE;
@@ -121,6 +140,16 @@ void GenxFloaterAreaSearch::onSearchByDistance()
 {
 	mMinDistance=getChild<LLSliderCtrl>("min_dist")->getValue().asInteger();
     mMaxDistance=getChild<LLSliderCtrl>("max_dist")->getValue().asInteger();
+    mParcelOnly = getChild<LLCheckBoxCtrl>("parcel_only")->getValue().asBoolean();
+    filterEdited=true;
+    refreshList();
+	
+}
+void GenxFloaterAreaSearch::onSearchByPrice()
+{
+	mMinPrice=getChild<LLSliderCtrl>("min_price")->getValue().asInteger();
+    mMaxPrice=getChild<LLSliderCtrl>("max_price")->getValue().asInteger();
+    mIncludePriceless = getChild<LLCheckBoxCtrl>("include_priceless")->getValue().asBoolean();
     filterEdited=true;
     refreshList();
 	
@@ -225,27 +254,50 @@ void GenxFloaterAreaSearch::processObjectPropertiesFamily(LLMessageSystem* msg, 
 	GenxFloaterAreaSearch* floater = findInstance();
 	if(!floater)
 		return;
-    GenxFloaterAreaSearchObject *data = new GenxFloaterAreaSearchObject();
+    // GenxFloaterAreaSearchObject *data = new GenxFloaterAreaSearchObject();
    
-	msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_ObjectID, data->uuid);
+	// msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_ObjectID, data->uuid);
 
-    msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_OwnerID, data->owner_id);
-	if (auto obj = gObjectList.findObject(data->uuid)) obj->mOwnerID = data->owner_id; 
-	msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_GroupID, data->group_id);
-	msg->getStringFast(_PREHASH_ObjectData, _PREHASH_Name, data->name);
-	msg->getStringFast(_PREHASH_ObjectData, _PREHASH_Description, data->description);
-    LLViewerObject *objectp = gObjectList.findObject(data->uuid);
+    // msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_OwnerID, data->owner_id);
+	// if (auto obj = gObjectList.findObject(data->uuid)) obj->mOwnerID = data->owner_id; 
+	// msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_GroupID, data->group_id);
+	// msg->getStringFast(_PREHASH_ObjectData, _PREHASH_Name, data->name);
+	// msg->getStringFast(_PREHASH_ObjectData, _PREHASH_Description, data->description);
+    
+    // LLViewerObject *objectp = gObjectList.findObject(data->uuid);
+    // LLViewerRegion *our_region = gAgent.getRegion();
+    // if (objectp)
+    // {
+    //     if (objectp->getRegion() == our_region && !objectp->isAvatar() && objectp->isRoot() &&
+    //         !objectp->flagTemporary() && !objectp->flagTemporaryOnRez())
+    //     {
+    //         floater->updateObject(data);
+    //     }
+    // }
+    // delete data;
+    LLUUID uuid;
+    msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_ObjectID, uuid);
+    LLViewerObject *objectp = gObjectList.findObject(uuid);
     LLViewerRegion *our_region = gAgent.getRegion();
     if (objectp)
     {
         if (objectp->getRegion() == our_region && !objectp->isAvatar() && objectp->isRoot() &&
             !objectp->flagTemporary() && !objectp->flagTemporaryOnRez())
         {
-            floater->updateObject(data);
+            char *zErrMsg = 0;
+            int rc;
+            sqlite3_stmt *stmt;
+            const char * sql = "INSERT INTO OBJECTS (UUID,LOCAL_ID) VALUES (?,?) ON CONFLICT(UUID) DO NOTHING";
+            rc = sqlite3_prepare_v2(floater->db, sql, -1, &stmt, NULL);
+            sqlite3_bind_text(stmt,1,uuid.asString().c_str(), strlen(uuid.asString().c_str()),SQLITE_STATIC) ;
+            sqlite3_bind_int(stmt,2,objectp->mLocalID) ;
+            rc = sqlite3_step(stmt);
+            
+            sqlite3_reset(stmt);    
+            sqlite3_finalize(stmt); 
         }
     }
-    delete data;
-   
+    
 
     
 }        
@@ -290,7 +342,8 @@ void GenxFloaterAreaSearch::updateObject(GenxFloaterAreaSearchObject *data) {
     char *zErrMsg = 0;
     sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);
     sql = "UPDATE OBJECTS SET GROUP_NAME=areasearch_compute_groupname(GROUP_ID) WHERE GROUP_NAME IS NULL AND GROUP_ID IS NOT NULL";
-    
+    sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);
+    sql = "UPDATE OBJECTS SET IN_PARCEL=areasearch_in_parcel(UUID)";
     sqlite3_exec (db, sql, NULL, NULL, &zErrMsg);
     //prepare the combo filters
     getChild<LLComboBox>("owner_filter")->clearRows();
@@ -386,6 +439,10 @@ void GenxFloaterAreaSearch::processObjectProperties(LLMessageSystem* msg)
         if (data->li<1) data->li=1;
         floater->updateObject(data);
         delete data;
+
+        //update the max_price slider max value if ojbect price is superior
+        int actualMaxValue = floater->getChild<LLSliderCtrl>("max_price")->getMaxValue(); 
+        if (data->price> actualMaxValue) floater->getChild<LLSliderCtrl>("max_price")->setMaxValue(data->price);
     }
     floater->requestPropertiesSent=false;
     floater->requestObjectProperties();
@@ -400,6 +457,19 @@ static void areasearch_compute_groupname(sqlite3_context *context, int argc, sql
        sqlite3_result_text(context, groupName.c_str(), -1, SQLITE_TRANSIENT);
     } else {
        sqlite3_result_null(context);
+    }
+
+}
+static void areasearch_in_parcel(sqlite3_context *context, int argc, sqlite3_value **argv) {
+    const unsigned char *text = sqlite3_value_text(argv[0]);
+    std::string strUUID = std::string(reinterpret_cast<const char*>(text));
+    LLUUID uuid (strUUID);
+    LLViewerObject *objectp = gObjectList.findObject(uuid);
+    BOOL in_parcel = objectp && LLViewerParcelMgr::instance().inAgentParcel(objectp->getPositionGlobal());
+    if (in_parcel) {
+       sqlite3_result_int(context, 1);
+    } else {
+       sqlite3_result_int(context, 0);
     }
 
 }
@@ -486,7 +556,7 @@ void GenxFloaterAreaSearch::refreshList() {
     sql ="DELETE FROM AREASEARCH_VIEW";
     rc = sqlite3_exec (db, sql, NULL, NULL, &zErrMsg); 
     sql = "INSERT INTO AREASEARCH_VIEW(UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE) " \
-    "SELECT UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE FROM OBJECTS WHERE UUID IS NOT NULL AND STATUS IS NOT NULL AND DISTANCE BETWEEN ? AND ?";
+    "SELECT UUID,NAME,DESCRIPTION,OWNER_NAME,GROUP_NAME,PRICE,LI,DISTANCE FROM OBJECTS WHERE UUID IS NOT NULL AND STATUS IS NOT NULL AND DISTANCE BETWEEN ? AND ? AND (PRICE BETWEEN ? AND ? or PRICE= ?) AND IN_PARCEL >=?";
     
     int indexFilter=1;
 
@@ -509,11 +579,19 @@ void GenxFloaterAreaSearch::refreshList() {
     sqlite3_bind_int(stmt,indexFilter,mMinDistance);
     indexFilter++;
     sqlite3_bind_int(stmt,indexFilter,mMaxDistance);
-
+    indexFilter++;
+    sqlite3_bind_int(stmt,indexFilter,mMinPrice);
+    indexFilter++;
+    sqlite3_bind_int(stmt,indexFilter,mMaxPrice);
+    indexFilter++;
+    sqlite3_bind_int(stmt,indexFilter,mIncludePriceless?-1:-2);
+    indexFilter++;
+    sqlite3_bind_int(stmt,indexFilter,mParcelOnly?1:0);
+    indexFilter++;
     if (!mSearchByName.empty()) {
         sqlite3_bind_text(stmt,indexFilter,mSearchByName.c_str(), strlen(mSearchByName.c_str()),SQLITE_TRANSIENT ) ;    
         sqlite3_bind_text(stmt,indexFilter+1,mSearchByName.c_str(), strlen(mSearchByName.c_str()),SQLITE_TRANSIENT ) ; 
-        indexFilter=3;
+        indexFilter+=2;
     }
     if(!mSearchByOwner.isNull()) {
          sqlite3_bind_text(stmt,indexFilter,mSearchByOwner.asString().c_str(), strlen(mSearchByOwner.asString().c_str()),SQLITE_TRANSIENT ) ; 

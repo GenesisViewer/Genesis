@@ -104,6 +104,7 @@ set(viewer_SOURCE_FILES
     floaterao.cpp
     floaterlocalassetbrowse.cpp
     generichandlers.cpp
+    genxareasearch.cpp
     genxaomgr.cpp
     genxcontactset.cpp
     genxdroptarget.cpp
@@ -669,6 +670,7 @@ set(viewer_HEADER_FILES
     floaterao.h
     floaterlocalassetbrowse.h
     generichandlers.h
+    genxareasearch.h
     genxaomgr.h
     genxcontactset.h
     genxdroptarget.h

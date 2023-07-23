@@ -40,6 +40,7 @@
 #include "floaterlocalassetbrowse.h"
 #include "hbfloatergrouptitles.h"
 #include "jcfloaterareasearch.h"
+#include "genxareasearch.h"
 #include "llagentcamera.h"
 #include "llchatbar.h"
 #include "llconsole.h"
@@ -215,11 +216,11 @@ struct MenuFloaterDict final : public LLSingleton<MenuFloaterDict>
 		registerFloater<LLFloaterLand>					("about land");
 		registerFloater<LLFloaterRegionInfo>			("about region");
 		registerFloater<LLFloaterActiveSpeakers>		("active speakers");
+		registerFloater<GenxFloaterAreaSearch>			("areasearch");
 		if (gSavedSettings.getBOOL("GenxAOMgr"))
 			registerFloater<GenxFloaterAO>					("ao");
 		else
 			registerFloater<LLFloaterAO>					("ao");
-		registerFloater<JCFloaterAreaSearch>			("areasearch");
 		registerFloater<LLFloaterAutoReplaceSettings>	("autoreplace");
 		registerFloater<LLFloaterAvatar>				("avatar");
 		registerFloater<LLFloaterBeacons>				("beacons");

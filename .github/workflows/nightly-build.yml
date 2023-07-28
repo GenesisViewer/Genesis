@@ -134,14 +134,15 @@ jobs:
        
       - name: ls
         run: ls -l ./Genesis/
-      - name: Upload from Genesis via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      - name: Upload to Genesis via SCP
+        uses: appleboy/scp-action@v0.1.4
         with:
-          server: ${{  secrets.FTP_HOST  }}
-          username: ${{  secrets.FTP_USER  }}
-          password: ${{ secrets.FTP_PASS }}
-          local-dir: ./Genesis/
-          server-dir: genesis/uploadsfromgit/
+          host: ${{ secrets.SCP_HOST }}
+          username: ${{ secrets.SCP_USERNAME }}
+          password: ${{ secrets.SCP_PASSWORD }}
+          port: ${{ secrets.SCP_PORT }}
+          source: "./Genesis/*.exe"
+          target: ${{ secrets.SCP_PATH }}  
       - run: curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 https://londoncitysl.com/genesis/nightly_builds/moveuploadedfiles.php
       - uses: geekyeggo/delete-artifact@v1
         with:

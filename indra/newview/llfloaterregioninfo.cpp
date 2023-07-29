@@ -3449,7 +3449,7 @@ BOOL LLPanelEstateAccess::postBuild()
 	if (banned_name_list)
 	{
 		banned_name_list->setCommitOnSelectionChange(TRUE);
-		banned_name_list->setMaxItemCount(ESTATE_MAX_ACCESS_IDS);
+		banned_name_list->setMaxItemCount(ESTATE_MAX_BANNED_IDS);
 	}
 
 	getChild<LLUICtrl>("banned_search_input")->setCommitCallback(boost::bind(&LLPanelEstateAccess::onBannedSearchEdit, this, _2));
@@ -3593,10 +3593,10 @@ void LLPanelEstateAccess::onClickAddBannedAgent()
 {
 	LLCtrlListInterface *list = childGetListInterface("banned_avatar_name_list");
 	if (!list) return;
-	if (list->getItemCount() >= ESTATE_MAX_ACCESS_IDS)
+	if (list->getItemCount() >= ESTATE_MAX_BANNED_IDS)
 	{
 		LLSD args;
-		args["MAX_BANNED"] = llformat("%d",ESTATE_MAX_ACCESS_IDS);
+		args["MAX_BANNED"] = llformat("%d",ESTATE_MAX_BANNED_IDS);
 		LLNotificationsUtil::add("MaxBannedAgentsOnRegion", args);
 		return;
 	}

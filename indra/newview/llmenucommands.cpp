@@ -216,7 +216,7 @@ struct MenuFloaterDict final : public LLSingleton<MenuFloaterDict>
 		registerFloater<LLFloaterLand>					("about land");
 		registerFloater<LLFloaterRegionInfo>			("about region");
 		registerFloater<LLFloaterActiveSpeakers>		("active speakers");
-		registerFloater<GenxFloaterAreaSearch>			("areasearch");
+		registerFloater<JCFloaterAreaSearch>			("areasearch");
 		if (gSavedSettings.getBOOL("GenxAOMgr"))
 			registerFloater<GenxFloaterAO>					("ao");
 		else

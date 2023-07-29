@@ -3812,7 +3812,7 @@ void LLPanelEstateAccess::accessAddCore3(const uuid_vec_t& ids, const std::vecto
 		LLNameListCtrl* name_list = panel->getChild<LLNameListCtrl>("banned_avatar_name_list");
 		LLNameListCtrl* em_list = panel->getChild<LLNameListCtrl>("estate_manager_name_list");
 		int currentCount = (name_list ? name_list->getItemCount() : 0);
-		if (ids.size() + currentCount > ESTATE_MAX_ACCESS_IDS)
+		if (ids.size() + currentCount > ESTATE_MAX_BANNED_IDS)
 		{
 			LLSD args;
 			args["NUM_ADDED"] = llformat("%d",ids.size());
@@ -4280,7 +4280,7 @@ void LLPanelEstateAccess::onEstateAccessReceived(const LLSD& result)
 	{
 		LLStringUtil::format_map_t args;
 		args["[BANNEDAGENTS]"] = llformat("%d", result["BannedAgents"].size());
-		args["[MAXBANNED]"] = llformat("%d", ESTATE_MAX_ACCESS_IDS);
+		args["[MAXBANNED]"] = llformat("%d", ESTATE_MAX_BANNED_IDS);
 		std::string msg = LLTrans::getString("RegionInfoBannedResidents", args);
 		panel->getChild<LLUICtrl>("ban_resident_label")->setValue(LLSD(msg));
 

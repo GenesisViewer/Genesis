@@ -15,7 +15,7 @@ GenxMembers::GenxMembers()
 	members.push_back("9f9011e4-de9d-4725-abb2-bfa1a21d5918"); //Evie Falconer
 	members.push_back("76234dcc-07f0-472a-bf46-230df2037997"); //DeadlyBellaDonna Resident
 	members.push_back("86d8bab7-b82e-4c34-b991-ea19f67c8226"); //Roni Nightingale
-	
+	members.push_back("3ac2cf73-eefa-4102-8016-7676a9a0081e"); //candicek15 Resident
 	
 	
 	

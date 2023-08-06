@@ -66,7 +66,7 @@
 #include "lldir.h"
 //#include "llenvironment.h"
 #include "llerrorcontrol.h"
-#include "genxareasearch.h"
+#include "genxareasearch2.h"
 #include "llfiltersd2xmlrpc.h"
 #include "llfocusmgr.h"
 #include "llhttpsender.h"

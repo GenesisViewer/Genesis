@@ -40,7 +40,7 @@
 #include "floaterlocalassetbrowse.h"
 #include "hbfloatergrouptitles.h"
 #include "jcfloaterareasearch.h"
-#include "genxareasearch2.h"
+#include "genxareasearch.h"
 #include "llagentcamera.h"
 #include "llchatbar.h"
 #include "llconsole.h"

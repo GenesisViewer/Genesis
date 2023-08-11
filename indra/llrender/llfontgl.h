@@ -152,7 +152,7 @@ public:
 	void	   addEmbeddedChar( llwchar wc, LLTexture* image, const LLWString& label) const;
 	void	   removeEmbeddedChar( llwchar wc ) const;
 
-	static void initClass(F32 screen_dpi, F32 x_scale, F32 y_scale,	 const std::string& app_dir, bool create_gl_textures = true);
+	static void initClass(F32 screen_dpi, F32 x_scale, F32 y_scale,	 const std::string& app_dir, bool create_gl_textures = true,bool legacy_font=false);
 
 	// Load sans-serif, sans-serif-small, etc.
 	// Slow, requires multiple seconds to load fonts.

@@ -935,7 +935,7 @@ void LLFontGL::removeEmbeddedChar( llwchar wc ) const
 }
 
 // static
-void LLFontGL::initClass(F32 screen_dpi, F32 x_scale, F32 y_scale, const std::string& app_dir, bool create_gl_textures)
+void LLFontGL::initClass(F32 screen_dpi, F32 x_scale, F32 y_scale, const std::string& app_dir, bool create_gl_textures,bool legacy_font)
 {
 	sVertDPI = (F32)llfloor(screen_dpi * y_scale);
 	sHorizDPI = (F32)llfloor(screen_dpi * x_scale);
@@ -947,7 +947,10 @@ void LLFontGL::initClass(F32 screen_dpi, F32 x_scale, F32 y_scale, const std::st
 	if (!sFontRegistry)
 	{
 		sFontRegistry = new LLFontRegistry(create_gl_textures);
-		sFontRegistry->parseFontInfo("fonts.xml");
+		if (legacy_font)
+			sFontRegistry->parseFontInfo("fonts-legacy.xml");
+		else	
+			sFontRegistry->parseFontInfo("fonts.xml");
 	}
 	else
 	{

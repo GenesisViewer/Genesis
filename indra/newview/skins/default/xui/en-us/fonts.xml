@@ -2,10 +2,11 @@
 <fonts>
 
   <font name="default" comment="default font files (global fallbacks)">
+    <file>NotoSansDisplay-Regular.ttf</file>
     <file>Inter-Regular.ttf</file>
     <file>Roboto-Regular.ttf</file>
     <file>DejaVuSansCondensed.ttf</file>
-    <file>NotoSansDisplay-Regular.ttf</file>
+    
     <file>SourceHanSansJP-Regular.otf</file>
     <file>SourceHanSansKR-Regular.otf</file>
     <file>SourceHanSansCN-Regular.otf</file>
@@ -34,11 +35,12 @@
   <font name="SansSerifBold" 
 	comment="Name of bold sans-serif font" 
 	font_style="Bold">
+    <file>NotoSansDisplay-Bold.ttf</file>
     <file>Inter-Bold.ttf</file>
     <file>Roboto-Bold.ttf</file>
 	  <file>DroidSans-Bold.ttf</file>
     <file>DejaVuSansCondensed-Bold.ttf</file>
-    <file>NotoSansDisplay-Bold.ttf</file>
+    
     <file>SourceHanSansJP-Bold.otf</file>
     <file>SourceHanSansKR-Bold.otf</file>
     <file>SourceHanSansCN-Bold.otf</file>
@@ -55,11 +57,12 @@
   <font name="SansSerif"
 	comment="Name of bold sans-serif font" 
 	font_style="BOLD">
+    <file>NotoSansDisplay-Bold.ttf</file>
     <file>Inter-Bold.ttf</file>
     <file>Roboto-Bold.ttf</file>
 	  <file>DroidSans-Bold.ttf</file>
     <file>DejaVuSansCondensed-Bold.ttf</file>
-    <file>NotoSansDisplay-Bold.ttf</file>
+    
     <file>SourceHanSansJP-Bold.otf</file>
     <file>SourceHanSansKR-Bold.otf</file>
     <file>SourceHanSansCN-Bold.otf</file>
@@ -70,17 +73,19 @@
   <font name="SansSerif"
 	comment="Name of italic sans-serif font"
 	font_style="ITALIC">
+    <file>NotoSansDisplay-Italic.ttf</file>
     <file>Roboto-Italic.ttf</file>
     <file>DejaVuSansCondensed-Oblique.ttf</file>
-    <file>NotoSansDisplay-Italic.ttf</file>
+    
   </font>
 
   <font name="SansSerif"
 	comment="Name of bold italic sans-serif font"
 	font_style="BOLD|ITALIC">
+    <file>NotoSansDisplay-BoldItalic.ttf</file>
     <file>Roboto-BoldItalic.ttf</file>
     <file>DejaVuSansCondensed-BoldOblique.ttf</file>
-    <file>NotoSansDisplay-BoldItalic.ttf</file>
+    
   </font>
 
   <font name="Monospace"

@@ -13,9 +13,7 @@ std::vector<GenxAOSet> GenxAOMgr::getAoSets() {
 	LLSD::array_const_iterator ao_end = aoSets.endArray();
 	for ( ; ao_it != ao_end; ++ao_it)
 	{
-		// const std::string& ao = (*ao_it).first;
 		
-		// const LLSD& ao_map = (*ao_it).second;
         GenxAOSet aoSet= GenxAOSet();
         aoSet.setID(LLUUID((*ao_it).get("id")));
         if ((*ao_it).has("name"))

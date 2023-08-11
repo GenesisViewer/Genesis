@@ -15,13 +15,13 @@
   </combo_box>
   <button name="new_ao_set" label="New" width="60" left="5" bottom_delta="-25" height="18">
   </button>
-  <button name="del_ao_set" label="Delete" width="60" left="130" bottom_delta="0" height="18">
+  <button name="del_ao_set" label="Delete" width="60" left="130" bottom_delta="-5" height="18">
   </button>
   <button name="rename_ao_set" label="Rename" width="190" left="5" bottom_delta="-25" height="18">
   </button>
-  <line_editor name="new_ao_set_name" width="140" left="5" bottom_delta="0" height="18" visible="false">
+  <line_editor name="new_ao_set_name" width="140" left="5" bottom_delta="-5" height="18" visible="false">
   </line_editor>
-  <button name="new_ao_set_name_ok" width="20" left="150" bottom_delta="0" height="20" visible="false" label=""
+  <button name="new_ao_set_name_ok" width="20" left="150" bottom_delta="-5" height="20" visible="false" label=""
     image_overlay="badge_ok.j2c"
     image_unselected="flyout_btn_left.tga"
     image_selected="flyout_btn_left_selected.tga"
@@ -49,7 +49,7 @@
     label="View"
     font="SansSerifSmall"
     left="5"
-    bottom_delta="0"
+    bottom_delta="-5"
     width="60"
     height="16"
     visible="false"
@@ -59,7 +59,7 @@
     label="Reload"
     font="SansSerifSmall"
     left="130"
-    bottom_delta="0"
+    bottom_delta="-5"
     width="60"
     height="16"
     visible="false"
@@ -82,7 +82,7 @@
     label="&gt;&gt;"
     font="SansSerifSmall"
     left="104"
-    bottom_delta="0"
+    bottom_delta="-5"
     width="90"
     height="20"
     follows="bottom|left"
@@ -99,158 +99,161 @@
     increment="1" initial_val="20" left="5" max_val="9000" min_val="1.00"
     mouse_opaque="true" name="standtime" label="Stand time:" label_width="80"
     tool_tip="AO stand time in seconds" width="180" /> 
-
-    <tab_container label="Default" bottom_delta="-95" left="210" mouse_opaque="false" name="tabcontainer" tab_min_width="50" tab_position="top" width="580" height="340" bg_opaque_color="0,0,0,0.0">
+    <check_box bottom_delta="-60" control_name="EnableAORemote" enabled="true"
+      follows="left|top" font="SansSerifSmall" height="16" initial_value="true"
+      label="Show AO toolbar" left="5" mouse_opaque="true" 
+      name="ao_remote_checkbox" radio_style="false" width="180" />
+    <tab_container label="Default" bottom_delta="-10" left="210" mouse_opaque="false" name="tabcontainer" tab_min_width="50" tab_position="top" width="580" height="349" bg_opaque_color="0,0,0,0.0">
     <panel border="true" left="0" bottom="0" follows="left|top|right|bottom" height="350" label="Default Anims" mouse_opaque="true" name="tabdefaultanims" width="580">
     
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false" 
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-40" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
 	         mouse_opaque="true" name="textdefaultwalk" v_pad="0" width="180">
         Default Walk:
       </text>
-      <combo_box name="walks" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="5"  />
+      <combo_box name="walks" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="-5"  />
 
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
 	         mouse_opaque="true" name="textdefaultrun" v_pad="0" width="180">
         Default Run:
       </text>
-      <combo_box name="runs" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="5"  />
+      <combo_box name="runs" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="-5"  />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
 	         mouse_opaque="true" name="textdefaultjump" v_pad="0" width="180">
         Default Jump:
       </text>
-      <combo_box name="jumps" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="5"  />
+      <combo_box name="jumps" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="-5"  />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
          font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
          mouse_opaque="true" name="textdefaultsit" v_pad="0" width="180">
         Default Sit:
       </text>
-      <combo_box name="sits" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="5"  />
+      <combo_box name="sits" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="-5"  />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
 	         mouse_opaque="true" name="textdefaultgsit" v_pad="0" width="180">
         Default Groundsit:
       </text>
-      <combo_box name="gsits" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="5"  />
+      <combo_box name="gsits" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="-5"  />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
 	         mouse_opaque="true" name="textdefaultcrouch" v_pad="0" width="180">
         Default Crouch:
       </text>
-      <combo_box name="crouchs" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="5"  />
+      <combo_box name="crouchs" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="-5"  />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
 	         mouse_opaque="true" name="textdefaultcrouchwalk" v_pad="0" width="180">
         Default Crouchwalk:
       </text>
-      <combo_box name="cwalks" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="5"  />
+      <combo_box name="cwalks" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="-5"  />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left="10"
 	         mouse_opaque="true" name="textdefaultfall" v_pad="0" width="180">
         Default Fall:
       </text>
-      <combo_box name="falls" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="5" />
+      <combo_box name="falls" label="" follows="left|top" height="20" left="10" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="275" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="285" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left="200"
 	         mouse_opaque="true" name="textdefaulthover" v_pad="0" width="180">
         Default Hover:
       </text>
-      <combo_box name="hovers" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5"  />
+      <combo_box name="hovers" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5"  />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaultfly" v_pad="0" width="180">
         Default Fly:
       </text>
-      <combo_box name="flys" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="flys" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaultflyslow" v_pad="0" width="180">
         Default Slow Fly:
       </text>
-      <combo_box name="flyslows" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="flyslows" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaultflyup" v_pad="0" width="180">
         Default Upward Fly:
       </text>
-      <combo_box name="flyups" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="flyups" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaultflydown" v_pad="0" width="180">
         Default Downward Fly:
       </text>
-      <combo_box name="flydowns" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="flydowns" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaultland" v_pad="0" width="180">
         Default Land:
       </text>
-      <combo_box name="lands" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="lands" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaultstandup" v_pad="0" width="180">
         Default Standup:
       </text>
-      <combo_box name="standups" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="standups" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaultprejump" v_pad="0" width="180">
         Default Pre-Jump:
       </text>
-      <combo_box name="prejumps" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="prejumps" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="275" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="285" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left="390"
 	         mouse_opaque="true" name="textdefaultfloat" v_pad="0" width="180">
         Default Float:
       </text>
-      <combo_box name="floats" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="floats" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaultswim" v_pad="0" width="180">
         Default Swim:
       </text>
-      <combo_box name="swims" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="swims" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaultswimup" v_pad="0" width="180">
         Default Upward Swim:
       </text>
-      <combo_box name="swimups" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="swimups" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaultswimdown" v_pad="0" width="180">
         Default Downward Swim:
       </text>
-      <combo_box name="swimdowns" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="swimdowns" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
       <text bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-	         bottom_delta="-45" drop_shadow_visible="true" follows="left|bottom"
+	         bottom_delta="-35" drop_shadow_visible="true" follows="left|bottom"
 	         font="SansSerifSmall" h_pad="0" halign="left" height="16" left_delta="0"
 	         mouse_opaque="true" name="textdefaulttyping" v_pad="0" width="180">
         Default Typing:
       </text>
-      <combo_box name="typings" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="5" />
+      <combo_box name="typings" label="" follows="left|top" height="20" left_delta="0" width="180" bottom_delta="-5" />
   </panel>
 </tab_container>
 </floater>

@@ -2,67 +2,74 @@
 #define GENX_FLOATERAREASEARCH_H
 
 #include "llfloater.h"
-#include "sqlite3.h"
+
 #include "lleventtimer.h"
 #include "llviewerregion.h"
+#include "llviewerparcelmgr.h"
+
+class GenxFloaterAreaSearchParcelObserver;
 
 class GenxFloaterAreaSearchObject {
 public:	
 	LLUUID uuid;
+	S32 local_id;
 	LLUUID owner_id;
+	std::string owner_name;
 	LLUUID group_id;
+	std::string group_name;
 	std::string name;
 	std::string description;
-	std::string group;
+	S32 distance;
 	S32 price;
 	S32 li; 
+	S32 status;
+	F64 lastRequestedTime;
 };
-class GenxFloaterAreaSearch : public LLFloater, public LLFloaterSingleton<GenxFloaterAreaSearch>,public LLEventTimer
-{
+class GenxFloaterAreaSearch : public LLFloater, public LLFloaterSingleton<GenxFloaterAreaSearch>{
 public:	
     GenxFloaterAreaSearch(const LLSD& data);
 	virtual ~GenxFloaterAreaSearch();
     /*virtual*/ BOOL postBuild();
 	/*virtual*/ void close(bool app = false);
 	/*virtual*/ void onOpen();
-	/*virtual*/ BOOL tick() override;
-	int callback(int argc, char **argv, char **azColName);
+	
 	void requestObjectProperties();
-	void updateObject(GenxFloaterAreaSearchObject *data);
-	void updateObjectsInfos();
+	void reloadList();
 	static void processObjectPropertiesFamily(LLMessageSystem* msg, void** user_data);
 	static void processObjectProperties(LLMessageSystem* msg);
+	static void idle(void *user_data);
+	BOOL isParcelOnly() { return mParcelOnly;}
+	
+private:
+	LLViewerRegion* mLastRegion;
+	S32 mLastParcel;
+	void findNewObjects();
+	void onSearchByName(LLUICtrl* caller, const LLSD& value);
+	void onSearchByOwner();
+	void onSearchByGroup();
+	void onSearchByDistance();
+	void onSearchByPrice();
+	void updateResultList(GenxFloaterAreaSearchObject data);
+	S32 computeDistance(GenxFloaterAreaSearchObject obj);
+	bool matchFilters(GenxFloaterAreaSearchObject data);
+	bool filterEdited;
+	std::map<LLUUID, GenxFloaterAreaSearchObject> objects;
 	std::string mSearchByName;
 	LLUUID mSearchByOwner;
 	LLUUID mSearchByGroup;
+	BOOL mUseDistance;
 	int mMinDistance;
 	int mMaxDistance;
 	int mMinPrice;
 	int mMaxPrice;
 	BOOL mIncludePriceless;
 	BOOL mParcelOnly;
-	sqlite3	*db;
-private:
+	LLVector3d lastAgentPos;
+	F64 lastUpdatedTime;
+
+	LLTextBox* mCounterText;
+
 	
-	void initDB();
-	void cleanDB();
-	
-	LLViewerRegion* mLastRegion;
-	
-	void onSearchByName(LLUICtrl* caller, const LLSD& value);
-	void onSearchByOwner();
-	void onSearchByGroup();
-	void onSearchByDistance();
-	void onSearchByPrice();
-	bool filterEdited;
-	void refreshList();
-	bool requestPropertiesSent;
 };
-static void areasearch_compute_groupname(sqlite3_context *context, int argc, sqlite3_value **argv);
-static void areasearch_compute_ownername(sqlite3_context *context, int argc, sqlite3_value **argv);
-static void areasearch_compute_distance(sqlite3_context *context, int argc, sqlite3_value **argv);
-static void areasearch_in_parcel(sqlite3_context *context, int argc, sqlite3_value **argv);
-static int areasearch_callback(void *param, int argc, char **argv, char **azColName);
-static int areasearch_callback_owner_combo(void *param, int argc, char **argv, char **azColName);
-static int areasearch_callback_group_combo(void *param, int argc, char **argv, char **azColName);
+
 #endif

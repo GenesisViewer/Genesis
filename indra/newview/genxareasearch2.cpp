@@ -360,7 +360,7 @@ void GenxFloaterAreaSearch::processObjectPropertiesFamily(LLMessageSystem* msg, 
     
     LLUUID uuid;
     msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_ObjectID, uuid);
-    LL_INFOS() << "In processObjectPropertiesFamily " <<uuid<<LL_ENDL;
+    
     LLViewerObject *objectp = gObjectList.findObject(uuid);
     LLViewerRegion *our_region = gAgent.getRegion();
     if (objectp)
@@ -389,7 +389,7 @@ void GenxFloaterAreaSearch::requestObjectProperties() {
 	{
 		if (obj.second.status>0 && (LLFrameTimer::getTotalSeconds()-obj.second.lastRequestedTime>3 ))
 		{
-            LL_INFOS()<< "In requestObjectProrperties " << obj.second.uuid << LL_ENDL;
+            
 			if (new_message) {
                 msg->newMessageFast(_PREHASH_ObjectSelect);
                 msg->nextBlockFast(_PREHASH_AgentData);
@@ -405,7 +405,7 @@ void GenxFloaterAreaSearch::requestObjectProperties() {
             count++;
             if (msg->isSendFull(NULL) || count >= 255)
             {
-                LL_INFOS() << "Sending full message " << LL_ENDL;
+                
                 gAgent.sendReliableMessage(); 
                 count = 0;
                 new_message = true;
@@ -418,7 +418,6 @@ void GenxFloaterAreaSearch::requestObjectProperties() {
 	}
     if (!new_message)
     {
-        LL_INFOS() << "Sending non full message " << LL_ENDL;
         
         gAgent.sendReliableMessage(); 
     }
@@ -435,7 +434,7 @@ void GenxFloaterAreaSearch::processObjectProperties(LLMessageSystem* msg)
 	{
 		LLUUID object_id;
 		msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_ObjectID, object_id, i);
-        LL_INFOS()<< "in processObjectProperties " << object_id << LL_ENDL;
+        
 		if (object_id.isNull())
 		{
 			LL_WARNS() << "Got Object Properties with NULL id" << LL_ENDL;
@@ -463,7 +462,7 @@ void GenxFloaterAreaSearch::processObjectProperties(LLMessageSystem* msg)
             continue;
         gCacheName->getFullName(data.owner_id,data.owner_name);
         gCacheName->getGroupName(data.group_id, data.group_name);
-        LL_INFOS() << "Owner Name for " << object_id << "is " << data.owner_name << LL_ENDL;
+        
         msg->getStringFast(_PREHASH_ObjectData, _PREHASH_Name, data.name, i);
 		msg->getStringFast(_PREHASH_ObjectData, _PREHASH_Description, data.description, i);
         U8 sale_type;

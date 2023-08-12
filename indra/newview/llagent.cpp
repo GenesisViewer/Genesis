@@ -2217,6 +2217,7 @@ void LLAgent::endAnimationUpdateUI()
 	// clean up UI from mode we're leaving
 	if (gAgentCamera.getLastCameraMode() == CAMERA_MODE_MOUSELOOK )
 	{
+		gViewerWindow->getRootView()->getChild<LLPanel>("favoritestoolbar")->setVisible(true);
 		// show mouse cursor
 		gViewerWindow->showCursor();
 		// show menus
@@ -2319,7 +2320,7 @@ void LLAgent::endAnimationUpdateUI()
 		// hide menus
 		gMenuBarView->setVisible(!gSavedSettings.getBOOL("LiruMouselookHidesMenubar"));
 		gStatusBar->setVisibleForMouselook(false);
-
+		gViewerWindow->getRootView()->getChild<LLPanel>("favoritestoolbar")->setVisible(false);
 		if (gSavedSettings.getBOOL("LiruMouselookHidesNotices"))
 			gNotifyBoxView->setVisible(false);
 
@@ -2397,6 +2398,7 @@ void LLAgent::endAnimationUpdateUI()
 	}
 	else if (gAgentCamera.getCameraMode() == CAMERA_MODE_CUSTOMIZE_AVATAR)
 	{
+		
 		LLToolMgr::getInstance()->setCurrentToolset(gFaceEditToolset);
 
 		LLFloaterMap::getInstance()->pushVisible(FALSE);

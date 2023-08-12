@@ -57,6 +57,7 @@ bool getCustomColorRLV(const LLUUID& id, LLColor4& color, LLViewerRegion* parent
 #include "llworld.h"
 #include "rlvhandler.h"
 
+
 LLToolGun::LLToolGun( LLToolComposite* composite )
 :	LLTool( std::string("gun"), composite ),
 		mIsSelected(FALSE)
@@ -154,6 +155,8 @@ BOOL LLToolGun::handleHover(S32 x, S32 y, MASK mask)
 void LLToolGun::draw()
 {
 	static LLCachedControl<bool> show_crosshairs(gSavedSettings, "ShowCrosshairs");
+	static LLCachedControl<bool> show_genx_crosshair(gSavedSettings, "ShowGenxCrosshairs");
+	static LLCachedControl<S32>  aim_target_size_factor(gSavedSettings, "GenxCrosshairsSize");
 	static LLCachedControl<bool> show_iff(gSavedSettings, "AlchemyMouselookIFF", true);
 	static LLCachedControl<F32> iff_range(gSavedSettings, "AlchemyMouselookIFFRange", 380.f);
 	if (show_crosshairs)
@@ -204,9 +207,29 @@ void LLToolGun::draw()
 				}
 			}
 		}
-
-		mCrosshairp->draw(
+		if (show_genx_crosshair) {
+			
+			S32 middleWindowWidth = windowWidth/2;
+			S32 middleWindowHeight = windowHeight/2;
+			S32 aimSize=8 * aim_target_size_factor;
+			S32 leftcornerX = middleWindowWidth - aimSize/2;
+			S32 rightcornerX =  middleWindowWidth + aimSize/2;
+			S32 leftcornerY = middleWindowHeight + aimSize/2;
+			S32 rightcornerY =  middleWindowHeight - aimSize/2;
+			
+			gl_line_2d(leftcornerX,leftcornerY,rightcornerX,leftcornerY,targetColor);
+			gl_line_2d(rightcornerX,leftcornerY,rightcornerX ,rightcornerY,targetColor);	
+			gl_line_2d(rightcornerX ,rightcornerY,leftcornerX ,rightcornerY,targetColor);	
+			gl_line_2d(leftcornerX ,rightcornerY,leftcornerX ,leftcornerY,targetColor);	
+			gl_line_2d(middleWindowWidth,leftcornerY,middleWindowWidth,rightcornerY,targetColor);
+			gl_line_2d(leftcornerX,middleWindowHeight,rightcornerX,middleWindowHeight,targetColor);
+		} else {
+			mCrosshairp->draw(
 			(windowWidth - mCrosshairp->getWidth() ) / 2,
 			(windowHeight - mCrosshairp->getHeight() ) / 2, targetColor);
+		}
+		
+		
+		
 	}
 }

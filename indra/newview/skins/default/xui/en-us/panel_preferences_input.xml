@@ -11,11 +11,14 @@
     <check_box follows="top" height="16" label="Display targeted avatar's name under the crosshair" bottom_delta="-18" name="AlchemyMouselookIFF" control_name="AlchemyMouselookIFF"/>
 	<check_box bottom_delta="-18" follows="top" height="16" initial_value="false" label="Show Avatar in Mouselook" name="first_person_avatar_visible"/>
 	<check_box bottom_delta="-18" follows="top" height="16" control_name="UseRealisticMouselook" label="Use 'realistic' Camera behavior in Mouselook" name="UseRealisticMouselook"/>
+	<check_box bottom_delta="-18" follows="top" height="16" control_name="ShowGenxCrosshairs" label="Use the Genesis crosshair instead of the static image" name="ShowGenxCrosshairs"/>
+	<slider bottom_delta="-18" can_edit_text="false" decimal_digits="0" follows="top" width="256" height="16" increment="1" initial_val="1"  max_val="4" min_val="1" control_name="GenxCrosshairsSize" name="GenxCrosshairsSize" value="1" label="Genesis crosshair factor size"/>
 	<text bottom_delta="-18" follows="top" height="16" name="UI Hidden in mouselook:">UI Hidden in mouselook:</text>
 	<check_box bottom_delta="-18" follows="top" height="16" control_name="LiruMouselookHidesFloaters" name="mouselook_hides_floaters" label="Floaters"/>
 	<check_box left_delta="80" bottom_delta="0" follows="top" height="16" control_name="LiruMouselookHidesNotices" name="mouselook_hides_notices" label="Notices"/>
 	<check_box left="148" bottom_delta="-18" follows="top" height="16" control_name="LiruMouselookHidesMenubar" name="mouselook_hides_menubar" label="Menubar"/>
 	<check_box left_delta="80" bottom_delta="0" follows="top" height="16" control_name="LiruMouselookHidesToolbar" name="mouselook_hides_toolbar" label="Toolbar"/>
+
 	<text bottom_delta="-20" follows="top" height="10" left="10" name=" Movement Options:">Movement Options:</text>
 	<check_box bottom_delta="-6" follows="top" height="16" label="Fly/land on holding up/down" left="148" name="automatic_fly"/>
 	<check_box bottom_delta="-18" follows="top" height="16" label="Allow crouch toggle by holding shift" name="crouch_toggle" control_name="SGShiftCrouchToggle"/>

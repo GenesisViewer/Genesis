@@ -19654,6 +19654,28 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <boolean>0</boolean>
     </map>
+    <key>ShowGenxCrosshairs</key>
+    <map>
+      <key>Comment</key>
+      <string>Use the drawed crosshair made by Genesis instead of the standard image</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <boolean>0</boolean>
+    </map>
+    <key>GenxCrosshairsSize</key>
+    <map>
+      <key>Comment</key>
+      <string>The size of the gens crosshairs</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>S32</string>
+      <key>Value</key>
+      <integer>2</integer>
+    </map>
   </map>
 
 </llsd>

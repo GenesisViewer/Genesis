@@ -278,14 +278,7 @@ void gl_line_2d(S32 x1, S32 y1, S32 x2, S32 y2 )
 
 void gl_line_2d(S32 x1, S32 y1, S32 x2, S32 y2, const LLColor4 &color )
 {
-	// Work around bug in ATI driver: vertical lines are offset by (-1,-1)
-	if( (x1 == x2) && gGLManager.mATIOffsetVerticalLines )
-	{
-		x1++;
-		x2++;
-		y1++;
-		y2++;
-	}
+	
 
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 

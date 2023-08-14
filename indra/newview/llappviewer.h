@@ -92,7 +92,9 @@ public:
     
 	// Thread accessors
 	static LLTextureCache* getTextureCache() { return sTextureCache; }
-	static LLImageDecodeThread* getImageDecodeThread() { return sImageDecodeThread; }
+	static LLImageDecodeThread* getImageDecodeThread() { return sGenxImageDecodeThread[0]; }
+	static LLImageDecodeThread* getGenxImageDecodeThread(int i) { return sGenxImageDecodeThread[i]; }
+	static int countGenxImageDecodeThread() { return sGenxImageDecodeThread.size(); }
 	static LLTextureFetch* getTextureFetch() { return sTextureFetch; }
 
 	static U32 getTextureCacheVersion() ;
@@ -235,7 +237,9 @@ private:
 
 	// Thread objects.
 	static LLTextureCache* sTextureCache; 
-	static LLImageDecodeThread* sImageDecodeThread; 
+	//static LLImageDecodeThread* sImageDecodeThread; 
+	//static LLImageDecodeThread* sGenxImageDecodeThread[];
+	static std::vector<LLImageDecodeThread*> sGenxImageDecodeThread;
 	static LLTextureFetch* sTextureFetch;
 
 	S32 mNumSessions;

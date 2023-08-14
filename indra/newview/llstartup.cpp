@@ -381,7 +381,10 @@ public:
 void update_texture_fetch()
 {
 	LLAppViewer::getTextureCache()->update(1); // unpauses the texture cache thread
-	LLAppViewer::getImageDecodeThread()->update(1); // unpauses the image thread
+	//LLAppViewer::getImageDecodeThread()->update(1); // unpauses the image thread
+	for (int i=0; i < LLAppViewer::countGenxImageDecodeThread(); i++) {
+		LLAppViewer::getGenxImageDecodeThread(i)->update(1);
+	}
 	LLAppViewer::getTextureFetch()->update(1); // unpauses the texture fetch thread
 	gTextureList.updateImages(0.10f);
 }

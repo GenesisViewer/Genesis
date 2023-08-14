@@ -187,7 +187,9 @@ void GenxFloaterAreaSearch::idle(void* user_data)
 	GenxFloaterAreaSearch* floater = findInstance();
 	if(!floater)
 		return;
+
     if (LLFrameTimer::getTotalSeconds()-floater->lastUpdatedTime<3 && !floater->filterEdited) return;  //don't update too much  
+    LL_INFOS() << "In GenxFloaterAreaSearch::idle" << LL_ENDL;
     floater->lastUpdatedTime=LLFrameTimer::getTotalSeconds();
     
     floater->findNewObjects();

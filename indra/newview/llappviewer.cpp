@@ -560,9 +560,10 @@ const std::string LLAppViewer::sGlobalSettingsName = "Global";
 const std::string LLAppViewer::sPerAccountSettingsName = "PerAccount"; 
 
 LLTextureCache* LLAppViewer::sTextureCache = NULL; 
-LLImageDecodeThread* LLAppViewer::sImageDecodeThread = NULL; 
+//LLImageDecodeThread* LLAppViewer::sImageDecodeThread = NULL; 
+//LLImageDecodeThread* LLAppViewer::sGenxImageDecodeThread[image_decoder_threads]; 
 LLTextureFetch* LLAppViewer::sTextureFetch = NULL; 
-
+std::vector<LLImageDecodeThread*> LLAppViewer::sGenxImageDecodeThread={};
 LLAppViewer::LLAppViewer() : 
 	mMarkerFile(),
 	mLogoutMarkerFile(),
@@ -1534,7 +1535,10 @@ bool LLAppViewer::mainLoop()
 						ms_sleep(milliseconds_to_sleep);
 						// also pause worker threads during this wait period
 						LLAppViewer::getTextureCache()->pause();
-						LLAppViewer::getImageDecodeThread()->pause();
+						//LLAppViewer::getImageDecodeThread()->pause();
+						for (int i=0; i < LLAppViewer::countGenxImageDecodeThread(); i++) {
+							LLAppViewer::getGenxImageDecodeThread(i)->pause();
+						}
 					}
 				}
 				
@@ -1562,7 +1566,10 @@ bool LLAppViewer::mainLoop()
 					}
 					{
 						LL_RECORD_BLOCK_TIME(FTM_DECODE);
-						work_pending += LLAppViewer::getImageDecodeThread()->update(1); // unpauses the image thread
+						for (int i=0; i < LLAppViewer::countGenxImageDecodeThread(); i++) {
+							work_pending +=LLAppViewer::getGenxImageDecodeThread(i)->update(1);
+						}
+						//work_pending += LLAppViewer::getImageDecodeThread()->update(1); // unpauses the image thread
 					}
 					{
 						LL_RECORD_BLOCK_TIME(FTM_DECODE);
@@ -1602,6 +1609,9 @@ bool LLAppViewer::mainLoop()
 				{
 					LLAppViewer::getTextureCache()->pause();
 					LLAppViewer::getImageDecodeThread()->pause();
+					for (int i=0; i < LLAppViewer::countGenxImageDecodeThread(); i++) {
+						LLAppViewer::getGenxImageDecodeThread(i)->pause();
+					}
 					// LLAppViewer::getTextureFetch()->pause(); // Don't pause the fetch (IO) thread
 				}
 				//LLVFSThread::sLocal->pause(); // Prevent the VFS thread from running while rendering.
@@ -1938,7 +1948,10 @@ bool LLAppViewer::cleanup()
 	{
 		S32 pending = 0;
 		pending += LLAppViewer::getTextureCache()->update(1); // unpauses the worker thread
-		pending += LLAppViewer::getImageDecodeThread()->update(1); // unpauses the image thread
+		//pending += LLAppViewer::getImageDecodeThread()->update(1); // unpauses the image thread
+		for (int i=0; i < LLAppViewer::countGenxImageDecodeThread(); i++) {
+			pending+=LLAppViewer::getGenxImageDecodeThread(i)->update(1);
+		}
 		pending += LLAppViewer::getTextureFetch()->update(1); // unpauses the texture fetch thread
 		pending += LLVFSThread::updateClass(0);
 		pending += LLLFSThread::updateClass(0);
@@ -1957,7 +1970,12 @@ bool LLAppViewer::cleanup()
 	// shotdown all worker threads before deleting them in case of co-dependencies
 	sTextureFetch->shutdown();
 	sTextureCache->shutdown();
-	sImageDecodeThread->shutdown();
+	//sImageDecodeThread->shutdown();
+
+	for (int i=0;i<sGenxImageDecodeThread.size();i++) {
+		sGenxImageDecodeThread[i]->shutdown();
+		
+	}
 
 	sTextureFetch->shutDownTextureCacheThread();
 	sTextureFetch->shutDownImageDecodeThread();
@@ -1965,10 +1983,14 @@ bool LLAppViewer::cleanup()
     sTextureCache = nullptr;
 	delete sTextureFetch;
     sTextureFetch = nullptr;
-	delete sImageDecodeThread;
-    sImageDecodeThread = nullptr;
-
-
+	// delete sImageDecodeThread;
+    // sImageDecodeThread = nullptr;
+	for (int i=0;i<sGenxImageDecodeThread.size();i++) {
+		
+		delete sGenxImageDecodeThread[i];
+		sGenxImageDecodeThread[i] = nullptr;
+	}
+	sGenxImageDecodeThread.clear();
 
 	LL_INFOS() << "Cleaning up Media and Textures" << LL_ENDL;
 
@@ -2098,10 +2120,14 @@ bool LLAppViewer::initThreads()
 	LLLFSThread::initClass(enable_threads && false);
 
 	// Image decoding
-	LLAppViewer::sImageDecodeThread = new LLImageDecodeThread(enable_threads && true);
+	const S32 image_decoder_threads = llmin(1,llabs(gSavedSettings.getS32("GenxDecodeImageThreads")));
+	for (int i=0; i<image_decoder_threads;i++) {
+		LLAppViewer::sGenxImageDecodeThread.push_back(new LLImageDecodeThread(enable_threads && true));
+	}
+	//LLAppViewer::sImageDecodeThread = LLAppViewer::sGenxImageDecodeThread[0];
 	LLAppViewer::sTextureCache = new LLTextureCache(enable_threads && true);
 	LLAppViewer::sTextureFetch = new LLTextureFetch(LLAppViewer::getTextureCache(),
-													sImageDecodeThread,
+													sGenxImageDecodeThread,
 													enable_threads && true,
 													app_metrics_qa_mode);	
 

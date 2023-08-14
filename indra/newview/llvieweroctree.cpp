@@ -1112,7 +1112,10 @@ void LLOcclusionCullingGroup::checkOcclusion()
 						F32 max_time = llmin(gFrameIntervalSeconds.value()*10.f, 1.f);
 						//do some usefu work while we wait
 						LLAppViewer::getTextureCache()->update(max_time); // unpauses the texture cache thread
-						LLAppViewer::getImageDecodeThread()->update(max_time); // unpauses the image thread
+						//LLAppViewer::getImageDecodeThread()->update(max_time); // unpauses the image thread
+						for (int i=0; i < LLAppViewer::countGenxImageDecodeThread(); i++) {
+							LLAppViewer::getGenxImageDecodeThread(i)->update(max_time);
+						}
 						LLAppViewer::getTextureFetch()->update(max_time); // unpauses the texture fetch thread
 						
 						glGetQueryObjectuivARB(mOcclusionQuery[LLViewerCamera::sCurCameraID], GL_QUERY_RESULT_AVAILABLE_ARB, &available);

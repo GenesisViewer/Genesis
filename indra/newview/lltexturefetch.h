@@ -60,7 +60,7 @@ class LLTextureFetch : public LLWorkerThread
 	friend class HTTPGetResponder;
 	
 public:
-	LLTextureFetch(LLTextureCache* cache, LLImageDecodeThread* imagedecodethread, bool threaded, bool qa_mode = false);
+	LLTextureFetch(LLTextureCache* cache, std::vector<LLImageDecodeThread*> imagedecodethread, bool threaded, bool qa_mode = false);
 	~LLTextureFetch();
 
 	class TFRequest;
@@ -156,8 +156,9 @@ public:
 private:
 
 	LLTextureCache* mTextureCache;
-	LLImageDecodeThread* mImageDecodeThread;
 	
+	std::vector<LLImageDecodeThread*> mImageDecodeThread;
+	int actual_thread;
 	// Map of all requests by UUID
 	typedef std::map<LLUUID,LLTextureFetchWorker*> map_t;
 	map_t mRequestMap;

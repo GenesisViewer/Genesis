@@ -1214,7 +1214,10 @@ void LLViewerTextureList::decodeAllImages(F32 max_time)
 	while (1)
 	{
 		LLAppViewer::instance()->getTextureCache()->update(1); // unpauses the texture cache thread
-		LLAppViewer::instance()->getImageDecodeThread()->update(1); // unpauses the image thread
+		//LLAppViewer::instance()->getImageDecodeThread()->update(1); // unpauses the image thread
+		for (int i=0; i < LLAppViewer::countGenxImageDecodeThread(); i++) {
+			LLAppViewer::getGenxImageDecodeThread(i)->update(1);
+		}
 		fetch_pending = LLAppViewer::instance()->getTextureFetch()->update(1); // unpauses the texture fetch thread
 		if (fetch_pending == 0 || timer.getElapsedTimeF32() > max_time)
 		{

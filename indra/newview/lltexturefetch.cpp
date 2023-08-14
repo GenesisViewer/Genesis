@@ -1857,7 +1857,10 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		setState(DECODE_IMAGE_UPDATE);
 		LL_DEBUGS(LOG_TXT) << mID << ": Decoding. Bytes: " << mFormattedImage->getDataSize() << " Discard: " << discard
 				<< " All Data: " << mHaveAllData << LL_ENDL;
-		mDecodeHandle = mFetcher->mImageDecodeThread->decodeImage(mFormattedImage, image_priority, discard, mNeedsAux,
+		mFetcher->actual_thread++;
+		if (mFetcher->actual_thread>=mFetcher->mImageDecodeThread.size()) mFetcher->actual_thread=0;
+		
+		mDecodeHandle = mFetcher->mImageDecodeThread.at(mFetcher->actual_thread)->decodeImage(mFormattedImage, image_priority, discard, mNeedsAux,
 																  new DecodeResponder(mFetcher, mID, this));
 		// fall though
 	}
@@ -2001,7 +2004,11 @@ void LLTextureFetchWorker::endWork(S32 param, bool aborted)
 {
 	if (mDecodeHandle != 0)
 	{
-		mFetcher->mImageDecodeThread->abortRequest(mDecodeHandle, false);
+		for (int i=0; i < mFetcher->mImageDecodeThread.size(); i++) {
+			LLImageDecodeThread* thread = mFetcher->mImageDecodeThread.at(i);
+			thread->abortRequest(mDecodeHandle, false);
+		}
+		//mFetcher->mImageDecodeThread->abortRequest(mDecodeHandle, false);
 		mDecodeHandle = 0;
 	}
 	mFormattedImage = NULL;
@@ -2376,7 +2383,7 @@ void LLTextureFetchWorker::recordTextureDone(bool is_http)
 //////////////////////////////////////////////////////////////////////////////
 // public
 
-LLTextureFetch::LLTextureFetch(LLTextureCache* cache, LLImageDecodeThread* imagedecodethread, bool threaded, bool qa_mode)
+LLTextureFetch::LLTextureFetch(LLTextureCache* cache, std::vector<LLImageDecodeThread*> imagedecodethread, bool threaded, bool qa_mode)
 	: LLWorkerThread("TextureFetch", threaded, true),
 	  mDebugCount(0),
 	  mDebugPause(FALSE),
@@ -2389,6 +2396,8 @@ LLTextureFetch::LLTextureFetch(LLTextureCache* cache, LLImageDecodeThread* image
 	  mTotalCacheReadCount(0U),
 	  mTotalCacheWriteCount(0U)
 {
+	
+
 	mTextureInfo.setUpLogging(gSavedSettings.getBOOL("LogTextureDownloadsToViewerLog"), gSavedSettings.getBOOL("LogTextureDownloadsToSimulator"), U32Bytes(gSavedSettings.getU32("TextureLoggingThreshold")));
 }
 
@@ -2433,47 +2442,50 @@ bool LLTextureFetch::createRequest(FTType f_type, const std::string& url, const 
 	S32 desired_size;
 	std::string exten = gDirUtilp->getExtension(url);
 	//if (f_type == FTT_SERVER_BAKE)
-    if ((f_type == FTT_SERVER_BAKE) && !url.empty() && !exten.empty() && (LLImageBase::getCodecFromExtension(exten) != IMG_CODEC_J2C))
-	{
-		// SH-4030: This case should be redundant with the following one, just
-		// breaking it out here to clarify that it's intended behavior.
-		llassert(!url.empty() && (!exten.empty() && LLImageBase::getCodecFromExtension(exten) != IMG_CODEC_J2C));
+	if (gSavedSettings.getBOOL("GenxDecodePartialImage")) {
+		if ((f_type == FTT_SERVER_BAKE) && !url.empty() && !exten.empty() && (LLImageBase::getCodecFromExtension(exten) != IMG_CODEC_J2C))
+		{
+			// SH-4030: This case should be redundant with the following one, just
+			// breaking it out here to clarify that it's intended behavior.
+			llassert(!url.empty() && (!exten.empty() && LLImageBase::getCodecFromExtension(exten) != IMG_CODEC_J2C));
 
-		// Do full requests for baked textures to reduce interim blurring.
-		LL_DEBUGS(LOG_TXT) << "full request for " << id << " texture is FTT_SERVER_BAKE" << LL_ENDL;
+			// Do full requests for baked textures to reduce interim blurring.
+			LL_DEBUGS(LOG_TXT) << "full request for " << id << " texture is FTT_SERVER_BAKE" << LL_ENDL;
+			desired_size = MAX_IMAGE_DATA_SIZE;
+			desired_discard = 0;
+		}
+		else if (!url.empty() && (!exten.empty() && LLImageBase::getCodecFromExtension(exten) != IMG_CODEC_J2C))
+		{
+			LL_DEBUGS(LOG_TXT) << "full request for " << id << " exten is not J2C: " << exten << LL_ENDL;
+			// Only do partial requests for J2C at the moment
+			//LL_INFOS() << "Merov : LLTextureFetch::createRequest(), blocking fetch on " << url << LL_ENDL; 
+			desired_size = MAX_IMAGE_DATA_SIZE;
+			desired_discard = 0;
+		}
+		else if (desired_discard == 0)
+		{
+			// if we want the entire image, and we know its size, then get it all
+			// (calcDataSizeJ2C() below makes assumptions about how the image
+			// was compressed - this code ensures that when we request the entire image,
+			// we really do get it.)
+			desired_size = MAX_IMAGE_DATA_SIZE;
+		}
+		else if (w*h*c > 0)
+		{
+			// If the requester knows the dimensions of the image,
+			// this will calculate how much data we need without having to parse the header
+
+			desired_size = LLImageJ2C::calcDataSizeJ2C(w, h, c, desired_discard);
+		}
+		else
+		{
+			desired_size = TEXTURE_CACHE_ENTRY_SIZE;
+			desired_discard = MAX_DISCARD_LEVEL;
+		}
+	} else {
 		desired_size = MAX_IMAGE_DATA_SIZE;
 		desired_discard = 0;
 	}
-	else if (!url.empty() && (!exten.empty() && LLImageBase::getCodecFromExtension(exten) != IMG_CODEC_J2C))
-	{
-		LL_DEBUGS(LOG_TXT) << "full request for " << id << " exten is not J2C: " << exten << LL_ENDL;
-		// Only do partial requests for J2C at the moment
-		//LL_INFOS() << "Merov : LLTextureFetch::createRequest(), blocking fetch on " << url << LL_ENDL; 
-		desired_size = MAX_IMAGE_DATA_SIZE;
-		desired_discard = 0;
-	}
-	else if (desired_discard == 0)
-	{
-		// if we want the entire image, and we know its size, then get it all
-		// (calcDataSizeJ2C() below makes assumptions about how the image
-		// was compressed - this code ensures that when we request the entire image,
-		// we really do get it.)
-		desired_size = MAX_IMAGE_DATA_SIZE;
-	}
-	else if (w*h*c > 0)
-	{
-		// If the requester knows the dimensions of the image,
-		// this will calculate how much data we need without having to parse the header
-
-		desired_size = LLImageJ2C::calcDataSizeJ2C(w, h, c, desired_discard);
-	}
-	else
-	{
-		desired_size = TEXTURE_CACHE_ENTRY_SIZE;
-		desired_discard = MAX_DISCARD_LEVEL;
-	}
-
-	
 	if (worker)
 	{
 		if (worker->wasAborted())
@@ -2816,11 +2828,15 @@ void LLTextureFetch::shutDownTextureCacheThread()
 //called in the MAIN thread after the ImageDecodeThread shuts down.
 void LLTextureFetch::shutDownImageDecodeThread() 
 {
-	if(mImageDecodeThread)
-	{
-		llassert_always(mImageDecodeThread->isQuitting() || mImageDecodeThread->isStopped()) ;
-		mImageDecodeThread = NULL ;
+	for (int i=0;i<mImageDecodeThread.size();i++) {
+		LLImageDecodeThread* thread = mImageDecodeThread.at(i);
+		if(thread)
+		{
+			llassert_always(thread->isQuitting() || thread->isStopped()) ;
+			thread = NULL ;
+		}
 	}
+	
 }
 
 // Threads:  Ttf

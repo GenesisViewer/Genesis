@@ -115,8 +115,19 @@
 		 <check_box bottom_delta="-20" control_name="GenxRenderHitBoxes" follows="top" height="16" initial_value="true" label="Render avatar Hit-Boxes" left="150" name="Genx_Render_Hit_Boxes" tool_tip="Shortcut: Alt+Shift+B. Hit boxes are generally used for combat or moderation. They draw a wire frame around other avatar's true positions, which can otherwise be spoofed by animations."/>
     </panel>
     <panel border="true" left="1" bottom="-190" height="180" width="600" label="Texture Management" name="TextureManagement">
-      <text bottom_delta="-25" follows="top" height="16" left="5" name="TextureManagementNotes">All these settings are actually very experimental</text>
-      <slider bottom_delta="-25" follows="top" decimal_digits="0" height="16" increment="1" initial_val="1" label="Number of threads to decode textures" width="320" label_width="220" left="5" min_val="1" max_val="16" control_name="GenxDecodeImageThreads" name="GenxDecodeImageThreads" tool_tip="Set the number of threads used to decode textures : Requires a Restart to take effect"/>
+      
+      <text_editor enabled="false"  width="580" name="TextureManagementNotes" height="250" bottom_delta="-20" left="5" word_wrap="true" max_length="1000">
+        PLEASE NOTE THIS IS AN EXPERIMENTAL SETTING
+
+Genesis defaults to 1 thread and Partial texture rendering enabled.
+
+Your PC can run at least 1 thread per core but beyond that, you will need to find the best setting for your particular computer.
+
+You will likely see a performance gain by unchecking 'partial texture rendering'.
+
+To find your starting point, in Windows: Press Ctrl + Shift + Esc to open Task Manager. Select the Performance tab to see how many cores and logical processors your PC has.  You should set your threads to either the amount of cores you have or logical processors, whichever is the higher value.
+      </text_editor>
+      <slider bottom_delta="-300" follows="top" decimal_digits="0" height="16" increment="1" initial_val="1" label="Number of threads to decode textures" width="320" label_width="220" left="5" min_val="1" max_val="16" control_name="GenxDecodeImageThreads" name="GenxDecodeImageThreads" tool_tip="Set the number of threads used to decode textures : Requires a Restart to take effect"/>
       <check_box bottom_delta="-25" left="5" follows="top" height="16" label="Use partial textures rendering" name="GenxDecodePartialImage"
          tool_tip="If enabled, the viewer will render partial textures as soon as it has enough datas. If not enabled, the viewer will ask all the texture datas before rendering. "
          width="270" control_name="GenxDecodePartialImage"/>

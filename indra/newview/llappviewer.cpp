@@ -2120,7 +2120,7 @@ bool LLAppViewer::initThreads()
 	LLLFSThread::initClass(enable_threads && false);
 
 	// Image decoding
-	const S32 image_decoder_threads = llmin(1,llabs(gSavedSettings.getS32("GenxDecodeImageThreads")));
+	const S32 image_decoder_threads = llmax(1,llabs(gSavedSettings.getS32("GenxDecodeImageThreads")));
 	for (int i=0; i<image_decoder_threads;i++) {
 		LLAppViewer::sGenxImageDecodeThread.push_back(new LLImageDecodeThread(enable_threads && true));
 	}

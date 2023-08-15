@@ -71,6 +71,8 @@
 #include "llprogressview.h"
 #include "llflexibleobject.h"
 
+#include "genxtexturecachethread.h"
+
 ////////////////////////////////////////////////////////////////////////////
 
 void (*LLViewerTextureList::sUUIDCallback)(void **, const LLUUID&) = NULL;
@@ -1214,6 +1216,7 @@ void LLViewerTextureList::decodeAllImages(F32 max_time)
 	while (1)
 	{
 		LLAppViewer::instance()->getTextureCache()->update(1); // unpauses the texture cache thread
+		LLAppViewer::getGenxTextureCacheThread()->update(1);
 		//LLAppViewer::instance()->getImageDecodeThread()->update(1); // unpauses the image thread
 		for (int i=0; i < LLAppViewer::countGenxImageDecodeThread(); i++) {
 			LLAppViewer::getGenxImageDecodeThread(i)->update(1);

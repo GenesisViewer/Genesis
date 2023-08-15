@@ -39,6 +39,7 @@
 
 class LLCommandLineParser;
 class LLTextureCache;
+class GenxTextureCacheThread;
 class LLImageDecodeThread;
 class LLTextureFetch;
 class LLWatchdogTimeout;
@@ -92,6 +93,7 @@ public:
     
 	// Thread accessors
 	static LLTextureCache* getTextureCache() { return sTextureCache; }
+	static GenxTextureCacheThread* getGenxTextureCacheThread() { return sGenxTextureCache; }
 	static LLImageDecodeThread* getImageDecodeThread() { return sGenxImageDecodeThread[0]; }
 	static LLImageDecodeThread* getGenxImageDecodeThread(int i) { return sGenxImageDecodeThread[i]; }
 	static int countGenxImageDecodeThread() { return sGenxImageDecodeThread.size(); }
@@ -237,6 +239,7 @@ private:
 
 	// Thread objects.
 	static LLTextureCache* sTextureCache; 
+	static GenxTextureCacheThread* sGenxTextureCache;
 	//static LLImageDecodeThread* sImageDecodeThread; 
 	//static LLImageDecodeThread* sGenxImageDecodeThread[];
 	static std::vector<LLImageDecodeThread*> sGenxImageDecodeThread;

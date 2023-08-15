@@ -340,7 +340,7 @@ public:
 	// setLastError needs to be deferred for J2C images since it may be called from a DLL
 	virtual void resetLastError();
 	virtual void setLastError(const std::string& message, const std::string& filename = std::string());
-	
+	BOOL isInGenxCache;
 protected:
 	BOOL copyData(U8 *data, S32 size);
 	

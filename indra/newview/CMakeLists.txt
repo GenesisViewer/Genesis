@@ -114,6 +114,7 @@ set(viewer_SOURCE_FILES
     genxprofilefloater.cpp
     genxreplacelinksfloater.cpp
     genxtexturecache.cpp
+    genxtexturecachethread.cpp
     groupchatlistener.cpp
     hbfloatergrouptitles.cpp
     hippofloaterxml.cpp
@@ -680,6 +681,7 @@ set(viewer_HEADER_FILES
     genxprofilefloater.h
     genxreplacelinksfloater.h
     genxtexturecache.h
+    genxtexturecachethread.h
     groupchatlistener.h
     hbfloatergrouptitles.h
     hippofloaterxml.h

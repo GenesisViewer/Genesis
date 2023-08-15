@@ -67,6 +67,7 @@
 #include <boost/algorithm/string/classification.hpp>
 
 #include "genxtexturecache.h"
+#include "genxtexturecachethread.h"
 class AIHTTPTimeoutPolicy;
 extern AIHTTPTimeoutPolicy HTTPGetResponder_timeout;
 extern AIHTTPTimeoutPolicy lcl_responder_timeout;
@@ -105,7 +106,27 @@ private:
 		LLTextureFetch* mFetcher;
 		LLUUID mID;
 	};
-
+	class GenxCacheReadResponder : public LLResponder
+	{
+	public:
+		GenxCacheReadResponder(LLTextureFetch* fetcher, const LLUUID& id)
+			: mFetcher(fetcher), mID(id)
+		{
+			
+		}
+		virtual void completed(bool success)
+		{
+			LLTextureFetchWorker* worker = mFetcher->getWorker(mID);
+			if (worker)
+			{
+				worker->genxCallbackCacheRead();
+			}
+		}
+	private:
+		LLTextureFetch* mFetcher;
+		LLUUID mID;
+		
+	};
 	class CacheWriteResponder : public LLTextureCache::WriteResponder
 	{
 	public:
@@ -178,6 +199,7 @@ public:
 						 bool partial, bool success);
 	void callbackCacheRead(bool success, LLImageFormatted* image,
 						   S32 imagesize, BOOL islocal);
+	void genxCallbackCacheRead();						   
 	void callbackCacheWrite(bool success);
 	void callbackDecoded(bool success, LLImageRaw* raw, LLImageRaw* aux);
 	
@@ -1114,10 +1136,29 @@ bool LLTextureFetchWorker::doWork(S32 param)
 							 << " Desired Discard: " << mDesiredDiscard << " Desired Size: " << mDesiredSize << LL_ENDL;
 		// fall through
 	}
-
+	if (mState == LOAD_FROM_TEXTURE_CACHE && gSavedSettings.getBOOL("GenxTextureCache"))
+	{
+		if (mCacheReadHandle == LLTextureCache::nullHandle() )
+		{
+			
+			std::string extension = gDirUtilp->getExtension(mUrl);
+			mFormattedImage = LLImageFormatted::createFromType(LLImageBase::getCodecFromExtension(extension));
+			if (mFormattedImage.isNull())
+			{
+				mFormattedImage = new LLImageJ2C; // default
+			}
+			if (mFormattedImage.notNull()) {
+				GenxCacheReadResponder* responder = new GenxCacheReadResponder(mFetcher, mID);
+				
+				mCacheReadHandle = mFetcher->mGenxTextureCache->readFromCache(mUrl,mID,mFormattedImage,responder);
+			}
+		}
+		return false;
+	}
 	if (mState == LOAD_FROM_TEXTURE_CACHE && !gSavedSettings.getBOOL("GenxTextureCache"))
 	{
-		if (mCacheReadHandle == LLTextureCache::nullHandle())
+
+		if (mCacheReadHandle == LLTextureCache::nullHandle() )
 		{
 			U32 cache_priority = mWorkPriority;
 			S32 offset = mFormattedImage.notNull() ? mFormattedImage->getDataSize() : 0;
@@ -1147,9 +1188,13 @@ bool LLTextureFetchWorker::doWork(S32 param)
 				setPriority(LLWorkerThread::PRIORITY_LOW | mWorkPriority); // Set priority first since Responder may change it
 
 				++mCacheReadCount;
+				
+				
 				CacheReadResponder* responder = new CacheReadResponder(mFetcher, mID, mFormattedImage);
 				mCacheReadHandle = mFetcher->mTextureCache->readFromCache(mID, cache_priority,
 																		  offset, size, responder);
+				
+					
 				mCacheReadTimer.reset();
 			}
 			else if(!mUrl.empty() && mCanUseHTTP)
@@ -1192,29 +1237,29 @@ bool LLTextureFetchWorker::doWork(S32 param)
 			return false;
 		}
 	}
-	if (mState == LOAD_FROM_TEXTURE_CACHE && gSavedSettings.getBOOL("GenxTextureCache"))
-	{
-		mCacheReadTimer.reset();
-		// For now, create formatted image based on extension
-		std::string extension = gDirUtilp->getExtension(mUrl);
-		mFormattedImage = LLImageFormatted::createFromType(LLImageBase::getCodecFromExtension(extension));
-		if (mFormattedImage.isNull())
-		{
-			mFormattedImage = new LLImageJ2C; // default
-		}
-		if (mFormattedImage.notNull()) {
+	// if (mState == LOAD_FROM_TEXTURE_CACHE && gSavedSettings.getBOOL("GenxTextureCache"))
+	// {
+	// 	mCacheReadTimer.reset();
+	// 	// For now, create formatted image based on extension
+	// 	std::string extension = gDirUtilp->getExtension(mUrl);
+	// 	mFormattedImage = LLImageFormatted::createFromType(LLImageBase::getCodecFromExtension(extension));
+	// 	if (mFormattedImage.isNull())
+	// 	{
+	// 		mFormattedImage = new LLImageJ2C; // default
+	// 	}
+	// 	if (mFormattedImage.notNull()) {
 			
-			GenxTextureCache::instance().readTextureCache(mID,mFormattedImage,mUrl);
-		}
-		if (mFormattedImage->getDataSize() > 0) {
-			mFileSize = mFormattedImage->getDataSize();
-			mImageCodec = mFormattedImage->getCodec();
-			mInLocalCache = TRUE;
+	// 		GenxTextureCache::instance().readTextureCache(mID,mFormattedImage,mUrl);
+	// 	}
+	// 	if (mFormattedImage->getDataSize() > 0) {
+	// 		mFileSize = mFormattedImage->getDataSize();
+	// 		mImageCodec = mFormattedImage->getCodec();
+	// 		mInLocalCache = TRUE;
 			
-			mHaveAllData = TRUE;
-		}
-		setState(CACHE_POST);
-	}
+	// 		mHaveAllData = TRUE;
+	// 	}
+	// 	setState(CACHE_POST);
+	// }
 	if (mState == CACHE_POST)
 	{
 		mCachedSize = mFormattedImage.notNull() ? mFormattedImage->getDataSize() : 0;
@@ -1222,7 +1267,6 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		if ((mCachedSize >= mDesiredSize) || mHaveAllData)
 		{
 			// we have enough data, decode it
-			LL_DEBUGS() << "we have enough data, decode it " << mID << LL_ENDL;
 			llassert_always(mFormattedImage->getDataSize() > 0);
 			mLoadedDiscard = mDesiredDiscard;
 			if (mLoadedDiscard < 0)
@@ -1941,7 +1985,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 	}
 	if (mState == WRITE_TO_CACHE && gSavedSettings.getBOOL("GenxTextureCache")) 
 	{
-		if (mWriteToCacheState != SHOULD_WRITE || mFormattedImage.isNull())
+		if (mWriteToCacheState != SHOULD_WRITE || mFormattedImage.isNull() || mFormattedImage.get()->isInGenxCache)
 		{
 			// If we're in a local cache or we didn't actually receive any new data,
 			// or we failed to load anything, skip
@@ -2267,7 +2311,21 @@ void LLTextureFetchWorker::callbackCacheRead(bool success, LLImageFormatted* ima
 	mLoaded = TRUE;
 	setPriority(LLWorkerThread::PRIORITY_HIGH | mWorkPriority);
 }
-
+void LLTextureFetchWorker::genxCallbackCacheRead() {
+	if (!mFormattedImage.isNull() && mFormattedImage->getDataSize() > 0) {
+		mFileSize = mFormattedImage->getDataSize();
+		mImageCodec = mFormattedImage->getCodec();
+		mInLocalCache = TRUE;
+		
+		mHaveAllData = TRUE;
+		//mWriteToCacheState = NOT_WRITE;
+		
+		setState(CACHE_POST);
+	} else {
+		setState(LOAD_FROM_NETWORK);
+	}
+	
+}
 void LLTextureFetchWorker::callbackCacheWrite(bool success)
 {
 	LLMutexLock lock(&mWorkMutex);
@@ -2383,13 +2441,14 @@ void LLTextureFetchWorker::recordTextureDone(bool is_http)
 //////////////////////////////////////////////////////////////////////////////
 // public
 
-LLTextureFetch::LLTextureFetch(LLTextureCache* cache, std::vector<LLImageDecodeThread*> imagedecodethread, bool threaded, bool qa_mode)
+LLTextureFetch::LLTextureFetch(LLTextureCache* cache, GenxTextureCacheThread* genxCache, std::vector<LLImageDecodeThread*> imagedecodethread, bool threaded, bool qa_mode)
 	: LLWorkerThread("TextureFetch", threaded, true),
 	  mDebugCount(0),
 	  mDebugPause(FALSE),
 	  mPacketCount(0),
 	  mBadPacketCount(0),
 	  mTextureCache(cache),
+	  mGenxTextureCache(genxCache),
 	  mImageDecodeThread(imagedecodethread),
 	  mTotalHTTPRequests(0),
 	  mQAMode(qa_mode),

@@ -45,6 +45,7 @@
 #include "llstat.h"
 #include "llviewertexture.h"
 
+
 class LLViewerTexture;
 class LLTextureFetchWorker;
 class HTTPGetResponder;
@@ -52,7 +53,7 @@ class LLImageDecodeThread;
 class LLHost;
 class LLViewerAssetStats;
 class LLTextureCache;
-
+class GenxTextureCacheThread;
 // Interface class
 class LLTextureFetch : public LLWorkerThread
 {
@@ -60,7 +61,7 @@ class LLTextureFetch : public LLWorkerThread
 	friend class HTTPGetResponder;
 	
 public:
-	LLTextureFetch(LLTextureCache* cache, std::vector<LLImageDecodeThread*> imagedecodethread, bool threaded, bool qa_mode = false);
+	LLTextureFetch(LLTextureCache* cache,GenxTextureCacheThread* genxCache, std::vector<LLImageDecodeThread*> imagedecodethread, bool threaded, bool qa_mode = false);
 	~LLTextureFetch();
 
 	class TFRequest;
@@ -156,6 +157,7 @@ public:
 private:
 
 	LLTextureCache* mTextureCache;
+	GenxTextureCacheThread* mGenxTextureCache;
 	
 	std::vector<LLImageDecodeThread*> mImageDecodeThread;
 	int actual_thread;

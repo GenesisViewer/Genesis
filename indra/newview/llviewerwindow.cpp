@@ -203,7 +203,7 @@
 //Genesis
 #include "llsqlmgr.h"
 #include "llversioninfo.h"
-
+#include "genxtexturecachethread.h"
 //
 // Globals
 //
@@ -5430,6 +5430,7 @@ void LLViewerWindow::stopGL(BOOL save_state)
 
 		// Pause texture decode threads (will get unpaused during main loop)
 		LLAppViewer::getTextureCache()->pause();
+		LLAppViewer::getGenxTextureCacheThread()->pause();
 		//LLAppViewer::getImageDecodeThread()->pause();
 		for (int i=0; i < LLAppViewer::countGenxImageDecodeThread(); i++) {
 			LLAppViewer::getGenxImageDecodeThread(i)->pause();

@@ -32,8 +32,8 @@
 //----------------------------------------------------------------------------
 
 // MAIN THREAD
-LLImageDecodeThread::LLImageDecodeThread(bool threaded)
-	: LLQueuedThread("imagedecode", threaded)
+LLImageDecodeThread::LLImageDecodeThread(bool threaded, int instance)
+	: LLQueuedThread("imagedecode_" + std::to_string(instance), threaded)
 {
 	mCreationMutex = new LLMutex();
 }
@@ -118,6 +118,7 @@ LLImageDecodeThread::ImageRequest::~ImageRequest()
 // Returns true when done, whether or not decode was successful.
 bool LLImageDecodeThread::ImageRequest::processRequest()
 {
+	
 	const F32 decode_time_slice = .1f;
 	bool done = true;
 	if (!mDecodedRaw && mFormattedImage.notNull())

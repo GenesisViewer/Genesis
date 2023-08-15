@@ -72,7 +72,7 @@ public:
 	};
 	
 public:
-	LLImageDecodeThread(bool threaded = true);
+	LLImageDecodeThread(bool threaded, int instance);
 	virtual ~LLImageDecodeThread();
 
 	handle_t decodeImage(LLImageFormatted* image,

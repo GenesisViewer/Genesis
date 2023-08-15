@@ -78,7 +78,7 @@ void GenxTextureCache::readTextureCache(LLUUID textureId, LLPointer<LLImageForma
         sqlite3_bind_text(stmt, 1,  textureId.asString().c_str(), strlen(textureId.asString().c_str()), SQLITE_STATIC);
         if ( sqlite3_step(stmt) == SQLITE_ROW) {
             size = sqlite3_column_int(stmt, 0);
-
+            formattedImage.get()->isInGenxCache=true;
         }
         sqlite3_finalize(stmt);
         if (size >0) {

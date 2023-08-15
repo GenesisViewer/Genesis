@@ -251,6 +251,7 @@
 #include "NACLantispam.h"    // for NaCl Antispam Registry
 
 #include "genxmotd.h"
+#include "genxtexturecachethread.h"
 class LLEnvironment;
 
 //
@@ -381,6 +382,7 @@ public:
 void update_texture_fetch()
 {
 	LLAppViewer::getTextureCache()->update(1); // unpauses the texture cache thread
+	LLAppViewer::getGenxTextureCacheThread()->update(1);
 	//LLAppViewer::getImageDecodeThread()->update(1); // unpauses the image thread
 	for (int i=0; i < LLAppViewer::countGenxImageDecodeThread(); i++) {
 		LLAppViewer::getGenxImageDecodeThread(i)->update(1);

@@ -16,6 +16,7 @@ GenxMembers::GenxMembers()
 	members.push_back("76234dcc-07f0-472a-bf46-230df2037997"); //DeadlyBellaDonna Resident
 	members.push_back("86d8bab7-b82e-4c34-b991-ea19f67c8226"); //Roni Nightingale
 	members.push_back("3ac2cf73-eefa-4102-8016-7676a9a0081e"); //candicek15 Resident
+	members.push_back("dc5f4e67-9c08-49a9-977e-4de91a4fed74"); //meka Gearbox
 	
 	
 	

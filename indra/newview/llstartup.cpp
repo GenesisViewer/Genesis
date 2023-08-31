@@ -1854,12 +1854,15 @@ bool idle_startup()
 
 		LLStartUp::initNameCache();
 		LLLogChat::initializeIDMap(); // Name cache loaded, create a happy mappy
+		LL_INFOS() << "name cache initialized" << LL_ENDL;
 		display_startup();
 
 		// update the voice settings *after* gCacheName initialization
 		// so that we can construct voice UI that relies on the name cache
+		LL_INFOS() << "Voice client settings update" << LL_ENDL;
 		LLVoiceClient::getInstance()->updateSettings();
 		display_startup();
+		LL_INFOS() << "Voice client settings update done" << LL_ENDL;
 
 		// *Note: this is where gWorldMap used to be initialized.
 
@@ -1888,7 +1891,7 @@ bool idle_startup()
 
 		// Sets up the parameters for the first simulator
 
-		LL_DEBUGS("AppInit") << "Initializing camera..." << LL_ENDL;
+		LL_INFOS("AppInit") << "Initializing camera..." << LL_ENDL;
 		gFrameTime    = totalTime();
 		F32 last_time = gFrameTimeSeconds;
 		gFrameTimeSeconds = (S64)(gFrameTime - gStartTime)/SEC_TO_MICROSEC;
@@ -1928,7 +1931,7 @@ bool idle_startup()
 		// Initialize global class data needed for surfaces (i.e. textures)
 		if (!gNoRender)
 		{
-			LL_DEBUGS("AppInit") << "Initializing sky..." << LL_ENDL;
+			LL_INFOS("AppInit") << "Initializing sky..." << LL_ENDL;
 			// Initialize all of the viewer object classes for the first time (doing things like texture fetches.
 			LLGLStateValidator::checkStates();
 			LLGLStateValidator::checkTextureChannels();
@@ -1937,11 +1940,13 @@ bool idle_startup()
 
 			LLGLStateValidator::checkStates();
 			LLGLStateValidator::checkTextureChannels();
+
+			LL_INFOS("AppInit") << "Initializing sky... Done." << LL_ENDL;
 		}
 
 		display_startup();
 
-		LL_DEBUGS("AppInit") << "Decoding images..." << LL_ENDL;
+		LL_INFOS("AppInit") << "Decoding images..." << LL_ENDL;
 		// For all images pre-loaded into viewer cache, decode them.
 		// Need to do this AFTER we init the sky
 		const S32 DECODE_TIME_SEC = 2;
@@ -1952,6 +1957,7 @@ bool idle_startup()
 			display_startup();
 			gTextureList.decodeAllImages(1.f);
 		}
+		LL_INFOS("AppInit") << "Decoding images... Done." << LL_ENDL;
 		LLStartUp::setStartupState( STATE_WORLD_WAIT );
 
 		display_startup();
@@ -1984,7 +1990,7 @@ bool idle_startup()
 
 		timeout.reset();
 		display_startup();
-
+		LL_INFOS("AppInit") << "STATE_SEED_CAP_GRANTED done." << LL_ENDL;
 		return FALSE;
 	}
 
@@ -1993,7 +1999,7 @@ bool idle_startup()
 	//---------------------------------------------------------------------
 	if(STATE_WORLD_WAIT == LLStartUp::getStartupState())
 	{
-		LL_DEBUGS("AppInit") << "Waiting for simulator ack...." << LL_ENDL;
+		LL_INFOS("AppInit") << "Waiting for simulator ack...." << LL_ENDL;
 		set_startup_status(0.59f, LLTrans::getString("LoginWaitingForRegionHandshake"), gAgent.mMOTD);
 		if(gGotUseCircuitCodeAck)
 		{
@@ -2006,6 +2012,7 @@ bool idle_startup()
 		}
 		msg->processAcks();
 		display_startup();
+		LL_INFOS("AppInit") << "STATE_WORLD_WAIT done." << LL_ENDL;
 		return FALSE;
 	}
 
@@ -2015,7 +2022,7 @@ bool idle_startup()
 	if (STATE_AGENT_SEND == LLStartUp::getStartupState())
 	{
 		
-		LL_DEBUGS("AppInit") << "Connecting to region..." << LL_ENDL;
+		LL_INFOS("AppInit") << "Connecting to region..." << LL_ENDL;
 		set_startup_status(0.60f, LLTrans::getString("LoginConnectingToRegion"), gAgent.mMOTD);
 		display_startup();
 		// register with the message system so it knows we're
@@ -2051,6 +2058,7 @@ bool idle_startup()
 
 		timeout.reset();
 		display_startup();
+		LL_INFOS("AppInit") << "STATE_AGENT_SEND done." << LL_ENDL;
 		return FALSE;
 	}
 
@@ -2059,6 +2067,7 @@ bool idle_startup()
 	//---------------------------------------------------------------------
 	if (STATE_AGENT_WAIT == LLStartUp::getStartupState())
 	{
+		LL_INFOS("AppInit") << "STATE_AGENT_WAIT." << LL_ENDL;
 		LLMessageSystem* msg = gMessageSystem;
 		while (msg->checkAllMessages(gFrameCount, gServicePump))
 		{
@@ -2086,6 +2095,7 @@ bool idle_startup()
 			LLStartUp::setStartupState( STATE_INVENTORY_SEND );
 		}
 		display_startup();
+		LL_INFOS("AppInit") << "STATE_AGENT_WAIT Done." << LL_ENDL;
 		return FALSE;
 	}
 

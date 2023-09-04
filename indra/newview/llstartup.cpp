@@ -341,7 +341,35 @@ void simfeature_debug_update(const std::string& val, const std::string& setting)
 	//if (!val.empty()) // Singu Note: Should we only update the setting if not empty?
 	gSavedSettings.setString(setting, val);
 }
+//MelyCosti MFA implementation
+bool handleMFAChallenge(LLSD const & notif, LLSD const & response)
+{
+    bool continue_clicked = response["continue"].asBoolean();
+    std::string token = response["token"].asString();
+    LL_DEBUGS("AppInit") << "PromptMFAToken: response: " << response << " continue_clicked" << continue_clicked << LL_ENDL;
 
+    // strip out whitespace - SL-17034/BUG-231938
+    token = boost::regex_replace(token, boost::regex("\\s"), "");
+
+    if (continue_clicked && !token.empty())
+    {
+        LL_INFOS("AppInit") << "PromptMFAToken: token submitted" << LL_ENDL;
+
+        // // Set the request data to true and retry login.
+		LLUserAuth::getInstance()->setMFAToken(token);
+		LLStartUp::setStartupState( STATE_XMLRPC_LEGACY_LOGIN );
+        // mRequestData["params"]["token"] = token;
+        // reconnect();
+    } else {
+        LL_INFOS("AppInit") << "PromptMFAToken: no token, attemptComplete" << LL_ENDL;
+        LLUserAuth::getInstance()->setMFAToken("");
+    }
+	if (gViewerWindow)
+	{
+		gViewerWindow->setShowProgress(TRUE);
+	}
+    return true;
+}
 //
 // exported functionality
 //
@@ -1330,6 +1358,10 @@ bool idle_startup()
 
 		// TODO if statement here to use web_login_key
 	    // OGPX : which routine would this end up in? the LLSD or XMLRPC, or ....?
+
+		//Mely Costi MFA implementation
+		//loading a previous MFA token and test it to authenticate
+		LLUserAuth::getInstance()->setMFAHashedToken(LLStartUp::loadMFATokenFromDisk());
 		LLUserAuth::getInstance()->authenticate(
 			grid_uri,
 			auth_method,
@@ -1345,7 +1377,7 @@ bool idle_startup()
 			requested_options,
 			hashed_mac_string,
 			LLAppViewer::instance()->getSerialNumber());
-
+		LLUserAuth::getInstance()->setMFAToken(""); // we reset the MFA token
 		gAuthString = hashed_mac_string;
 
 		// reset globals
@@ -1520,10 +1552,28 @@ bool idle_startup()
 						quit = true;
 					}
 				}
+				//MelyCosti MFA implementation
+				if(reason_response == "mfa_challenge")
+				{
+					LL_INFOS("AppInit") << " MFA challenge" << LL_ENDL;
+					LLStartUp::setStartupState( STATE_UPDATE_CHECK );
+					if (gViewerWindow)
+					{
+						gViewerWindow->setShowProgress(FALSE);
+					}
+
+					LLSD args(LLSDMap( "MESSAGE", LLTrans::getString(response["message_id"]) ));
+					LLSD payload;
+					LLNotificationsUtil::add("PromptMFAToken", args, payload,
+						boost::bind(handleMFAChallenge, _1, _2));
+					return false;						
+				}
+
 				if(reason_response == "key")
 				{
 					// Couldn't login because user/password is wrong
 					// Clear the password
+					LLUserAuth::getInstance()->setMFAToken("");
 					password = "";
 				}
 				/*if(reason_response == "update")
@@ -2883,7 +2933,52 @@ std::string LLStartUp::loadPasswordFromDisk()
 
 	return hashed_password;
 }
+// static
+std::string LLStartUp::loadMFATokenFromDisk()
+{
+	// Only load password if we also intend to save it (otherwise the user
+	// wonders what we're doing behind his back).  JC
+	BOOL remember_password = gSavedSettings.getBOOL("RememberPassword");
+	if (!remember_password)
+	{
+		return std::string("");
+	}
 
+	std::string token("");
+
+	
+
+	std::string filepath = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS,
+													   "mfa.dat");
+	LLFILE* fp = LLFile::fopen(filepath, "rb");		/* Flawfinder: ignore */
+	if (!fp)
+	{
+		return token;
+	}
+
+	// UUID is 16 bytes, written into ASCII is 32 characters
+	// without trailing \0
+	const S32 HASHED_LENGTH = 100;
+	U8 buffer[HASHED_LENGTH+1];
+
+	if (1 != fread(buffer, HASHED_LENGTH, 1, fp))
+	{
+		return token;
+	}
+
+	fclose(fp);
+
+	// Decipher with MAC address
+	LLXORCipher cipher(gMACAddress, 6);
+	cipher.decrypt(buffer, HASHED_LENGTH);
+
+	buffer[HASHED_LENGTH] = '\0';
+
+	token.assign((char*)buffer);
+	
+
+	return token;
+}
 
 // static
 void LLStartUp::savePasswordToDisk(const std::string& hashed_password)
@@ -2912,7 +3007,33 @@ void LLStartUp::savePasswordToDisk(const std::string& hashed_password)
 
 	fclose(fp);
 }
+// static
+void LLStartUp::saveMFATokenToDisk(const std::string& token)
+{
+	std::string filepath = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS,
+													   "mfa.dat");
+	LLFILE* fp = LLFile::fopen(filepath, "wb");		/* Flawfinder: ignore */
+	if (!fp)
+	{
+		return;
+	}
 
+	// Encipher with MAC address
+	const S32 HASHED_LENGTH = 100;
+	U8 buffer[HASHED_LENGTH+1];
+
+	LLStringUtil::copy((char*)buffer, token.c_str(), HASHED_LENGTH+1);
+
+	LLXORCipher cipher(gMACAddress, 6);
+	cipher.encrypt(buffer, HASHED_LENGTH);
+
+	if (fwrite(buffer, HASHED_LENGTH, 1, fp) != 1)
+	{
+		LL_WARNS("AppInit") << "Short write" << LL_ENDL;
+	}
+
+	fclose(fp);
+}
 
 // static
 void LLStartUp::deletePasswordFromDisk()
@@ -4045,6 +4166,9 @@ bool process_login_success_response(std::string& password, U32& first_sim_size_x
 	{
 		// Successful login means the password is valid, so save it.
 		LLStartUp::savePasswordToDisk(password);
+		if(response.has("mfa_hash")) {
+			LLStartUp::saveMFATokenToDisk(response["mfa_hash"]);
+		}
 	}
 	else
 	{

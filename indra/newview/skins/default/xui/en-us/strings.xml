@@ -76,6 +76,8 @@ Make sure you entered the correct Login URI. An example of a Login URI is: \"htt
 
 	<string name="LoginFailed">Login failed.</string>
 	<string name="Quit">Quit</string>
+	 <string name="LoginFailedAuthenticationMFARequired">To continue logging in, enter a new token from your multifactor authentication app.
+If you feel this is an error, please contact support@secondlife.com</string>
 	<string name="LoginFailedViewerNotPermitted">
 The viewer you are using can no longer access Second Life. Please visit the following page to download a new viewer:
 https://genesisviewer.org

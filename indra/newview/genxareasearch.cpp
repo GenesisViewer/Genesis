@@ -85,7 +85,8 @@ BOOL GenxFloaterAreaSearch::postBuild()
     include_price_checkbox->setCommitCallback(boost::bind(&GenxFloaterAreaSearch::onSearchByPrice,this));
     mIncludePriceless=TRUE;
     
-    
+    LLScrollListCtrl *result_list =  getChild<LLScrollListCtrl>("result_list");
+    result_list->setDoubleClickCallback((boost::bind(&GenxFloaterAreaSearch::onDoubleClick,this)));
 	gIdleCallbacks.addFunction(idle, this);
 
     mCounterText = getChild<LLTextBox>("counter");
@@ -93,6 +94,18 @@ BOOL GenxFloaterAreaSearch::postBuild()
     
     
     return TRUE;
+}
+LLViewerObject* GenxFloaterAreaSearch::getSelectedObject()
+{
+    LLScrollListCtrl *result_list =  getChild<LLScrollListCtrl>("result_list");
+	if (LLScrollListItem* item = result_list->getFirstSelected())
+		return gObjectList.findObject(item->getUUID());
+	return NULL;
+}
+void GenxFloaterAreaSearch::onDoubleClick()
+{
+	if (LLViewerObject* objectp = getSelectedObject())
+		gAgentCamera.lookAtObject(objectp->getID(), false);
 }
 void GenxFloaterAreaSearch::findNewObjects() {
     S32 total = gObjectList.getNumObjects();

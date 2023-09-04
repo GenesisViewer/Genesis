@@ -39,6 +39,8 @@ public:
 	static void processObjectProperties(LLMessageSystem* msg);
 	static void idle(void *user_data);
 	BOOL isParcelOnly() { return mParcelOnly;}
+	class LLViewerObject* getSelectedObject();
+	void onDoubleClick();
 	
 private:
 	LLViewerRegion* mLastRegion;

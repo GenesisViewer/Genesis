@@ -2217,7 +2217,7 @@ void LLAgent::endAnimationUpdateUI()
 	// clean up UI from mode we're leaving
 	if (gAgentCamera.getLastCameraMode() == CAMERA_MODE_MOUSELOOK )
 	{
-		gViewerWindow->getRootView()->getChild<LLPanel>("favoritestoolbar")->setVisible(true);
+		gViewerWindow->getRootView()->getChild<LLPanel>("favoritestoolbar")->setVisible(gSavedSettings.getBOOL("GenxFavBar"));
 		// show mouse cursor
 		gViewerWindow->showCursor();
 		// show menus

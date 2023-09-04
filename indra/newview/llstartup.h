@@ -121,10 +121,12 @@ public:
 	
 	// Load MD5 of user's password from local disk file.
 	static std::string loadPasswordFromDisk();
-	
+	// Load MFA Hash from local disk file.
+	static std::string loadMFATokenFromDisk();
 	// Record MD5 of user's password for subsequent login.
 	static void savePasswordToDisk(const std::string& hashed_password);
-	
+	// Record MFA Hash for subsequent login.
+	static void saveMFATokenToDisk(const std::string& token);
 	// Delete the saved password local disk file.
 	static void deletePasswordFromDisk();
 	
@@ -140,6 +142,8 @@ public:
 
 	static LLViewerStats::PhaseMap& getPhases() { return *sPhases; }
 	static LLEventPump& getStateEventPump() { return *sStateWatcher; }
+
+	
 private:
 	static LLSLURL sStartSLURL;
 

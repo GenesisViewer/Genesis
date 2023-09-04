@@ -131,7 +131,8 @@ public:
 	LLSD mResult; // OGPX : *way* different access of auth result in OGP.
 	UserAuthcode mAuthResponse; // OGPX TODO: proper access functions
 	 
-
+	void setMFAToken(std::string token) {mMFAToken = token;}
+	void setMFAHashedToken(std::string token) {mMFAHashedToken = token;}
 	// clears out internal data cache.
 	void reset();
 	
@@ -157,6 +158,9 @@ private:
 	LLSD parseValues(UserAuthcode &auth_code, const std::string& key_pfx, XMLRPC_VALUE param);
 
 	F64 mLastTransferRateBPS;	// bits per second, only valid after a big transfer like inventory
+
+	std::string mMFAToken;
+	std::string mMFAHashedToken;
 };
 
 #endif /* LLUSERAUTH_H */

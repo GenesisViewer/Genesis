@@ -249,7 +249,9 @@ void LLUserAuth::authenticate(
 		XMLRPC_VectorAppendString(params, "read_critical", "true", 0);
 	}
 	XMLRPC_VectorAppendInt(params, "last_exec_event", (int) last_exec_froze);
-
+	XMLRPC_VectorAppendString(params,"extended_errors","true",0); // request message_id and message_args
+	XMLRPC_VectorAppendString(params, "mfa_hash", mMFAHashedToken.c_str(),0);
+	XMLRPC_VectorAppendString(params, "token", mMFAToken.c_str(),0);
 	// append optional requests in an array
 	XMLRPC_VALUE options = XMLRPC_CreateVector("options", xmlrpc_vector_array);
 	std::vector<const char*>::const_iterator it = requested_options.begin();

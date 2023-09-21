@@ -54,9 +54,14 @@
 			<menu_item_call enabled="false" hidden="false" label="Client ID" mouse_opaque="true" name="ClientID">
 				<on_click function="Avatar.ClientID" />
 			</menu_item_call>
-			<menu_item_call enabled="true" label="Derender" mouse_opaque="true" name="Derender">
-				<on_click function="Object.DERENDER" />
-			</menu_item_call>
+			<pie_menu label="Derender" name="Derender">
+				<menu_item_call enabled="true" label="Indefinitely" mouse_opaque="true" name="Derender">
+					<on_click function="Object.DERENDER" />
+				</menu_item_call>
+				<menu_item_call enabled="true" label="Temporary" mouse_opaque="true" name="DerenderTemporary">
+					<on_click function="Object.DERENDER_TEMPORARY" />
+				</menu_item_call>
+			</pie_menu>
 		</pie_menu>
 		<menu_item_call enabled="false" label="Eject..." mouse_opaque="true" name="Eject...">
 			<on_click function="Avatar.Eject" />

@@ -2078,7 +2078,7 @@ void handle_attachment_edit(const LLUUID& idItem)
 }
 // [/SL:KB]
 
-bool add_object_to_blacklist( const LLUUID& id, const std::string& entry_name )
+bool add_object_to_blacklist( const LLUUID& id, const std::string& entry_name, bool isTemporary )
 {
 	// ...don't kill the avatar
 	if (id != gAgentID)
@@ -2087,7 +2087,7 @@ bool add_object_to_blacklist( const LLUUID& id, const std::string& entry_name )
 		indata["entry_type"] = LLAssetType::AT_OBJECT;
 		indata["entry_name"] = entry_name;
 		indata["entry_agent"] = gAgentID;
-
+		indata["temporary"] = isTemporary;
 		LLFloaterBlacklist::addEntry(id, indata);
 		LLViewerObject *objectp = gObjectList.findObject(id);
 		if (objectp)
@@ -2100,8 +2100,12 @@ bool add_object_to_blacklist( const LLUUID& id, const std::string& entry_name )
 }
 
 // <dogmode> Derenderizer. Originally by Phox.
-class LLObjectDerender final : public view_listener_t
+class LLObjectCommonDerender final : public view_listener_t
 {
+private :
+	bool isTemporary;	
+public :
+	void setTemporary(bool temp){isTemporary=temp;}	
 	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
 	{
 		LLViewerObject* slct = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
@@ -2116,7 +2120,7 @@ class LLObjectDerender final : public view_listener_t
 			LLNameValue* firstname = slct->getNVPair("FirstName");
 			LLNameValue* lastname =  slct->getNVPair("LastName");
 			entry_name = llformat("Derendered: (AV) %s %s",firstname->getString(),lastname->getString());
-			added |= add_object_to_blacklist(id, entry_name);
+			added |= add_object_to_blacklist(id, entry_name,isTemporary);
 		}
 		else
 		{
@@ -2159,7 +2163,7 @@ class LLObjectDerender final : public view_listener_t
 						entry_name = "Derendered: (unknown object)";
 
 				}
-				added |= add_object_to_blacklist(id, entry_name);
+				added |= add_object_to_blacklist(id, entry_name,isTemporary);
 			}
 		}
 
@@ -10024,21 +10028,25 @@ class ListObjectCanEdit final : public view_listener_t
 		return true;
 	}
 };
-
-class ListObjectDerender final : public view_listener_t
+class ListObjectCommonDerender final : public view_listener_t
 {
+private :
+	bool isTemporary;	
+public :
+	void setTemporary(bool temp){isTemporary=temp;}	
 	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
 	{
 		const std::string& unknown = LLTrans::getString("land_type_unknown");
 		for (const auto& id : LFIDBearer::getActiveSelectedIDs())
 		{
 			const auto& obj_data = get_obj_data(id); // Needed for object name
-			add_object_to_blacklist(id, obj_data ? obj_data->name : unknown);
+			add_object_to_blacklist(id, obj_data ? obj_data->name : unknown,isTemporary);
 		}
 
 		return true;
 	}
 };
+
 
 class MediaCtrlCopyURL final : public view_listener_t
 {
@@ -10295,7 +10303,12 @@ void initialize_menus()
 	addMenu(new LLObjectBuy(), "Object.Buy");
 	addMenu(new LLObjectEdit(), "Object.Edit");
 	// <dogmode> Visual mute, originally by Phox.
-	addMenu(new LLObjectDerender(), "Object.DERENDER");
+	LLObjectCommonDerender *derender = new LLObjectCommonDerender();
+	derender->setTemporary(false);
+	addMenu(derender, "Object.DERENDER");
+	LLObjectCommonDerender *derenderTemporary = new LLObjectCommonDerender();
+	derenderTemporary->setTemporary(true);
+	addMenu(derenderTemporary, "Object.DERENDER_TEMPORARY");
 	addMenu(new LLAvatarReloadTextures(), "Avatar.ReloadTextures");
 	addMenu(new LLObjectReloadTextures(), "Object.ReloadTextures");
 	addMenu(new LLObjectExport(), "Object.Export");
@@ -10447,7 +10460,12 @@ void initialize_menus()
 	addMenu(new ListObjectEnableTouch, "List.Object.EnableTouch");
 	addMenu(new ListObjectEdit, "List.Object.Edit");
 	addMenu(new ListObjectCanEdit, "List.Object.CanEdit");
-	addMenu(new ListObjectDerender, "List.Object.Derender");
+	ListObjectCommonDerender *oDerender = new ListObjectCommonDerender();
+	oDerender->setTemporary(false);
+	addMenu(oDerender, "List.Object.Derender");
+	ListObjectCommonDerender *oDerenderTemporary = new ListObjectCommonDerender();
+	oDerenderTemporary->setTemporary(true);
+	addMenu(oDerenderTemporary, "List.Object.DerenderTemporary");
 	addMenu(new ListExperienceAllow, "List.Experience.Allow");
 	addMenu(new ListExperienceForget, "List.Experience.Forget");
 	addMenu(new ListExperienceBlock, "List.Experience.Block");

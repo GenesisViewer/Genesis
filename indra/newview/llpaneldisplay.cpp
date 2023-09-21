@@ -342,10 +342,18 @@ BOOL LLPanelDisplay::postBuild()
 	}
 
 	refresh();
-
+	//Mely : manage water rendering
+	LLCheckBoxCtrl *waterCtrl = getChild<LLCheckBoxCtrl>("render_water");
+	
+	
+	waterCtrl->setValue(gPipeline.hasRenderType(gPipeline.RENDER_TYPE_WATER));
+	waterCtrl->setCommitCallback(boost::bind(&LLPanelDisplay::onToggleWater,this));
 	return TRUE;
 }
-
+void LLPanelDisplay::onToggleWater()
+{
+	gPipeline.toggleRenderType(gPipeline.RENDER_TYPE_WATER);
+}
 void LLPanelDisplay::initWindowSizeControls()
 {
 	// Window size

@@ -81,8 +81,12 @@
       <on_visible function="List.Object.CanEdit" userdata=""/>
     </menu_item_call>
     <menu_item_separator/>
+
     <menu_item_call label="Derender" name="Derender">
       <on_click function="List.Object.Derender"/>
+    </menu_item_call>
+    <menu_item_call label="Derender Temporary" name="DerenderTemporary">
+      <on_click function="List.Object.DerenderTemporary"/>
     </menu_item_call>
   </menu>
   <menu name="Copy" label="Copy">

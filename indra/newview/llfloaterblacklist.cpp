@@ -121,6 +121,16 @@ void LLFloaterBlacklist::refresh()
 			column["column"] = "entry_date";
 			column["value"] = iter->second["entry_date"].asString();
 		}
+		{
+			LLSD& column = element["columns"][5];
+			column["column"] = "temporary";
+			if (iter->second.has("temporary")) {
+				column["value"] = iter->second["temporary"]?"Yes":"No";
+			} else {
+				column["value"] ="No";
+			}
+			
+		}
 		list->addElement(element, ADD_BOTTOM);
 	}
 }
@@ -231,7 +241,11 @@ void LLFloaterBlacklist::loadFromSave()
 	{
 		for(LLSD::map_iterator iter = data.beginMap(); iter != data.endMap(); ++iter)
 		{
-			blacklist_entries.insert(std::pair<LLUUID,LLSD>(LLUUID(iter->first),iter->second));
+			//Mely : when an object is setted as temporary blacklisted, don't load on startup.
+			if (iter->second.has("temporary") && iter->second["temporary"])
+				continue;
+			else	
+				blacklist_entries.insert(std::pair<LLUUID,LLSD>(LLUUID(iter->first),iter->second));
 		}
 		updateBlacklists();
 	}

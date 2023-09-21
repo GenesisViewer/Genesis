@@ -53,6 +53,7 @@
 #include "llwaterparammanager.h"
 #include "llwlparamset.h"
 #include "llwlparammanager.h"
+#include "pipeline.h"
 
  // [RLVa:KB]
 #include "rlvhandler.h"
@@ -233,6 +234,14 @@ BOOL wlfPanel_AdvSettings::postBuild()
 		}
 		// Set up based on initial region.
 		onRegionChanged();
+
+		//Mely : manage water rendering
+		LLCheckBoxCtrl *waterCtrl = getChild<LLCheckBoxCtrl>("render_water");
+		
+		
+		waterCtrl->setValue(gPipeline.hasRenderType(gPipeline.RENDER_TYPE_WATER));
+		waterCtrl->setCommitCallback(boost::bind(&wlfPanel_AdvSettings::onToggleWater,this));
+		
 	}
 	else
 	{
@@ -240,7 +249,10 @@ BOOL wlfPanel_AdvSettings::postBuild()
 	}
 	return TRUE;
 }
-
+void wlfPanel_AdvSettings::onToggleWater()
+{
+	gPipeline.toggleRenderType(gPipeline.RENDER_TYPE_WATER);
+}
 void wlfPanel_AdvSettings::draw()
 {
 	refresh();

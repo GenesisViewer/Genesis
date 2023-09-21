@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<panel bg_visible="false" border="false" border_visible="false" height="275" name="Adv_Settings" use_bounding_rect="true" width="220">
-	<panel bottom="1" filename="panel_bg_tab.xml" height="290" width="197"/>
+<panel bg_visible="false" border="false" border_visible="false" height="300" name="Adv_Settings" use_bounding_rect="true" width="220">
+	<panel bottom="1" filename="panel_bg_tab.xml" height="320" width="197"/>
 	<text bottom="-9" left="5" height="20" width="190" name="Camera Preset:">Cam Preset:</text>
 	<button bottom_delta="2" left="81" width="20" height="20" label="" toggle="true" image_selected="Cam_Preset_Back_On.png" image_unselected="Cam_Preset_Back_Off.png" name="Rear" tool_tip="Rear View">
 		<button.commit_callback function="Wlf.ChangeCameraPreset" parameter="0"/>
@@ -28,6 +28,7 @@
 	<combo_box name="WLWaterPresetsCombo" bottom_delta="1" left_delta="20" height="18" width="131" tool_tip="WindLight Presets for your Water."/>
 	<button bottom_delta="-1" height="19" label="" left="157" image_overlay="arrow_left.tga" name="WWprev" width="19"/>
 	<button bottom_delta="0" height="19" label="" left_delta="18" image_overlay="arrow_right.tga" name="WWnext" width="19"/>
+	<check_box left="5" label="display water" height="16" name="render_water" tool_tip="Derendering water may increase your FPS."/>
 	<check_box left="5" label="EEP WL" control_name="UseEnvironmentFromRegion" height="16" name="use_estate_wl" tool_tip="Use the region's emulated EEP settings when available."/>
 <!--check_box bottom_delta="0" left_delta="125" label="Always?" control_name="UseEnvironmentFromRegionAlways" height="16" name="Always" tool_tip="Always use region/parcel settings when they exist, automatically."/-->
 	<check_box bottom_delta="0" left_delta="100" label="Crossfade" control_name="PhoenixInterpolateSky" height="16" name="Crossfade" tool_tip="Transitional blend to parcel EEP Windlight settings if EEP is enabled."/>

@@ -61,6 +61,7 @@ public:
 	void onChangeWWPresetName(const LLSD& value);
 	void onChangeWLPresetName(const LLSD& value);
 	const bool& isExpanded() const { return mExpanded; }
+	void onToggleWater();
 
 protected:
 	void build();

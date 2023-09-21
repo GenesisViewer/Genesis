@@ -175,7 +175,7 @@ protected:
 
 	/// callback for defaults
 	void setHardwareDefaults();
-
+	void onToggleWater();
 	// helper function
 	static void fractionFromDecimal(F32 decimal_val, S32& numerator, S32& denominator);
 };

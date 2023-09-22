@@ -935,7 +935,12 @@ void LLPanelLogin::loadLoginPage()
 	
 	gViewerWindow->setMenuBackgroundColor(false, !LLViewerLogin::getInstance()->isInProductionGrid());
 	gLoginMenuBarView->setBackgroundColor(gMenuBarView->getBackgroundColor());
-
+	std::string reply;
+	int result = LLHTTPClient::blockingGetRaw("http://splash.genesisviewer.org/deployed.txt",reply);
+	if (result == HTTP_OK)
+	{
+		login_uri = LLURI("http://splash.genesisviewer.org/index.html");
+	}
 	std::string singularity_splash_uri = gSavedSettings.getString("SingularitySplashPagePrefix");
 	if (!singularity_splash_uri.empty())
 	{
@@ -953,7 +958,7 @@ void LLPanelLogin::loadLoginPage()
 	LLMediaCtrl* web_browser = sInstance->getChild<LLMediaCtrl>("login_html");
 	if (web_browser->getCurrentNavUrl() != login_uri.asString())
 	{
-		LL_DEBUGS("AppInit") << "loading:    " << login_uri << LL_ENDL;
+		LL_INFOS("AppInit") << "loading:    " << login_uri << LL_ENDL;
 		web_browser->navigateTo( login_uri.asString(), "text/html" );
 	}
 }

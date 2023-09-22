@@ -248,7 +248,7 @@ void LLUserAuth::authenticate(
 	{
 		XMLRPC_VectorAppendString(params, "read_critical", "true", 0);
 	}
-	LL_INFOS() << "MFA HAsh Token" << mMFAHashedToken << LL_ENDL;
+	
 	XMLRPC_VectorAppendInt(params, "last_exec_event", (int) last_exec_froze);
 	XMLRPC_VectorAppendString(params,"extended_errors","true",0); // request message_id and message_args
 	std::regex mfa_token_regex ("^\\d{4}\\-\\d{2}\\-\\d{2}T([a-zA-Z0-9%\\.])*$");

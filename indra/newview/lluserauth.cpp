@@ -36,7 +36,7 @@
 
 #include <sstream>
 #include <iterator>
-
+#include <regex>
 #include "lldir.h"
 #include "llversioninfo.h"
 #include "llappviewer.h"
@@ -248,9 +248,14 @@ void LLUserAuth::authenticate(
 	{
 		XMLRPC_VectorAppendString(params, "read_critical", "true", 0);
 	}
+	LL_INFOS() << "MFA HAsh Token" << mMFAHashedToken << LL_ENDL;
 	XMLRPC_VectorAppendInt(params, "last_exec_event", (int) last_exec_froze);
 	XMLRPC_VectorAppendString(params,"extended_errors","true",0); // request message_id and message_args
-	XMLRPC_VectorAppendString(params, "mfa_hash", mMFAHashedToken.c_str(),0);
+	std::regex mfa_token_regex ("^\\d{4}\\-\\d{2}\\-\\d{2}T([a-zA-Z0-9%\\.])*$");
+	if (regex_match (mMFAHashedToken,mfa_token_regex))
+		XMLRPC_VectorAppendString(params, "mfa_hash", mMFAHashedToken.c_str(),0);
+	else
+		XMLRPC_VectorAppendString(params, "mfa_hash", "",0);	
 	XMLRPC_VectorAppendString(params, "token", mMFAToken.c_str(),0);
 	// append optional requests in an array
 	XMLRPC_VALUE options = XMLRPC_CreateVector("options", xmlrpc_vector_array);

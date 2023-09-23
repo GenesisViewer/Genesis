@@ -152,7 +152,19 @@ void LLFloaterBlacklist::onClickAdd(void* user_data)
 
 	addEntry(add_id,indata);
 }
-
+//static
+void LLFloaterBlacklist::removeTemporaryAssets()
+{
+	
+	for(auto itr = blacklist_entries.begin(); itr != blacklist_entries.end();)
+	{
+		if (itr->second.has("temporary") && itr->second["temporary"])
+			itr = blacklist_entries.erase(itr);
+		else
+			++itr;
+	}
+	updateBlacklists();
+}
 //static
 void LLFloaterBlacklist::addEntry(LLUUID key, LLSD data)
 {

@@ -27,7 +27,7 @@ public:
 	as long as you keep the above format.
 	*/
 	static void addEntry(LLUUID key, LLSD data);
-
+	static void removeTemporaryAssets();
 	static boost::unordered_map<LLUUID,LLSD> blacklist_entries;
 	static uuid_vec_t blacklist_textures;
 	static uuid_vec_t blacklist_objects;

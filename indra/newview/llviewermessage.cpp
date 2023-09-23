@@ -114,6 +114,7 @@
 #include "llagentui.h"
 #include "llviewerregion.h"
 #include  "llexperiencecache.h"
+#include "llfloaterblacklist.h"
 
 // [RLVa:KB] - Checked: 2010-03-09 (RLVa-1.2.0a)
 #include "rlvactions.h"
@@ -3033,6 +3034,8 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	effectp->setColor(LLColor4U(gAgent.getEffectColor()));
 	LLHUDManager::getInstance()->sendEffects();
 
+	//Mely : Temporary Blaclisted items are removed
+	LLFloaterBlacklist::removeTemporaryAssets();
 	//	gTeleportDisplay = TRUE;
 	//	gTeleportDisplayTimer.reset();
 	//	gViewerWindow->setShowProgress(TRUE);

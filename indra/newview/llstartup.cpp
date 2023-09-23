@@ -40,7 +40,7 @@
 #else
 #	include <sys/stat.h>		// mkdir()
 #endif
-
+#include "compiletime.h"
 #include "llviewermedia_streamingaudio.h"
 #include "llaudioengine.h"
 
@@ -933,6 +933,14 @@ bool idle_startup()
 			LocalAssetBrowser::instance(); // <edit/>
 			// Quickly get something onscreen to look at.
 			gViewerWindow->initWorldUI();
+			if (LLVersionInfo::getChannel() == "Genesis Test") {
+				LL_INFOS() << "Compile time" << UNIX_TIMESTAMP << LL_ENDL;
+				LL_INFOS() << "Date time" << (int)LLDate::now().secondsSinceEpoch()<<LL_ENDL;
+				int remainindDays = (int)((LLDate::now().secondsSinceEpoch() - UNIX_TIMESTAMP + 180*24*60*60 ) /(24*60*60));
+				LL_INFOS() << "Remaining days " << remainindDays <<LL_ENDL;
+				gWindowTitle = gWindowTitle + "- Remaining days: " + std::to_string(remainindDays);
+				gViewerWindow->getWindow()->setTitle(gWindowTitle);
+			}
 			display_startup();
 		}
 
@@ -1019,6 +1027,17 @@ bool idle_startup()
 
 	if (STATE_LOGIN_CLEANUP == LLStartUp::getStartupState())
 	{
+		
+			//Mely, we want that tests version expires one day (180 days actually)
+			
+			if (LLVersionInfo::getChannel() == "Genesis Test" && UNIX_TIMESTAMP + 180*24*60*60 < LLDate::now().secondsSinceEpoch() ) {
+				
+				LLNotificationsUtil::add("ExpiredNightlyBuild");
+				LLStartUp::setStartupState(STATE_LOGIN_SHOW);
+				return FALSE;
+			}
+			
+
 		// Post login screen, we should see if any settings have changed that may
 		// require us to either start/stop or change the socks proxy. As various communications
 		// past this point may require the proxy to be up.

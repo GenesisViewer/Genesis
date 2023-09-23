@@ -666,6 +666,7 @@ set(viewer_HEADER_FILES
     ascentprefsvan.h
     awavefront.h
     chatbar_as_cmdline.h
+    compiletime.h
     daeexport.h
     floaterao.h
     floaterlocalassetbrowse.h

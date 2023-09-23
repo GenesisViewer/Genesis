@@ -11543,7 +11543,13 @@ Are you sure you want to delete the selected user?
 [GRIDNAME] requires a non-empty first name to login.
 Please try again.
   </notification>
-
+  <notification
+   icon="alertmodal.tga"
+   name="ExpiredNightlyBuild"
+   type="alertmodal">
+This Nightly build version of Genesis has expired.
+Please download a newer version from https://genesisviewer.org
+  </notification>
   <notification
    icon="alertmodal.tga"
    name="EmptyLastNameMessage"

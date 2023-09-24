@@ -933,14 +933,14 @@ bool idle_startup()
 			LocalAssetBrowser::instance(); // <edit/>
 			// Quickly get something onscreen to look at.
 			gViewerWindow->initWorldUI();
-			if (LLVersionInfo::getChannel() == "Genesis Test") {
-				LL_INFOS() << "Compile time" << UNIX_TIMESTAMP << LL_ENDL;
-				LL_INFOS() << "Date time" << (int)LLDate::now().secondsSinceEpoch()<<LL_ENDL;
-				int remainindDays = (int)((LLDate::now().secondsSinceEpoch() - UNIX_TIMESTAMP + 180*24*60*60 ) /(24*60*60));
-				LL_INFOS() << "Remaining days " << remainindDays <<LL_ENDL;
-				gWindowTitle = gWindowTitle + "- Remaining days: " + std::to_string(remainindDays);
-				gViewerWindow->getWindow()->setTitle(gWindowTitle);
-			}
+			// if (LLVersionInfo::getChannel() == "Genesis Test") {
+			// 	LL_INFOS() << "Compile time" << UNIX_TIMESTAMP << LL_ENDL;
+			// 	LL_INFOS() << "Date time" << (int)LLDate::now().secondsSinceEpoch()<<LL_ENDL;
+			// 	int remainindDays = (int)((LLDate::now().secondsSinceEpoch() - UNIX_TIMESTAMP + 180*24*60*60 ) /(24*60*60));
+			// 	LL_INFOS() << "Remaining days " << remainindDays <<LL_ENDL;
+			// 	gWindowTitle = gWindowTitle + "- Remaining days: " + std::to_string(remainindDays);
+			// 	gViewerWindow->getWindow()->setTitle(gWindowTitle);
+			// }
 			display_startup();
 		}
 

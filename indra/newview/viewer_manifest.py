@@ -734,7 +734,10 @@ class WindowsManifest(ViewerManifest):
                 self.sign(self.args['dest']+"\\SLVoice.exe")
             except:
                 print ("Couldn't sign binaries. Tried to sign %s" % self.args['dest'] + "\\" + self.final_exe())    
-		
+        else:
+            print("Not creating an installer without a signature");
+            exit();
+            
         # a standard map of strings for replacing in the templates
         substitution_strings = {
             'version' : '.'.join(self.args['version']),

@@ -63,7 +63,7 @@ def add_indra_lib_path():
 
 add_indra_lib_path()
 
-import optparse
+import argparse
 import os
 import urllib.request, urllib.parse, urllib.error
 import hashlib
@@ -219,67 +219,73 @@ def local_master_cache_filename():
 
 
 def run(sysargs):
-    parser = optparse.OptionParser(
+    parser = argparse.ArgumentParser(
         usage="usage: %prog [FILE] [FILE]",
         description=__doc__)
-    parser.add_option(
-        '-m', '--mode', type='string', dest='mode',
+    parser.add_argument('files',nargs='*')
+    parser.add_argument(
+        '-m', '--mode', dest='mode',
         default='development',
         help="""[development|production] The strictness mode to use
 while checking the template; see the wiki page for details about
 what is allowed and disallowed by each mode:
 http://wiki.secondlife.com/wiki/Template_verifier.py
 """)
-    parser.add_option(
-        '-u', '--master_url', type='string', dest='master_url',
-        default='https://bitbucket.org/lindenlab/master-message-template-git/raw/master/message_template.msg',
+    default_master_url='https://bitbucket.org/lindenlab/master-message-template-git/raw/master/message_template.msg'
+    parser.add_argument(
+        '-u', '--master_url', dest='master_url',
+        default=default_master_url,
         help="""The url of the master message template.""")
-    parser.add_option(
+    parser.add_argument(
         '-c', '--cache_master', action='store_true', dest='cache_master',
         default=False,  help="""Set to true to attempt use local cached copy of the master template.""")
-    parser.add_option(
+    parser.add_argument(
         '-f', '--force', action='store_true', dest='force_verification',
         default=False, help="""Set to true to skip the sha_1 check and force template verification.""")
 
-    options, args = parser.parse_args(sysargs)
+    args = parser.parse_args(sysargs)
 
-    if options.mode == 'production':
-        options.cache_master = False
+    if args.mode == 'production':
+        args.cache_master = False
 
     # both current and master supplied in positional params
-    if len(args) == 2:
-        master_filename, current_filename = args
+    if len(args.files) == 2:
+        master_filename, current_filename = args.files
         print("master:", master_filename)
         print("current:", current_filename)
         master_url = 'file://%s' % master_filename
         current_url = 'file://%s' % current_filename
     # only current supplied in positional param
-    elif len(args) == 1:
+    elif len(args.files) == 1:
         master_url = None
-        current_filename = args[0]
-        print("master:", options.master_url) 
+        current_filename = args.files[0]
+        print("master:", args.master_url) 
         print("current:", current_filename)
         current_url = 'file://%s' % current_filename
     # nothing specified, use defaults for everything
-    elif len(args) == 0:
+    elif len(args.files) == 0:
         master_url  = None
         current_url = None
+        print("No Current or Master Specified, using defaults")
     else:
         die("Too many arguments")
 
     if master_url is None:
-        master_url = options.master_url
+        master_url = args.master_url
+        if len(master_url)<1:
+            master_url = default_master_url
+        print("setting default master:",master_url)
         
     if current_url is None:
         current_filename = local_template_filename()
-        print("master:", options.master_url)
+        print("master:", args.master_url)
         print("current:", current_filename)
         current_url = 'file://%s' % current_filename
 
     # retrieve the contents of the local template
     current = fetch(current_url)
     hexdigest = hashlib.sha1(current).hexdigest()
-    if not options.force_verification:
+    if not args.force_verification:
         # Early exist if the template hasn't changed.
         sha_url = "%s.sha1" % current_url
         current_sha = fetch(sha_url).decode("utf-8")
@@ -290,7 +296,7 @@ http://wiki.secondlife.com/wiki/Template_verifier.py
     # and check for syntax
     current_parsed = llmessage.parseTemplateString(current.decode("utf-8"))
 
-    if options.cache_master:
+    if args.cache_master:
         # optionally return a url to a locally-cached master so we don't hit the network all the time
         master_url = cache_master(master_url)
 
@@ -300,7 +306,7 @@ http://wiki.secondlife.com/wiki/Template_verifier.py
     try:
         master_parsed = retry(3, parse_master_url)
     except (IOError, tokenstream.ParseError) as e:
-        if options.mode == 'production':
+        if args.mode == 'production':
             raise e
         else:
             print("WARNING: problems retrieving the master from %s."  % master_url)
@@ -309,7 +315,7 @@ http://wiki.secondlife.com/wiki/Template_verifier.py
             return 0
         
     acceptable, compat = compare(
-        master_parsed, current_parsed, options.mode)
+        master_parsed, current_parsed, args.mode)
 
     def explain(header, compat):
         print(header)
@@ -318,7 +324,7 @@ http://wiki.secondlife.com/wiki/Template_verifier.py
 
     if acceptable:
         explain("--- PASS ---", compat)
-        if options.force_verification == False:
+        if args.force_verification == False:
             print("Updating sha1 to %s" % hexdigest)
             sha_filename = "%s.sha1" % current_filename
             sha_file = open(sha_filename, 'w')
@@ -329,8 +335,4 @@ http://wiki.secondlife.com/wiki/Template_verifier.py
         return 1
 
 if __name__ == '__main__':
-    sys.exit(run(sys.argv[1:]))
-
-
-
-
+	sys.exit(run(sys.argv[1:]))

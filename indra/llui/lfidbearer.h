@@ -32,9 +32,9 @@ struct LFIDBearer
 		MULTIPLE = -2,
 		NONE = -1,
 		AVATAR = 0,
-		GROUP,
-		OBJECT,
-		EXPERIENCE,
+		GROUP=1,
+		OBJECT=2,
+		EXPERIENCE=3,
 		COUNT = 5
 	};
 

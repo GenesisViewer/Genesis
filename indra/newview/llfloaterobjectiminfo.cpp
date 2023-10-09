@@ -146,7 +146,7 @@ public:
 		payload["owner_id"] = query_map["owner"];
 		payload["name"] = query_map["name"];
 		payload["slurl"] = LLWeb::escapeURL(query_map["slurl"]);
-		payload["group_owned"] = query_map["groupowned"];
+		payload["group_owned"] = query_map["groupowned"].asInteger();
 		LLFloaterObjectIMInfo::showInstance()->update(payload);
 		return true;
 	}

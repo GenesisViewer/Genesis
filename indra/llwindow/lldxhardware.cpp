@@ -46,6 +46,8 @@
 #include "llstl.h"
 #include "lltimer.h"
 
+#include <comdef.h>
+
 void (*gWriteDebug)(const char* msg) = NULL;
 LLDXHardware gDXHardware;
 
@@ -206,6 +208,221 @@ HRESULT GetVideoMemoryViaWMI( WCHAR* strInputDeviceID, DWORD* pdwAdapterRam )
 		return E_FAIL;
 }
 
+//Getting the version of graphics controller driver via WMI
+std::string LLDXHardware::getDriverVersionWMI(EGPUVendor vendor)
+{
+	std::string mDriverVersion;
+	HRESULT hrCoInitialize = S_OK;
+	HRESULT hres;
+	hrCoInitialize = CoInitialize(0);
+	IWbemLocator *pLoc = NULL;
+
+	hres = CoCreateInstance(
+		CLSID_WbemLocator,
+		0,
+		CLSCTX_INPROC_SERVER,
+		IID_IWbemLocator, (LPVOID *)&pLoc);
+	
+	if (FAILED(hres))
+	{
+		LL_DEBUGS("AppInit") << "Failed to initialize COM library. Error code = 0x" << hres << LL_ENDL;
+		return std::string();                  // Program has failed.
+	}
+
+	IWbemServices *pSvc = NULL;
+
+	// Connect to the root\cimv2 namespace with
+	// the current user and obtain pointer pSvc
+	// to make IWbemServices calls.
+	hres = pLoc->ConnectServer(
+		bstr_t(L"ROOT\\CIMV2"), // Object path of WMI namespace
+		NULL,                    // User name. NULL = current user
+		NULL,                    // User password. NULL = current
+		0,                       // Locale. NULL indicates current
+		NULL,                    // Security flags.
+		0,                       // Authority (e.g. Kerberos)
+		0,                       // Context object 
+		&pSvc                    // pointer to IWbemServices proxy
+		);
+
+	if (FAILED(hres))
+	{
+		LL_WARNS("AppInit") << "Could not connect. Error code = 0x" << hres << LL_ENDL;
+		pLoc->Release();
+		CoUninitialize();
+		return std::string();                // Program has failed.
+	}
+
+	LL_DEBUGS("AppInit") << "Connected to ROOT\\CIMV2 WMI namespace" << LL_ENDL;
+
+	// Set security levels on the proxy -------------------------
+	hres = CoSetProxyBlanket(
+		pSvc,                        // Indicates the proxy to set
+		RPC_C_AUTHN_WINNT,           // RPC_C_AUTHN_xxx
+		RPC_C_AUTHZ_NONE,            // RPC_C_AUTHZ_xxx
+		NULL,                        // Server principal name 
+		RPC_C_AUTHN_LEVEL_CALL,      // RPC_C_AUTHN_LEVEL_xxx 
+		RPC_C_IMP_LEVEL_IMPERSONATE, // RPC_C_IMP_LEVEL_xxx
+		NULL,                        // client identity
+		EOAC_NONE                    // proxy capabilities 
+		);
+
+	if (FAILED(hres))
+	{
+		LL_WARNS("AppInit") << "Could not set proxy blanket. Error code = 0x" << hres << LL_ENDL;
+		pSvc->Release();
+		pLoc->Release();
+		CoUninitialize();
+		return std::string();               // Program has failed.
+	}
+	IEnumWbemClassObject* pEnumerator = NULL;
+
+	// Get the data from the query
+	ULONG uReturn = 0;
+	hres = pSvc->ExecQuery( 
+		bstr_t("WQL"),
+		bstr_t("SELECT * FROM Win32_VideoController"), //Consider using Availability to filter out disabled controllers
+		WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+		NULL,
+		&pEnumerator);
+
+	if (FAILED(hres))
+	{
+		LL_WARNS("AppInit") << "Query for operating system name failed." << " Error code = 0x" << hres << LL_ENDL;
+		pSvc->Release();
+		pLoc->Release();
+		CoUninitialize();
+		return std::string();               // Program has failed.
+	}
+
+	while (pEnumerator)
+	{
+		IWbemClassObject *pclsObj = NULL;
+		HRESULT hr = pEnumerator->Next(WBEM_INFINITE, 1,
+			&pclsObj, &uReturn);
+
+		if (0 == uReturn)
+		{
+			break;               // If quantity less then 1.
+		}
+        
+        if (vendor != GPU_ANY)
+        {
+            VARIANT vtCaptionProp;
+            // Might be preferable to check "AdapterCompatibility" here instead of caption.
+            hr = pclsObj->Get(L"Caption", 0, &vtCaptionProp, 0, 0);
+
+            if (FAILED(hr))
+            {
+                LL_WARNS("AppInit") << "Query for Caption property failed." << " Error code = 0x" << hr << LL_ENDL;
+                pSvc->Release();
+                pLoc->Release();
+                CoUninitialize();
+                return std::string();               // Program has failed.
+            }
+
+            // use characters in the returned driver version
+            BSTR caption(vtCaptionProp.bstrVal);
+
+            //convert BSTR to std::string
+            std::wstring ws(caption, SysStringLen(caption));
+            std::string caption_str(ws.begin(), ws.end());
+            LLStringUtil::toLower(caption_str);
+
+            bool found = false;
+            switch (vendor)
+            {
+            case GPU_INTEL:
+                found = caption_str.find("intel") != std::string::npos;
+                break;
+            case GPU_NVIDIA:
+                found = caption_str.find("nvidia") != std::string::npos;
+                break;
+            case GPU_AMD:
+                found = caption_str.find("amd") != std::string::npos
+                        || caption_str.find("ati ") != std::string::npos
+                        || caption_str.find("radeon") != std::string::npos;
+                break;
+            default:
+                break;
+            }
+
+            if (found)
+            {
+                VariantClear(&vtCaptionProp);
+            }
+            else
+            {
+                VariantClear(&vtCaptionProp);
+                pclsObj->Release();
+                continue;
+            }
+        }
+
+        VARIANT vtVersionProp;
+
+		// Get the value of the DriverVersion property
+		hr = pclsObj->Get(L"DriverVersion", 0, &vtVersionProp, 0, 0);
+
+		if (FAILED(hr))
+		{
+			LL_WARNS("AppInit") << "Query for DriverVersion property failed." << " Error code = 0x" << hr << LL_ENDL;
+			pSvc->Release();
+			pLoc->Release();
+			CoUninitialize();
+			return std::string();               // Program has failed.
+		}
+
+		// use characters in the returned driver version
+		BSTR driverVersion(vtVersionProp.bstrVal);
+
+		//convert BSTR to std::string
+		std::wstring ws(driverVersion, SysStringLen(driverVersion));
+		std::string str(ws.begin(), ws.end());
+		LL_INFOS("AppInit") << " DriverVersion : " << str << LL_ENDL;
+
+		if (mDriverVersion.empty())
+		{
+			mDriverVersion = str;
+		}
+		else if (mDriverVersion != str)
+		{
+            if (vendor == GPU_ANY)
+            {
+                // Expected from systems with gpus from different vendors
+                LL_INFOS("DriverVersion") << "Multiple video drivers detected. Version of second driver: " << str << LL_ENDL;
+            }
+            else
+            {
+                // Not Expected!
+                LL_WARNS("DriverVersion") << "Multiple video drivers detected from same vendor. Version of second driver : " << str << LL_ENDL;
+            }
+		}
+
+		VariantClear(&vtVersionProp);
+		pclsObj->Release();
+	}
+
+	// Cleanup
+	// ========
+	if (pSvc)
+	{
+		pSvc->Release();
+	}
+	if (pLoc)
+	{
+		pLoc->Release();
+	}
+	if (pEnumerator)
+	{
+		pEnumerator->Release();
+	}
+	if (SUCCEEDED(hrCoInitialize))
+	{
+		CoUninitialize();
+	}
+	return mDriverVersion;
+}
 void get_wstring(IDxDiagContainer* containerp, const WCHAR* wszPropName, WCHAR* wszPropValue, int outputSize)
 {
 	HRESULT hr;

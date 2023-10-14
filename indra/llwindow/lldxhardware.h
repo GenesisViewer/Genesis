@@ -94,7 +94,15 @@ public:
 	// vram_only TRUE does a "light" probe.
 	//rewriting getInfo to FS way. thanks to the firestorm team for this.
 	BOOL getInfo(BOOL vram_only, bool disable_wmi);
-
+	// WMI can return multiple GPU drivers
+    // specify which one to output
+    typedef enum {
+        GPU_INTEL,
+        GPU_NVIDIA,
+        GPU_AMD,
+        GPU_ANY
+    } EGPUVendor;
+	std::string getDriverVersionWMI(EGPUVendor vendor);
 	S32 getVRAM() const { return mVRAM; }
 
 	LLSD getDisplayInfo();

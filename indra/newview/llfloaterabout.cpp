@@ -255,20 +255,58 @@ LLFloaterAbout::LLFloaterAbout()
 	support.append( (const char*) glGetString(GL_RENDERER) );
 	support += '\n';
 
+//#if LL_WINDOWS
+    // getWindow()->incBusyCount();
+    // getWindow()->setCursor(UI_CURSOR_ARROW);
+    // support.append("Windows Graphics Driver Version: ");
+    // LLSD driver_info = gDXHardware.getDisplayInfo();
+    // if (driver_info.has("DriverVersion"))
+    // {
+    //     support.append(driver_info["DriverVersion"]);
+    // }
+    // support += '\n';
+    // getWindow()->decBusyCount();
+    // getWindow()->setCursor(UI_CURSOR_ARROW);
+//#endif
 #if LL_WINDOWS
-    getWindow()->incBusyCount();
-    getWindow()->setCursor(UI_CURSOR_ARROW);
-    support.append("Windows Graphics Driver Version: ");
-    LLSD driver_info = gDXHardware.getDisplayInfo();
-    if (driver_info.has("DriverVersion"))
+    std::string drvinfo;
+	support.append("Windows Graphics Driver Version: ");
+    if (gGLManager.mIsIntel)
     {
-        support.append(driver_info["DriverVersion"]);
+        drvinfo = gDXHardware.getDriverVersionWMI(LLDXHardware::GPU_INTEL);
     }
-    support += '\n';
-    getWindow()->decBusyCount();
-    getWindow()->setCursor(UI_CURSOR_ARROW);
-#endif
+    else if (gGLManager.mIsNVIDIA)
+    {
+        drvinfo = gDXHardware.getDriverVersionWMI(LLDXHardware::GPU_NVIDIA);
+    }
+    else if (gGLManager.mIsATI)
+    {
+        drvinfo = gDXHardware.getDriverVersionWMI(LLDXHardware::GPU_AMD);
+    }
 
+    if (drvinfo.empty())
+    {
+        // Generic/substitute windows driver? Unknown vendor?
+        LL_WARNS("DriverVersion") << "Vendor based driver search failed, searching for any driver" << LL_ENDL;
+        drvinfo = gDXHardware.getDriverVersionWMI(LLDXHardware::GPU_ANY);
+    }
+
+	if (!drvinfo.empty())
+	{
+		support.append(drvinfo);
+		
+	}
+	else
+	{
+		LL_WARNS("DriverVersion")<< "Cannot get driver version from getDriverVersionWMI" << LL_ENDL;
+		LLSD driver_info = gDXHardware.getDisplayInfo();
+		if (driver_info.has("DriverVersion"))
+		{
+			support.append(driver_info["DriverVersion"]);
+		}
+	}
+	support += '\n';
+#endif
 	support.append("OpenGL Version: ");
 	support.append( (const char*) glGetString(GL_VERSION) );
 // [RLVa:KB] - Checked: 2010-04-18 (RLVa-1.2.0)

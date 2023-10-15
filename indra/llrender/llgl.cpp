@@ -735,65 +735,19 @@ bool LLGLManager::initGL()
 	
 	// Trailing space necessary to keep "nVidia Corpor_ati_on" cards
 	// from being recognized as ATI.
-	if (mGLVendor.substr(0,4) == "ATI "
-//#if LL_LINUX
-//		// The Mesa-based drivers put this in the Renderer string,
-//		// not the Vendor string.
-//		|| mGLRenderer.find("AMD") != std::string::npos
-//#endif //LL_LINUX
-		)
+	// Trailing space necessary to keep "nVidia Corpor_ati_on" cards
+	// from being recognized as ATI.
+    // NOTE: AMD has been pretty good about not breaking this check, do not rename without good reason
+	if (mGLVendor.substr(0,4) == "ATI ")
 	{
 		mGLVendorShort = "ATI";
 		// *TODO: Fix this?
 		mIsATI = TRUE;
-
-#if LL_WINDOWS && !LL_MESA_HEADLESS
-		if (mDriverVersionRelease < 3842)
-		{
-			mATIOffsetVerticalLines = TRUE;
-		}
-#endif // LL_WINDOWS
-
-#if (LL_WINDOWS || LL_LINUX) && !LL_MESA_HEADLESS
-		// count any pre OpenGL 3.0 implementation as an old driver
-		if (mGLVersion < 3.f) 
-		{
-			mATIOldDriver = TRUE;
-		}
-#endif // (LL_WINDOWS || LL_LINUX) && !LL_MESA_HEADLESS
 	}
 	else if (mGLVendor.find("NVIDIA ") != std::string::npos)
 	{
 		mGLVendorShort = "NVIDIA";
 		mIsNVIDIA = TRUE;
-		if (   mGLRenderer.find("GEFORCE4 MX") != std::string::npos
-			|| mGLRenderer.find("GEFORCE2") != std::string::npos
-			|| mGLRenderer.find("GEFORCE 2") != std::string::npos
-			|| mGLRenderer.find("GEFORCE4 460 GO") != std::string::npos
-			|| mGLRenderer.find("GEFORCE4 440 GO") != std::string::npos
-			|| mGLRenderer.find("GEFORCE4 420 GO") != std::string::npos)
-		{
-			mIsGF2or4MX = TRUE;
-		}
-		else if (mGLRenderer.find("GEFORCE FX") != std::string::npos
-				 || mGLRenderer.find("QUADRO FX") != std::string::npos
-				 || mGLRenderer.find("NV34") != std::string::npos)
-		{
-			mIsGFFX = TRUE;
-		}
-		else if(mGLRenderer.find("GEFORCE3") != std::string::npos)
-		{
-			mIsGF3 = TRUE;
-		}
-#if LL_DARWIN
-		else if ((mGLRenderer.find("9400M") != std::string::npos)
-			  || (mGLRenderer.find("9600M") != std::string::npos)
-			  || (mGLRenderer.find("9800M") != std::string::npos))
-		{
-			mIsMobileGF = TRUE;
-		}
-#endif
-
 	}
 	else if (mGLVendor.find("INTEL") != std::string::npos
 #if LL_LINUX
@@ -805,14 +759,6 @@ bool LLGLManager::initGL()
 	{
 		mGLVendorShort = "INTEL";
 		mIsIntel = TRUE;
-#if LL_WINDOWS
-		if (mGLRenderer.find("HD") != std::string::npos
-			&& ((mGLRenderer.find("2000") != std::string::npos || mGLRenderer.find("3000") != std::string::npos)
-				|| (mGLVersion == 3.1f && mGLRenderer.find("INTEL(R) HD GRAPHICS") != std::string::npos)))
-		{
-			mIsHD3K = TRUE;
-		}
-#endif
 	}
 	else
 	{

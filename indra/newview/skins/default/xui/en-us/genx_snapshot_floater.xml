@@ -8,7 +8,7 @@
      <text bottom="410" follows="top|left" height="15" left="10" name="type_label">
 		Target
 	</text>
-     <combo_box bottom_delta="-23" follows="left|top" height="20" left="10" name="snapshot_type_radio" width="180">
+     <combo_box bottom_delta="-23" follows="left|top" height="20" left="10" name="snapshot_type_radio" width="220">
 		<combo_item name="local" value="3">
 			Save to hard drive
 		</combo_item>
@@ -24,21 +24,21 @@
 		
 	</combo_box>
      <button bottom_delta="-30" follows="left|top" height="20" label="Refresh" left="10"
-	  name="new_snapshot_btn" width="90"/>
-	<button bottom_delta="0" follows="left|top" height="20" label="Freeze" left="100"
-	     name="freeze_time_btn" width="90" tool_tip="Show a fullscreen preview. Allows camming around as if time is frozen to make multiple snapshots of the same scene. Press ESC to undo!" />
+	  name="new_snapshot_btn" width="110"/>
+	<button bottom_delta="0" follows="left|top" height="20" label="Freeze" left="120"
+	     name="freeze_time_btn" width="110" tool_tip="Show a fullscreen preview. Allows camming around as if time is frozen to make multiple snapshots of the same scene. Press ESC to undo!" />
 	<button bottom_delta="-22" follows="left|top" height="20" label="Upload" left="10"
 	     name="feed_btn" width="90" />
 	<button bottom_delta="0" follows="left|top" height="20" label="Send" left="10"
-	     name="send_btn" width="90" />
+	     name="send_btn" width="110" />
 	<button bottom_delta="0" follows="left|top" height="20" label="Upload ([UPLOADFEE])" left="10"
-	     name="upload_btn" width="90" />
+	     name="upload_btn" width="110" />
      <flyout_button bottom_delta="0" follows="left|top" height="20" label="Save" left="10"
-       list_position="below" mouse_opaque="true" name="save_btn" tool_tip="Save image to a file" width="90">
+       list_position="below" mouse_opaque="true" name="save_btn" tool_tip="Save image to a file" width="110">
     <flyout_button_item value="save" name="save_item">Save</flyout_button_item>
     <flyout_button_item value="saveas" name="saveas_item">Save As...</flyout_button_item>
 	</flyout_button>     
-    <button bottom_delta="0" follows="left|top" height="20" label="Cancel" left="100" name="discard_btn" width="90"/>
+    <button bottom_delta="0" follows="left|top" height="20" label="Cancel" left="120" name="discard_btn" width="110"/>
      <button bottom="-124" follows="left|top" font="SansSerifSmall" halign="center"
 	     height="20" label="More &gt;&gt;" left="10"
 	     mouse_opaque="true" name="more_btn" scale_image="TRUE"
@@ -50,7 +50,7 @@
      <text bottom_delta="-20" follows="top|left" height="15" left="10" name="type_label2" width="115">
 	Target Resolution
 	</text>
-	<text bottom_delta="0" follows="top|left" height="15" left="130" name="format_label"
+	<text bottom_delta="0" follows="top|left" height="15" left="170" name="format_label"
 	     width="70">
 	Format
 	</text>    
@@ -171,7 +171,7 @@
 			Custom
 		</combo_item>
 	</combo_box>
-	<combo_box bottom_delta="0" follows="left|top" height="20" label="Format" left="120"
+	<combo_box bottom_delta="0" follows="left|top" height="20" label="Format" left="160"
 	     name="local_format_combo" width="70">
 		<combo_item name="PNG">
 			PNG
@@ -184,14 +184,14 @@
 		</combo_item>
 	</combo_box>
      <spinner bottom_delta="-25" decimal_digits="0" follows="left|top" height="20"
-	     increment="32" label="Width" label_width="30" left="10" max_val="6016"
-	     min_val="32" name="snapshot_width" width="80"/>
+	     increment="32" label="Width" label_width="50" left="10" max_val="6016"
+	     min_val="32" name="snapshot_width" width="100"/>
 	<spinner bottom_delta="0" decimal_digits="0" follows="left|top" height="20"
-	     increment="32" label="Height" label_width="38" left="100" max_val="6016"
-	     min_val="32" name="snapshot_height" width="88"/>
+	     increment="32" label="Height" label_width="48" left="120" max_val="6016"
+	     min_val="32" name="snapshot_height" width="108"/>
 	<slider bottom_delta="-15" decimal_digits="0" follows="left|top" height="15"
 	     increment="1" initial_val="75" label="Image Quality" left="10"
-	     max_val="100" min_val="0" name="image_quality_slider" width="180" />
+	     max_val="100" min_val="0" name="image_quality_slider" width="230" />
 	<check_box bottom_delta="-19" follows="top|left" label="Keep aspect ratio"
 	     left="8" name="keep_aspect" tool_tip="Note: setting the resolution to non-Custom, or the Aspect to Default will reset this check box because they aren't compatible." />
 

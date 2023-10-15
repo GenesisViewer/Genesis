@@ -1164,8 +1164,8 @@ LLSnapshotLivePreview::EAspectSizeProblem LLSnapshotLivePreview::generateFormatt
 	}
 
 	Dout(dc::snapshot, "Generating a new formatted image!");
-
-	mFormattedWidth = mWidth;
+	
+	mFormattedWidth = mWidth ;
 	mFormattedHeight = mHeight;
 	mFormattedRawWidth = w;
 	mFormattedRawHeight = h;
@@ -1195,7 +1195,7 @@ LLSnapshotLivePreview::EAspectSizeProblem LLSnapshotLivePreview::generateFormatt
 	else
 	{
 		// 'scaled' is just the target size.
-		scaled->scale(mWidth, mHeight);
+		scaled->scale(w, h);
 	}
 
 	bool lossless = false;
@@ -3007,7 +3007,7 @@ LLRect LLFloaterSnapshot::getThumbnailAreaRect()
 	// getRect() includes shadows and the title bar, therefore the real corners are as follows:
 	//return LLRect(1, getRect().getHeight() - 17, getRect().getWidth() - 1, getRect().getHeight() - 17 - THUMBHEIGHT);
 	if (gSavedSettings.getBOOL("GenxSnapshotFloater"))
-		return LLRect(200,20,getRect().getWidth()-5,getRect().getHeight()-20);
+		return LLRect(250,20,getRect().getWidth()-5,getRect().getHeight()-20);
 	else 
 		return LLRect(1, getRect().getHeight() - 17, getRect().getWidth() - 1, getRect().getHeight() - 17 - THUMBHEIGHT);	
 }

@@ -94,6 +94,8 @@ LLIconDictionary::LLIconDictionary()
 	addEntry(LLInventoryType::ICONNAME_SETTINGS_DAY,	new IconEntry("Inv_SettingsDay.png"));
 	addEntry(LLInventoryType::ICONNAME_SETTINGS,		new IconEntry("Inv_Settings.png"));
 
+	addEntry(LLInventoryType::ICONNAME_MATERIAL,                new IconEntry("Inv_Material.png"));
+
 	addEntry(LLInventoryType::ICONNAME_CLOTHING_UNKNOWN, 		new IconEntry("inv_item_unknown.tga"));
 	addEntry(LLInventoryType::ICONNAME_INVALID, 				new IconEntry("inv_invalid.png"));
 	addEntry(LLInventoryType::ICONNAME_UNKNOWN, 				new IconEntry("Inv_UnknownObject.png"));
@@ -175,6 +177,9 @@ const std::string& LLInventoryIcon::getIconName(LLAssetType::EType asset_type,
 			// TODO: distinguish between Sky and Water settings.
 			idx = assignSettingsIcon(misc_flag);
 			break;
+		case LLAssetType::AT_MATERIAL:
+			idx = LLInventoryType::ICONNAME_MATERIAL;
+			break;	
 		case LLAssetType::AT_UNKNOWN:
 			idx = LLInventoryType::ICONNAME_UNKNOWN;
 			break;

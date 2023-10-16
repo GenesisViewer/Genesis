@@ -102,7 +102,7 @@ LLAssetDictionary::LLAssetDictionary()
 	addEntry(LLAssetType::AT_MY_OUTFITS,		new AssetEntry("MY_OUTFITS",		"my_otfts",	"my outfits",		false,		false,		false));
 	addEntry(LLAssetType::AT_MESH,		        new AssetEntry("MESH",		        "mesh",	    "mesh",		        false,		true,		true));
 	addEntry(LLAssetType::AT_SETTINGS,	        new AssetEntry("SETTINGS",			"settings",	"settings blob",	true,		true,		true));
-
+	addEntry(LLAssetType::AT_MATERIAL,          new AssetEntry("MATERIAL",          "material", "render material",  true,       true,       true));
 	addEntry(LLAssetType::AT_UNKNOWN, 			new AssetEntry("UNKNOWN",			"invalid",	NULL,		  		false,		false,		false));
 	addEntry(LLAssetType::AT_NONE, 				new AssetEntry("NONE",				"-1",		NULL,		  		false,		false,		false));
 };		

@@ -571,6 +571,7 @@ public:
 		addEntry(0x1 << LLInventoryType::IT_SOUND,			new FilterEntry(view->getString("filter_type_sound")));
 		addEntry(0x1 << LLInventoryType::IT_TEXTURE,		new FilterEntry(view->getString("filter_type_texture")));
 		addEntry(0x1 << LLInventoryType::IT_SNAPSHOT,		new FilterEntry(view->getString("filter_type_snapshot")));
+		addEntry(0x1 << LLInventoryType::IT_MATERIAL,		new FilterEntry(view->getString("filter_type_material")));
 		addEntry(0xffffffff,								new FilterEntry(view->getString("filter_type_all")));
 	}
 	virtual U32 notFound() const

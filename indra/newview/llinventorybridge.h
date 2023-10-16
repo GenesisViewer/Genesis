@@ -351,7 +351,16 @@ protected:
 	std::string		mMessage;
 	LLRootHandle<LLFolderBridge> mHandle;
 };
-
+class LLMaterialBridge : public LLItemBridge
+{
+public:
+    LLMaterialBridge(LLInventoryPanel* inventory,
+                     LLFolderView* root,
+                     const LLUUID& uuid) :
+        LLItemBridge(inventory, root, uuid) {}
+    virtual void openItem();
+    virtual void buildContextMenu(LLMenuGL& menu, U32 flags);
+};
 class LLTextureBridge : public LLItemBridge
 {
 public:

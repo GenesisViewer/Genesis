@@ -1425,7 +1425,13 @@ LLInvFVBridge* LLInvFVBridge::createBridge(LLAssetType::EType asset_type,
 
 			
             break;
-
+		case LLAssetType::AT_MATERIAL:
+            if (inv_type != LLInventoryType::IT_MATERIAL)
+            {
+                LL_WARNS() << LLAssetType::lookup(asset_type) << " asset has inventory type " << LLInventoryType::lookupHumanReadable(inv_type) << " on uuid " << uuid << LL_ENDL;
+            }
+            new_listener = new LLMaterialBridge(inventory, root, uuid);
+            break;
 		default:
 			LL_INFOS() << "Unhandled asset type (llassetstorage.h): "
 					<< (S32)asset_type << " (" << LLAssetType::lookup(asset_type) << ")" << LL_ENDL;
@@ -6974,7 +6980,37 @@ bool LLSettingsBridge::canUpdateRegion() const
     //return LLEnvironment::instance().canAgentUpdateRegionEnvironment();
 	return FALSE;
 }
+// +=================================================+
+// |        LLMaterialBridge                         |
+// +=================================================+
 
+void LLMaterialBridge::openItem()
+{
+    LLViewerInventoryItem* item = getItem();
+    if (item)
+    {
+        LLInvFVBridgeAction::doAction(item->getType(),mUUID,getInventoryModel());
+    }
+}
+
+void LLMaterialBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
+{
+    LL_DEBUGS() << "LLMaterialBridge::buildContextMenu()" << LL_ENDL;
+
+    if (isMarketplaceListingsFolder())
+    {
+        menuentry_vec_t items;
+        menuentry_vec_t disabled_items;
+        addMarketplaceContextMenuOptions(flags, items, disabled_items);
+        items.push_back(std::string("Properties"));
+        getClipboardEntries(false, items, disabled_items, flags);
+        hide_context_entries(menu, items, disabled_items);
+    }
+    else
+    {
+        LLItemBridge::buildContextMenu(menu, flags);
+    }
+}
 
 // +=================================================+
 // |        LLLinkBridge                             |

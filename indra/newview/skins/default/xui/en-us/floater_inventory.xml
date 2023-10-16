@@ -22,6 +22,7 @@
 	<string name="filter_type_wearable">Clothing / Body Parts</string>
 	<string name="filter_type_gesture">Gestures</string>
 	<string name="filter_type_landmark">Landmarks</string>
+	<string name="filter_type_material">Materials</string>
 	<string name="filter_type_notecard">Notecards</string>
 	<string name="filter_type_object">Objects</string>
 	<string name="filter_type_script">Scripts</string>
@@ -37,6 +38,7 @@
 		<combo_item name="filter_type_wearable">Clothing / Body Parts</combo_item>
 		<combo_item name="filter_type_gesture">Gestures</combo_item>
 		<combo_item name="filter_type_landmark">Landmarks</combo_item>
+		<combo_item name="filter_type_material">Materials</combo_item>
 		<combo_item name="filter_type_notecard">Notecards</combo_item>
 		<combo_item name="filter_type_object">Objects</combo_item>
 		<combo_item name="filter_type_script">Scripts</combo_item>

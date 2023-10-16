@@ -86,6 +86,7 @@ LLInventoryDictionary::LLInventoryDictionary()
 	addEntry(LLInventoryType::IT_GESTURE,             new InventoryEntry("gesture",   "gesture",       1, LLAssetType::AT_GESTURE)); 
 	addEntry(LLInventoryType::IT_MESH,                new InventoryEntry("mesh",      "mesh",          1, LLAssetType::AT_MESH));
 	addEntry(LLInventoryType::IT_SETTINGS,            new InventoryEntry("settings",  "settings",      1, LLAssetType::AT_SETTINGS));
+	addEntry(LLInventoryType::IT_MATERIAL,            new InventoryEntry("material",  "render material", 1, LLAssetType::AT_MATERIAL));
 }
 
 
@@ -154,6 +155,7 @@ DEFAULT_ASSET_FOR_INV_TYPE[LLAssetType::AT_COUNT] =
 	LLInventoryType::IT_NONE,			// 54	AT_RESERVED_5
 
 	LLInventoryType::IT_SETTINGS,			// 55	AT_SETTINGS
+	LLInventoryType::IT_MATERIAL,       // 57   AT_MATERIAL
 };
 
 // static

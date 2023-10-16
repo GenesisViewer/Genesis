@@ -447,6 +447,7 @@ void do_create(LLInventoryModel *model, LLInventoryPanel *ptr, const LLSD& sdtyp
 							LLInventoryType::IT_GESTURE,
 							LLFloaterPerms::getNextOwnerPerms("Gestures"));
 	}
+	
 	else if ("outfit" == type || ("update outfit" == type && !LLAppearanceMgr::getInstance()->updateBaseOutfit())) // If updateBaseOutfit fails, prompt to make a new outfit
 	{
 		new LLMakeOutfitDialog(false);

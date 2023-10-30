@@ -89,7 +89,11 @@ class LLColor4
 		const LLColor4&	set(const LLColor3 &vec, F32 a);	// Sets LLColor4 to LLColor3 vec, with alpha specified
 		const LLColor4&	set(const F32 *vec);			// Sets LLColor4 to vec
 		const LLColor4&	set(const LLColor4U& color4u); // Sets LLColor4 to color4u, rescaled.
-
+		const LLColor4&	set(const F64 *vec);			// Sets LLColor4 to (double)vec
+		 // set from a vector of unknown type and size
+        // may leave some data unmodified
+        template<typename T> 
+        const LLColor4& set(const std::vector<T>& v);
 
 		const LLColor4&    setAlpha(F32 a);
 
@@ -334,7 +338,24 @@ inline const LLColor4&	LLColor4::set(const F32 *vec)
 	mV[VW] = vec[VW];
 	return (*this);
 }
+inline const LLColor4&	LLColor4::set(const F64 *vec)
+{
+    mV[VX] = static_cast<F32>(vec[VX]);
+    mV[VY] = static_cast<F32>(vec[VY]);
+    mV[VZ] = static_cast<F32>(vec[VZ]);
+    mV[VW] = static_cast<F32>(vec[VW]);
+    return (*this);
+}
+template<typename T>
+const LLColor4& LLColor4::set(const std::vector<T>& v)
+{
+    for (S32 i = 0; i < llmin((S32)v.size(), 4); ++i)
+    {
+        mV[i] = v[i];
+    }
 
+    return *this;
+}
 // deprecated
 inline const LLColor4&	LLColor4::setVec(F32 x, F32 y, F32 z)
 {
@@ -656,6 +677,28 @@ void LLColor4::clamp()
 		mV[3] = 1.f;
 	}
 }
+// Return the given linear space color value in gamma corrected (sRGB) space
+inline const LLColor4 srgbColor4(const LLColor4 &a) {
+    LLColor4 srgbColor;
 
+    srgbColor.mV[0] = linearTosRGB(a.mV[0]);
+    srgbColor.mV[1] = linearTosRGB(a.mV[1]);
+    srgbColor.mV[2] = linearTosRGB(a.mV[2]);
+    srgbColor.mV[3] = a.mV[3];
+
+    return srgbColor;
+}
+
+// Return the given gamma corrected (sRGB) color in linear space
+inline const LLColor4 linearColor4(const LLColor4 &a)
+{
+    LLColor4 linearColor;
+    linearColor.mV[0] = sRGBtoLinear(a.mV[0]);
+    linearColor.mV[1] = sRGBtoLinear(a.mV[1]);
+    linearColor.mV[2] = sRGBtoLinear(a.mV[2]);
+    linearColor.mV[3] = a.mV[3];
+
+    return linearColor;
+}
 #endif
 

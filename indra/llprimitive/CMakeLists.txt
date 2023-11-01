@@ -10,6 +10,8 @@ include(LLXML)
 include(LLPhysicsExtensions)
 include(Colladadom)
 include(LLCharacter)
+include(GLH)
+include(TinyGLTF)
 
 include_directories(
     ${LLCOMMON_INCLUDE_DIRS}
@@ -27,6 +29,8 @@ include_directories(SYSTEM
 
 set(llprimitive_SOURCE_FILES
     lldaeloader.cpp
+    llgltfloader.cpp
+    llgltfmaterial.cpp
     llmaterialid.cpp
     llmaterial.cpp
     llmaterialtable.cpp
@@ -46,7 +50,9 @@ set(llprimitive_SOURCE_FILES
 set(llprimitive_HEADER_FILES
     CMakeLists.txt
     lldaeloader.h
+    llgltfloader.h
     legacy_object_types.h
+    llgltfmaterial.h
     llmaterial.h
     llmaterialid.h
     llmaterialtable.h
@@ -74,6 +80,7 @@ add_library (llprimitive ${llprimitive_SOURCE_FILES})
 
 target_link_libraries(
     llprimitive
+    
     PUBLIC
     llcommon
     )

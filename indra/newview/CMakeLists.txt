@@ -18,6 +18,7 @@ include(FMODSTUDIO)
 include(GeneratePrecompiledHeader)
 include(GLOD)
 include(Hunspell)
+include(JsonCpp)
 include(LLAddBuildTest)
 include(LLAppearance)
 include(LLAudio)
@@ -466,6 +467,7 @@ set(viewer_SOURCE_FILES
     llprefsim.cpp
     llprefsvoice.cpp
     llpreview.cpp
+    llpreviewmaterial.cpp
     llpreviewanim.cpp
     llpreviewgesture.cpp
     llpreviewlandmark.cpp
@@ -505,6 +507,7 @@ set(viewer_SOURCE_FILES
     lltexturestats.cpp
     lltexturestatsuploader.cpp
     lltextureview.cpp
+    lltinygltfhelper.cpp
     lltool.cpp
     lltoolbar.cpp
     lltoolbrush.cpp
@@ -1034,6 +1037,7 @@ set(viewer_HEADER_FILES
     llprefsim.h
     llprefsvoice.h
     llpreview.h
+    llpreviewmaterial.h
     llpreviewanim.h
     llpreviewgesture.h
     llpreviewlandmark.h
@@ -1075,6 +1079,7 @@ set(viewer_HEADER_FILES
     lltexturestats.h
     lltexturestatsuploader.h
     lltextureview.h
+    lltinygltfhelper.h
     lltool.h
     lltoolbar.h
     lltoolbrush.h

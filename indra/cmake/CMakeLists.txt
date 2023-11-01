@@ -96,6 +96,7 @@ set(cmake_SOURCE_FILES
     WinManifest.cmake
     LibVLCPlugin.cmake
     XmlRpcEpi.cmake
+    xxHash.cmake
     ZLIB.cmake
     )
 

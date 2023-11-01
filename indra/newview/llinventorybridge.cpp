@@ -69,6 +69,7 @@
 #include "llpreviewgesture.h"
 #include "llpreviewlandmark.h"
 #include "llpreviewnotecard.h"
+#include "llpreviewmaterial.h"
 #include "llpreviewscript.h"
 #include "llpreviewsound.h"
 #include "llpreviewtexture.h"
@@ -7405,6 +7406,43 @@ public:
 protected:
 	LLLSLTextBridgeAction(const LLUUID& id,LLInventoryModel* model) : LLInvFVBridgeAction(id,model) {}
 };
+class LLMaterialBridgeAction: public LLInvFVBridgeAction
+{
+	friend class LLInvFVBridgeAction;
+public:
+	virtual void doIt()
+	{
+		LLViewerInventoryItem* item = getItem();
+		if (item)
+		{
+			if(!LLPreview::show(item->getUUID(), TRUE))
+				{
+					// There isn't one, so make a new preview
+					S32 left, top;
+					gFloaterView->getNewFloaterPosition(&left, &top);
+					LLRect rect = gSavedSettings.getRect("MaterialEditorRect");
+					rect.translate(left - rect.mLeft, top - rect.mTop);
+					LLPreviewMaterial* preview;
+					preview = new LLPreviewMaterial("preview material", rect, std::string("Material: ") + item->getName(),
+									item->getUUID(), LLUUID::null, item->getAssetUUID(),
+									item);
+					//preview->setSourceID(source_id);
+					
+					preview->setFocus(TRUE);
+					// Force to be entirely onscreen.
+					gFloaterView->adjustToFitScreen(preview, FALSE);
+				}
+		}
+		LLInvFVBridgeAction::doIt();
+	}
+
+	virtual ~LLMaterialBridgeAction(){}
+protected:
+	LLMaterialBridgeAction(const LLUUID& id,LLInventoryModel* model) : LLInvFVBridgeAction(id,model) {}
+	// return true if the item is in agent inventory. if false, it
+	// must be lost or in the inventory library.
+	
+};
 
 class LLWearableBridgeAction: public LLInvFVBridgeAction
 {
@@ -7496,6 +7534,9 @@ LLInvFVBridgeAction* LLInvFVBridgeAction::createAction(LLAssetType::EType asset_
 		case LLAssetType::AT_BODYPART:
 			action = new LLWearableBridgeAction(uuid,model);
 			break;
+		case LLAssetType::AT_MATERIAL:
+			action = new LLMaterialBridgeAction(uuid,model);
+			break;	
 		default:
 			break;
 	}

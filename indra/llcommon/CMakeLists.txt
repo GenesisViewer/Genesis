@@ -13,6 +13,7 @@ include(Boost)
 include(OpenSSL)
 include(LLSharedLibs)
 include(Copy3rdPartyLibs)
+include(JsonCpp)
 include(ZLIB)
 include(URIPARSER)
 
@@ -30,6 +31,7 @@ set(llcommon_SOURCE_FILES
     aiframetimer.cpp
     aisyncclient.cpp
     aithreadid.cpp
+    hbxxh.cpp
     imageids.cpp
     indra_constants.cpp
     llallocator.cpp
@@ -125,6 +127,7 @@ set(llcommon_HEADER_FILES
     bitpack.h
     ctype_workaround.h
     fix_macros.h
+    hbxxh.h
     imageids.h
     indra_constants.h
     linden_common.h

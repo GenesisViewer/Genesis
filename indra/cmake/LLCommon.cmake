@@ -4,6 +4,7 @@ include(APR)
 include(Boost)
 include(EXPAT)
 include(Linking)
+include(xxHash)
 include(ZLIB)
 
 if (DARWIN)

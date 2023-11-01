@@ -122,3 +122,7 @@ void process_generic_message(LLMessageSystem* msg, void**)
 		}
 	}
 }
+void process_generic_streaming_message(LLMessageSystem* msg, void**)
+{
+    // placeholder to suppress packet loss reports and log spam (SL-20473)
+}

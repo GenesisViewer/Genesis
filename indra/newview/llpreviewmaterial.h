@@ -37,6 +37,7 @@
 #include "llvoinventorylistener.h"
 #include "llviewertexture.h"
 #include "lltexturectrl.h"
+#include "llimagej2c.h"
 class LLButton;
 class LLColorSwatchCtrl;
 class LLComboBox;
@@ -59,6 +60,7 @@ namespace tinygltf
 {
     class Model;
 }
+
 class LLPreviewMaterial : public LLPreview, public LLVOInventoryListener
 {
 public:
@@ -80,6 +82,8 @@ public:
     bool setFromGltfModel(const tinygltf::Model& model, S32 index, bool set_textures = false);
     // initialize the UI from a default GLTF material
     void loadDefaults();
+    // get a dump of the json representation of the current state of the editor UI as a material object
+    void getGLTFMaterial(LLGLTFMaterial* mat);
     void loadAsset() override;
     // for live preview, apply current material to currently selected object
     void applyToSelection();
@@ -135,15 +139,52 @@ public:
     void inventoryChanged(LLViewerObject* object, LLInventoryObject::object_list_t* inventory, S32 serial_num, void* user_data) override;
 
     bool decodeAsset(const std::vector<char>& buffer);
+    std::string getEncodedAsset();
 
     virtual const char *getTitleName() const { return "Material"; }
     void onCommitTexture(LLUICtrl* ctrl, const LLSD& data, S32 dirty_flag);
     void onCancelCtrl(LLUICtrl* ctrl, const LLSD& data, S32 dirty_flag);
     void onSelectCtrl(LLUICtrl* ctrl, const LLSD& data, S32 dirty_flag);
+
+    void onClickSave();
+    bool saveIfNeeded();
+    S32 saveTextures();
+    static bool capabilitiesAvailable();
+
+    typedef std::function<void(LLUUID newAssetId, LLSD response)> upload_callback_f;
+    static void saveTextureDone(LLUUID const& asset_id, void* user_data, S32 status,  LLExtStat ext_status, upload_callback_f cb);
+    void saveTexture(LLImageJ2C* img, const std::string& name, const LLUUID& asset_id, LLAssetStorage::LLStoreAssetCallback cb);
+    void setFailedToUploadTexture();
+    void clearTextures();
 protected:
     static LLPreviewMaterial* getInstance(const LLUUID& uuid);
     void setEnableEditing(bool can_modify);
 private:
+    bool updateInventoryItem(const std::string &buffer, const LLUUID &item_id, const LLUUID &task_id);
+    void createInventoryItem(const std::string &buffer, const std::string &name, const std::string &desc, const LLPermissions& permissions);
+
+    // utility function for building a description of the imported material
+    // based on what we know about it.
+    const std::string buildMaterialDescription();
+
+    // last known name of each texture
+    std::string mBaseColorName;
+    std::string mNormalName;
+    std::string mMetallicRoughnessName;
+    std::string mEmissiveName;
+
+    // keep pointers to fetched textures or viewer will remove them
+    // if user temporary selects something else with 'apply now'
+    LLPointer<LLViewerFetchedTexture> mBaseColorFetched;
+    LLPointer<LLViewerFetchedTexture> mNormalFetched;
+    LLPointer<LLViewerFetchedTexture> mMetallicRoughnessFetched;
+    LLPointer<LLViewerFetchedTexture> mEmissiveFetched;
+
+    // J2C versions of packed buffers for uploading
+    LLPointer<LLImageJ2C> mBaseColorJ2C;
+    LLPointer<LLImageJ2C> mNormalJ2C;
+    LLPointer<LLImageJ2C> mMetallicRoughnessJ2C;
+    LLPointer<LLImageJ2C> mEmissiveJ2C;
 
     LLTextureCtrl* mBaseColorTextureCtrl;
     LLTextureCtrl* mMetallicTextureCtrl;
@@ -173,5 +214,7 @@ private:
 	// at the LLPreview level.  JC 2009-06-24
 	LLUUID mNotecardObjectID;
     bool mIsOverride = false;
+
+    bool mUploadingTexturesFailure;
 };
 #endif //LL_LLPREVIEWMATERIAL_H

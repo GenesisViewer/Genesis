@@ -44,9 +44,12 @@
 #include "llviewerobjectlist.h"
 #include "llviewerregion.h"
 #include "llnotificationsutil.h"
-
+#include "llstatusbar.h" //can_afford_transaction
 #include "tinygltf/tiny_gltf.h"
 #include "lltinygltfhelper.h"
+#include "lltrans.h"
+#include "llviewermenufile.h" // upload_new_resource
+#include "llfloaterperms.h"
 #include <strstream>
 
 const std::string MATERIAL_BASE_COLOR_DEFAULT_NAME = "Base Color";
@@ -94,8 +97,18 @@ LLPreviewMaterial::LLPreviewMaterial(const std::string& name,
 			  inv_item),
 	mAssetID( asset_id ),
 	mMaterialItemID(item_id),
-	mObjectID(object_id)
+	mObjectID(object_id), 
+    mUnsavedChanges(0)
+    , mRevertedChanges(0)
+    , mExpectedUploadCost(0)
+    , mUploadingTexturesCount(0)
+    , mUploadingTexturesFailure(false)
 {
+    const LLInventoryItem* item = getItem();
+    if (item)
+    {
+        mAssetID = item->getAssetUUID();
+    }
     LLUICtrlFactory::getInstance()->buildFloater(this,"floater_material_editor.xml");
 }
 
@@ -134,7 +147,7 @@ void LLPreviewMaterial::resetUnsavedChanges()
     mRevertedChanges = 0;
     if (!mIsOverride)
     {
-        childSetVisible("unsaved_changes", false);
+        //childSetVisible("unsaved_changes", false);
         setCanSave(false);
 
         mExpectedUploadCost = 0;
@@ -144,7 +157,7 @@ void LLPreviewMaterial::resetUnsavedChanges()
 //Should be in LLPreview maybe
 BOOL LLPreviewMaterial::canModify(const LLUUID taskUUID, const LLInventoryItem* item) {
     const LLViewerObject* object = nullptr;
-	if (taskUUID.notNull())
+    if (taskUUID.notNull())
 	{
 		object = gObjectList.findObject(taskUUID);
 	}
@@ -167,7 +180,7 @@ void LLPreviewMaterial::markChangesUnsaved(U32 dirty_flag)
         return;
     }
 
-    childSetVisible("unsaved_changes", mUnsavedChanges);
+    //childSetVisible("unsaved_changes", mUnsavedChanges);
 
     if (mUnsavedChanges)
     {
@@ -493,14 +506,9 @@ void LLPreviewMaterial::setEnableEditing(bool can_modify)
 void LLPreviewMaterial::loadAsset()
 {
     const LLInventoryItem* item;
-    if (mNotecardInventoryID.notNull())
-    {
-        item = mAuxItem.get();
-    }
-    else
-    {
-        item = getItem();
-    }
+    
+    item = getItem();
+   
     
     bool fail = false;
 
@@ -510,7 +518,6 @@ void LLPreviewMaterial::loadAsset()
         bool allow_copy = gAgent.allowOperation(PERM_COPY, perm, GP_OBJECT_MANIPULATE);
         bool allow_modify = canModify(mObjectUUID, item);
         bool source_library = mObjectUUID.isNull() && gInventory.isObjectDescendentOf(mItemUUID, gInventory.getLibraryRootFolderID());
-
         setCanSaveAs(allow_copy);
         setMaterialName(item->getName());
 
@@ -530,11 +537,7 @@ void LLPreviewMaterial::loadAsset()
                 LLHost source_sim = LLHost();
                 LLSD* user_data = new LLSD();
 
-                if (mNotecardInventoryID.notNull())
-                {
-                    user_data->with("objectid", mNotecardObjectID).with("notecardid", mNotecardInventoryID);
-                }
-                else if (mObjectUUID.notNull())
+                if (mObjectUUID.notNull())
                 {
                     LLViewerObject* objectp = gObjectList.findObject(mObjectUUID);
                     if (objectp && objectp->getRegion())
@@ -731,12 +734,12 @@ BOOL LLPreviewMaterial::postBuild()
         mNormalTextureCtrl->setCanApplyImmediately(false);
     }
 
-    // if (!mIsOverride)
-    // {
-    //     childSetAction("save", boost::bind(&LLPreviewMaterial::onClickSave, this));
+    if (!mIsOverride)
+    {
+         childSetAction("save", boost::bind(&LLPreviewMaterial::onClickSave, this));
     //     childSetAction("save_as", boost::bind(&LLPreviewMaterial::onClickSaveAs, this));
     //     childSetAction("cancel", boost::bind(&LLPreviewMaterial::onClickCancel, this));
-    // }
+    }
 
     if (mIsOverride)
     {
@@ -799,7 +802,7 @@ BOOL LLPreviewMaterial::postBuild()
     if (!mIsOverride)
     {
         // "unsaved_changes" doesn't exist in live editor
-        childSetVisible("unsaved_changes", mUnsavedChanges);
+        //childSetVisible("unsaved_changes", mUnsavedChanges);
 
         // Doesn't exist in live editor
         getChild<LLUICtrl>("total_upload_fee")->setTextArg("[FEE]", llformat("%d", 0));
@@ -810,6 +813,24 @@ BOOL LLPreviewMaterial::postBuild()
     // working from inventory, upload or editing inworld
 
 	return LLPreview::postBuild();
+}
+void LLPreviewMaterial::onClickSave()
+{
+    if (!capabilitiesAvailable())
+    {
+        LLNotificationsUtil::add("MissingMaterialCaps");
+        return;
+    }
+    if (!can_afford_transaction(mExpectedUploadCost))
+    {
+        LLSD args;
+        args["COST"] = llformat("%d", mExpectedUploadCost);
+        LLNotificationsUtil::add("ErrorCannotAffordUpload", args);
+        return;
+    }
+
+    applyToSelection();
+    saveIfNeeded();
 }
 //TODO
 void LLPreviewMaterial::applyToSelection()
@@ -912,15 +933,17 @@ void LLPreviewMaterial::onLoadComplete(LLVFS *vfs,const LLUUID& asset_uuid,
     LLSD* floater_key = (LLSD*)user_data;
     LL_INFOS("MaterialEditor") << "loading " << asset_uuid << " for " << *floater_key << LL_ENDL;
     //LLPreviewMaterial* editor = LLFloaterReg::findTypedInstance<LLPreviewMaterial>("material_editor", *floater_key);
-    LLPreviewMaterial* editor = LLPreviewMaterial::getInstance(*floater_key);
+    LLPreviewMaterial* editor = LLPreviewMaterial::getInstance((*floater_key).asUUID());
     if (editor)
     {
+        LL_INFOS("MaterialEditor") << "editor found for " << *floater_key << LL_ENDL;
         if (asset_uuid != editor->mAssetID)
         {
             LL_WARNS("MaterialEditor") << "Asset id mismatch, expected: " << editor->mAssetID << " got: " << asset_uuid << LL_ENDL;
         }
         if (0 == status)
         {
+            LL_INFOS("MaterialEditor") << "loading from LVFS " << asset_uuid << LL_ENDL;
             LLVFile file(vfs, asset_uuid, type, LLVFile::READ);
 
 			S32 file_length = file.getSize();
@@ -933,11 +956,13 @@ void LLPreviewMaterial::onLoadComplete(LLVFS *vfs,const LLUUID& asset_uuid,
             editor->decodeAsset(buffer);
 
             BOOL allow_modify = editor->canModify(editor->mObjectUUID, editor->getItem());
+            LL_INFOS("MaterialEditor") << "allow_modify " << allow_modify << LL_ENDL;
             BOOL source_library = editor->mObjectUUID.isNull() && gInventory.isObjectDescendentOf(editor->mItemUUID, gInventory.getLibraryRootFolderID());
             editor->setEnableEditing(allow_modify && !source_library);
             editor->resetUnsavedChanges();
             editor->mAssetStatus = PREVIEW_ASSET_LOADED;
             editor->setEnabled(true); // ready for use
+           
         }
         else
         {
@@ -967,4 +992,544 @@ void LLPreviewMaterial::onLoadComplete(LLVFS *vfs,const LLUUID& asset_uuid,
         LL_DEBUGS("MaterialEditor") << "Floater " << *floater_key << " does not exist." << LL_ENDL;
     }
     delete floater_key;
+}
+bool LLPreviewMaterial::capabilitiesAvailable()
+{
+    const LLViewerRegion* region = gAgent.getRegion();
+    if (!region)
+    {
+        LL_WARNS("MaterialEditor") << "Not connected to a region, cannot save material." << LL_ENDL;
+        return false;
+    }
+    std::string agent_url = region->getCapability("UpdateMaterialAgentInventory");
+    std::string task_url = region->getCapability("UpdateMaterialTaskInventory");
+
+    return (!agent_url.empty() && !task_url.empty());
+}
+bool LLPreviewMaterial::saveIfNeeded()
+{
+    if (mUploadingTexturesCount > 0)
+    {
+        // Upload already in progress, wait until
+        // textures upload will retry saving on callback.
+        // Also should prevent some failure-callbacks
+        return true;
+    }
+    if (saveTextures() > 0)
+    {
+        // started texture upload
+        setEnabled(false);
+        return true;
+    }
+    std::string buffer = getEncodedAsset();
+    const LLInventoryItem* item = getItem();
+    // save it out to database
+    if (item)
+    {
+        if (!updateInventoryItem(buffer, mItemUUID, mObjectUUID))
+        {
+            return false;
+        }
+
+        if (mCloseAfterSave)
+        {
+            close();
+        }
+        else
+        {
+            mAssetStatus = PREVIEW_ASSET_LOADING;
+            setEnabled(false);
+        }
+    }
+    else
+    { 
+        // Make a new inventory item and set upload permissions
+        LLPermissions local_permissions;
+        local_permissions.init(gAgent.getID(), gAgent.getID(), LLUUID::null, LLUUID::null);
+
+        U32 everyone_perm = LLFloaterPerms::getEveryonePerms("Materials");
+        U32 group_perm = LLFloaterPerms::getGroupPerms("Materials");
+        U32 next_owner_perm = LLFloaterPerms::getNextOwnerPerms("Materials");
+        local_permissions.initMasks(PERM_ALL, PERM_ALL, everyone_perm, group_perm, next_owner_perm);
+
+        std::string res_desc = buildMaterialDescription();
+        createInventoryItem(buffer, mMaterialName, res_desc, local_permissions);
+
+        // We do not update floater with uploaded asset yet, so just close it.
+        close();
+    }
+    return true;
+}
+/**
+ * Build a description of the material we just imported.
+ * Currently this means a list of the textures present but we
+ * may eventually want to make it more complete - will be guided
+ * by what the content creators say they need.
+ */
+const std::string LLPreviewMaterial::buildMaterialDescription()
+{
+    std::ostringstream desc;
+    desc << LLTrans::getString("Material Texture Name Header");
+
+    // add the texture names for each just so long as the material
+    // we loaded has an entry for it (i think testing the texture 
+    // control UUI for NULL is a valid metric for if it was loaded
+    // or not but I suspect this code will change a lot so may need
+    // to revisit
+    if (!mBaseColorTextureCtrl->getValue().asUUID().isNull())
+    {
+        desc << mBaseColorName;
+        desc << ", ";
+    }
+    if (!mMetallicTextureCtrl->getValue().asUUID().isNull())
+    {
+        desc << mMetallicRoughnessName;
+        desc << ", ";
+    }
+    if (!mEmissiveTextureCtrl->getValue().asUUID().isNull())
+    {
+        desc << mEmissiveName;
+        desc << ", ";
+    }
+    if (!mNormalTextureCtrl->getValue().asUUID().isNull())
+    {
+        desc << mNormalName;
+    }
+
+    // trim last char if it's a ',' in case there is no normal texture
+    // present and the code above inserts one
+    // (no need to check for string length - always has initial string)
+    std::string::iterator iter = desc.str().end() - 1;
+    if (*iter == ',')
+    {
+        desc.str().erase(iter);
+    }
+
+    // sanitize the material description so that it's compatible with the inventory
+    // note: split this up because clang doesn't like operating directly on the
+    // str() - error: lvalue reference to type 'basic_string<...>' cannot bind to a
+    // temporary of type 'basic_string<...>'
+    std::string inv_desc = desc.str();
+    LLInventoryObject::correctInventoryName(inv_desc);
+
+    return inv_desc;
+}
+S32 LLPreviewMaterial::saveTextures()
+{
+    mUploadingTexturesFailure = false; // not supposed to get here if already uploading
+
+    S32 work_count = 0;
+    LLUUID key = mMaterialItemID; // must be locally declared for lambda's capture to work
+    if (mBaseColorTextureUploadId == getBaseColorId() && mBaseColorTextureUploadId.notNull())
+    {
+        mUploadingTexturesCount++;
+        work_count++;
+        saveTexture(mBaseColorJ2C, mBaseColorName, mBaseColorTextureUploadId, [key](const LLUUID &asset_id, void *user_data, S32 status, LLExtStat ext_status)
+        {
+            LLPreviewMaterial* me = LLPreviewMaterial::getInstance(key);
+            if (me)
+            {
+                bool success = status == LL_ERR_NOERR;
+                if (success)
+                {
+                    me->setBaseColorId(asset_id);
+
+                    // discard upload buffers once texture have been saved
+                    me->mBaseColorJ2C = nullptr;
+                    me->mBaseColorFetched = nullptr;
+                    me->mBaseColorTextureUploadId.setNull();
+
+                    me->mUploadingTexturesCount--;
+
+                    if (!me->mUploadingTexturesFailure)
+                    {
+                        // try saving
+                        me->saveIfNeeded();
+                    }
+                    else if (me->mUploadingTexturesCount == 0)
+                    {
+                        me->setEnabled(true);
+                    }
+                }
+                else
+                {
+                    // stop upload if possible, unblock and let user decide
+                    me->setFailedToUploadTexture();
+                }
+            }
+        });
+    }
+    if (mNormalTextureUploadId == getNormalId() && mNormalTextureUploadId.notNull())
+    {
+        mUploadingTexturesCount++;
+        work_count++;
+        saveTexture(mNormalJ2C, mNormalName, mNormalTextureUploadId, [key](const LLUUID &asset_id, void *user_data, S32 status, LLExtStat ext_status)
+        {
+            LLPreviewMaterial* me = LLPreviewMaterial::getInstance(key);
+            if (me)
+            {
+                bool success = status == LL_ERR_NOERR;
+                if (success)
+                {
+                    me->setNormalId(asset_id);
+
+                    // discard upload buffers once texture have been saved
+                    me->mNormalJ2C = nullptr;
+                    me->mNormalFetched = nullptr;
+                    me->mNormalTextureUploadId.setNull();
+
+                    me->mUploadingTexturesCount--;
+
+                    if (!me->mUploadingTexturesFailure)
+                    {
+                        // try saving
+                        me->saveIfNeeded();
+                    }
+                    else if (me->mUploadingTexturesCount == 0)
+                    {
+                        me->setEnabled(true);
+                    }
+                }
+                else
+                {
+                    // stop upload if possible, unblock and let user decide
+                    me->setFailedToUploadTexture();
+                }
+            }
+        });
+    }
+    if (mMetallicTextureUploadId == getMetallicRoughnessId() && mMetallicTextureUploadId.notNull())
+    {
+        mUploadingTexturesCount++;
+        work_count++;
+        saveTexture(mMetallicRoughnessJ2C, mMetallicRoughnessName, mMetallicTextureUploadId, [key](const LLUUID &asset_id, void *user_data, S32 status, LLExtStat ext_status)
+        {
+            LLPreviewMaterial* me = LLPreviewMaterial::getInstance(key);
+            if (me)
+            {
+                bool success = status == LL_ERR_NOERR;
+                if (success)
+                {
+                    me->setMetallicRoughnessId(asset_id);
+
+                    // discard upload buffers once texture have been saved
+                    me->mMetallicRoughnessJ2C = nullptr;
+                    me->mMetallicRoughnessFetched = nullptr;
+                    me->mMetallicTextureUploadId.setNull();
+
+                    me->mUploadingTexturesCount--;
+
+                    if (!me->mUploadingTexturesFailure)
+                    {
+                        // try saving
+                        me->saveIfNeeded();
+                    }
+                    else if (me->mUploadingTexturesCount == 0)
+                    {
+                        me->setEnabled(true);
+                    }
+                }
+                else
+                {
+                    // stop upload if possible, unblock and let user decide
+                    me->setFailedToUploadTexture();
+                }
+            }
+        });
+    }
+
+    if (mEmissiveTextureUploadId == getEmissiveId() && mEmissiveTextureUploadId.notNull())
+    {
+        mUploadingTexturesCount++;
+        work_count++;
+        saveTexture(mEmissiveJ2C, mEmissiveName, mEmissiveTextureUploadId, [key](const LLUUID &asset_id, void *user_data, S32 status, LLExtStat ext_status)
+        {
+            LLPreviewMaterial* me = LLPreviewMaterial::getInstance(key);
+            if (me)
+            {
+                bool success = status == LL_ERR_NOERR;
+                if (success)
+                {
+                    me->setEmissiveId(asset_id);
+
+                    // discard upload buffers once texture have been saved
+                    me->mEmissiveJ2C = nullptr;
+                    me->mEmissiveFetched = nullptr;
+                    me->mEmissiveTextureUploadId.setNull();
+
+                    me->mUploadingTexturesCount--;
+
+                    if (!me->mUploadingTexturesFailure)
+                    {
+                        // try saving
+                        me->saveIfNeeded();
+                    }
+                    else if (me->mUploadingTexturesCount == 0)
+                    {
+                        me->setEnabled(true);
+                    }
+                }
+                else
+                {
+                    // stop upload if possible, unblock and let user decide
+                    me->setFailedToUploadTexture();
+                }
+            }
+        });
+    }
+
+    if (!work_count)
+    {
+        // Discard upload buffers once textures have been confirmed as saved.
+        // Otherwise we keep buffers for potential upload failure recovery.
+        clearTextures();
+    }
+
+    // asset storage can callback immediately, causing a decrease
+    // of mUploadingTexturesCount, report amount of work scheduled
+    // not amount of work remaining
+    return work_count;
+}
+void LLPreviewMaterial::clearTextures()
+{
+    mBaseColorJ2C = nullptr;
+    mNormalJ2C = nullptr;
+    mEmissiveJ2C = nullptr;
+    mMetallicRoughnessJ2C = nullptr;
+
+    mBaseColorFetched = nullptr;
+    mNormalFetched = nullptr;
+    mMetallicRoughnessFetched = nullptr;
+    mEmissiveFetched = nullptr;
+
+    mBaseColorTextureUploadId.setNull();
+    mNormalTextureUploadId.setNull();
+    mMetallicTextureUploadId.setNull();
+    mEmissiveTextureUploadId.setNull();
+}
+void LLPreviewMaterial::setFailedToUploadTexture()
+{
+    mUploadingTexturesFailure = true;
+    mUploadingTexturesCount--;
+    if (mUploadingTexturesCount == 0)
+    {
+        setEnabled(true);
+    }
+}
+
+void LLPreviewMaterial::saveTexture(LLImageJ2C* img, const std::string& name, const LLUUID& asset_id, LLAssetStorage::LLStoreAssetCallback cb)
+{
+    if (asset_id.isNull()
+        || img == nullptr
+        || img->getDataSize() == 0)
+    {
+        return;
+    }
+
+    // // copy image bytes into string
+    // std::string buffer;
+    // buffer.assign((const char*) img->getData(), img->getDataSize());
+
+    U32 expected_upload_cost = LLAgentBenefitsMgr::current().getTextureUploadCost();
+
+    LLSD key = mMaterialItemID;
+    std::function<bool(LLUUID itemId, LLSD response, std::string reason)> failed_upload([key](LLUUID assetId, LLSD response, std::string reason)
+    {
+        LLPreviewMaterial* me = LLPreviewMaterial::getInstance(key);
+        if (me)
+        {
+            me->setFailedToUploadTexture();
+        }
+        return true; // handled
+    });
+    
+    // LLResourceUploadInfo::ptr_t uploadInfo(std::make_shared<LLNewBufferedResourceUploadInfo>(
+    //     buffer,
+    //     asset_id,
+    //     name, 
+    //     name, 
+    //     0,
+    //     LLFolderType::FT_TEXTURE, 
+    //     LLInventoryType::IT_TEXTURE,
+    //     LLAssetType::AT_TEXTURE,
+    //     LLFloaterPerms::getNextOwnerPerms("Uploads"),
+    //     LLFloaterPerms::getGroupPerms("Uploads"),
+    //     LLFloaterPerms::getEveryonePerms("Uploads"),
+    //     expected_upload_cost, 
+    //     false,
+    //     cb,
+    //     failed_upload));
+
+    // upload_new_resource(uploadInfo);
+    // gen a new uuid for this asset
+	LLTransactionID tid;
+	tid.generate();
+	LLAssetID new_asset_id = tid.makeAssetID(gAgent.getSecureSessionID());
+	LLVFile::writeFile(img->getData(), img->getDataSize(), gVFS, new_asset_id, LLAssetType::AT_TEXTURE);
+	
+	
+	upload_new_resource(tid,	// tid
+				LLAssetType::AT_TEXTURE,
+				name,
+                name,
+				0,
+				LLFolderType::FT_TEXTURE,
+				LLInventoryType::IT_TEXTURE,
+				LLFloaterPerms::getNextOwnerPerms("Uploads"),  
+				LLFloaterPerms::getGroupPerms("Uploads"), 
+				LLFloaterPerms::getEveryonePerms("Uploads"),
+				name,
+				cb, expected_upload_cost, NULL,NULL);
+	
+}
+// Get a dump of the json representation of the current state of the editor UI
+// in GLTF format, excluding transforms as they are not supported in material
+// assets. (See also LLGLTFMaterial::sanitizeAssetMaterial())
+void LLPreviewMaterial::getGLTFMaterial(LLGLTFMaterial* mat)
+{
+    mat->mBaseColor = getBaseColor();
+    mat->mBaseColor.mV[3] = getTransparency();
+    mat->mTextureId[LLGLTFMaterial::GLTF_TEXTURE_INFO_BASE_COLOR] = getBaseColorId();
+
+    mat->mTextureId[LLGLTFMaterial::GLTF_TEXTURE_INFO_NORMAL] = getNormalId();
+
+    mat->mTextureId[LLGLTFMaterial::GLTF_TEXTURE_INFO_METALLIC_ROUGHNESS] = getMetallicRoughnessId();
+    mat->mMetallicFactor = getMetalnessFactor();
+    mat->mRoughnessFactor = getRoughnessFactor();
+
+    mat->mEmissiveColor = getEmissiveColor();
+    mat->mTextureId[LLGLTFMaterial::GLTF_TEXTURE_INFO_EMISSIVE] = getEmissiveId();
+
+    mat->mDoubleSided = getDoubleSided();
+    mat->setAlphaMode(getAlphaMode());
+    mat->mAlphaCutoff = getAlphaCutoff();
+}
+std::string LLPreviewMaterial::getEncodedAsset()
+{
+    LLSD asset;
+    asset["version"] = LLGLTFMaterial::ASSET_VERSION;
+    asset["type"] = LLGLTFMaterial::ASSET_TYPE;
+    LLGLTFMaterial mat;
+    getGLTFMaterial(&mat);
+    asset["data"] = mat.asJSON();
+
+    std::ostringstream str;
+    LLSDSerialize::serialize(asset, str, LLSDSerialize::LLSD_BINARY);
+
+    return str.str();
+}
+
+bool LLPreviewMaterial::updateInventoryItem(const std::string &buffer, const LLUUID &item_id, const LLUUID &task_id)
+{
+    const LLViewerRegion* region = gAgent.getRegion();
+    if (!region)
+    {
+        LL_WARNS("MaterialEditor") << "Not connected to a region, cannot save material." << LL_ENDL;
+        return false;
+    }
+    std::string agent_url = region->getCapability("UpdateMaterialAgentInventory");
+    std::string task_url = region->getCapability("UpdateMaterialTaskInventory");
+
+    if (!agent_url.empty() && !task_url.empty())
+    {
+        std::string url;
+        //LLResourceUploadInfo::ptr_t uploadInfo;
+
+        if (task_id.isNull() && !agent_url.empty())
+        {
+            // We need to update the asset information
+            LLTransactionID tid;
+            LLAssetID asset_id;
+            tid.generate();
+            asset_id = tid.makeAssetID(gAgent.getSecureSessionID());
+
+            LLVFile file(gVFS, asset_id, LLAssetType::AT_MATERIAL, LLVFile::APPEND);
+            S32 size = buffer.length() + 1;
+            file.setMaxSize(size);
+            file.write((U8*)buffer.c_str(), size);
+
+            // uploadInfo = std::make_shared<LLBufferedAssetUploadInfo>(item_id, LLAssetType::AT_MATERIAL, buffer,
+            //     [](LLUUID itemId, LLUUID newAssetId, LLUUID newItemId, LLSD)
+            //     {
+            //         // done callback
+            //         LLMaterialEditor::finishInventoryUpload(itemId, newAssetId, newItemId);
+            //     },
+            //     [](LLUUID itemId, LLUUID taskId, LLSD response, std::string reason)
+            //     {
+            //         // failure callback
+            //         LLMaterialEditor* me = LLFloaterReg::findTypedInstance<LLMaterialEditor>("material_editor", LLSD(itemId));
+            //         if (me)
+            //         {
+            //             me->setEnabled(true);
+            //         }
+            //         return true;
+            //     }
+            //     );
+            // url = agent_url;
+            LLSD body;
+				body["item_id"] = mItemUUID;
+            LLHTTPClient::post(agent_url, body,
+					new LLUpdateAgentInventoryResponder(body, asset_id, LLAssetType::AT_MATERIAL));
+
+        }
+        // else if (!task_id.isNull() && !task_url.empty())
+        // {
+        //     uploadInfo = std::make_shared<LLBufferedAssetUploadInfo>(task_id, item_id, LLAssetType::AT_MATERIAL, buffer,
+        //         [](LLUUID itemId, LLUUID task_id, LLUUID newAssetId, LLSD)
+        //         {
+        //             // done callback
+        //             LLMaterialEditor::finishTaskUpload(itemId, newAssetId, task_id);
+        //         },
+        //         [](LLUUID itemId, LLUUID task_id, LLSD response, std::string reason)
+        //         {
+        //             // failure callback
+        //             LLSD floater_key;
+        //             floater_key["taskid"] = task_id;
+        //             floater_key["itemid"] = itemId;
+        //             LLMaterialEditor* me = LLFloaterReg::findTypedInstance<LLMaterialEditor>("material_editor", floater_key);
+        //             if (me)
+        //             {
+        //                 me->setEnabled(true);
+        //             }
+        //             return true;
+        //         }
+        //         );
+        //     url = task_url;
+        // }
+
+        if (!url.empty())
+        {
+            //LLViewerAssetUpload::EnqueueInventoryUpload(url, uploadInfo);
+            
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+    else // !gAssetStorage
+    {
+        LL_WARNS("MaterialEditor") << "Not connected to an materials capable region." << LL_ENDL;
+        return false;
+    }
+
+    // todo: apply permissions from textures here if server doesn't
+    // if any texture is 'no transfer', material should be 'no transfer' as well
+
+    return true;
+}
+void LLPreviewMaterial::createInventoryItem(const std::string &buffer, const std::string &name, const std::string &desc, const LLPermissions& permissions)
+{
+    // gen a new uuid for this asset
+    LLTransactionID tid;
+    tid.generate();     // timestamp-based randomization + uniquification
+    //LLUUID parent = gInventory.findUserDefinedCategoryUUIDForType(LLFolderType::FT_MATERIAL);
+    LLUUID parent = gInventory.findCategoryUUIDForType(LLFolderType::FT_MATERIAL);
+    const U8 subtype = 0;//NO_INV_SUBTYPE;  // TODO maybe use AT_SETTINGS and LLSettingsType::ST_MATERIAL ?
+
+    // LLPointer<LLObjectsMaterialItemCallback> cb = new LLObjectsMaterialItemCallback(permissions, buffer, name);
+    // create_inventory_item(gAgent.getID(), gAgent.getSessionID(), parent, tid, name, desc,
+    //     LLAssetType::AT_MATERIAL, LLInventoryType::IT_MATERIAL, subtype, permissions.getMaskNextOwner(),
+    //     cb);
 }

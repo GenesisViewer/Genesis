@@ -7427,6 +7427,7 @@ public:
 									item->getUUID(), LLUUID::null, item->getAssetUUID(),
 									item);
 					//preview->setSourceID(source_id);
+					
 					preview->setFocus(TRUE);
 					// Force to be entirely onscreen.
 					gFloaterView->adjustToFitScreen(preview, FALSE);

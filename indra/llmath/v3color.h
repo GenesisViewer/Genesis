@@ -87,7 +87,10 @@ public:
 	const LLColor3&	set(F32 x, F32 y, F32 z);	// Sets LLColor3 to (x, y, z)
 	const LLColor3&	set(const LLColor3 &vec);	// Sets LLColor3 to vec
 	const LLColor3&	set(const F32 *vec);		// Sets LLColor3 to vec
-
+    // write to a vector of unknown type and size
+    // maye leave some data unmodified
+    template<typename T>
+    void write(std::vector<T>& v) const;
 	F32		magVec() const;				// deprecated
 	F32		magVecSquared() const;		// deprecated
 	F32		normVec();					// deprecated
@@ -478,4 +481,14 @@ inline LLColor3 lerp(const LLColor3 &a, const LLColor3 &b, F32 u)
 }
 
 
+// write to a vector of unknown type and size
+// maye leave some data unmodified
+template<typename T>
+void LLColor3::write(std::vector<T>& v) const
+{
+    for (int i = 0; i < llmin((S32)v.size(), 3); ++i)
+    {
+        v[i] = mV[i];
+    }
+}
 #endif

@@ -11964,4 +11964,23 @@ Please be sure that your report won't be a duplicate of an existing one.
        text="Cancel"/>
     </form>
   </notification>
+  <notification
+   icon="alertmodal.tga"
+   name="UnableToLoadMaterial"
+   type="alertmodal">
+Unable to load material.
+Please try again.
+    <tag>fail</tag>
+    <usetemplate
+     name="okbutton"
+     yestext="OK"/>
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="MissingMaterialCaps"
+   type="alertmodal">
+    <tag>fail</tag>
+    Not connected to a materials capable region.
+  </notification>
 </notifications>

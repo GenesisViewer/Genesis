@@ -94,7 +94,10 @@ class LLColor4
         // may leave some data unmodified
         template<typename T> 
         const LLColor4& set(const std::vector<T>& v);
-
+		// write to a vector of unknown type and size
+        // maye leave some data unmodified
+        template<typename T>
+        void write(std::vector<T>& v) const;
 		const LLColor4&    setAlpha(F32 a);
 
 		F32			magVec() const;				// deprecated -- use length()
@@ -699,6 +702,14 @@ inline const LLColor4 linearColor4(const LLColor4 &a)
     linearColor.mV[3] = a.mV[3];
 
     return linearColor;
+}
+template<typename T>
+void LLColor4::write(std::vector<T>& v) const
+{
+    for (int i = 0; i < llmin((S32)v.size(), 4); ++i)
+    {
+        v[i] = mV[i];
+    }
 }
 #endif
 

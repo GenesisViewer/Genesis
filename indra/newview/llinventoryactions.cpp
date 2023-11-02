@@ -447,6 +447,15 @@ void do_create(LLInventoryModel *model, LLInventoryPanel *ptr, const LLSD& sdtyp
 							LLInventoryType::IT_GESTURE,
 							LLFloaterPerms::getNextOwnerPerms("Gestures"));
 	}
+	else if ("material" == type)
+    {
+        const LLUUID parent_id = self ? self->getUUID() : model->findCategoryUUIDForType(LLFolderType::FT_MATERIAL);
+        ptr->createNewItem(LLTrans::getString("New Material"),
+            parent_id,
+            LLAssetType::AT_MATERIAL,
+            LLInventoryType::IT_MATERIAL,
+            PERM_ALL);	// overridden in create_new_item
+    }
 	
 	else if ("outfit" == type || ("update outfit" == type && !LLAppearanceMgr::getInstance()->updateBaseOutfit())) // If updateBaseOutfit fails, prompt to make a new outfit
 	{

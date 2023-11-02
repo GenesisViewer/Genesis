@@ -1111,7 +1111,20 @@ void create_gesture_cb(const LLUUID& inv_item)
 		}
 	}
 }
+void create_gltf_material_cb(const LLUUID& inv_item)
+{
+    if (!inv_item.isNull())
+    {
+        LLViewerInventoryItem* item = gInventory.getItem(inv_item);
+        if (item)
+        {
+            set_default_permissions(item, "Materials");
 
+            gInventory.updateItem(item);
+            gInventory.notifyObservers();
+        }
+    }
+}
 
 void create_notecard_cb(const LLUUID& inv_item)
 {

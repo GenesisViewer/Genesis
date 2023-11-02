@@ -717,6 +717,15 @@ void LLInventoryModelBackgroundFetch::fixBadLookupSetting() {
 			gInventory.updateCategory(settingsCat);
 		}
 	}
+	LLUUID materialsCatUUID = gInventory.findCategoryUUIDForType(LLFolderType::FT_MATERIAL);
+	if (!materialsCatUUID.isNull()) {
+		LLViewerInventoryCategory* materialCat =  gInventory.getCategory(materialsCatUUID);
+		if (materialCat->getName() == LLFolderType::badLookup()) {
+			//ok we had the bug
+			materialCat->rename("Materials");
+			gInventory.updateCategory(materialCat);
+		}
+	}
 }
 bool LLInventoryModelBackgroundFetch::fetchQueueContainsNoDescendentsOf(const LLUUID& cat_id) const
 {

@@ -1198,6 +1198,11 @@ void LLInventoryPanel::createNewItem(const std::string& name,
 		create_inventory_item(gAgent.getID(), gAgent.getSessionID(),
 							  parent_id, LLTransactionID::tnull, name, desc, asset_type, inv_type,
 							  NOT_WEARABLE, next_owner_perm, cb);
+	} else if (inv_type == LLInventoryType::IT_MATERIAL){
+		LLPointer<LLInventoryCallback> cb =  new LLBoostFuncInventoryCallback(create_gltf_material_cb);
+		create_inventory_item(gAgent.getID(), gAgent.getSessionID(),
+							  parent_id, LLTransactionID::tnull, name, desc, asset_type, inv_type,
+							  NOT_WEARABLE, next_owner_perm, cb);
 	}
 	else
 	{

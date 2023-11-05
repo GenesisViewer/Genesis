@@ -150,7 +150,8 @@ public:
     bool saveIfNeeded();
     S32 saveTextures();
     static bool capabilitiesAvailable();
-
+    static bool canModifyObjectsMaterial();
+    static bool canSaveObjectsMaterial();
     typedef std::function<void(LLUUID newAssetId, LLSD response)> upload_callback_f;
     static void saveTextureDone(LLUUID const& asset_id, void* user_data, S32 status,  LLExtStat ext_status, upload_callback_f cb);
     void saveTexture(LLImageJ2C* img, const std::string& name, const LLUUID& asset_id, LLAssetStorage::LLStoreAssetCallback cb);

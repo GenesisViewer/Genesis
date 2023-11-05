@@ -39,7 +39,9 @@
 #include "llsdserialize.h"
 #include "llscrollbar.h"
 #include "llcolorswatch.h"
+#include "lllocalgltfmaterials.h"
 #include "llgltfmaterial.h"
+#include "llgltfmateriallist.h"
 #include "lluictrlfactory.h"
 #include "llviewerobjectlist.h"
 #include "llviewerregion.h"
@@ -50,6 +52,7 @@
 #include "lltrans.h"
 #include "llviewermenufile.h" // upload_new_resource
 #include "llfloaterperms.h"
+#include "llselectmgr.h"
 #include <strstream>
 
 const std::string MATERIAL_BASE_COLOR_DEFAULT_NAME = "Base Color";
@@ -83,6 +86,132 @@ const S32 PREVIEW_MIN_HEIGHT =
 	2 * PREVIEW_BORDER +
 	3*(20 + PREVIEW_PAD) +
 	2 * SCROLLBAR_SIZE + 128;
+    ///----------------------------------------------------------------------------
+/// Class LLSelectedTEGetMatData
+/// For finding selected applicable inworld material
+///----------------------------------------------------------------------------
+
+struct LLSelectedTEGetMatData : public LLSelectedTEFunctor
+{
+    LLSelectedTEGetMatData(bool for_override);
+
+    bool apply(LLViewerObject* objectp, S32 te_index);
+
+    bool mIsOverride;
+    bool mIdenticalTexColor;
+    bool mIdenticalTexMetal;
+    bool mIdenticalTexEmissive;
+    bool mIdenticalTexNormal;
+    bool mFirst;
+    LLUUID mTexColorId;
+    LLUUID mTexMetalId;
+    LLUUID mTexEmissiveId;
+    LLUUID mTexNormalId;
+    LLUUID mObjectId;
+    LLViewerObject* mObject = nullptr;
+    S32 mObjectTE;
+    LLUUID mMaterialId;
+    LLPointer<LLGLTFMaterial> mMaterial;
+    LLPointer<LLLocalGLTFMaterial> mLocalMaterial;
+};
+
+LLSelectedTEGetMatData::LLSelectedTEGetMatData(bool for_override)
+    : mIsOverride(for_override)
+    , mIdenticalTexColor(true)
+    , mIdenticalTexMetal(true)
+    , mIdenticalTexEmissive(true)
+    , mIdenticalTexNormal(true)
+    , mObjectTE(-1)
+    , mFirst(true)
+{}
+
+bool LLSelectedTEGetMatData::apply(LLViewerObject* objectp, S32 te_index)
+{
+    if (!objectp)
+    {
+        return false;
+    }
+    LLUUID mat_id = objectp->getRenderMaterialID(te_index);
+    mMaterialId = mat_id;
+    bool can_use = mIsOverride ? objectp->permModify() : objectp->permCopy();
+    LLTextureEntry *tep = objectp->getTE(te_index);
+    // We might want to disable this entirely if at least
+    // something in selection is no-copy or no modify
+    // or has no base material
+    if (can_use && tep && mat_id.notNull())
+    {
+        if (mIsOverride)
+        {
+            LLPointer<LLGLTFMaterial> mat = tep->getGLTFRenderMaterial();
+
+            LLUUID tex_color_id;
+            LLUUID tex_metal_id;
+            LLUUID tex_emissive_id;
+            LLUUID tex_normal_id;
+            llassert(mat.notNull()); // by this point shouldn't be null
+            if (mat.notNull())
+            {
+                tex_color_id = mat->mTextureId[LLGLTFMaterial::GLTF_TEXTURE_INFO_BASE_COLOR];
+                tex_metal_id = mat->mTextureId[LLGLTFMaterial::GLTF_TEXTURE_INFO_METALLIC_ROUGHNESS];
+                tex_emissive_id = mat->mTextureId[LLGLTFMaterial::GLTF_TEXTURE_INFO_EMISSIVE];
+                tex_normal_id = mat->mTextureId[LLGLTFMaterial::GLTF_TEXTURE_INFO_NORMAL];
+            }
+            if (mFirst)
+            {
+                mMaterial = mat;
+                mTexColorId = tex_color_id;
+                mTexMetalId = tex_metal_id;
+                mTexEmissiveId = tex_emissive_id;
+                mTexNormalId = tex_normal_id;
+                mObjectTE = te_index;
+                mObject = objectp;
+                mObjectId = objectp->getID();
+                mFirst = false;
+            }
+            else
+            {
+                if (mTexColorId != tex_color_id)
+                {
+                    mIdenticalTexColor = false;
+                }
+                if (mTexMetalId != tex_metal_id)
+                {
+                    mIdenticalTexMetal = false;
+                }
+                if (mTexEmissiveId != tex_emissive_id)
+                {
+                    mIdenticalTexEmissive = false;
+                }
+                if (mTexNormalId != tex_normal_id)
+                {
+                    mIdenticalTexNormal = false;
+                }
+            }
+        }
+        else
+        {
+            LLGLTFMaterial *mat = tep->getGLTFMaterial();
+            LLLocalGLTFMaterial *local_mat = dynamic_cast<LLLocalGLTFMaterial*>(mat);
+
+            mObject = objectp;
+            mObjectId = objectp->getID();
+            if (local_mat)
+            {
+                mLocalMaterial = local_mat;
+            }
+            mMaterial = tep->getGLTFRenderMaterial();
+
+            if (mMaterial.isNull())
+            {
+                // Shouldn't be possible?
+                LL_WARNS("MaterialEditor") << "Object has material id, but no material" << LL_ENDL;
+                mMaterial = gGLTFMaterialList.getMaterial(mat_id);
+            }
+        }
+        return true;
+    }
+    return false;
+}
 // Default constructor
 LLPreviewMaterial::LLPreviewMaterial(const std::string& name,
 									 const LLRect& rect,
@@ -1532,4 +1661,129 @@ void LLPreviewMaterial::createInventoryItem(const std::string &buffer, const std
     // create_inventory_item(gAgent.getID(), gAgent.getSessionID(), parent, tid, name, desc,
     //     LLAssetType::AT_MATERIAL, LLInventoryType::IT_MATERIAL, subtype, permissions.getMaskNextOwner(),
     //     cb);
+}
+// *NOTE: permissions_out includes user preferences for new item creation (LLFloaterPerms)
+bool can_use_objects_material(LLSelectedTEGetMatData& func, const std::vector<PermissionBit>& ops, LLPermissions& permissions_out, LLViewerInventoryItem*& item_out)
+{
+    if (!LLPreviewMaterial::capabilitiesAvailable())
+    {
+        return false;
+    }
+
+    // func.mIsOverride=true is used for the singleton material editor floater
+    // associated with the build floater. This flag also excludes objects from
+    // the selection that do not satisfy PERM_MODIFY.
+    llassert(func.mIsOverride);
+    LLSelectMgr::getInstance()->getSelection()->applyToTEs(&func, true /*first applicable*/);
+
+    LLViewerObject* selected_object = func.mObject;
+    if (!selected_object)
+    {
+        // LLSelectedTEGetMatData can fail if there are no selected faces
+        // with materials, but we expect at least some object is selected.
+        return false;
+    }
+    if (selected_object->isInventoryPending())
+    {
+        return false;
+    }
+    for (PermissionBit op : ops)
+    {
+        if (op == PERM_MODIFY && selected_object->isPermanentEnforced())
+        {
+            return false;
+        }
+    }
+
+    item_out = selected_object->getInventoryItemByAsset(func.mMaterialId);
+
+    LLPermissions item_permissions;
+    if (item_out)
+    {
+        item_permissions.set(item_out->getPermissions());
+        for (PermissionBit op : ops)
+        {
+            if (!gAgent.allowOperation(op, item_permissions, GP_OBJECT_MANIPULATE))
+            {
+                return false;
+            }
+        }
+        // Update flags for new owner
+        if (!item_permissions.setOwnerAndGroup(LLUUID::null, gAgent.getID(), LLUUID::null, true))
+        {
+            llassert(false);
+            return false;
+        }
+    }
+    else
+    {
+        item_permissions.init(gAgent.getID(), gAgent.getID(), LLUUID::null, LLUUID::null);
+    }
+
+    // Use root object for permissions checking
+    LLViewerObject* root_object = selected_object->getRootEdit();
+    LLPermissions* object_permissions_p = LLSelectMgr::getInstance()->findObjectPermissions(root_object);
+    LLPermissions object_permissions;
+    if (object_permissions_p)
+    {
+        object_permissions.set(*object_permissions_p);
+        for (PermissionBit op : ops)
+        {
+            if (!gAgent.allowOperation(op, object_permissions, GP_OBJECT_MANIPULATE))
+            {
+                return false;
+            }
+        }
+        // Update flags for new owner
+        if (!object_permissions.setOwnerAndGroup(LLUUID::null, gAgent.getID(), LLUUID::null, true))
+        {
+            llassert(false);
+            return false;
+        }
+    }
+    else
+    {
+        object_permissions.init(gAgent.getID(), gAgent.getID(), LLUUID::null, LLUUID::null);
+    }
+
+    LLPermissions floater_perm;
+    floater_perm.init(gAgent.getID(), gAgent.getID(), LLUUID::null, LLUUID::null);
+    floater_perm.setMaskEveryone(LLFloaterPerms::getEveryonePerms("Materials"));
+    floater_perm.setMaskGroup(LLFloaterPerms::getGroupPerms("Materials"));
+    floater_perm.setMaskNext(LLFloaterPerms::getNextOwnerPerms("Materials"));
+
+    // *NOTE: A close inspection of LLPermissions::accumulate shows that
+    // conflicting UUIDs will be unset. This is acceptable behavior for now.
+    // The server will populate creator info based on the item creation method
+    // used.
+    // *NOTE: As far as I'm aware, there is currently no good way to preserve
+    // creation history when there's no material item present. In that case,
+    // the agent who saved the material will be considered the creator.
+    // -Cosmic,2023-08-07
+    if (item_out)
+    {
+        permissions_out.set(item_permissions);
+    }
+    else
+    {
+        permissions_out.set(object_permissions);
+    }
+    permissions_out.accumulate(floater_perm);
+
+    return true;
+}
+bool LLPreviewMaterial::canModifyObjectsMaterial()
+{
+    LLSelectedTEGetMatData func(true);
+    LLPermissions permissions;
+    LLViewerInventoryItem* item_out;
+    return can_use_objects_material(func, std::vector<PermissionBit>({PERM_MODIFY}), permissions, item_out);
+}
+
+bool LLPreviewMaterial::canSaveObjectsMaterial()
+{
+    LLSelectedTEGetMatData func(true);
+    LLPermissions permissions;
+    LLViewerInventoryItem* item_out;
+    return can_use_objects_material(func, std::vector<PermissionBit>({PERM_COPY, PERM_MODIFY}), permissions, item_out);
 }

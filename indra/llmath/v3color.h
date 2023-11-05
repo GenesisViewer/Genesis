@@ -87,6 +87,11 @@ public:
 	const LLColor3&	set(F32 x, F32 y, F32 z);	// Sets LLColor3 to (x, y, z)
 	const LLColor3&	set(const LLColor3 &vec);	// Sets LLColor3 to vec
 	const LLColor3&	set(const F32 *vec);		// Sets LLColor3 to vec
+
+	// set from a vector of unknown type and size
+    // may leave some data unmodified
+    template<typename T>
+    const LLColor3& set(const std::vector<T>& v);
     // write to a vector of unknown type and size
     // maye leave some data unmodified
     template<typename T>
@@ -490,5 +495,15 @@ void LLColor3::write(std::vector<T>& v) const
     {
         v[i] = mV[i];
     }
+}
+template<typename T>
+const LLColor3& LLColor3::set(const std::vector<T>& v)
+{
+    for (S32 i = 0; i < llmin((S32)v.size(), 3); ++i)
+    {
+        mV[i] = v[i];
+    }
+
+    return *this;
 }
 #endif

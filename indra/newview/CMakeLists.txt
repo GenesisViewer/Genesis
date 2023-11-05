@@ -204,6 +204,7 @@ set(viewer_SOURCE_FILES
     llfavoritesbar.cpp
     llfavoritestoolbar.cpp
     llfeaturemanager.cpp
+    llfetchedgltfmaterial.cpp
     llfirstuse.cpp
     llflexibleobject.cpp
     llfloaterabout.cpp
@@ -322,6 +323,7 @@ set(viewer_SOURCE_FILES
     llgesturemgr.cpp
     llgiveinventory.cpp
     llgivemoney.cpp
+    llgltfmateriallist.cpp
     llglsandbox.cpp
     llgroupactions.cpp
     llgroupmgr.cpp
@@ -357,6 +359,7 @@ set(viewer_SOURCE_FILES
     lljoystickbutton.cpp
     lllandmarkactions.cpp
     lllandmarklist.cpp
+    lllocalgltfmaterials.cpp
     lllogchat.cpp
     llloginhandler.cpp
     llmainlooprepeater.cpp
@@ -892,6 +895,8 @@ set(viewer_HEADER_FILES
     llgesturemgr.h
     llgiveinventory.h
     llgivemoney.h
+    llfetchedgltfmaterial.h
+    llgltfmateriallist.h
     llgroupactions.h
     llgroupmgr.h
     llgroupnotify.h
@@ -926,6 +931,7 @@ set(viewer_HEADER_FILES
     lllandmarkactions.h
     lllandmarklist.h
     lllightconstants.h
+    lllocalgltfmaterials.h
     lllogchat.h
     llloginhandler.h
     llmainlooprepeater.h

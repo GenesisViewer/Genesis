@@ -193,6 +193,7 @@ class LocalAssetBrowser : public LLSingleton<LocalAssetBrowser>
 		friend class FloaterLocalAssetBrowser;
 		friend class LocalAssetBrowserTimer;
 		static void UpdateTextureCtrlList(LLScrollListCtrl*);
+		static void UpdateMaterialCtrlList(LLScrollListCtrl*);
 		static void setLayerUpdated(bool toggle) { mLayerUpdated = toggle; }
 		static void setSculptUpdated(bool toggle) { mSculptUpdated = toggle; }
 		static void add(const LocalBitmap& unit) { loaded_bitmaps.push_back(unit); }

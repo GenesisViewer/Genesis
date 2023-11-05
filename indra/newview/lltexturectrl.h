@@ -65,7 +65,12 @@ public:
 		TEXTURE_SELECT,
 		TEXTURE_CANCEL
 	} ETexturePickOp;
-
+	typedef enum e_pick_inventory_type
+    {
+        PICK_TEXTURE_MATERIAL = 0,
+        PICK_TEXTURE = 1,
+        PICK_MATERIAL = 2,
+    } EPickInventoryType;
 public:
 	LLTextureCtrl(
 		const std::string& name, const LLRect& rect,
@@ -80,6 +85,8 @@ public:
 	static LLView* fromXML(LLXMLNodePtr node, LLView *parent, LLUICtrlFactory *factory);
 
 	virtual BOOL	handleMouseDown(S32 x, S32 y, MASK mask);
+	void setInventoryPickType(EPickInventoryType type);
+    EPickInventoryType getInventoryPickType() { return mInventoryPickType; };
 	virtual BOOL	handleDragAndDrop(S32 x, S32 y, MASK mask,
 						BOOL drop, EDragAndDropType cargo_type, void *cargo_data,
 						EAcceptance *accept,
@@ -173,7 +180,8 @@ public:
 	void setShowLoadingPlaceholder(BOOL showLoadingPlaceholder);
 
 	LLViewerFetchedTexture* getTexture() { return mTexturep; }
-
+	void refreshLocalList();
+    void refreshInventoryFilter();
 	static void handleClickOpenTexture(void* userdata);
 	static void handleClickCopyAssetID(void* userdata);
 
@@ -215,6 +223,7 @@ private:
 	BOOL					 mEnable;
 	// </edit>
 	std::string				 mLoadingPlaceholderString;
+	LLTextureCtrl::EPickInventoryType mInventoryPickType;
 };
 
 // XUI HACK: When floaters converted, switch this file to lltexturepicker.h/cpp

@@ -5907,6 +5907,13 @@ bool LLViewerObject::unpackParameterEntry(U16 param_type, LLDataPacker *dp)
 	}
 }
 
+LLNetworkData* LLViewerObject::getParameterEntry(U16 param_type) const
+{
+	//ExtraParameter* param = getExtraParameterEntry(param_type);
+	const ExtraParameter& param = getExtraParameterEntry(param_type);
+	return param.data;
+}
+
 LLViewerObject::ExtraParameter* LLViewerObject::createNewParameterEntry(U16 param_type)
 {
 	LLNetworkData* new_block = NULL;
@@ -6834,7 +6841,16 @@ LLVOAvatar* LLViewerObject::getAvatar() const
 
 	return NULL;
 }
+const LLUUID& LLViewerObject::getRenderMaterialID(U8 te) const
+{
+    LLRenderMaterialParams* param_block = (LLRenderMaterialParams*)getParameterEntry(LLNetworkData::PARAMS_RENDER_MATERIAL);
+    if (param_block)
+    {
+        return param_block->getMaterial(te);
+    }
 
+    return LLUUID::null;
+}
 
 class ObjectPhysicsProperties : public LLHTTPNode
 {

@@ -54,7 +54,7 @@ this feature is still a work in progress.
 #include "llcombobox.h"
 #include "llscrolllistitem.h"
 #include "lluictrlfactory.h"
-
+#include "lllocalgltfmaterials.h"
 /* misc headers */
 #include <time.h>
 #include <ctime>
@@ -84,6 +84,7 @@ static FloaterLocalAssetBrowser* sLFInstance = NULL;
 LocalAssetBrowser* gLocalBrowser;
 LocalAssetBrowserTimer* gLocalBrowserTimer;
 std::vector<LocalBitmap> LocalAssetBrowser::loaded_bitmaps;
+
 bool    LocalAssetBrowser::mLayerUpdated;
 bool    LocalAssetBrowser::mSculptUpdated;
 
@@ -654,7 +655,37 @@ void LocalAssetBrowser::UpdateTextureCtrlList(LLScrollListCtrl* ctrl)
 		}
 	}
 }
+/* This function refills the texture picker floater's scrolllist with the updated contents of materials */
+void LocalAssetBrowser::UpdateMaterialCtrlList(LLScrollListCtrl* ctrl)
+{
+	if (ctrl) // checking again in case called externally for some silly reason.
+	{
+		LLLocalGLTFMaterialMgr::getInstance()->feedScrollList(ctrl);
+		// if (!mMaterialList.empty())
+        // {
+            
 
+        //     for (local_list_iter iter = mMaterialList.begin();
+        //         iter != mMaterialList.end(); iter++)
+        //     {
+		
+		// 		auto row = LLScrollListItem::Params();
+		// 		row.value((*iter)->getTrackingID());
+		// 		row.columns.add(LLScrollListCell::Params()
+		// 			.column("unit_name")
+		// 			.type("text")
+		// 			.value((*iter)->getShortName()));
+
+		// 		row.columns.add(LLScrollListCell::Params()
+		// 			.column("unit_id_HIDDEN")
+		// 			.type("text")
+		// 			.value((*iter)->getTrackingID()));
+
+		// 		ctrl->addRow(row);
+		// 	}
+		// }
+	}
+}
 void LocalAssetBrowser::PerformTimedActions()
 {
 	// perform checking if updates are needed && update if so.

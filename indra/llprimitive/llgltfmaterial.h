@@ -65,6 +65,11 @@ struct TextureTransform
         ALPHA_MODE_BLEND,
         ALPHA_MODE_MASK
     };
+
+    LLGLTFMaterial& operator=(const LLGLTFMaterial& rhs);
+    bool operator==(const LLGLTFMaterial& rhs) const;
+    bool operator!=(const LLGLTFMaterial& rhs) const { return !(*this == rhs); }
+
     enum TextureInfo : U32
     {
         GLTF_TEXTURE_INFO_BASE_COLOR,
@@ -119,13 +124,36 @@ struct TextureTransform
     // Anything otherthan "MASK" or "BLEND" sets mAlphaMode to ALPHA_MODE_OPAQUE
     void setAlphaMode(const std::string& mode, bool for_override = false);
     void setAlphaMode(S32 mode, bool for_override = false);
-    static S32 getDefaultAlphaMode();
+    
     const char* getAlphaMode() const;
-    static bool getDefaultDoubleSided();
+    
+    
+
+    // Default value accessors
+    static F32 getDefaultAlphaCutoff();
+    static S32 getDefaultAlphaMode();
+    static F32 getDefaultMetallicFactor();
+    static F32 getDefaultRoughnessFactor();
+    static LLColor4 getDefaultBaseColor();
     static LLColor3 getDefaultEmissiveColor();
+    static bool getDefaultDoubleSided();
+    static LLVector2 getDefaultTextureOffset();
+    static LLVector2 getDefaultTextureScale();
+    static F32 getDefaultTextureRotation();
+
     // get the contents of this LLGLTFMaterial as a json string
     std::string asJSON(bool prettyprint = false) const;
 
+    // initialize from given tinygltf::Model
+    // model - the model to reference
+    // mat_index - index of material in model's material array
+    void setFromModel(const tinygltf::Model& model, S32 mat_index);
+
+    static void applyOverrideUUID(LLUUID& dst_id, const LLUUID& override_id);
+    void applyOverride(const LLGLTFMaterial& override_mat);
+    // For base materials only (i.e. assets). Clears transforms to
+    // default since they're not supported in assets yet.
+    void sanitizeAssetMaterial();
     // write to given tinygltf::Model
     void writeToModel(tinygltf::Model& model, S32 mat_index) const;
     template<typename T>
@@ -134,4 +162,17 @@ struct TextureTransform
     static void writeToTexture(tinygltf::Model& model, T& texture_info, const LLUUID& texture_id, const TextureTransform& transform, bool force_write = false);
     template<typename T>
     static void allocateTextureImage(tinygltf::Model& model, T& texture_info, const std::string& uri);
+
+    // For local materials, they have to keep track of where
+    // they are assigned to for full updates
+    virtual void addTextureEntry(LLTextureEntry* te) {};
+    virtual void removeTextureEntry(LLTextureEntry* te) {};
+protected:
+    static LLVector2 vec2FromJson(const std::map<std::string, tinygltf::Value>& object, const char* key, const LLVector2& default_value);
+    static F32 floatFromJson(const std::map<std::string, tinygltf::Value>& object, const char* key, const F32 default_value);
+
+    template<typename T>
+    void setFromTexture(const tinygltf::Model& model, const T& texture_info, TextureInfo texture_info_id);
+    template<typename T>
+    static void setFromTexture(const tinygltf::Model& model, const T& texture_info, LLUUID& texture_id, TextureTransform& transform);    
 };

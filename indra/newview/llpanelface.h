@@ -407,7 +407,7 @@ private:
 	LLComboBox*		mComboTexGen;
 	LLComboBox*		mComboMatMedia;
 	LLComboBox*		mComboMatType;
-
+	LLComboBox*		mComboPBRType;
 	LLCheckBoxCtrl*	mCheckFullbright;
 
 	LLTextBox*		mLabelColorTransp;
@@ -429,10 +429,42 @@ private:
 	 * all controls of the floater texture picker which allow to apply the texture will be disabled.
 	 */
 	void onTextureSelectionChanged(LLInventoryItem* itemp);
-
+	void updateUIGLTF(LLViewerObject* objectp, bool& has_pbr_material, bool& has_faces_without_pbr, bool force_set_values);
+	void updateVisibilityGLTF(LLViewerObject* objectp = nullptr);
 	bool mIsAlpha;
 
+	class Selection
+    {
+    public:
+        void connect();
 
+        // Returns true if the selected objects or sides have changed since
+        // this was last called, and no object update is pending
+        bool update();
+
+        // Prevents update() returning true until the provided object is
+        // updated. Necessary to prevent controls updating when the mouse is
+        // held down.
+        void setDirty() { mChanged = true; };
+
+        // Callbacks
+        void onSelectionChanged() { mNeedsSelectionCheck = true; }
+        void onSelectedObjectUpdated(const LLUUID &object_id, S32 side);
+
+    protected:
+        bool compareSelection();
+
+        bool mChanged = false;
+
+        boost::signals2::scoped_connection mSelectConnection;
+        bool mNeedsSelectionCheck = true;
+        S32 mSelectedObjectCount = 0;
+        S32 mSelectedTECount = 0;
+        LLUUID mSelectedObjectID;
+        S32 mLastSelectedSide = -1;
+    };
+
+    static Selection sMaterialOverrideSelection;
 	#if defined(DEF_GET_MAT_STATE)
 		#undef DEF_GET_MAT_STATE
 	#endif
@@ -521,6 +553,7 @@ private:
 		static void getFace(LLFace*& face_to_return, bool& identical_face);
 		static void getImageFormat(LLGLenum& image_format_to_return, bool& identical_face);
 		static void getTexId(LLUUID& id, bool& identical);
+		static void getPbrMaterialId(LLUUID& id, bool& identical, bool& has_pbr, bool& has_faces_without_pbr);
 		static void getObjectScaleS(F32& scale_s, bool& identical);
 		static void getObjectScaleT(F32& scale_t, bool& identical);
 		static void getMaxDiffuseRepeats(F32& repeats, bool& identical);
@@ -537,6 +570,7 @@ private:
 		DEF_GET_TE_STATE(LLTextureEntry::e_texgen,LLTextureEntry::e_texgen,getTexGen,LLTextureEntry::TEX_GEN_DEFAULT)
 		DEF_GET_TE_STATE(LLColor4,const LLColor4&,getColor,LLColor4::white)
 	};
+	
 };
 
 #endif

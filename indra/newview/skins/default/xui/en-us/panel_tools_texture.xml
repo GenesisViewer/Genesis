@@ -102,6 +102,10 @@
                  name="Materials"
                  value="Materials" />
                 <combo_box.item
+                 label="PBR"
+                 name="PBR"
+                 value="PBR" /> 
+                <combo_box.item
                  label="Media"
                  name="Media"
                  value="Media" />
@@ -126,6 +130,34 @@
                  name="Shininess (specular)"
                  value="Shininess (specular)" />
             </combo_box>
+            <combo_box
+             follows="left|top"
+             height="18"
+             left_delta="0"
+             name="combobox pbrtype"
+             bottom_delta="0"
+             width="140"
+             visible = "false">
+                <combo_box.item
+                 label="Complete material"
+                 name="Complete material"
+                 value="Complete material" />
+                
+            </combo_box>
+            <texture_picker
+             can_apply_immediately="true"
+             allow_no_texture="true"
+             follows="left|top"
+             height="80"
+             label="Material"
+             layout="topleft"
+             left="10"
+             name="pbr_control"
+             tool_tip="Click to choose a pbr material"
+             bottom_delta="-90"
+             width="64" 
+             fallback_image="materials_ui_x_24.png"
+             visible="false"/>
             <texture_picker
              allow_no_texture="true"
              allow_invisible_texture="true"
@@ -138,7 +170,7 @@
              left="10"
              name="texture control"
              tool_tip="Click to choose a picture"
-             bottom_delta="-90"
+             bottom_delta="0"
              width="64" />
             <text
              type="string"

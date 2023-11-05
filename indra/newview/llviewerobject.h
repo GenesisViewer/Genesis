@@ -200,6 +200,9 @@ public:
 
 	virtual BOOL	isAttachment() const { return FALSE; }
 	virtual LLVOAvatar* getAvatar() const;  //get the avatar this object is attached to, or NULL if object is not an attachment
+
+	const LLUUID& getRenderMaterialID(U8 te) const;
+
 	virtual BOOL	isHUDAttachment() const { return FALSE; }
 	virtual BOOL	isTempAttachment() const;
 	virtual void 	updateRadius() {};
@@ -605,7 +608,7 @@ public:
 	const LLSculptParams* getSculptParams() const { return mSculptParamsInUse ? &mSculptParams : nullptr; }
 	const LLLightImageParams* getLightImageParams() const { return mLightImageParamsInUse ? &mLightImageParams : nullptr; }
 	const LLExtendedMeshParams* getExtendedMeshParams() const { return mExtendedMeshParamsInUse ? &mExtendedMeshParams : nullptr; }
-
+	virtual LLNetworkData* getParameterEntry(U16 param_type) const;
 	bool setParameterEntry(U16 param_type, const LLNetworkData& new_value, bool local_origin);
 	bool setParameterEntryInUse(U16 param_type, BOOL in_use, bool local_origin);
 

@@ -107,7 +107,9 @@ public:
 		PARAMS_RESERVED = 0x50, // Used on server-side
 		PARAMS_MESH     = 0x60,
 		PARAMS_EXTENDED_MESH = 0x70,
-		PARAMS_MAX = PARAMS_EXTENDED_MESH
+		PARAMS_RENDER_MATERIAL = 0x80,
+        PARAMS_REFLECTION_PROBE = 0x90,
+		PARAMS_MAX = PARAMS_REFLECTION_PROBE
 	};
 	
 public:
@@ -311,7 +313,31 @@ public:
 	U32 getFlags() const { return mFlags; }
 	
 };
+class LLRenderMaterialParams : public LLNetworkData
+{
+private:
+    struct Entry
+    {
+        U8 te_idx;
+        LLUUID id;
+    };
+    std::vector< Entry > mEntries;
 
+public:
+    LLRenderMaterialParams();
+    BOOL pack(LLDataPacker& dp) const override;
+    BOOL unpack(LLDataPacker& dp) override;
+    bool operator==(const LLNetworkData& data) const override;
+    void copy(const LLNetworkData& data) override;
+    LLSD asLLSD() const;
+    operator LLSD() const { return asLLSD(); }
+    bool fromLLSD(LLSD& sd);
+
+    void setMaterial(U8 te_idx, const LLUUID& id);
+    const LLUUID& getMaterial(U8 te_idx) const;
+
+    bool isEmpty() { return mEntries.empty(); }
+};
 // This code is not naming-standards compliant. Leaving it like this for
 // now to make the connection to code in
 // 	BOOL packTEMessage(LLDataPacker &dp) const;

@@ -81,13 +81,13 @@
 	     image_name="map_event.tga" left="1151" mouse_opaque="true" name="event"
 	     width="16" />
 	<check_box bottom="-116" control_name="MapShowPGEvents" follows="top|right"
-	     font="SansSerifSmall" height="16" initial_value="false" label="PG"
+	     font="SansSerifSmall" height="16" initial_value="false" label="General"
 	     left_delta="20" mouse_opaque="true" name="event_chk" width="55" />
 	<icon bottom="-136" color="1, 1, 1, 1" follows="top|right" height="16"
 	     image_name="map_event_mature.tga" left="1151" mouse_opaque="true"
 	     name="events_mature_icon" width="16" />
 	<check_box bottom="-136" control_name="MapShowMatureEvents" follows="top|right"
-	     font="SansSerifSmall" height="16" initial_value="true" label="Mature"
+	     font="SansSerifSmall" height="16" initial_value="true" label="Moderate"
 	     left_delta="20" mouse_opaque="true" name="events_mature_chk" width="55" />
 	<icon bottom="-156" color="1, 1, 1, 1" follows="top|right" height="16"
 	     image_name="map_event_adult.tga" left="1151" mouse_opaque="true"

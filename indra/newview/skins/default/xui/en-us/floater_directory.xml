@@ -33,11 +33,11 @@
 				  name="Search" width="70" />
 			 <check_box bottom="-22" control_name="ShowPGSearchAll" follows="left|top"
 				  font="SansSerifSmall" height="16" initial_value="true"
-				  label="PG content" left_delta="78" mouse_opaque="true"
+				  label="General content" left_delta="78" mouse_opaque="true"
 				  name="incpg" width="156" />
 			 <check_box bottom="-22" control_name="ShowMatureSearchAll" follows="left|top"
 				  font="SansSerifSmall" height="16" initial_value="false"
-				  label="Mature content" left_delta="100" mouse_opaque="true"
+				  label="Moderate content" left_delta="100" mouse_opaque="true"
 				  name="incmature" width="156" />
 			 <check_box bottom="-22" control_name="ShowAdultSearchAll" follows="left|top"
 				  font="SansSerifSmall" height="16" initial_value="false"

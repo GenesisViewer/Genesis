@@ -77,10 +77,10 @@
 			Adult
 		</combo_item>
 		<combo_item name="Mature" value="21">
-			Mature
+			Moderate
 		</combo_item>
 		<combo_item name="PG" value="13">
-			PG
+			General
 		</combo_item>
 	</combo_box>
 	<button bottom_delta="0" follows="left|top" font="SansSerifSmall" height="18" label="?"

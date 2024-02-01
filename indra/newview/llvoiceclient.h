@@ -129,6 +129,8 @@ public:
 	virtual void tuningSetMicVolume(float volume)=0;
 	virtual void tuningSetSpeakerVolume(float volume)=0;
 	virtual float tuningGetEnergy(void)=0;
+	virtual void setFriendsVoiceBoost(float volume)=0;
+	virtual float getFriendsVoiceBoost() = 0;
 	//@}
 
 	/////////////////////
@@ -152,6 +154,7 @@ public:
 
 	virtual void getParticipantList(uuid_set_t &participants)=0;
 	virtual bool isParticipant(const LLUUID& speaker_id)=0;
+	
 	//@}
 
 	////////////////////////////
@@ -338,7 +341,8 @@ public:
 	void tuningSetMicVolume(float volume);
 	void tuningSetSpeakerVolume(float volume);
 	float tuningGetEnergy(void);
-
+	virtual void setFriendsVoiceBoost(float volume);
+	virtual float getFriendsVoiceBoost();
 	// devices
 
 	// This returns true when it's safe to bring up the "device settings" dialog in the prefs.

@@ -384,7 +384,10 @@ static void handleAudioVolumeChanged(const LLSD& newvalue)
 {
 	audio_update_volume(false);
 }
-
+static void handleFriendsBoostLevelChanged(const LLSD& newvalue)
+{
+	audio_update_volume(false);
+}
 static bool handleJoystickChanged(const LLSD& newvalue)
 {
 	LLViewerJoystick::getInstance()->setCameraNeedsUpdate(TRUE);
@@ -785,6 +788,7 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("AudioLevelMusic")->getSignal()->connect(boost::bind(&handleAudioVolumeChanged, _2));
 	gSavedSettings.getControl("AudioLevelMedia")->getSignal()->connect(boost::bind(&handleAudioVolumeChanged, _2));
 	gSavedSettings.getControl("AudioLevelVoice")->getSignal()->connect(boost::bind(&handleAudioVolumeChanged, _2));
+	gSavedSettings.getControl("FriendsBoostLevel")->getSignal()->connect(boost::bind(&handleFriendsBoostLevelChanged, _2));
 	gSavedSettings.getControl("AudioLevelDoppler")->getSignal()->connect(boost::bind(&handleAudioVolumeChanged, _2));
 	gSavedSettings.getControl("AudioLevelRolloff")->getSignal()->connect(boost::bind(&handleAudioVolumeChanged, _2));
 	gSavedSettings.getControl("AudioLevelUnderwaterRolloff")->getSignal()->connect(boost::bind(&handleAudioVolumeChanged, _2));

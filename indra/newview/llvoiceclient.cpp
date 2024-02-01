@@ -245,8 +245,14 @@ float LLVoiceClient::tuningGetEnergy(void)
 		return 0.0;
 	}
 }
-
-
+float LLVoiceClient::getFriendsVoiceBoost() {
+	if (mVoiceModule) return mVoiceModule->getFriendsVoiceBoost();
+	return 0;
+}
+void LLVoiceClient::setFriendsVoiceBoost(float volume) {
+	
+	if (mVoiceModule) mVoiceModule->setFriendsVoiceBoost(volume);
+}
 //------------------------------------------------
 // devices
 

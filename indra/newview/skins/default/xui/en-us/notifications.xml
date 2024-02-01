@@ -7136,7 +7136,7 @@ Some terms in your search query were excluded due to content restrictions as cla
    icon="notifytip.tga"
    name="NoContentToSearch"
    type="notifytip">
-Please select at least one type of content to search (PG, Mature, or Adult).
+Please select at least one type of content to search (General, Moderate, or Adult).
   <tag>fail</tag>
   </notification>
 

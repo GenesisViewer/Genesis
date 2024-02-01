@@ -28,10 +28,10 @@
       - Select Mature -
     </combo_item>
     <combo_item name="mature" value="Mature">
-      Mature Content
+      Moderate Content
     </combo_item>
     <combo_item name="pg" value="PG">
-      PG Content
+      General Content
     </combo_item>
   </combo_box>
 	<text bottom_delta="-25" follows="left|top"

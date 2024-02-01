@@ -336,6 +336,7 @@ LLVivoxVoiceClient::LLVivoxVoiceClient() :
 	mEarLocation(0),
 	mSpeakerVolumeDirty(true),
 	mSpeakerMuteDirty(true),
+	mFriendsVoiceBoost(0.0f),
 	mMicVolume(0),
 	mMicVolumeDirty(true),
 
@@ -2333,7 +2334,52 @@ float LLVivoxVoiceClient::tuningGetEnergy(void)
 {
 	return mTuningEnergy;
 }
+void LLVivoxVoiceClient::setFriendsVoiceBoost(float volume) {
+	
+	mFriendsVoiceBoost=volume;
+	if (!mAudioSession) return;
+	participantList::iterator iter = mAudioSession->mParticipantList.begin();
 
+		
+	bool dirty = false;
+	for(; iter != mAudioSession->mParticipantList.end(); iter++)
+	{
+		participantState *p = &*iter;
+		
+		if (p) {
+			bool isBuddy = LLAvatarTracker::instance().isBuddy(p->mAvatarID);
+			
+			
+			p->isBuddy=isBuddy;
+			p->mVolumeDirty=true;
+			dirty=true;
+			
+		}
+
+
+		
+
+	}
+	if (dirty) {
+		mAudioSession->mVolumeDirty = true;
+	}
+	// participantList::iterator iter = mAudioSession->mParticipantList.begin();
+
+		
+
+	// for(; iter != mAudioSession->mParticipantList.end(); iter++)
+	// {
+	// 	participantState *p = &*iter;
+	// 	if(p!=nullptr&& p->isAvatar() && LLAvatarTracker::instance().isBuddy(p->mAvatarID)){
+			
+	// 		setUserVolume(p->mAvatarID,volume+LLVoiceClient::VOLUME_DEFAULT);
+	// 	} else {
+	// 		setUserVolume(p->mAvatarID, LLVoiceClient::VOLUME_MIN);
+	// 	}
+			
+	// }
+	
+}
 bool LLVivoxVoiceClient::deviceSettingsAvailable()
 {
 	bool result = true;
@@ -2645,8 +2691,12 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 				// Can't set volume/mute for yourself
 				if(!p->mIsSelf)
 				{
+					F32 participantVolume = p->mVolume;
+					if (p->isBuddy) {
+						participantVolume+= LLVoiceClient::getInstance()->getFriendsVoiceBoost();
+					}
 					// scale from the range 0.0-1.0 to vivox volume in the range 0-100
-					S32 volume = ll_pos_round(p->mVolume / VOLUME_SCALE_VIVOX);
+					S32 volume = ll_pos_round(participantVolume / VOLUME_SCALE_VIVOX);
 					bool mute = p->mOnMuteList;
 
 					if(mute)
@@ -2665,7 +2715,7 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 						mute = true;
 					}
 
-					LL_DEBUGS("Voice") << "Setting volume/mute for avatar " << p->mAvatarID << " to " << volume << (mute ? "/true" : "/false") << LL_ENDL;
+					LL_DEBUGS("Voice") << "Setting volume/mute for avatar " << p->mAvatarID << " to " << participantVolume << (mute ? "/true" : "/false") << LL_ENDL;
 
 					// SLIM SDK: Send both volume and mute commands.
 
@@ -2673,7 +2723,7 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 					stream << "<Request requestId=\"" << mCommandCookie++ << "\" action=\"Session.SetParticipantVolumeForMe.1\">"
 						<< "<SessionHandle>" << getAudioSessionHandle() << "</SessionHandle>"
 						<< "<ParticipantURI>" << p->mURI << "</ParticipantURI>"
-						<< "<Volume>" << volume << "</Volume>"
+						<< "<Volume>" << participantVolume << "</Volume>"
 						<< "</Request>\n\n\n";
 
 					if(!mAudioSession->mIsP2P)
@@ -3877,13 +3927,20 @@ LLVivoxVoiceClient::participantState *LLVivoxVoiceClient::sessionState::addParti
 		}
 
 		// Singu Note: mParticipantsByUUID is dead. Keep it that way.
-	
+		// Mely
+		// is this participant a Buddy?
+		bool isBuddy = LLAvatarTracker::instance().isBuddy(result->mAvatarID);
+		result->isBuddy=isBuddy;
+		result->mVolume=LLVoiceClient::VOLUME_DEFAULT;
 		if (LLSpeakerVolumeStorage::getInstance()->getSpeakerVolume(result->mAvatarID, result->mVolume))
 		{
+			
 			result->mVolumeDirty = true;
 			mVolumeDirty = true;
 		}
-
+		
+			
+		
 		LL_DEBUGS("Voice") << "participant \"" << result->mURI << "\" added." << LL_ENDL;
 
 		return result;
@@ -5003,7 +5060,7 @@ F32 LLVivoxVoiceClient::getUserVolume(const LLUUID& id)
 	if(participant)
 	{
 		result = participant->mVolume;
-
+		
 		// Enable this when debugging voice slider issues.  It's way to spammy even for debug-level logging.
 		// LL_DEBUGS("Voice") << "mVolume = " << result <<  " for " << id << LL_ENDL;
 	}

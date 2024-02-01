@@ -2943,6 +2943,18 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <real>0.5</real>
     </map>
+    
+    <key>FriendsBoostLevel</key>
+    <map>
+      <key>Comment</key>
+      <string>Boost Friends Audio level of voice chat</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.0</real>
+    </map>
     <key>AudioLevelWind</key>
     <map>
       <key>Comment</key>

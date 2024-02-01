@@ -66,6 +66,10 @@ public:
 	virtual void tuningSetMicVolume(float volume);
 	virtual void tuningSetSpeakerVolume(float volume);
 	virtual float tuningGetEnergy(void);
+	virtual void setFriendsVoiceBoost(float volume);
+	virtual float getFriendsVoiceBoost(){
+		return mFriendsVoiceBoost;
+	};
 	//@}
 
 	/////////////////////
@@ -262,6 +266,7 @@ protected:
 		F32 mVolume;
 		std::string mGroupID;
 		int mUserVolume;
+		
 		bool mPTT;
 		bool mIsSpeaking;
 		bool mIsModeratorMuted;
@@ -270,6 +275,7 @@ protected:
 		bool mVolumeDirty;		// true if this participant needs a volume command sent (either mOnMuteList or mUserVolume has changed)
 		bool mAvatarIDValid;
 		bool mIsSelf;
+		bool isBuddy;
 	};
 	
 	// Singu Note: participantList has replaced both participantMap and participantUUIDMap.
@@ -654,6 +660,7 @@ private:
 
 	bool mTuningMode;
 	float mTuningEnergy;
+	float mFriendsVoiceBoost;
 	std::string mTuningAudioFile;
 	int mTuningMicVolume;
 	bool mTuningMicVolumeDirty;

@@ -331,6 +331,7 @@ protected:
 		// The code will have to walk the list to find the changed participant(s).
 		bool		mVolumeDirty;
 		bool		mMuteDirty;
+		bool		mFriendsBoostLevelDirty;
 
 		bool		mParticipantsChanged;
 		// Singu Note: mParticipantList has replaced both mParticipantsByURI and mParticipantsByUUID.

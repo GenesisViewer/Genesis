@@ -2336,23 +2336,33 @@ float LLVivoxVoiceClient::tuningGetEnergy(void)
 }
 void LLVivoxVoiceClient::setFriendsVoiceBoost(float volume) {
 	
+	if (mFriendsVoiceBoost == volume)
+		return;
+	LL_INFOS() << "setting Friends Voice Boost to " << volume << LL_ENDL;	
 	mFriendsVoiceBoost=volume;
 	if (!mAudioSession) return;
 	participantList::iterator iter = mAudioSession->mParticipantList.begin();
 
 		
-	bool dirty = false;
+	
 	for(; iter != mAudioSession->mParticipantList.end(); iter++)
 	{
 		participantState *p = &*iter;
 		
 		if (p) {
 			bool isBuddy = LLAvatarTracker::instance().isBuddy(p->mAvatarID);
+			if (p->isBuddy != isBuddy) {
+				p->isBuddy=isBuddy;
+				
+				p->mVolumeDirty=true;
+				
+			}
+			if (p->isBuddy)
+				p->mVolumeDirty=true;
 			
 			
-			p->isBuddy=isBuddy;
-			p->mVolumeDirty=true;
-			dirty=true;
+			
+			
 			
 		}
 
@@ -2360,9 +2370,8 @@ void LLVivoxVoiceClient::setFriendsVoiceBoost(float volume) {
 		
 
 	}
-	if (dirty) {
-		mAudioSession->mVolumeDirty = true;
-	}
+	
+	mAudioSession->mFriendsBoostLevelDirty = true;
 	// participantList::iterator iter = mAudioSession->mParticipantList.begin();
 
 		
@@ -2674,14 +2683,14 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 		stream << "</Request>\n\n\n";
 	}
 
-	if(mAudioSession && (mAudioSession->mVolumeDirty || mAudioSession->mMuteDirty))
+	if(mAudioSession && (mAudioSession->mVolumeDirty || mAudioSession->mMuteDirty || mAudioSession->mFriendsBoostLevelDirty))
 	{
 		// Singu Note: mParticipantList has replaced mParticipantsByURI.
 		participantList::iterator iter = mAudioSession->mParticipantList.begin();
 
 		mAudioSession->mVolumeDirty = false;
 		mAudioSession->mMuteDirty = false;
-
+		mAudioSession->mFriendsBoostLevelDirty=false;
 		for(; iter != mAudioSession->mParticipantList.end(); iter++)
 		{
 			participantState *p = &*iter;
@@ -2704,18 +2713,18 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 						// SetParticipantMuteForMe doesn't work in p2p sessions.
 						// If we want the user to be muted, set their volume to 0 as well.
 						// This isn't perfect, but it will at least reduce their volume to a minimum.
-						volume = 0;
+						participantVolume = 0;
 						// Mark the current volume level as set to prevent incoming events
 						// changing it to 0, so that we can return to it when unmuting.
 						p->mVolumeSet = true;
 					}
 
-					if(volume == 0)
+					if(participantVolume == 0)
 					{
 						mute = true;
 					}
 
-					LL_DEBUGS("Voice") << "Setting volume/mute for avatar " << p->mAvatarID << " to " << participantVolume << (mute ? "/true" : "/false") << LL_ENDL;
+					LL_INFOS("Voice") << "Setting volume/mute for avatar " << p->mAvatarID << " to " << participantVolume << (mute ? "/true" : "/false") << LL_ENDL;
 
 					// SLIM SDK: Send both volume and mute commands.
 
@@ -5231,6 +5240,7 @@ LLVivoxVoiceClient::sessionState::sessionState() :
 	mReconnect(false),
 	mVolumeDirty(false),
 	mMuteDirty(false),
+	mFriendsBoostLevelDirty(false),
 	mParticipantsChanged(false)
 {
 }

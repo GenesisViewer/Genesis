@@ -2713,13 +2713,13 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 						// SetParticipantMuteForMe doesn't work in p2p sessions.
 						// If we want the user to be muted, set their volume to 0 as well.
 						// This isn't perfect, but it will at least reduce their volume to a minimum.
-						volume = 0;
+						participantVolume = 0;
 						// Mark the current volume level as set to prevent incoming events
 						// changing it to 0, so that we can return to it when unmuting.
 						p->mVolumeSet = true;
 					}
 
-					if(volume == 0)
+					if(participantVolume == 0)
 					{
 						mute = true;
 					}

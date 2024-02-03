@@ -128,10 +128,11 @@ bool LLInventoryFilter::check(LLFolderViewItem* item)
 	}
 
 	mSubStringMatchOffset = mFilterSubString.size() ? item->getSearchableLabel().find(mFilterSubString) : std::string::npos;
-
+	
 	const bool passed_filtertype = checkAgainstFilterType(item);
 	const bool passed_permissions = checkAgainstPermissions(item);
 	const bool passed_filterlink = checkAgainstFilterLinks(item);
+	
 	const bool passed_wearable = (mFilterOps.mFilterTypes & FILTERTYPE_WORN) != FILTERTYPE_WORN || (gAgentWearables.isWearingItem(item_id) || (gAgentAvatarp && gAgentAvatarp->isWearingAttachment(item_id)));
 	const bool passed = (passed_filtertype &&
 						 passed_permissions &&
@@ -891,11 +892,7 @@ void LLInventoryFilter::setFilterLinks(EFilterLink filter_links)
 	if (mFilterOps.mFilterLinks != filter_links)
 	{
 		mFilterOps.mFilterLinks = filter_links;
-		if (filter_links == FILTERLINK_EXCLUDE_LINKS ||
-			filter_links == FILTERLINK_ONLY_LINKS)
-			setModified(FILTER_MORE_RESTRICTIVE);
-		else
-			setModified(FILTER_LESS_RESTRICTIVE);
+		setModified(FILTER_RESTART);
 	}
 }
 

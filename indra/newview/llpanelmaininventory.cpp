@@ -935,8 +935,10 @@ BOOL LLFloaterInventoryFinder::postBuild()
 
 void LLFloaterInventoryFinder::onLinks(const LLSD& val)
 {
+	
 	auto value = val.asInteger();
 	mFilter->setFilterLinks(value == 0 ? LLInventoryFilter::FILTERLINK_INCLUDE_LINKS : value == 1 ? LLInventoryFilter::FILTERLINK_EXCLUDE_LINKS : LLInventoryFilter::FILTERLINK_ONLY_LINKS);
+	
 }
 
 void LLFloaterInventoryFinder::onTimeAgo(LLUICtrl *ctrl, void *user_data)
@@ -1101,8 +1103,8 @@ void LLFloaterInventoryFinder::draw()
 	}
 
 	// update the panel, panel will update the filter
-	mPanelMainInventory->getPanel()->setFilterLinks(getCheckShowLinks() ?
-		LLInventoryFilter::FILTERLINK_INCLUDE_LINKS : LLInventoryFilter::FILTERLINK_EXCLUDE_LINKS);
+	// mPanelMainInventory->getPanel()->setFilterLinks(getCheckShowLinks() ?
+	// 	LLInventoryFilter::FILTERLINK_INCLUDE_LINKS : LLInventoryFilter::FILTERLINK_EXCLUDE_LINKS);
 
 	mPanelMainInventory->getPanel()->setShowFolderState(getCheckShowEmpty() ?
 		LLInventoryFilter::SHOW_ALL_FOLDERS : LLInventoryFilter::SHOW_NON_EMPTY_FOLDERS);

@@ -2704,6 +2704,7 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 					if (p->isBuddy) {
 						participantVolume+= LLVoiceClient::getInstance()->getFriendsVoiceBoost();
 					}
+					participantVolume = llclamp(participantVolume,LLVoiceClient::VOLUME_MIN,LLVoiceClient::VOLUME_MAX);
 					// scale from the range 0.0-1.0 to vivox volume in the range 0-100
 					S32 volume = ll_pos_round(participantVolume / VOLUME_SCALE_VIVOX);
 					bool mute = p->mOnMuteList;
@@ -2713,18 +2714,18 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 						// SetParticipantMuteForMe doesn't work in p2p sessions.
 						// If we want the user to be muted, set their volume to 0 as well.
 						// This isn't perfect, but it will at least reduce their volume to a minimum.
-						participantVolume = 0;
+						volume = 0;
 						// Mark the current volume level as set to prevent incoming events
 						// changing it to 0, so that we can return to it when unmuting.
 						p->mVolumeSet = true;
 					}
 
-					if(participantVolume == 0)
+					if(volume == 0)
 					{
 						mute = true;
 					}
 
-					LL_INFOS("Voice") << "Setting volume/mute for avatar " << p->mAvatarID << " to " << participantVolume << (mute ? "/true" : "/false") << LL_ENDL;
+					LL_INFOS("Voice") << "Setting volume/mute for avatar " << p->mAvatarID << " to " << volume << (mute ? "/true" : "/false") << LL_ENDL;
 
 					// SLIM SDK: Send both volume and mute commands.
 
@@ -2732,7 +2733,7 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 					stream << "<Request requestId=\"" << mCommandCookie++ << "\" action=\"Session.SetParticipantVolumeForMe.1\">"
 						<< "<SessionHandle>" << getAudioSessionHandle() << "</SessionHandle>"
 						<< "<ParticipantURI>" << p->mURI << "</ParticipantURI>"
-						<< "<Volume>" << participantVolume << "</Volume>"
+						<< "<Volume>" << volume << "</Volume>"
 						<< "</Request>\n\n\n";
 
 					if(!mAudioSession->mIsP2P)
@@ -3602,7 +3603,10 @@ void LLVivoxVoiceClient::participantUpdatedEvent(
 			//  is a volume or mute change pending.
 			if ( !participant->mVolumeSet && !participant->mVolumeDirty)
 			{
-				participant->mVolume = (F32)volume * VOLUME_SCALE_VIVOX;
+				F32 participantVolume = (F32)volume * VOLUME_SCALE_VIVOX;
+				if (participant->isBuddy)
+					participantVolume -= LLVoiceClient::getInstance()->getFriendsVoiceBoost();
+				participant->mVolume = participantVolume;
 			}
 
 			// *HACK: mantipov: added while working on EXT-3544
@@ -3936,10 +3940,7 @@ LLVivoxVoiceClient::participantState *LLVivoxVoiceClient::sessionState::addParti
 		}
 
 		// Singu Note: mParticipantsByUUID is dead. Keep it that way.
-		// Mely
-		// is this participant a Buddy?
-		bool isBuddy = LLAvatarTracker::instance().isBuddy(result->mAvatarID);
-		result->isBuddy=isBuddy;
+		
 		result->mVolume=LLVoiceClient::VOLUME_DEFAULT;
 		if (LLSpeakerVolumeStorage::getInstance()->getSpeakerVolume(result->mAvatarID, result->mVolume))
 		{

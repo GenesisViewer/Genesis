@@ -129,6 +129,7 @@ public:
 	virtual void tuningSetMicVolume(float volume)=0;
 	virtual void tuningSetSpeakerVolume(float volume)=0;
 	virtual float tuningGetEnergy(void)=0;
+	virtual void updateDefaultBoostLevel(float volume)=0;
 	virtual void setFriendsVoiceBoost(float volume)=0;
 	virtual float getFriendsVoiceBoost() = 0;
 	//@}
@@ -326,7 +327,8 @@ public:
 	static const F32 OVERDRIVEN_POWER_LEVEL;
 
 	static const F32 VOLUME_MIN;
-	static const F32 VOLUME_DEFAULT;
+	//static const F32 VOLUME_DEFAULT;
+	
 	static const F32 VOLUME_MAX;
 
 	void updateSettings(); // call after loading settings and whenever they change
@@ -342,7 +344,11 @@ public:
 	void tuningSetSpeakerVolume(float volume);
 	float tuningGetEnergy(void);
 	virtual void setFriendsVoiceBoost(float volume);
+	virtual void updateDefaultBoostLevel(float volume);
 	virtual float getFriendsVoiceBoost();
+	virtual float getDefaultBoostlevel() {
+		return mDefaultVolume;
+	}
 	// devices
 
 	// This returns true when it's safe to bring up the "device settings" dialog in the prefs.
@@ -488,6 +494,7 @@ protected:
 	bool		mUserPTTState;
 	bool		mMuteMic;
 	bool		mDisableMic;
+	float mDefaultVolume; //Default boost level
 };
 
 /**

@@ -42,7 +42,8 @@
 const F32 LLVoiceClient::OVERDRIVEN_POWER_LEVEL = 0.7f;
 
 const F32 LLVoiceClient::VOLUME_MIN = 0.f;
-const F32 LLVoiceClient::VOLUME_DEFAULT = 0.5f;
+//const F32 LLVoiceClient::VOLUME_DEFAULT = 0.5f;
+
 const F32 LLVoiceClient::VOLUME_MAX = 1.0f;
 
 
@@ -192,7 +193,7 @@ void LLVoiceClient::updateSettings()
 	mDisableMic = gSavedSettings.getBOOL("VoiceDisableMic");
 
 	updateMicMuteLogic();
-
+	mDefaultVolume=gSavedSettings.getF32("GenxBoostLevel");
 	if (mVoiceModule)
     {
         mVoiceModule->updateSettings();
@@ -252,6 +253,10 @@ float LLVoiceClient::getFriendsVoiceBoost() {
 void LLVoiceClient::setFriendsVoiceBoost(float volume) {
 	
 	if (mVoiceModule) mVoiceModule->setFriendsVoiceBoost(volume);
+}
+void LLVoiceClient::updateDefaultBoostLevel(float volume) {
+	if (mVoiceModule) mVoiceModule->updateDefaultBoostLevel(volume);
+	mDefaultVolume=volume;
 }
 //------------------------------------------------
 // devices

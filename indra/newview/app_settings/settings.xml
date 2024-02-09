@@ -19710,6 +19710,17 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <boolean>1</boolean>
     </map>
+    <key>GenxBoostLevel</key>
+    <map>
+      <key>Comment</key>
+      <string>default volume for avatars. Must be between 0 and 1</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.5</real>
+    </map>
   </map>
 
 </llsd>

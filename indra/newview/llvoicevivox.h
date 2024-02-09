@@ -66,6 +66,7 @@ public:
 	virtual void tuningSetMicVolume(float volume);
 	virtual void tuningSetSpeakerVolume(float volume);
 	virtual float tuningGetEnergy(void);
+	virtual void updateDefaultBoostLevel(float volume);
 	virtual void setFriendsVoiceBoost(float volume);
 	virtual float getFriendsVoiceBoost(){
 		return mFriendsVoiceBoost;
@@ -174,6 +175,7 @@ public:
 	virtual BOOL getOnMuteList(const LLUUID& id);
 	virtual F32 getUserVolume(const LLUUID& id);
 	virtual void setUserVolume(const LLUUID& id, F32 volume); // set's volume for specified agent, from 0-1 (where .5 is nominal)
+	
 	//@}
 
 	// authorize the user

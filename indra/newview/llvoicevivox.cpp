@@ -2334,6 +2334,29 @@ float LLVivoxVoiceClient::tuningGetEnergy(void)
 {
 	return mTuningEnergy;
 }
+void LLVivoxVoiceClient::updateDefaultBoostLevel(float volume) {
+	if (LLVoiceClient::getInstance()->getDefaultBoostlevel() == volume)
+		return;
+	if (!mAudioSession) 
+		return;	
+	
+
+	//apply the diff to participant but value each participant must be between 0 and 1
+	participantList::iterator iter = mAudioSession->mParticipantList.begin();
+
+		
+	
+	for(; iter != mAudioSession->mParticipantList.end(); iter++)
+	{
+		participantState *p = &*iter;
+		if (p && p->isAvatar()) {
+			
+			float newVolume=llclamp(volume,0.0f,1.0f);
+			LLVoiceClient::getInstance()->setUserVolume(p->mAvatarID,newVolume);
+		}
+	}
+	
+}
 void LLVivoxVoiceClient::setFriendsVoiceBoost(float volume) {
 	
 	if (mFriendsVoiceBoost == volume)
@@ -3891,7 +3914,7 @@ LLVivoxVoiceClient::participantState::participantState(const std::string &uri, c
 	 mIsModeratorMuted(false),
 	 mLastSpokeTimestamp(0.f),
 	 mPower(0.f),
-	 mVolume(LLVoiceClient::VOLUME_DEFAULT),
+	 mVolume(LLVoiceClient::getInstance()->getDefaultBoostlevel()),
 	 mUserVolume(0),
 	 mOnMuteList(false),
 	 mVolumeSet(false),
@@ -3941,7 +3964,7 @@ LLVivoxVoiceClient::participantState *LLVivoxVoiceClient::sessionState::addParti
 
 		// Singu Note: mParticipantsByUUID is dead. Keep it that way.
 		
-		result->mVolume=LLVoiceClient::VOLUME_DEFAULT;
+		result->mVolume=LLVoiceClient::getInstance()->getDefaultBoostlevel();
 		if (LLSpeakerVolumeStorage::getInstance()->getSpeakerVolume(result->mAvatarID, result->mVolume))
 		{
 			
@@ -5085,7 +5108,7 @@ void LLVivoxVoiceClient::setUserVolume(const LLUUID& id, F32 volume)
 		participantState *participant = findParticipantByID(id);
 		if (participant && !participant->mIsSelf)
 		{
-			if (!is_approx_equal(volume, LLVoiceClient::VOLUME_DEFAULT))
+			if (!is_approx_equal(volume, LLVoiceClient::getInstance()->getDefaultBoostlevel()))
 			{
 				// Store this volume setting for future sessions if it has been
 				// changed from the default

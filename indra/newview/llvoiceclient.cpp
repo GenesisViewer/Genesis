@@ -246,13 +246,13 @@ float LLVoiceClient::tuningGetEnergy(void)
 		return 0.0;
 	}
 }
-float LLVoiceClient::getFriendsVoiceBoost() {
-	if (mVoiceModule) return mVoiceModule->getFriendsVoiceBoost();
-	return 0;
+float LLVoiceClient::getNonFriendsVoiceAttenuation() {
+	if (mVoiceModule) return mVoiceModule->getNonFriendsVoiceAttenuation();
+	return 0.5;
 }
-void LLVoiceClient::setFriendsVoiceBoost(float volume) {
+void LLVoiceClient::setNonFriendsVoiceAttenuation(float volume) {
 	
-	if (mVoiceModule) mVoiceModule->setFriendsVoiceBoost(volume);
+	if (mVoiceModule) mVoiceModule->setNonFriendsVoiceAttenuation(volume);
 }
 void LLVoiceClient::updateDefaultBoostLevel(float volume) {
 	if (mVoiceModule) mVoiceModule->updateDefaultBoostLevel(volume);

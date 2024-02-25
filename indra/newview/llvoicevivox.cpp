@@ -336,7 +336,7 @@ LLVivoxVoiceClient::LLVivoxVoiceClient() :
 	mEarLocation(0),
 	mSpeakerVolumeDirty(true),
 	mSpeakerMuteDirty(true),
-	mFriendsVoiceBoost(0.0f),
+	mNonFriendsVoiceAttenuation(0.5f),
 	mMicVolume(0),
 	mMicVolumeDirty(true),
 
@@ -2357,12 +2357,12 @@ void LLVivoxVoiceClient::updateDefaultBoostLevel(float volume) {
 	}
 	
 }
-void LLVivoxVoiceClient::setFriendsVoiceBoost(float volume) {
+void LLVivoxVoiceClient::setNonFriendsVoiceAttenuation(float volume) {
 	
-	if (mFriendsVoiceBoost == volume)
+	if (mNonFriendsVoiceAttenuation == volume)
 		return;
-	LL_INFOS() << "setting Friends Voice Boost to " << volume << LL_ENDL;	
-	mFriendsVoiceBoost=volume;
+	LL_INFOS() << "setting Non Friends Voice Attenuation to " << volume << LL_ENDL;	
+	mNonFriendsVoiceAttenuation=volume;
 	if (!mAudioSession) return;
 	participantList::iterator iter = mAudioSession->mParticipantList.begin();
 
@@ -2380,7 +2380,7 @@ void LLVivoxVoiceClient::setFriendsVoiceBoost(float volume) {
 				p->mVolumeDirty=true;
 				
 			}
-			if (p->isBuddy)
+			if (!p->isBuddy)
 				p->mVolumeDirty=true;
 			
 			
@@ -2394,7 +2394,7 @@ void LLVivoxVoiceClient::setFriendsVoiceBoost(float volume) {
 
 	}
 	
-	mAudioSession->mFriendsBoostLevelDirty = true;
+	mAudioSession->mNonFriendsAttenuationLevelDirty = true;
 	// participantList::iterator iter = mAudioSession->mParticipantList.begin();
 
 		
@@ -2706,14 +2706,14 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 		stream << "</Request>\n\n\n";
 	}
 
-	if(mAudioSession && (mAudioSession->mVolumeDirty || mAudioSession->mMuteDirty || mAudioSession->mFriendsBoostLevelDirty))
+	if(mAudioSession && (mAudioSession->mVolumeDirty || mAudioSession->mMuteDirty || mAudioSession->mNonFriendsAttenuationLevelDirty))
 	{
 		// Singu Note: mParticipantList has replaced mParticipantsByURI.
 		participantList::iterator iter = mAudioSession->mParticipantList.begin();
 
 		mAudioSession->mVolumeDirty = false;
 		mAudioSession->mMuteDirty = false;
-		mAudioSession->mFriendsBoostLevelDirty=false;
+		mAudioSession->mNonFriendsAttenuationLevelDirty=false;
 		for(; iter != mAudioSession->mParticipantList.end(); iter++)
 		{
 			participantState *p = &*iter;
@@ -2724,8 +2724,8 @@ void LLVivoxVoiceClient::sendPositionalUpdate(void)
 				if(!p->mIsSelf)
 				{
 					F32 participantVolume = p->mVolume;
-					if (p->isBuddy) {
-						participantVolume+= LLVoiceClient::getInstance()->getFriendsVoiceBoost();
+					if (!p->isBuddy) {
+						participantVolume+=  LLVoiceClient::getInstance()->getNonFriendsVoiceAttenuation();
 					}
 					participantVolume = llclamp(participantVolume,LLVoiceClient::VOLUME_MIN,LLVoiceClient::VOLUME_MAX);
 					// scale from the range 0.0-1.0 to vivox volume in the range 0-100
@@ -3627,8 +3627,8 @@ void LLVivoxVoiceClient::participantUpdatedEvent(
 			if ( !participant->mVolumeSet && !participant->mVolumeDirty)
 			{
 				F32 participantVolume = (F32)volume * VOLUME_SCALE_VIVOX;
-				if (participant->isBuddy)
-					participantVolume -= LLVoiceClient::getInstance()->getFriendsVoiceBoost();
+				if (!participant->isBuddy)
+					participantVolume -= LLVoiceClient::getInstance()->getNonFriendsVoiceAttenuation();
 				participant->mVolume = participantVolume;
 			}
 
@@ -5264,7 +5264,7 @@ LLVivoxVoiceClient::sessionState::sessionState() :
 	mReconnect(false),
 	mVolumeDirty(false),
 	mMuteDirty(false),
-	mFriendsBoostLevelDirty(false),
+	mNonFriendsAttenuationLevelDirty(false),
 	mParticipantsChanged(false)
 {
 }

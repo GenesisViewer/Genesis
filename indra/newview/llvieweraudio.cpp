@@ -121,7 +121,7 @@ void audio_update_volume( bool wind_fade )
 	static const LLCachedControl<F32> audio_level_doppler("AudioLevelDoppler",1.0);
 	static const LLCachedControl<F32> audio_level_rolloff("AudioLevelRolloff",1.0);
 	static const LLCachedControl<F32> audio_level_underwater_rolloff("AudioLevelUnderwaterRolloff",3.0);
-	static const LLCachedControl<F32> friends_level_boost("FriendsBoostLevel",0.0);
+	static const LLCachedControl<F32> non_friends_level_attenuation("NonFriendsAttenuationLevel",0.0);
 	static const LLCachedControl<F32> default_level_boost("GenxBoostLevel",0.5);
 	BOOL mute_audio = _mute_audio;
 	if (!gViewerWindow->getActive() && mute_when_minimized)
@@ -181,7 +181,7 @@ void audio_update_volume( bool wind_fade )
 		{
 			LLVoiceClient::getInstance()->setMuteMic(false);
 		}
-		LLVoiceClient::getInstance()->setFriendsVoiceBoost(friends_level_boost);
+		LLVoiceClient::getInstance()->setNonFriendsVoiceAttenuation(non_friends_level_attenuation);
 
 		LLVoiceClient::getInstance()->updateDefaultBoostLevel(default_level_boost);
 	}

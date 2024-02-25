@@ -67,9 +67,9 @@ public:
 	virtual void tuningSetSpeakerVolume(float volume);
 	virtual float tuningGetEnergy(void);
 	virtual void updateDefaultBoostLevel(float volume);
-	virtual void setFriendsVoiceBoost(float volume);
-	virtual float getFriendsVoiceBoost(){
-		return mFriendsVoiceBoost;
+	virtual void setNonFriendsVoiceAttenuation(float volume);
+	virtual float getNonFriendsVoiceAttenuation(){
+		return mNonFriendsVoiceAttenuation;
 	};
 	//@}
 
@@ -333,7 +333,7 @@ protected:
 		// The code will have to walk the list to find the changed participant(s).
 		bool		mVolumeDirty;
 		bool		mMuteDirty;
-		bool		mFriendsBoostLevelDirty;
+		bool		mNonFriendsAttenuationLevelDirty;
 
 		bool		mParticipantsChanged;
 		// Singu Note: mParticipantList has replaced both mParticipantsByURI and mParticipantsByUUID.
@@ -663,7 +663,7 @@ private:
 
 	bool mTuningMode;
 	float mTuningEnergy;
-	float mFriendsVoiceBoost;
+	float mNonFriendsVoiceAttenuation;
 	std::string mTuningAudioFile;
 	int mTuningMicVolume;
 	bool mTuningMicVolumeDirty;

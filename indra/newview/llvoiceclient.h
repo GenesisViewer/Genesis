@@ -130,8 +130,8 @@ public:
 	virtual void tuningSetSpeakerVolume(float volume)=0;
 	virtual float tuningGetEnergy(void)=0;
 	virtual void updateDefaultBoostLevel(float volume)=0;
-	virtual void setFriendsVoiceBoost(float volume)=0;
-	virtual float getFriendsVoiceBoost() = 0;
+	virtual void setNonFriendsVoiceAttenuation(float volume)=0;
+	virtual float getNonFriendsVoiceAttenuation() = 0;
 	//@}
 
 	/////////////////////
@@ -343,9 +343,9 @@ public:
 	void tuningSetMicVolume(float volume);
 	void tuningSetSpeakerVolume(float volume);
 	float tuningGetEnergy(void);
-	virtual void setFriendsVoiceBoost(float volume);
+	virtual void setNonFriendsVoiceAttenuation(float volume);
 	virtual void updateDefaultBoostLevel(float volume);
-	virtual float getFriendsVoiceBoost();
+	virtual float getNonFriendsVoiceAttenuation();
 	virtual float getDefaultBoostlevel() {
 		return mDefaultVolume;
 	}

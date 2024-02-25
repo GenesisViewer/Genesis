@@ -8,7 +8,7 @@
 	<button bottom_delta="0" control_name="MuteMedia" follows="top" height="16" image_selected="icn_speaker-muted_dark.tga" image_unselected="icn_speaker_dark.tga" scale_image="false" label="" right="-28" name="mute_media" toggle="true" width="25"/>
 	<slider control_name="AudioLevelVoice" follows="top" height="15" increment="0.005" initial_val="0.5" label="Voice" label_width="55" left="10" max_val="1" min_val="0" name="Voice Volume" show_text="false" volume="true" width="181"/>
 	<button bottom_delta="0" control_name="MuteVoice" follows="top" height="16" image_selected="icn_speaker-muted_dark.tga" image_unselected="icn_speaker_dark.tga" scale_image="false" label="" right="-28" name="mute_voice" toggle="true" width="25"/>
-	<slider control_name="FriendsBoostLevel" follows="top" height="15" increment="0.005" initial_val="0" label="Friends Boost" label_width="100" left="10" max_val="0.5" min_val="0" name="Friends Boost" show_text="false" volume="false" width="181"/>
+	<slider control_name="NonFriendsAttenuationLevel" follows="top" height="15" increment="0.005" initial_val="0" label="Non Friends Att" label_width="100" left="10" max_val="0" min_val="-0.5" name="Non Friends Att" show_text="false" volume="false" width="181"/>
 	
 	<slider control_name="AudioLevelSFX" follows="top" height="15" increment="0.005" initial_val="0.5" label="Sounds" label_width="55" left="10" max_val="1" min_val="0" name="SFX Volume" show_text="false" volume="true" width="181"/>
 	<button bottom_delta="0" control_name="MuteSounds" follows="top" height="16" image_selected="icn_speaker-muted_dark.tga" image_unselected="icn_speaker_dark.tga" scale_image="false" label="" right="-28" name="mute_sfx" toggle="true" width="25"/>

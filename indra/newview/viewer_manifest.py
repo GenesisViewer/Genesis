@@ -492,7 +492,11 @@ class WindowsManifest(ViewerManifest):
         # Get shared libs from the shared libs staging directory
         with self.prefix(src=os.path.join(self.args['build'], os.pardir,
                                           'sharedlibs', config)):
-
+            # WebRTC libraries
+            for libfile in (
+                    'llwebrtc.dll',
+            ):
+                self.path(libfile)
             # Get llcommon and deps. If missing assume static linkage and continue.
             if self.path('llcommon.dll') == 0:
                 print ("Skipping llcommon.dll (assuming llcommon was linked statically)")

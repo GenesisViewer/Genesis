@@ -1144,6 +1144,46 @@
         <key>version</key>
         <string>3.0.8.189</string>
       </map>
+      <key>webrtc</key>
+      <map>
+        <key>canonical_repo</key>
+        <string>https://github.com/secondlife/3p-webrtc-build</string>
+        <key>copyright</key>
+        <string>Copyright (c) 2011, The WebRTC project authors. All rights reserved.</string>
+        <key>license</key>
+        <string>MIT</string>
+        <key>license_file</key>
+        <string>LICENSES/webrtc-license.txt</string>
+        <key>name</key>
+        <string>webrtc</string>
+        <key>platforms</key>
+        <map>
+          
+          <key>windows64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              
+              <key>hash</key>
+              <string>59d5f2e40612ab7b0b1a5da8ba288f48d5979216</string>
+              <key>hash_algorithm</key>
+              <string>sha1</string>
+              <key>url</key>
+              <string>http://pkg.genesisviewer.org/webrtc-m114.5735.08.53.8337236647-windows64-8337236647.tar.zst</string>
+            </map>
+            <key>name</key>
+            <string>windows64</string>
+          </map>
+        </map>
+        <key>vcs_branch</key>
+        <string>secondlife</string>
+        <key>vcs_revision</key>
+        <string>d3f62d32bac8694d3c7423c731ae30c113bf6a11</string>
+        <key>vcs_url</key>
+        <string>https://github.com/secondlife/3p-webrtc-build</string>
+        <key>version</key>
+        <string>m114.5735.08.53.8337236647</string>
+      </map>
       <key>xmlrpc-epi</key>
       <map>
         <key>copyright</key>

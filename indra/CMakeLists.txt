@@ -12,7 +12,7 @@ project(${ROOT_PROJECT_NAME})
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
@@ -44,6 +44,7 @@ add_subdirectory(${LIBS_OPEN_PREFIX}llmessage)
 add_subdirectory(${LIBS_OPEN_PREFIX}llprimitive)
 add_subdirectory(${LIBS_OPEN_PREFIX}llrender)
 add_subdirectory(${LIBS_OPEN_PREFIX}llvfs)
+add_subdirectory(${LIBS_OPEN_PREFIX}llwebrtc)
 add_subdirectory(${LIBS_OPEN_PREFIX}llwindow)
 add_subdirectory(${LIBS_OPEN_PREFIX}genxsqlite)
 add_subdirectory(${LIBS_OPEN_PREFIX}llxml)

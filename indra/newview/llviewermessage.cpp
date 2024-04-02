@@ -321,7 +321,7 @@ bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
             }
 		break;
 	}
-        case 1 or 999: // Decline (999 is for auto decline cause the avatar is muted)
+        case 1 || 999: // Decline (999 is for auto decline cause the avatar is muted)
 	    // fall-through
 	    //case 3: // Send IM - decline and start IM session
 		    {

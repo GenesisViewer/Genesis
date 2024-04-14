@@ -31,6 +31,7 @@
 #include "llviewercontrol.h"
 #include "llviewerwindow.h"
 #include "llvoicevivox.h"
+#include "llvoicewebrtc.h"
 #include "llviewernetwork.h"
 #include "llcommandhandler.h"
 #include "llhttpnode.h"
@@ -153,6 +154,8 @@ void LLVoiceClient::userAuthorized(const std::string& user_id, const LLUUID &age
 	if(voice_server == "vivox")
 	{
 		mVoiceModule = (LLVoiceModuleInterface *)LLVivoxVoiceClient::getInstance();
+	} else if (voice_server == "webrtc") {
+		mVoiceModule = (LLVoiceModuleInterface *)LLWebRTCVoiceClient::getInstance();
 	}
 	else
 	{

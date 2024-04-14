@@ -47,6 +47,7 @@ include(StateMachine)
 include(TemplateCheck)
 include(UI)
 include(ViewerMiscLibs)
+#include(WebRTC)
 include(WinManifest)
 include(ZLIB)
 include(URIPARSER)
@@ -80,6 +81,7 @@ include_directories(
     ${LLVFS_INCLUDE_DIRS}
     ${LLWINDOW_INCLUDE_DIRS}
     ${GENXSQLITE_INCLUDE_DIRS}
+    ${LIBS_OPEN_DIR}/llwebrtc
     ${LLXML_INCLUDE_DIRS}
     ${HUNSPELL_INCLUDE_DIR}
     ${OPENAL_LIB_INCLUDE_DIRS}
@@ -603,6 +605,7 @@ set(viewer_SOURCE_FILES
     llvoiceremotectrl.cpp
     llvoicevisualizer.cpp
     llvoicevivox.cpp
+    llvoicewebrtc.cpp
     llvoinventorylistener.cpp
     llvopartgroup.cpp
     llvosky.cpp
@@ -1176,6 +1179,7 @@ set(viewer_HEADER_FILES
     llvoiceremotectrl.h
     llvoicevisualizer.h
     llvoicevivox.h
+    llvoicewebrtc.h
     llvoinventorylistener.h
     llvopartgroup.h
     llvosky.h
@@ -1753,8 +1757,18 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${HUNSPELL_LIBRARY}
     ${LLPHYSICSEXTENSIONS_LIBRARIES}
     ${LLAPPEARANCE_LIBRARIES}
+    absl::btree
+    absl::core_headers
     absl::flat_hash_map
+    absl::flat_hash_set
+    absl::hash
+    absl::int128
+    absl::memory
+    absl::meta
     absl::node_hash_map
+    absl::node_hash_set
+    absl::optional
+    absl::variant
     nlohmann_json::nlohmann_json
     fmt::fmt
     )

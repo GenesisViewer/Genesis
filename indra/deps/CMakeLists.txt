@@ -4,7 +4,8 @@ include(FetchContent)
 
 set(CMAKE_FOLDER "Third Party")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 FetchContent_Declare(
   Catch2
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
@@ -25,7 +26,7 @@ FetchContent_Declare(
 FetchContent_Declare(
   absl
   GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
-  GIT_TAG        20230125.4
+  GIT_TAG        768eb2ca2857342673fcd462792ce04b8bac3fa3
 )
 
 # This is a hack because absl has dumb cmake

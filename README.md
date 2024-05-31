@@ -28,5 +28,8 @@ autobuild configure -cRelease -A64 -- -DVIEWER_CHANNEL_BASE="Genesis" -DVIEWER_C
 ## Building the project
 autobuild build --no-configure -cRelease -A64
 
+## Get support
+contact us inworld using the genesis group
+
 
 

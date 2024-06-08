@@ -47,7 +47,7 @@ include(StateMachine)
 include(TemplateCheck)
 include(UI)
 include(ViewerMiscLibs)
-#include(WebRTC)
+include(WebRTC)
 include(WinManifest)
 include(ZLIB)
 include(URIPARSER)
@@ -1582,6 +1582,7 @@ if (WINDOWS)
       ${CMAKE_SOURCE_DIR}/../scripts/messages/message_template.msg
       ${SHARED_LIB_STAGING_DIR}/Release/glod.dll
       ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/glod.dll
+      ${SHARED_LIB_STAGING_DIR}/llwebrtc.dll
       ${SHARED_LIB_STAGING_DIR}/Release/SLVoice.exe
       ${SHARED_LIB_STAGING_DIR}/Release/vivoxplatform.dll
       ${GOOGLE_PERF_TOOLS_SOURCE}
@@ -1648,6 +1649,7 @@ if (WINDOWS)
         ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
         generate_viewer_version
         stage_third_party_libs
+        llwebrtc
 		llcommon
         ${COPY_INPUT_DEPENDENCIES}
       COMMENT "Performing viewer_manifest copy"
@@ -1655,7 +1657,7 @@ if (WINDOWS)
 
     add_custom_target(copy_w_viewer_manifest ALL DEPENDS ${VIEWER_BUILD_DEST_DIR}/copy_touched.bat)
 
-    add_dependencies(${VIEWER_BINARY_NAME} stage_third_party_libs llcommon copy_w_viewer_manifest)
+    add_dependencies(${VIEWER_BINARY_NAME} stage_third_party_libs llcommon llwebrtc copy_w_viewer_manifest)
 
     if (EXISTS ${CMAKE_SOURCE_DIR}/copy_win_scripts)
       add_dependencies(${VIEWER_BINARY_NAME} copy_win_scripts)
@@ -1757,6 +1759,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${HUNSPELL_LIBRARY}
     ${LLPHYSICSEXTENSIONS_LIBRARIES}
     ${LLAPPEARANCE_LIBRARIES}
+    ${WEBRTC_LIBRARIES}
     absl::btree
     absl::core_headers
     absl::flat_hash_map

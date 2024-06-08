@@ -1165,11 +1165,11 @@
             <map>
               
               <key>hash</key>
-              <string>59d5f2e40612ab7b0b1a5da8ba288f48d5979216</string>
+              <string>abbd27bdbeec9b8c01ab7c176bee7bacbf7252f5</string>
               <key>hash_algorithm</key>
               <string>sha1</string>
               <key>url</key>
-              <string>http://pkg.genesisviewer.org/webrtc-m114.5735.08.53.8337236647-windows64-8337236647.tar.zst</string>
+              <string>https://github.com/secondlife/3p-webrtc-build/releases/download/m114.5735.08.59-debug/webrtc-m114.5735.08.59-debug.8823062977-windows64-8823062977.tar.zst</string>
             </map>
             <key>name</key>
             <string>windows64</string>
@@ -1182,7 +1182,7 @@
         <key>vcs_url</key>
         <string>https://github.com/secondlife/3p-webrtc-build</string>
         <key>version</key>
-        <string>m114.5735.08.53.8337236647</string>
+        <string>m114.5735.08.59-debug.8823062977-darwin64-8823062977</string>
       </map>
       <key>xmlrpc-epi</key>
       <map>

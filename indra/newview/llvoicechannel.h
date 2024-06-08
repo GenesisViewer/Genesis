@@ -28,7 +28,7 @@
 #define LL_VOICECHANNEL_H
 
 #include "llvoiceclient.h"
-
+#include "llpanel.h"
 class LLVoiceChannel : public LLVoiceClientStatusObserver
 {
 public:

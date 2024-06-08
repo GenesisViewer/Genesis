@@ -4,6 +4,8 @@
 
 
 #include "llvoiceclient.h"
+#include "llvoicechannel.h"
+
 // WebRTC Includes
 #include <llwebrtc.h>
 class LLAvatarName;
@@ -47,7 +49,8 @@ public:
 	virtual float getNonFriendsVoiceAttenuation(){
 		return 0;
 	};
-
+	typedef std::set<LLVoiceClientParticipantObserver*> observer_set_t;
+	observer_set_t mParticipantObservers;
 	//@}
 
 	/////////////////////
@@ -178,6 +181,16 @@ public:
     //@}
     void OnDevicesChangedImpl(const llwebrtc::LLWebRTCVoiceDeviceList &render_devices,
                               const llwebrtc::LLWebRTCVoiceDeviceList &capture_devices);
+
+	//----------------------------------
+    // devices
+    void clearCaptureDevices();
+    void addCaptureDevice(const LLVoiceDevice& device);
+
+    void clearRenderDevices();
+    void addRenderDevice(const LLVoiceDevice& device);
+
+    void setDevicesListUpdated(bool state);
 	virtual std::string sipURIFromID(const LLUUID &id);
 	//@}
 
@@ -274,6 +287,13 @@ public:
 
 		stateJail					// Go here when all else has failed.  Nothing will be retried, we're done.
 	};
+	enum streamState
+	{
+		streamStateUnknown = 0,
+		streamStateIdle = 1,
+		streamStateConnected = 2,
+		streamStateRinging = 3,
+	};
 	struct participantState
 	{
 	public:
@@ -322,7 +342,7 @@ public:
 
 		participantState *findParticipant(const std::string &uri);
 		participantState *findParticipantByID(const LLUUID& id);
-
+		
 		bool isCallBackPossible();
 		bool isTextIMPossible();
 
@@ -368,15 +388,22 @@ public:
 private:
 	llwebrtc::LLWebRTCDeviceInterface *mWebRTCDeviceInterface;
 	LLVoiceVersionInfo mVoiceVersion;
-
+	std::string mAccountName;
+	std::string mAccountPassword;
+	std::string mAccountDisplayName;
 	sessionState *mAudioSession;		// Session state for the current audio session
+	bool mAudioSessionChanged;			// set to true when the above pointer gets changed, so observers can be notified.
 	bool  mVoiceEnabled;
 	bool mTuningMode;
     S32   mEarLocation;	
+	bool		mSpeakerVolumeDirty;
+	bool		mSpeakerMuteDirty;
+	int			mSpeakerVolume;
 	bool mSpatialCoordsDirty;
 	// These variables can last longer than WebRTC in coroutines so we need them as static
     static bool sShuttingDown;	
 
+	sessionState *mNextAudioSession;	// Session state for the audio session we're trying to join
 
 	// Number of times (in a row) "stateJoiningSession" case for spatial channel is reached in stateMachine().
 	// The larger it is the greater is possibility there is a problem with connection to voice server.
@@ -394,21 +421,57 @@ private:
 	LLUUID mPreviewVoiceFont;
 	LLUUID mPreviewVoiceFontLast;
 
+	std::string mCaptureDevice;
+	std::string mRenderDevice;
+	bool mCaptureDeviceDirty;
+	bool mRenderDeviceDirty;
+
 	int mTuningMicVolume;
 	bool mTuningMicVolumeDirty;
 	float mTuningEnergy;
+	float mNonFriendsVoiceAttenuation;
 	int mTuningSpeakerVolume;
 	bool mTuningSpeakerVolumeDirty;
+
+	int			mMicVolume;
+	bool		mMicVolumeDirty;
+
+	bool mConnected;
+	std::string mChannelName;			// Name of the channel to be looked up
+	std::string mSpatialSessionURI;
+	std::string mSpatialSessionCredentials;
+	bool mAreaVoiceDisabled;
 	void setState(state inState);
 	state getState(void)  { return mState; };
 	std::string state2string(state inState);
 
 	// Pokes the state machine to leave the audio session next time around.
 	void sessionTerminate();
-
+	void switchChannel(std::string uri = std::string(), bool spatial = true, bool no_reconnect = false, bool is_p2p = false, std::string hash = "");
+	sessionState *addSession(const std::string &uri, const std::string &handle = LLStringUtil::null);
+	void deleteSession(sessionState *session);
+	// This is called in several places where the session _may_ need to be deleted.
+	// It contains logic for whether to delete the session or keep it around.
+	void reapSession(sessionState *session);
+	void joinSession(sessionState *session);
+	void verifySessionState(void);
+	void setSessionHandle(sessionState *session, const std::string &handle = LLStringUtil::null);
+	void setSessionURI(sessionState *session, const std::string &uri);
 	participantState *findParticipantByID(const LLUUID& id);
 
-
+	////////////////////////////////////////
+	// voice sessions.
+	typedef std::set<sessionState*> sessionSet;
+	typedef std::map<std::string, sessionState*> sessionMap;
+	typedef sessionSet::iterator sessionIterator;
+	sessionIterator sessionsBegin(void);
+	sessionIterator sessionsEnd(void);
+	sessionState *findSession(const std::string &handle);
+	sessionState *findSessionBeingCreatedByURI(const std::string &uri);
+	sessionState *findSession(const LLUUID &participant_id);
+	sessionState *findSessionByCreateID(const std::string &create_id);
+	sessionMap mSessionsByHandle;				// Active sessions, indexed by session handle.  Sessions which are being initiated may not be in this map.
+	sessionSet mSessions;						// All sessions, not indexed.  This is the canonical session list.
 
 
 	typedef std::set<LLVoiceEffectObserver*> voice_font_observer_set_t;
@@ -422,6 +485,10 @@ private:
 	voice_effect_list_t	mVoiceFontList;
 	voice_effect_list_t	mVoiceFontTemplateList;
 
+	bool		mMuteMic;
+	bool		mMuteMicDirty;
+
+	bool mLipSyncEnabled;
 	struct voiceFontEntry
 	{
 		voiceFontEntry(LLUUID& id);
@@ -444,6 +511,22 @@ private:
 	
 	void deleteAllVoiceFonts();
 	void deleteVoiceFontTemplates();
+
+
+	LLVoiceDeviceList mCaptureDevices;
+    LLVoiceDeviceList mRenderDevices;
+	bool mDevicesListUpdated;            // set to true when the device list has been updated
+                                        // and false when the panelvoicedevicesettings has queried for an update status.
+
+	typedef std::set<LLVoiceClientStatusObserver*> status_observer_set_t;
+	status_observer_set_t mStatusObservers;
+
+	void notifyStatusObservers(LLVoiceClientStatusObserver::EStatusType status);					
+	typedef std::set<LLFriendObserver*> friend_observer_set_t;
+	friend_observer_set_t mFriendObservers;
+	void notifyFriendObservers();
+	bool inSpatialChannel(void);
+	std::string getAudioSessionURI();					
 };
 
 #endif //LL_VOICE_WEBRTC_H

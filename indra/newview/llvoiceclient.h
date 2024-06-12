@@ -93,8 +93,12 @@ public:
 
 struct LLVoiceVersionInfo
 {
-	std::string serverType;
+	std::string voiceServerType;
+	std::string internalVoiceServerType;
+	int         majorVersion;
+	int         minorVersion;
 	std::string serverVersion;
+	std::string mBuildVersion;
 };
 
 //////////////////////////////////
@@ -321,7 +325,7 @@ public:
 
 	void init(LLPumpIO *pump);	// Call this once at application startup (creates connector)
 	void terminate();	// Call this to clean up during shutdown
-
+	void changeServerType(); // vivox or webrtc
 	const LLVoiceVersionInfo getVersion();
 
 	static const F32 OVERDRIVEN_POWER_LEVEL;
@@ -478,6 +482,8 @@ public:
 
 protected:
 	LLVoiceModuleInterface* mVoiceModule;
+	LLVoiceModuleInterface* mVoiceModuleVivox;
+	LLVoiceModuleInterface* mVoiceModuleWebRTC;
 	LLPumpIO *m_servicePump;
 
 
@@ -495,6 +501,8 @@ protected:
 	bool		mMuteMic;
 	bool		mDisableMic;
 	float mDefaultVolume; //Default boost level
+
+	std::string servertype; //vivox or webrtc
 };
 
 /**

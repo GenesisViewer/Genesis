@@ -169,7 +169,7 @@ public:
 	F32 getWaterHeight() const;
 
 	BOOL isVoiceEnabled() const;
-
+	std::string getVoiceServerType();
 	void setBillableFactor(F32 billable_factor) { mBillableFactor = billable_factor; }
 	F32 getBillableFactor() 		const 	{ return mBillableFactor; }
 

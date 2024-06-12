@@ -67,8 +67,8 @@ const F32 VOLUME_SCALE_VIVOX = 0.01f;
 
 const F32 SPEAKING_TIMEOUT = 1.f;
 
-static const std::string VOICE_SERVER_TYPE = "Vivox";
-
+const std::string VIVOX_VOICE_SERVER_TYPE = "vivox";
+static const std::string VISIBLE_VOICE_SERVER_TYPE = "Vivox";
 // Don't retry connecting to the daemon more frequently than this:
 const F32 CONNECT_THROTTLE_SECONDS = 1.0f;
 
@@ -361,7 +361,12 @@ LLVivoxVoiceClient::LLVivoxVoiceClient() :
 	mSpeakerVolume = scale_speaker_volume(0);
 
 	mVoiceVersion.serverVersion = "";
-	mVoiceVersion.serverType = VOICE_SERVER_TYPE;
+	mVoiceVersion.voiceServerType = VISIBLE_VOICE_SERVER_TYPE;
+    mVoiceVersion.internalVoiceServerType = VIVOX_VOICE_SERVER_TYPE;
+    mVoiceVersion.majorVersion = 1;
+    mVoiceVersion.minorVersion = 0;
+    mVoiceVersion.mBuildVersion = "";
+    mVoiceVersion.serverVersion = "";
 
 	//  gMuteListp isn't set up at this point, so we defer this until later.
 //	gMuteListp->addObserver(&mutelist_listener);
@@ -446,7 +451,7 @@ const LLVoiceVersionInfo& LLVivoxVoiceClient::getVersion()
 
 void LLVivoxVoiceClient::updateSettings()
 {
-	setVoiceEnabled(gSavedSettings.getBOOL("EnableVoiceChat"));
+	//setVoiceEnabled(gSavedSettings.getBOOL("EnableVoiceChat"));
 	setEarLocation(gSavedSettings.getS32("VoiceEarLocation"));
 
 	std::string inputDevice = gSavedSettings.getString("VoiceInputAudioDevice");

@@ -83,7 +83,7 @@
 #include "stringize.h"
 #include "llviewercontrol.h"
 #include "llsdserialize.h"
-
+#include "llvoiceclient.h"
 #include "llviewerparcelmgr.h"	//Aurora Sim
 #ifdef LL_WINDOWS
 	#pragma warning(disable:4355)
@@ -288,6 +288,7 @@ private:
 		LLSD::map_const_iterator iter;
 		for(iter = content.beginMap(); iter != content.endMap(); ++iter)
 		{
+			LL_INFOS() << "Capability received " << iter->first << ","<< iter->second << LL_ENDL; 
 			regionp->setCapability(iter->first, iter->second);
 
 			LL_DEBUGS("AppInit", "Capabilities")
@@ -298,7 +299,10 @@ private:
 			{
 				regionp->showReleaseNotes();
 			}
+			
+
 		}
+		
 
 		regionp->setCapabilitiesReceived(true);
 
@@ -306,6 +310,7 @@ private:
 		{
 			LLStartUp::setStartupState( STATE_SEED_CAP_GRANTED );
 		}
+		LLVoiceClient::getInstance()->changeServerType();
 	}
 
 private:
@@ -1572,6 +1577,7 @@ void LLViewerRegion::setSimulatorFeatures(const LLSD& sim_features)
 	mSimulatorFeatures = sim_features;
 
 	setSimulatorFeaturesReceived(true);
+	LLVoiceClient::getInstance()->changeServerType();
 
 }
 
@@ -2094,6 +2100,7 @@ void LLViewerRegionImpl::buildCapabilityNames(LLSD& capabilityNames)
 	capabilityNames.append("ViewerMetrics");
 	capabilityNames.append("ViewerStartAuction");
 	capabilityNames.append("ViewerStats");
+	capabilityNames.append("VoiceServerType");
 	capabilityNames.append("WearablesLoaded");
 	
 	// Please add new capabilities alphabetically to reduce
@@ -2419,7 +2426,13 @@ bool LLViewerRegion::meshUploadEnabled() const
 				mSimulatorFeatures["MeshUploadEnabled"].asBoolean());
 	}
 }
-
+std::string LLViewerRegion::getVoiceServerType() {
+	std::string voiceServerType="";
+	if (mSimulatorFeatures.has("VoiceServerType")) {
+		voiceServerType=mSimulatorFeatures["VoiceServerType"].asString();
+	}
+	return voiceServerType;
+}
 bool LLViewerRegion::bakesOnMeshEnabled() const
 {
 	return (mSimulatorFeatures.has("BakesOnMeshEnabled") &&

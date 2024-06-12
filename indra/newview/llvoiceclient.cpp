@@ -39,6 +39,7 @@
 #include "llsdserialize.h"
 #include "llkeyboard.h"
 #include "rlvhandler.h"
+#include "llagent.h"
 
 const F32 LLVoiceClient::OVERDRIVEN_POWER_LEVEL = 0.7f;
 
@@ -116,6 +117,8 @@ std::string LLVoiceClientStatusObserver::status2string(LLVoiceClientStatusObserv
 LLVoiceClient::LLVoiceClient()
 	:
 	mVoiceModule(nullptr),
+	mVoiceModuleVivox(nullptr),
+	mVoiceModuleWebRTC(nullptr),
 	m_servicePump(nullptr),
 	mVoiceEffectEnabled(LLCachedControl<bool>(gSavedSettings, "VoiceMorphingEnabled", true)),
 	mVoiceEffectDefault(LLCachedControl<std::string>(gSavedPerAccountSettings, "VoiceEffectDefault", "00000000-0000-0000-0000-000000000000")),
@@ -129,6 +132,9 @@ LLVoiceClient::LLVoiceClient()
 	mMuteMic(false),
 	mDisableMic(false)
 {
+	mVoiceModuleVivox = (LLVoiceModuleInterface *)LLVivoxVoiceClient::getInstance();
+	
+	mVoiceModuleWebRTC = (LLVoiceModuleInterface *)LLWebRTCVoiceClient::getInstance();
 	updateSettings();
 }
 
@@ -149,26 +155,36 @@ void LLVoiceClient::userAuthorized(const std::string& user_id, const LLUUID &age
 {
 	// In the future, we should change this to allow voice module registration
 	// with a table lookup of sorts.
-	std::string voice_server = gSavedSettings.getString("VoiceServerType");
-	LL_DEBUGS("Voice") << "voice server type " << voice_server << LL_ENDL;
-	if(voice_server == "vivox")
-	{
-		mVoiceModule = (LLVoiceModuleInterface *)LLVivoxVoiceClient::getInstance();
-	} else if (voice_server == "webrtc") {
-		mVoiceModule = (LLVoiceModuleInterface *)LLWebRTCVoiceClient::getInstance();
-	}
-	else
-	{
-		mVoiceModule = nullptr;
-		return;
-	}
-	mVoiceModule->init(m_servicePump);
-	mVoiceModule->userAuthorized(user_id, agentID);
+	// std::string voice_server = gSavedSettings.getString("VoiceServerType");
+	// LL_DEBUGS("Voice") << "voice server type " << voice_server << LL_ENDL;
+	// if(voice_server == "vivox")
+	// {
+	// 	mVoiceModule = (LLVoiceModuleInterface *)LLVivoxVoiceClient::getInstance();
+	// } else if (voice_server == "webrtc") {
+	// 	mVoiceModule = (LLVoiceModuleInterface *)LLWebRTCVoiceClient::getInstance();
+	// }
+	// else
+	// {
+	// 	mVoiceModule = nullptr;
+	// 	return;
+	// }
+	// mVoiceModule->init(m_servicePump);
+	// mVoiceModule->userAuthorized(user_id, agentID);
+	mVoiceModuleVivox->init(m_servicePump);
+	mVoiceModuleVivox->userAuthorized(user_id, agentID);
+	mVoiceModuleVivox->updateSettings();
+	mVoiceModuleWebRTC->init(m_servicePump);
+	mVoiceModuleWebRTC->userAuthorized(user_id, agentID);
+	mVoiceModuleWebRTC->updateSettings();
 }
 
 void LLVoiceClient::terminate()
 {
-	if (mVoiceModule) mVoiceModule->terminate();
+	// if (mVoiceModule) mVoiceModule->terminate();
+	if (mVoiceModuleVivox) mVoiceModuleVivox->terminate();
+	if (mVoiceModuleWebRTC) mVoiceModuleWebRTC->terminate();
+	mVoiceModuleVivox = nullptr;
+	mVoiceModuleWebRTC = nullptr;
 	mVoiceModule = nullptr;
 }
 
@@ -182,7 +198,8 @@ const LLVoiceVersionInfo LLVoiceClient::getVersion()
 	{
 		LLVoiceVersionInfo result;
 		result.serverVersion = std::string();
-		result.serverType = std::string();
+		result.voiceServerType = std::string();
+		result.mBuildVersion = std::string();
 		return result;
 	}
 }
@@ -862,7 +879,31 @@ std::string LLVoiceClient::sipURIFromID(const LLUUID &id)
 		return std::string();
 	}
 }
-
+void LLVoiceClient::changeServerType() {
+	std::string regionServerType = gAgent.getRegion()->getVoiceServerType();
+	if (regionServerType.empty()) {
+			regionServerType = "vivox";
+	}
+	LL_INFOS() << "Region voice system " << regionServerType << LL_ENDL;
+	if (servertype == regionServerType) return;
+	if (regionServerType=="vivox") {
+		mVoiceModuleWebRTC->setVoiceEnabled(false);
+		mVoiceModuleVivox->setVoiceEnabled(true);
+		
+		mVoiceModule = mVoiceModuleVivox;
+		
+	}else if (regionServerType=="webrtc")
+	{
+		LL_INFOS() << "Entering region with WebRTC enabled" << LL_ENDL;
+		mVoiceModuleVivox->setVoiceEnabled(false);
+		mVoiceModuleWebRTC->setVoiceEnabled(true);
+		mVoiceModule= mVoiceModuleWebRTC;
+	}
+	servertype = regionServerType;
+	
+	mVoiceModule->updateSettings();
+	
+}
 LLVoiceEffectInterface* LLVoiceClient::getVoiceEffectInterface() const
 {
 	return getVoiceEffectEnabled() ? dynamic_cast<LLVoiceEffectInterface*>(mVoiceModule) : NULL;
@@ -873,32 +914,52 @@ LLVoiceEffectInterface* LLVoiceClient::getVoiceEffectInterface() const
 
 class LLViewerRequiredVoiceVersion : public LLHTTPNode
 {
-	static BOOL sAlertedUser;
-
-	void post(
+	static bool sAlertedUser;
+	virtual void post(
 					  LLHTTPNode::ResponsePtr response,
 					  const LLSD& context,
-					  const LLSD& input) const override
+					  const LLSD& input) const
 	{
-		//You received this messsage (most likely on region cross or
-		//teleport)
-		if ( input.has("body") && input["body"].has("major_version") )
+		std::string voice_server_type = "vivox";
+		if (input.has("body") && input["body"].has("voice_server_type"))
 		{
-			int major_voice_version =
-			input["body"]["major_version"].asInteger();
-			//			int minor_voice_version =
-			//				input["body"]["minor_version"].asInteger();
-			LLVoiceVersionInfo versionInfo = LLVoiceClient::getInstance()->getVersion();
+			voice_server_type = input["body"]["voice_server_type"].asString();
+		}
 
-			if (major_voice_version > 1)
+		LLVoiceModuleInterface *voiceModule = NULL;
+
+		if (voice_server_type == "vivox" || voice_server_type.empty())
+		{
+			voiceModule = (LLVoiceModuleInterface *) LLVivoxVoiceClient::getInstance();
+		}
+		else if (voice_server_type == "webrtc")
+		{
+			voiceModule = (LLVoiceModuleInterface *) LLWebRTCVoiceClient::getInstance();
+		}
+		else
+		{
+			LL_WARNS("Voice") << "Unknown voice server type " << voice_server_type << LL_ENDL;
+			if (!sAlertedUser)
 			{
-				if (!sAlertedUser)
-				{
-					//sAlertedUser = TRUE;
-					LLNotificationsUtil::add("VoiceVersionMismatch");
-					gSavedSettings.setBOOL("EnableVoiceChat", FALSE); // toggles listener
-				}
+				// sAlertedUser = true;
+				LLNotificationsUtil::add("VoiceVersionMismatch");
 			}
+			return;
+		}
+
+		LLVoiceVersionInfo versionInfo = voiceModule->getVersion();
+		if (input.has("body") && input["body"].has("major_version") &&
+			input["body"]["major_version"].asInteger() > versionInfo.majorVersion)
+		{
+			if (!sAlertedUser)
+			{
+				// sAlertedUser = true;
+				LLNotificationsUtil::add("VoiceVersionMismatch");
+				LL_WARNS("Voice") << "Voice server version mismatch " << input["body"]["major_version"].asInteger() << "/"
+								  << versionInfo.majorVersion
+								  << LL_ENDL;
+			}
+			return;
 		}
 	}
 };
@@ -1099,7 +1160,7 @@ void LLSpeakerVolumeStorage::save()
 	}
 }
 
-BOOL LLViewerRequiredVoiceVersion::sAlertedUser = FALSE;
+bool LLViewerRequiredVoiceVersion::sAlertedUser = FALSE;
 
 LLHTTPRegistration<LLViewerParcelVoiceInfo>
     gHTTPRegistrationMessageParcelVoiceInfo(

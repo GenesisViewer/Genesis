@@ -10,9 +10,11 @@ include(WebRTC)
 
 project(llwebrtc)
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
 
-
+if (LINUX)
+    add_compile_options(-Wno-deprecated-declarations) # webrtc::CreateAudioDeviceWithDataObserver is deprecated
+endif (LINUX)
+add_compile_options("$<$<CONFIG:DEBUG>:/MTd>")
 set(llwebrtc_SOURCE_FILES
     llwebrtc.cpp
     )
@@ -26,10 +28,11 @@ set(llwebrtc_HEADER_FILES
 list(APPEND llwebrtc_SOURCE_FILES ${llwebrtc_HEADER_FILES})
 
 add_library (llwebrtc SHARED ${llwebrtc_SOURCE_FILES})
-target_compile_options(llwebrtc SHARED "-DCMAKE_BUILD_TYPE=Debug")    
+
 set_target_properties(llwebrtc PROPERTIES PUBLIC_HEADER llwebrtc.h)
 
 if (WINDOWS)
+    
     target_link_libraries(llwebrtc PRIVATE ll::webrtc 
                                        secur32
                                        winmm
@@ -37,16 +40,19 @@ if (WINDOWS)
                                        wmcodecdspuuid
                                        msdmo
                                        strmiids
-                                       iphlpapi)
+                                       iphlpapi
+                                       advapi32
+                                       )
 elseif (DARWIN)
     target_link_libraries(llwebrtc PRIVATE ll::webrtc)
 elseif (LINUX)
     target_link_libraries(llwebrtc PRIVATE ll::webrtc)
 endif (WINDOWS)
     
-target_include_directories( llwebrtc  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories( llwebrtc INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (WINDOWS)
+    
     set_property(TARGET llwebrtc PROPERTY
         MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
 endif (WINDOWS)
@@ -54,7 +60,7 @@ endif (WINDOWS)
 ADD_CUSTOM_COMMAND(TARGET llwebrtc POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_if_different
                        $<TARGET_FILE:llwebrtc>
-                               ${SHARED_LIB_STAGING_DIR})
+                               ${SHARED_LIB_STAGING_DIR}/Release)
 # Add tests
 if (LL_TESTS)
 endif (LL_TESTS)

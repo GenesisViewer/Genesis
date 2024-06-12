@@ -33,10 +33,10 @@ if (WINDOWS)
       "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Od /Zi /MD /MP"
       CACHE STRING "C++ compiler release-with-debug options" FORCE)
   set(CMAKE_CXX_FLAGS_RELEASE
-      "${CMAKE_CXX_FLAGS_RELEASE} ${LL_CXX_FLAGS} /O2 /Zi /Zo /MD /MP /Ob2 /Zc:inline /fp:fast -D_ITERATOR_DEBUG_LEVEL=0"
+      "${CMAKE_CXX_FLAGS_RELEASE} ${LL_CXX_FLAGS} /O2  /Zo /MD /MP /Ob2 /Zc:inline /fp:fast -D_ITERATOR_DEBUG_LEVEL=0"
       CACHE STRING "C++ compiler release options" FORCE)
   set(CMAKE_C_FLAGS_RELEASE
-      "${CMAKE_C_FLAGS_RELEASE} ${LL_C_FLAGS} /O2 /Zi /MD /MP /fp:fast"
+      "${CMAKE_C_FLAGS_RELEASE} ${LL_C_FLAGS} /O2 /MD /MP /fp:fast"
       CACHE STRING "C compiler release options" FORCE)
 
   if (ADDRESS_SIZE EQUAL 32)

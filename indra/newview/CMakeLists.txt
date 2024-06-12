@@ -1732,6 +1732,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLXML_LIBRARIES}
     ${LLMATH_LIBRARIES}
     ${LLCOMMON_LIBRARIES}
+    llwebrtc
     ${NDOF_LIBRARY}
     ${NVAPI_LIBRARY}
     ${URIPARSER_LIBRARY}

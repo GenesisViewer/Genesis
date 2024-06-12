@@ -3,12 +3,15 @@ include(Linking)
 include(Prebuilt)
 
 include_guard()
-
+add_compile_options("$<$<CONFIG:DEBUG>:/MTd>")
 add_library( ll::webrtc INTERFACE IMPORTED )
 target_include_directories( ll::webrtc SYSTEM INTERFACE "${LIBS_PREBUILT_DIR}/include/webrtc" "${LIBS_PREBUILT_DIR}/include/webrtc/third_party/abseil-cpp")
+
 use_prebuilt_binary(webrtc)
 
 if (WINDOWS)
+    target_compile_options(ll::webrtc INTERFACE "/MTd" "/guard:cf" )
+    target_link_options(ll::webrtc INTERFACE  "/guard:cf")
     target_link_libraries( ll::webrtc INTERFACE webrtc.lib )
 elseif (DARWIN)
     FIND_LIBRARY(COREAUDIO_LIBRARY CoreAudio)
@@ -26,5 +29,5 @@ elseif (DARWIN)
         ${COCOA_LIBRARY}
     )
 elseif (LINUX)
-    target_link_libraries( ll::webrtc INTERFACE libwebrtc )
+    target_link_libraries( ll::webrtc INTERFACE libwebrtc.a X11 )
 endif (WINDOWS)

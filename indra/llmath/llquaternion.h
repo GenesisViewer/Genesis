@@ -138,7 +138,7 @@ public:
 	friend LLVector4 operator*(const LLVector4 &a, const LLQuaternion &rot);		// Rotates a by rot
 	friend LLVector3 operator*(const LLVector3 &a, const LLQuaternion &rot);		// Rotates a by rot
 	friend LLVector3d operator*(const LLVector3d &a, const LLQuaternion &rot);		// Rotates a by rot
-
+	F64 operator[](int idx) const { return mQ[idx]; }
 	// Non-standard operators
 	friend F32 dot(const LLQuaternion &a, const LLQuaternion &b);
 	friend LLQuaternion lerp(F32 t, const LLQuaternion &p, const LLQuaternion &q);		// linear interpolation (t = 0 to 1) from p to q

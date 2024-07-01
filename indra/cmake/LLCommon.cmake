@@ -6,7 +6,7 @@ include(EXPAT)
 include(Linking)
 include(xxHash)
 include(ZLIB)
-
+include(JsonCpp)
 if (DARWIN)
   include(CMakeFindFrameworks)
   find_library(CORESERVICES_LIBRARY CoreServices)

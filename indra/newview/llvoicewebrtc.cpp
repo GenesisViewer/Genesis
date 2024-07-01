@@ -7,7 +7,9 @@
 #include "llvoavatarself.h"
 #include "llviewercamera.h"
 #include "llworld.h"
-
+#include "json/reader.h"
+#include "json/writer.h"
+#include "llavatarnamecache.h"
 bool LLWebRTCVoiceClient::sShuttingDown = false;
 
 // Defines the maximum number of times(in a row) "stateJoiningSession" case for spatial channel is reached in stateMachine()
@@ -20,6 +22,15 @@ const F32 SPEAKING_TIMEOUT = 1.f;
 static const std::string REPORTED_VOICE_SERVER_TYPE = "Secondlife WebRTC Gateway";
 const std::string WEBRTC_VOICE_SERVER_TYPE = "webrtc";
 const S32 INVALID_PARCEL_ID = -1;
+
+    // Cosine of a "trivially" small angle
+    const F32 FOUR_DEGREES = 4.0f * (F_PI / 180.0f);
+    const F32 MINUSCULE_ANGLE_COS = (F32) cos(0.5f * FOUR_DEGREES);
+
+	const F32 MAX_AUDIO_DIST      = 50.0f;
+// Don't send positional updates more frequently than this:
+    const F32 UPDATE_THROTTLE_SECONDS = 0.1f;
+	const F32 MAX_RETRY_WAIT_SECONDS  = 10.0f;
 LLWebRTCVoiceClient::LLWebRTCVoiceClient(){
 
     mVoiceVersion.serverVersion = "";
@@ -120,77 +131,130 @@ bool LLWebRTCVoiceClient::inTuningMode()
 	}
 	return result;
 }
-void LLWebRTCVoiceClient::setCameraPosition(const LLVector3d &position, const LLVector3 &velocity, const LLMatrix3 &rot)
+
+
+void LLWebRTCVoiceClient::setAvatarPosition(const LLVector3d &position, const LLVector3 &velocity, const LLQuaternion &rot)
 {
-	mCameraRequestedPosition = position;
+    if (dist_vec_squared(mAvatarPosition, position) > 0.01)
+    {
+        mAvatarPosition     = position;
+        mSpatialCoordsDirty = true;
+    }
 
-	if(mCameraVelocity != velocity)
-	{
-		mCameraVelocity = velocity;
-		mSpatialCoordsDirty = true;
-	}
+    if (mAvatarVelocity != velocity)
+    {
+        mAvatarVelocity     = velocity;
+        mSpatialCoordsDirty = true;
+    }
 
-	if(mCameraRot != rot)
-	{
-		mCameraRot = rot;
-		mSpatialCoordsDirty = true;
-	}
+    // If the two rotations are not exactly equal test their dot product
+    // to get the cos of the angle between them.
+    // If it is too small, don't update.
+    F32 rot_cos_diff = llabs(dot(mAvatarRot, rot));
+    if ((mAvatarRot != rot) && (rot_cos_diff < MINUSCULE_ANGLE_COS))
+    {
+        mAvatarRot          = rot;
+        mSpatialCoordsDirty = true;
+    }
 }
-
-void LLWebRTCVoiceClient::setAvatarPosition(const LLVector3d &position, const LLVector3 &velocity, const LLMatrix3 &rot)
+// For spatial, determine which neighboring regions to connect to
+// for cross-region voice.
+void LLWebRTCVoiceClient::updateNeighboringRegions()
 {
-	if(dist_vec_squared(mAvatarPosition, position) > 0.01)
-	{
-		mAvatarPosition = position;
-		mSpatialCoordsDirty = true;
-	}
+    static const std::vector<LLVector3d> neighbors {LLVector3d(0.0f, 1.0f, 0.0f),  LLVector3d(0.707f, 0.707f, 0.0f),
+                                                    LLVector3d(1.0f, 0.0f, 0.0f),  LLVector3d(0.707f, -0.707f, 0.0f),
+                                                    LLVector3d(0.0f, -1.0f, 0.0f), LLVector3d(-0.707f, -0.707f, 0.0f),
+                                                    LLVector3d(-1.0f, 0.0f, 0.0f), LLVector3d(-0.707f, 0.707f, 0.0f)};
 
-	if(mAvatarVelocity != velocity)
-	{
-		mAvatarVelocity = velocity;
-		mSpatialCoordsDirty = true;
-	}
+    // Estate voice requires connection to neighboring regions.
+    mNeighboringRegions.clear();
 
-	if(mAvatarRot != rot)
-	{
-		mAvatarRot = rot;
-		mSpatialCoordsDirty = true;
-	}
+    mNeighboringRegions.insert(gAgent.getRegion()->getRegionID());
+
+    // base off of speaker position as it'll move more slowly than camera position.
+    // Once we have hysteresis, we may be able to track off of speaker and camera position at 50m
+    // TODO: Add hysteresis so we don't flip-flop connections to neighbors
+    LLVector3d speaker_pos = LLWebRTCVoiceClient::getInstance()->getSpeakerPosition();
+    for (auto &neighbor_pos : neighbors)
+    {
+        // include every region within 100m (2*MAX_AUDIO_DIST) to deal witht he fact that the camera
+        // can stray 50m away from the avatar.
+        LLViewerRegion *neighbor = LLWorld::instance().getRegionFromPosGlobal(speaker_pos + 2 * MAX_AUDIO_DIST * neighbor_pos);
+        if (neighbor && !neighbor->getRegionID().isNull())
+        {
+            mNeighboringRegions.insert(neighbor->getRegionID());
+        }
+    }
+}
+// The listener (camera) must be within 50m of the
+// avatar.  Enforce it on the client.
+// This will also be enforced on the voice server
+// based on position sent from the simulator to the
+// voice server.
+void LLWebRTCVoiceClient::enforceTether()
+{
+    LLVector3d tethered = mListenerRequestedPosition;
+
+    // constrain 'tethered' to within 50m of mAvatarPosition.
+    {
+        LLVector3d camera_offset   = mListenerRequestedPosition - mAvatarPosition;
+        F32        camera_distance = (F32) camera_offset.magVec();
+        if (camera_distance > MAX_AUDIO_DIST)
+        {
+            tethered = mAvatarPosition + (MAX_AUDIO_DIST / camera_distance) * camera_offset;
+        }
+    }
+
+    if (dist_vec_squared(mListenerPosition, tethered) > 0.01)
+    {
+        mListenerPosition   = tethered;
+        mSpatialCoordsDirty = true;
+    }
 }
 void LLWebRTCVoiceClient::updatePosition(void)
 {
 
 	LLViewerRegion *region = gAgent.getRegion();
-	if(region && isAgentAvatarValid())
-	{
-		LLMatrix3 rot;
-		LLVector3d pos;
+    if (region && isAgentAvatarValid())
+    {
+        // get the avatar position.
+        LLVector3d   avatar_pos  = gAgentAvatarp->getPositionGlobal();
+        LLQuaternion avatar_qrot = gAgentAvatarp->getRootJoint()->getWorldRotation();
 
-		// TODO: If camera and avatar velocity are actually used by the voice system, we could compute them here...
-		// They're currently always set to zero.
+        avatar_pos += LLVector3d(0.f, 0.f, 1.f);  // bump it up to head height
 
-		// Send the current camera position to the voice code
-		rot.setRows(LLViewerCamera::getInstance()->getAtAxis(), LLViewerCamera::getInstance()->getLeftAxis (),  LLViewerCamera::getInstance()->getUpAxis());
-		pos = gAgent.getRegion()->getPosGlobalFromRegion(LLViewerCamera::getInstance()->getOrigin());
+        LLVector3d   earPosition;
+        LLQuaternion earRot;
+        switch (mEarLocation)
+        {
+            case earLocCamera:
+            default:
+                earPosition = region->getPosGlobalFromRegion(LLViewerCamera::getInstance()->getOrigin());
+                earRot      = LLViewerCamera::getInstance()->getQuaternion();
+                break;
 
-		LLWebRTCVoiceClient::getInstance()->setCameraPosition(
-															 pos,				// position
-															 LLVector3::zero,	// velocity
-															 rot);				// rotation matrix
+            case earLocAvatar:
+                earPosition = mAvatarPosition;
+                earRot      = mAvatarRot;
+                break;
 
-		// Send the current avatar position to the voice code
-		rot = gAgentAvatarp->getRootJoint()->getWorldRotation().getMatrix3();
-		pos = gAgentAvatarp->getPositionGlobal();
+            case earLocMixed:
+                earPosition = mAvatarPosition;
+                earRot      = LLViewerCamera::getInstance()->getQuaternion();
+                break;
+        }
+        setListenerPosition(earPosition,      // position
+                            LLVector3::zero,  // velocity
+                            earRot);          // rotation matrix
 
-		// TODO: Can we get the head offset from outside the LLVOAvatar?
-		//			pos += LLVector3d(mHeadOffset);
-		pos += LLVector3d(0.f, 0.f, 1.f);
+        setAvatarPosition(avatar_pos,       // position
+                          LLVector3::zero,  // velocity
+                          avatar_qrot);     // rotation matrix
 
-		LLWebRTCVoiceClient::getInstance()->setAvatarPosition(
-															 pos,				// position
-															 LLVector3::zero,	// velocity
-															 rot);				// rotation matrix
-	}
+        enforceTether();
+
+        updateNeighboringRegions();
+    }
 }
 void LLWebRTCVoiceClient::idle(void* user_data)
 {
@@ -244,7 +308,6 @@ void LLWebRTCVoiceClient::stateMachine()
 			setState(stateDisableCleanup);
 		}
 	}
-	LL_INFOS() << "WEBRTC in state " << state2string(getState()) << LL_ENDL; 
 	switch(getState())
 	{
 		//MARK: stateDisableCleanup
@@ -273,6 +336,7 @@ void LLWebRTCVoiceClient::stateMachine()
 				
                 startEstateSession();
 				sessionState::processSessionStates();
+				setState(stateConnectorStarted);
 			}
 		break;
 
@@ -1823,165 +1887,367 @@ LLVoiceWebRTCConnection::~LLVoiceWebRTCConnection()
         mWebRTCPeerConnectionInterface = nullptr;
     }
 }
+// tell the Secondlife WebRTC server that
+// we're joining and whether we're
+// joining a server associated with the
+// the region we currently occupy or not (primary)
+// The WebRTC voice server will pass this info
+// to peers.
+void LLVoiceWebRTCConnection::sendJoin()
+{
+    Json::FastWriter writer;
+    Json::Value      root     = Json::objectValue;
+    Json::Value      join_obj = Json::objectValue;
+    LLUUID           regionID = gAgent.getRegion()->getRegionID();
+    if ((regionID == mRegionID) || !isSpatial())
+    {
+        join_obj["p"] = true;
+    }
+    root["j"]             = join_obj;
+    std::string json_data = writer.write(root);
+    mWebRTCDataInterface->sendData(json_data, false);
+}
+void LLWebRTCVoiceClient::sessionState::sendData(const std::string &data)
+{
+    for (auto &connection : mWebRTCConnections)
+    {
+        connection->sendData(data);
+    }
+}
+void LLWebRTCVoiceClient::predSendData(const LLWebRTCVoiceClient::sessionStatePtr_t &session, const std::string &spatial_data)
+{
+    if (session->isSpatial() && !spatial_data.empty())
+    {
+        session->sendData(spatial_data);
+    }
+}
+/*static*/
+void LLWebRTCVoiceClient::sessionState::for_eachPredicate(const std::pair<std::string, LLWebRTCVoiceClient::sessionState::wptr_t> &a, sessionFunc_t func)
+{
+    ptr_t aLock(a.second.lock());
+
+    if (aLock)
+        func(aLock);
+    else
+    {
+        LL_WARNS("Voice") << "Stale handle in session map!" << LL_ENDL;
+    }
+}
+void LLWebRTCVoiceClient::sessionState::for_each(sessionFunc_t func)
+{
+    std::for_each(mSessions.begin(), mSessions.end(), boost::bind(for_eachPredicate, _1, func));
+}
+// We send our position via a WebRTC data channel to the WebRTC
+// server for fine-grained, low latency updates.  On the server,
+// these updates will be 'tethered' to the actual position of the avatar.
+// Those updates are higher latency, however.
+// This mechanism gives low latency spatial updates and server-enforced
+// prevention of 'evesdropping' by sending camera updates beyond the
+// standard 50m
+void LLWebRTCVoiceClient::sendPositionUpdate(bool force)
+{
+   
+    Json::FastWriter writer;
+    std::string      spatial_data;
+
+    if (mSpatialCoordsDirty || force)
+    {
+        Json::Value   spatial = Json::objectValue;
+
+        spatial["sp"]   = Json::objectValue;
+        spatial["sp"]["x"] = (int) (mAvatarPosition[0] * 100);
+        spatial["sp"]["y"] = (int) (mAvatarPosition[1] * 100);
+        spatial["sp"]["z"] = (int) (mAvatarPosition[2] * 100);
+        spatial["sh"]      = Json::objectValue;
+        spatial["sh"]["x"] = (int) (mAvatarRot[0] * 100);
+        spatial["sh"]["y"] = (int) (mAvatarRot[1] * 100);
+        spatial["sh"]["z"] = (int) (mAvatarRot[2] * 100);
+        spatial["sh"]["w"] = (int) (mAvatarRot[3] * 100);
+
+        spatial["lp"]   = Json::objectValue;
+        spatial["lp"]["x"] = (int) (mListenerPosition[0] * 100);
+        spatial["lp"]["y"] = (int) (mListenerPosition[1] * 100);
+        spatial["lp"]["z"] = (int) (mListenerPosition[2] * 100);
+        spatial["lh"]      = Json::objectValue;
+        spatial["lh"]["x"] = (int) (mListenerRot[0] * 100);
+        spatial["lh"]["y"] = (int) (mListenerRot[1] * 100);
+        spatial["lh"]["z"] = (int) (mListenerRot[2] * 100);
+        spatial["lh"]["w"] = (int) (mListenerRot[3] * 100);
+
+        mSpatialCoordsDirty = false;
+        spatial_data = writer.write(spatial);
+
+        sessionState::for_each(boost::bind(predSendData, _1, spatial_data));
+    }
+}
+void LLVoiceWebRTCConnection::breakVoiceConnectionCoro() {
+	if (mWebRTCDataInterface)
+		{
+			mWebRTCDataInterface->unsetDataObserver(this);
+			mWebRTCDataInterface = nullptr;
+		}
+		mWebRTCAudioInterface   = nullptr;
+		LLViewerRegion *regionp = LLWorld::instance().getRegionFromID(mRegionID);
+		if (!regionp || !regionp->capabilitiesReceived())
+		{
+			LL_DEBUGS("Voice") << "no capabilities for voice provisioning; waiting " << LL_ENDL;
+			return;
+		}
+
+		std::string url = regionp->getCapability("ProvisionVoiceAccountRequest");
+		if (url.empty())
+		{
+			return;
+		}
+
+		LL_DEBUGS("Voice") << "region ready for voice break; url=" << url << LL_ENDL;
+
+		LLSD body;
+		body["logout"]         = TRUE;
+		body["viewer_session"] = mViewerSession;
+		body["voice_server_type"] = WEBRTC_VOICE_SERVER_TYPE;
+		mOutstandingRequests++;
+		setVoiceConnectionState(VOICE_STATE_WAIT_FOR_EXIT);
+		LLHTTPClient::post(url, body,new LLHTTPClient::ResponderIgnore);
+		// LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t httpAdapter(
+		// 	new LLCoreHttpUtil::HttpCoroutineAdapter("LLVoiceWebRTCAdHocConnection::breakVoiceConnection",
+		// 											LLCore::HttpRequest::DEFAULT_POLICY_ID));
+		// LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest);
+		// LLCore::HttpOptions::ptr_t httpOpts(new LLCore::HttpOptions);
+
+		// httpOpts->setWantHeaders(true);
+
+		
+
+		
+
+		if (LLWebRTCVoiceClient::isShuttingDown())
+		{
+			return;
+		}
+
+		if (mWebRTCPeerConnectionInterface)
+		{
+			mWebRTCPeerConnectionInterface->shutdownConnection();
+		}
+		setVoiceConnectionState(VOICE_STATE_SESSION_EXIT);
+
+		mOutstandingRequests--;
+}
 // Primary state machine for negotiating a single voice connection to the
 // Secondlife WebRTC server.
 bool LLVoiceWebRTCConnection::connectionStateMachine()
 {
 	LL_INFOS() << "WebRTC : Connection connectionStateMachine" << LL_ENDL;
-    // processIceUpdates();
+    processIceUpdates();
 
-    // switch (getVoiceConnectionState())
-    // {
-    //     case VOICE_STATE_START_SESSION:
-    //     {
-    //         LL_PROFILE_ZONE_NAMED_CATEGORY_VOICE("VOICE_STATE_START_SESSION")
-    //         if (mShutDown)
-    //         {
-    //             setVoiceConnectionState(VOICE_STATE_DISCONNECT);
-    //             break;
-    //         }
-    //         mIceCompleted = false;
-    //         setVoiceConnectionState(VOICE_STATE_WAIT_FOR_SESSION_START);
-    //         // tell the webrtc library that we want a connection.  The library will
-    //         // respond with an offer on a separate thread, which will cause
-    //         // the session state to change.
-    //         if (!mWebRTCPeerConnectionInterface->initializeConnection())
-    //         {
-    //             setVoiceConnectionState(VOICE_STATE_SESSION_RETRY);
-    //         }
-    //         break;
-    //     }
+    switch (getVoiceConnectionState())
+    {
+        case VOICE_STATE_START_SESSION:
+        {
+            if (mShutDown)
+            {
+                setVoiceConnectionState(VOICE_STATE_DISCONNECT);
+                break;
+            }
+            mIceCompleted = false;
+            setVoiceConnectionState(VOICE_STATE_WAIT_FOR_SESSION_START);
+            // tell the webrtc library that we want a connection.  The library will
+            // respond with an offer on a separate thread, which will cause
+            // the session state to change.
+            if (!mWebRTCPeerConnectionInterface->initializeConnection())
+            {
+                setVoiceConnectionState(VOICE_STATE_SESSION_RETRY);
+            }
+            break;
+        }
 
-    //     case VOICE_STATE_WAIT_FOR_SESSION_START:
-    //     {
-    //         if (mShutDown)
-    //         {
-    //             setVoiceConnectionState(VOICE_STATE_DISCONNECT);
-    //         }
-    //         break;
-    //     }
+        case VOICE_STATE_WAIT_FOR_SESSION_START:
+        {
+            if (mShutDown)
+            {
+                setVoiceConnectionState(VOICE_STATE_DISCONNECT);
+            }
+            break;
+        }
 
-    //     case VOICE_STATE_REQUEST_CONNECTION:
-    //         if (mShutDown)
-    //         {
-    //             setVoiceConnectionState(VOICE_STATE_DISCONNECT);
-    //             break;
-    //         }
-    //         // Ask the sim to ask the Secondlife WebRTC server for a connection to
-    //         // a given voice channel.  On completion, we'll move on to the
-    //         // VOICE_STATE_SESSION_ESTABLISHED via a callback on a webrtc thread.
-    //         setVoiceConnectionState(VOICE_STATE_CONNECTION_WAIT);
-    //         LLCoros::getInstance()->launch("LLVoiceWebRTCConnection::requestVoiceConnectionCoro",
-    //                                        boost::bind(&LLVoiceWebRTCConnection::requestVoiceConnectionCoro, this));
-    //         break;
+        case VOICE_STATE_REQUEST_CONNECTION:
+            if (mShutDown)
+            {
+                setVoiceConnectionState(VOICE_STATE_DISCONNECT);
+                break;
+            }
+            // Ask the sim to ask the Secondlife WebRTC server for a connection to
+            // a given voice channel.  On completion, we'll move on to the
+            // VOICE_STATE_SESSION_ESTABLISHED via a callback on a webrtc thread.
+            setVoiceConnectionState(VOICE_STATE_CONNECTION_WAIT);
+            // LLCoros::getInstance()->launch("LLVoiceWebRTCConnection::requestVoiceConnectionCoro",
+            //                                boost::bind(&LLVoiceWebRTCConnection::requestVoiceConnectionCoro, this));
+			requestVoiceConnection();
+            break;
 
-    //     case VOICE_STATE_CONNECTION_WAIT:
-    //         if (mShutDown)
-    //         {
-    //             setVoiceConnectionState(VOICE_STATE_DISCONNECT);
-    //         }
-    //         break;
+        case VOICE_STATE_CONNECTION_WAIT:
+            if (mShutDown)
+            {
+                setVoiceConnectionState(VOICE_STATE_DISCONNECT);
+            }
+            break;
 
-    //     case VOICE_STATE_SESSION_ESTABLISHED:
-    //     {
-    //         if (mShutDown)
-    //         {
-    //             setVoiceConnectionState(VOICE_STATE_DISCONNECT);
-    //             break;
-    //         }
-    //         // update the peer connection with the various characteristics of
-    //         // this connection.
-    //         mWebRTCAudioInterface->setMute(mMuted);
-    //         mWebRTCAudioInterface->setReceiveVolume(mSpeakerVolume);
-    //         mWebRTCAudioInterface->setSendVolume(mMicGain);
-    //         LLWebRTCVoiceClient::getInstance()->OnConnectionEstablished(mChannelID, mRegionID);
-    //         setVoiceConnectionState(VOICE_STATE_WAIT_FOR_DATA_CHANNEL);
-    //         break;
-    //     }
+        case VOICE_STATE_SESSION_ESTABLISHED:
+        {
+            if (mShutDown)
+            {
+                setVoiceConnectionState(VOICE_STATE_DISCONNECT);
+                break;
+            }
+            // update the peer connection with the various characteristics of
+            // this connection.
+            mWebRTCAudioInterface->setMute(mMuted);
+            mWebRTCAudioInterface->setReceiveVolume(mSpeakerVolume);
+            mWebRTCAudioInterface->setSendVolume(mMicGain);
+            LLWebRTCVoiceClient::getInstance()->OnConnectionEstablished(mChannelID, mRegionID);
+            setVoiceConnectionState(VOICE_STATE_WAIT_FOR_DATA_CHANNEL);
+            break;
+        }
 
-    //     case VOICE_STATE_WAIT_FOR_DATA_CHANNEL:
-    //     {
-    //         if (mShutDown)
-    //         {
-    //             setVoiceConnectionState(VOICE_STATE_DISCONNECT);
-    //             break;
-    //         }
-    //         if (mWebRTCDataInterface) // the interface will be set when the session is negotiated.
-    //         {
-    //             sendJoin();  // tell the Secondlife WebRTC server that we're here via the data channel.
-    //             setVoiceConnectionState(VOICE_STATE_SESSION_UP);
-    //             LLWebRTCVoiceClient::getInstance()->sendPositionUpdate(true);
-    //         }
-    //         break;
-    //     }
+        case VOICE_STATE_WAIT_FOR_DATA_CHANNEL:
+        {
+            if (mShutDown)
+            {
+                setVoiceConnectionState(VOICE_STATE_DISCONNECT);
+                break;
+            }
+            if (mWebRTCDataInterface) // the interface will be set when the session is negotiated.
+            {
+                sendJoin();  // tell the Secondlife WebRTC server that we're here via the data channel.
+                setVoiceConnectionState(VOICE_STATE_SESSION_UP);
+                LLWebRTCVoiceClient::getInstance()->sendPositionUpdate(true);
+            }
+            break;
+        }
 
-    //     case VOICE_STATE_SESSION_UP:
-    //     {
-    //         mRetryWaitPeriod = 0;
-    //         mRetryWaitSecs   = ((F32) rand() / (RAND_MAX)) + 0.5;
+        case VOICE_STATE_SESSION_UP:
+        {
+            mRetryWaitPeriod = 0;
+            mRetryWaitSecs   = ((F32) rand() / (RAND_MAX)) + 0.5;
 
-    //         // we'll stay here as long as the session remains up.
-    //         if (mShutDown)
-    //         {
-    //             setVoiceConnectionState(VOICE_STATE_DISCONNECT);
-    //         }
-    //         break;
-    //     }
+            // we'll stay here as long as the session remains up.
+            if (mShutDown)
+            {
+                setVoiceConnectionState(VOICE_STATE_DISCONNECT);
+            }
+            break;
+        }
 
-    //     case VOICE_STATE_SESSION_RETRY:
-    //         // only retry ever 'n' seconds
-    //         if (mRetryWaitPeriod++ * UPDATE_THROTTLE_SECONDS > mRetryWaitSecs)
-    //         {
-    //             // something went wrong, so notify that the connection has failed.
-    //             LLWebRTCVoiceClient::getInstance()->OnConnectionFailure(mChannelID, mRegionID, mCurrentStatus);
-    //             setVoiceConnectionState(VOICE_STATE_DISCONNECT);
-    //             mRetryWaitPeriod = 0;
-    //             if (mRetryWaitSecs < MAX_RETRY_WAIT_SECONDS)
-    //             {
-    //                 // back off the retry period, and do it by a small random
-    //                 // bit so all clients don't reconnect at once.
-    //                 mRetryWaitSecs += ((F32) rand() / (RAND_MAX)) + 0.5;
-    //                 mRetryWaitPeriod = 0;
-    //             }
-    //         }
-    //         break;
+        case VOICE_STATE_SESSION_RETRY:
+            // only retry ever 'n' seconds
+            if (mRetryWaitPeriod++ * UPDATE_THROTTLE_SECONDS > mRetryWaitSecs)
+            {
+                // something went wrong, so notify that the connection has failed.
+                LLWebRTCVoiceClient::getInstance()->OnConnectionFailure(mChannelID, mRegionID, mCurrentStatus);
+                setVoiceConnectionState(VOICE_STATE_DISCONNECT);
+                mRetryWaitPeriod = 0;
+                if (mRetryWaitSecs < MAX_RETRY_WAIT_SECONDS)
+                {
+                    // back off the retry period, and do it by a small random
+                    // bit so all clients don't reconnect at once.
+                    mRetryWaitSecs += ((F32) rand() / (RAND_MAX)) + 0.5;
+                    mRetryWaitPeriod = 0;
+                }
+            }
+            break;
 
-    //     case VOICE_STATE_DISCONNECT:
-    //         LLCoros::instance().launch("LLVoiceWebRTCConnection::breakVoiceConnectionCoro",
-    //                                    boost::bind(&LLVoiceWebRTCConnection::breakVoiceConnectionCoro, this));
-    //         break;
+        case VOICE_STATE_DISCONNECT:
+            breakVoiceConnectionCoro();
+            break;
 
-    //     case VOICE_STATE_WAIT_FOR_EXIT:
-    //         break;
+        case VOICE_STATE_WAIT_FOR_EXIT:
+            break;
 
-    //     case VOICE_STATE_SESSION_EXIT:
-    //     {
-    //         {
-    //             if (!mShutDown)
-    //             {
-    //                 mVoiceConnectionState = VOICE_STATE_START_SESSION;
-    //             }
-    //             else
-    //             {
-    //                 // if we still have outstanding http or webrtc calls, wait for them to
-    //                 // complete so we don't delete objects while they still may be used.
-    //                 if (mOutstandingRequests <= 0)
-    //                 {
-    //                     LLWebRTCVoiceClient::getInstance()->OnConnectionShutDown(mChannelID, mRegionID);
-    //                     return false;
-    //                 }
-    //             }
-    //         }
-    //         break;
-    //     }
+        case VOICE_STATE_SESSION_EXIT:
+        {
+            {
+                if (!mShutDown)
+                {
+                    mVoiceConnectionState = VOICE_STATE_START_SESSION;
+                }
+                else
+                {
+                    // if we still have outstanding http or webrtc calls, wait for them to
+                    // complete so we don't delete objects while they still may be used.
+                    if (mOutstandingRequests <= 0)
+                    {
+                        LLWebRTCVoiceClient::getInstance()->OnConnectionShutDown(mChannelID, mRegionID);
+                        return false;
+                    }
+                }
+            }
+            break;
+        }
 
-    //     default:
-    //     {
-    //         LL_WARNS("Voice") << "Unknown voice control state " << getVoiceConnectionState() << LL_ENDL;
-    //         return false;
-    //     }
-    // }
+        default:
+        {
+            LL_WARNS("Voice") << "Unknown voice control state " << getVoiceConnectionState() << LL_ENDL;
+            return false;
+        }
+    }
     return true;
+}
+void LLWebRTCVoiceClient::sessionState::shutdownAllConnections()
+{
+    mShuttingDown = true;
+    for (auto &&connection : mWebRTCConnections)
+    {
+        connection->shutDown();
+    }
+}
+/////////////////////////////
+// session control messages.
+//
+// these are called by the sessions to report
+// status for a given channel.  By filtering
+// on channel and region, these functions
+// can send various notifications to
+// other parts of the viewer, as well as
+// managing housekeeping
+
+// A connection to a channel was successfully established,
+// so shut down the current session and move on to the next
+// if one is available.
+// if the current session is the one that was established,
+// notify the observers.
+void LLWebRTCVoiceClient::OnConnectionEstablished(const std::string &channelID, const LLUUID &regionID)
+{
+    
+    if (gAgent.getRegion()->getRegionID() == regionID)
+    {
+        if (mNextSession && mNextSession->mChannelID == channelID)
+        {
+            if (mSession)
+            {
+                mSession->shutdownAllConnections();
+            }
+            mSession = mNextSession;
+            mNextSession.reset();
+
+            // Add ourselves as a participant.
+            mSession->addParticipant(gAgentID);
+        }
+
+        // The current session was established.
+        if (mSession && mSession->mChannelID == channelID)
+        {
+            LLWebRTCVoiceClient::getInstance()->notifyStatusObservers(LLVoiceClientStatusObserver::STATUS_LOGGED_IN);
+
+            // only set status to joined if asked to.  This will happen in the case where we're not
+            // doing an ad-hoc based p2p session. Those sessions expect a STATUS_JOINED when the peer
+            // has, in fact, joined, which we detect elsewhere.
+            if (!mSession->mNotifyOnFirstJoin)
+            {
+                LLWebRTCVoiceClient::getInstance()->notifyStatusObservers(LLVoiceClientStatusObserver::STATUS_JOINED);
+            }
+        }
+    }
 }
 LLWebRTCVoiceClient::estateSessionState::estateSessionState()
 {
@@ -2647,4 +2913,145 @@ bool LLWebRTCVoiceClient::sessionState::processConnectionStates()
         }
     }
     return !mWebRTCConnections.empty();
+}
+void LLWebRTCVoiceClient::notifyParticipantObservers()
+{
+    for (observer_set_t::iterator it = mParticipantObservers.begin(); it != mParticipantObservers.end();)
+    {
+        LLVoiceClientParticipantObserver *observer = *it;
+        observer->onParticipantsChanged();
+        // In case onParticipantsChanged() deleted an entry.
+        it = mParticipantObservers.upper_bound(observer);
+    }
+}
+// Name resolution
+void LLWebRTCVoiceClient::lookupName(const LLUUID &id)
+{
+    if (mAvatarNameCacheConnection.connected())
+    {
+        mAvatarNameCacheConnection.disconnect();
+    }
+    mAvatarNameCacheConnection = LLAvatarNameCache::get(id, boost::bind(&LLWebRTCVoiceClient::onAvatarNameCache, this, _1, _2));
+}
+
+void LLWebRTCVoiceClient::onAvatarNameCache(const LLUUID& agent_id,
+                                           const LLAvatarName& av_name)
+{
+    mAvatarNameCacheConnection.disconnect();
+    std::string display_name = av_name.getDisplayName();
+    avatarNameResolved(agent_id, display_name);
+}
+
+void LLWebRTCVoiceClient::predAvatarNameResolution(const LLWebRTCVoiceClient::sessionStatePtr_t &session, LLUUID id, std::string name)
+{
+    participantStatePtr_t participant(session->findParticipantByID(id));
+    if (participant)
+    {
+        // Found -- fill in the name
+        participant->mDisplayName = name;
+        // and post a "participants updated" message to listeners later.
+        LLWebRTCVoiceClient::getInstance()->notifyParticipantObservers();
+    }
+}
+
+void LLWebRTCVoiceClient::avatarNameResolved(const LLUUID &id, const std::string &name)
+{
+    sessionState::for_each(boost::bind(predAvatarNameResolution, _1, id, name));
+}
+//  participantState level participant management
+LLWebRTCVoiceClient::participantState::participantState(const LLUUID& agent_id) :
+     mURI(agent_id.asString()),
+     mAvatarID(agent_id),
+     mIsSpeaking(false),
+     mIsModeratorMuted(false),
+     mLevel(0.f),
+     mVolume(LLVoiceClient::getInstance()->getDefaultBoostlevel())
+{
+}
+LLWebRTCVoiceClient::participantStatePtr_t LLWebRTCVoiceClient::sessionState::addParticipant(const LLUUID& agent_id)
+{
+
+    
+
+    participantStatePtr_t result;
+
+    participantUUIDMap::iterator iter = mParticipantsByUUID.find(agent_id);
+
+    if (iter != mParticipantsByUUID.end())
+    {
+        result = iter->second;
+    }
+
+    if(!result)
+    {
+        // participant isn't already in one list or the other.
+        result.reset(new participantState(agent_id));
+        mParticipantsByUUID.insert(participantUUIDMap::value_type(agent_id, result));
+        result->mAvatarID      = agent_id;
+
+        LLWebRTCVoiceClient::getInstance()->lookupName(agent_id);
+
+        LLSpeakerVolumeStorage::getInstance()->getSpeakerVolume(result->mAvatarID, result->mVolume);
+        if (!LLWebRTCVoiceClient::sShuttingDown)
+        {
+            LLWebRTCVoiceClient::getInstance()->notifyParticipantObservers();
+        }
+
+        LL_DEBUGS("Voice") << "Participant \"" << result->mURI << "\" added." << LL_ENDL;
+    }
+
+    return result;
+}
+void LLWebRTCVoiceClient::OnConnectionShutDown(const std::string &channelID, const LLUUID &regionID)
+{
+    if (gAgent.getRegion()->getRegionID() == regionID)
+    {
+        if (mSession && mSession->mChannelID == channelID)
+        {
+            LL_DEBUGS("Voice") << "Main WebRTC Connection Shut Down." << LL_ENDL;
+        }
+    }
+}
+
+void LLWebRTCVoiceClient::OnConnectionFailure(const std::string                       &channelID,
+                                              const LLUUID                            &regionID,
+                                              LLVoiceClientStatusObserver::EStatusType status_type)
+{
+    LL_DEBUGS("Voice") << "A connection failed.  channel:" << channelID << LL_ENDL;
+    if (gAgent.getRegion()->getRegionID() == regionID)
+    {
+        if (mNextSession && mNextSession->mChannelID == channelID)
+        {
+            LLWebRTCVoiceClient::getInstance()->notifyStatusObservers(status_type);
+        }
+        else if (mSession && mSession->mChannelID == channelID)
+        {
+            LLWebRTCVoiceClient::getInstance()->notifyStatusObservers(status_type);
+        }
+    }
+}
+// Send data to the Secondlife WebRTC server via the webrtc
+// data channel.
+void LLVoiceWebRTCConnection::sendData(const std::string &data)
+{
+    if (getVoiceConnectionState() == VOICE_STATE_SESSION_UP && mWebRTCDataInterface)
+    {
+        mWebRTCDataInterface->sendData(data, false);
+    }
+}
+void LLWebRTCVoiceClient::setListenerPosition(const LLVector3d &position, const LLVector3 &velocity, const LLQuaternion &rot)
+{
+    mListenerRequestedPosition = position;
+
+    if (mListenerVelocity != velocity)
+    {
+        mListenerVelocity   = velocity;
+        mSpatialCoordsDirty = true;
+    }
+
+    if (mListenerRot != rot)
+    {
+        mListenerRot        = rot;
+        mSpatialCoordsDirty = true;
+    }
 }

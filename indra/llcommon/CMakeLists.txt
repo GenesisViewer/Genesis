@@ -301,6 +301,7 @@ target_link_libraries(
     ${Boost_SYSTEM_LIBRARY}
     ${CORESERVICES_LIBRARY}
     ${URIPARSER_LIBRARY}
+    ll::jsoncpp
     fmt::fmt
     nlohmann_json::nlohmann_json
     absl::strings

@@ -5,6 +5,7 @@
 #include "llcororesponder.h"
 #include "llvoiceclient.h"
 #include "llvoicechannel.h"
+#include "llmutelist.h"
 
 // WebRTC Includes
 #include <llwebrtc.h>
@@ -45,7 +46,7 @@ public:
     virtual void setMicGain(F32 volume);
     virtual void setSpeakerVolume(F32 volume);
 	virtual bool isSpatial() = 0;
-	void OnVoiceConnectionRequestSuccess(const LLCoroResponder& responder);
+	void OnVoiceConnectionRequestSuccess(const LLCoroResponderRaw& responder);
 	LLUUID getRegionID() { return mRegionID; }
 	void sendJoin();
 	void sendData(const std::string &data);
@@ -379,7 +380,7 @@ public:
 	//@}
 	void setEarLocation(S32 loc);
 	void sendPositionUpdate(bool force);
-
+	void updateOwnVolume();
 		// internal state for a simple state machine.  This is used to deal with the asynchronous nature of some of the messages.
 	// Note: if you change this list, please make corresponding changes to LLVivoxVoiceClient::state2string().
 	enum state
@@ -476,6 +477,7 @@ public:
 	// Singu Note: participantList has replaced both participantMap and participantUUIDMap.
 	typedef std::vector<participantState> participantList;
 	typedef boost::shared_ptr<participantState> participantStatePtr_t;
+	participantStatePtr_t findParticipantByID(const std::string &channelID, const LLUUID &id);
 	typedef std::map<const LLUUID, participantStatePtr_t> participantUUIDMap;
 
 	
@@ -499,7 +501,8 @@ public:
 		void removeAllParticipants();
 
 		participantState *findParticipant(const std::string &uri);
-		participantState *findParticipantByID(const LLUUID& id);
+		//participantState *findParticipantByID(const LLUUID& id);
+		participantStatePtr_t findParticipantByID(const LLUUID& id);
 		static ptr_t matchSessionByChannelID(const std::string& channel_id);
 		static void addSession(const std::string &channelID, ptr_t& session);
 		virtual bool isSpatial() = 0;
@@ -582,6 +585,15 @@ public:
 		bool isEstate() override { return true; }
 		bool isCallbackPossible() override { return false; }
 	};
+	class parcelSessionState : public sessionState
+    {
+      public:
+        parcelSessionState(const std::string& channelID, S32 parcel_local_id);
+
+        bool isSpatial() override { return true; }
+        bool isEstate() override { return false; }
+        bool isCallbackPossible() override { return false; }
+    };
 private:
 	llwebrtc::LLWebRTCDeviceInterface *mWebRTCDeviceInterface;
 	LLVoiceVersionInfo mVoiceVersion;
@@ -674,7 +686,7 @@ private:
 	void verifySessionState(void);
 	void setSessionHandle(sessionState *session, const std::string &handle = LLStringUtil::null);
 	void setSessionURI(sessionState *session, const std::string &uri);
-	participantState *findParticipantByID(const LLUUID& id);
+	//participantState *findParticipantByID(const LLUUID& id);
 
 	////////////////////////////////////////
 	// voice sessions.
@@ -760,13 +772,13 @@ private:
 
 
 	LLQuaternion mAvatarRot;
-
+	bool inOrJoiningChannel(const std::string &channelID);
 	bool inEstateChannel();
 	typedef boost::shared_ptr<sessionState> sessionStatePtr_t;
 	sessionStatePtr_t mSession;    // Session state for the current session
 
     sessionStatePtr_t mNextSession;    // Session state for the session we're trying to join
-
+	bool startParcelSession(const std::string& channelID, S32 parcelID);
 	bool startEstateSession();
 	/////////////////////////////
     // Accessors for data related to nearby speakers
@@ -776,7 +788,7 @@ private:
 	sessionStatePtr_t addSession(const std::string &channel_id, sessionState::ptr_t session);
 
 	static void predSendData(const LLWebRTCVoiceClient::sessionStatePtr_t &session, const std::string& spatial_data);
-
+	static void predUpdateOwnVolume(const LLWebRTCVoiceClient::sessionStatePtr_t &session, F32 audio_level);
 	void enforceTether();
 	void updateNeighboringRegions();
 
@@ -784,6 +796,10 @@ private:
     void onAvatarNameCache(const LLUUID& id, const LLAvatarName& av_name);
     void avatarNameResolved(const LLUUID &id, const std::string &name);
     static void predAvatarNameResolution(const LLWebRTCVoiceClient::sessionStatePtr_t &session, LLUUID id, std::string name);
+
+	// helper function to retrieve the audio level
+    // Used in multiple places.
+    float getAudioLevel();
 };
 
 #endif //LL_VOICE_WEBRTC_H

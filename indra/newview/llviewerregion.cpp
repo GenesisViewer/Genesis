@@ -310,7 +310,7 @@ private:
 		{
 			LLStartUp::setStartupState( STATE_SEED_CAP_GRANTED );
 		}
-		LLVoiceClient::getInstance()->changeServerType();
+		//LLVoiceClient::getInstance()->changeServerType();
 	}
 
 private:
@@ -1577,7 +1577,7 @@ void LLViewerRegion::setSimulatorFeatures(const LLSD& sim_features)
 	mSimulatorFeatures = sim_features;
 
 	setSimulatorFeaturesReceived(true);
-	LLVoiceClient::getInstance()->changeServerType();
+	//LLVoiceClient::getInstance()->changeServerType();
 
 }
 

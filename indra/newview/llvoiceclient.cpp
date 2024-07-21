@@ -206,6 +206,7 @@ const LLVoiceVersionInfo LLVoiceClient::getVersion()
 
 void LLVoiceClient::updateSettings()
 {
+	LL_INFOS() << "LLVoiceClient::updateSettings() " << LL_ENDL;
 	setUsePTT(gSavedSettings.getBOOL("PTTCurrentlyEnabled"));
 	std::string keyString = gSavedSettings.getString("PushToTalkButton");
 	setPTTKey(keyString);
@@ -218,6 +219,7 @@ void LLVoiceClient::updateSettings()
     {
         mVoiceModule->updateSettings();
     }
+	LL_INFOS() << "end of LLVoiceClient::updateSettings() " << LL_ENDL;
 }
 
 //--------------------------------------------------

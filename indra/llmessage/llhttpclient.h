@@ -270,7 +270,7 @@ public:
 
 	public:
 		// Derived classes that implement completed_headers()/completedHeaders() should return true here.
-		virtual bool needsHeaders(void) const { return false; }
+		virtual bool needsHeaders(void) const { return true; }
 
 		// A derived class should return true if curl should close the connection when done.
 		// The default is to keep connections open for possible reuse.

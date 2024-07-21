@@ -34,9 +34,10 @@
 #include "api/audio_codecs/builtin_audio_decoder_factory.h"
 #include "api/audio_codecs/builtin_audio_encoder_factory.h"
 #include "api/media_stream_interface.h"
+
 #include "api/media_stream_track.h"
 #include "modules/audio_processing/audio_buffer.h"
-
+#include <fstream>
 namespace llwebrtc
 {
 
@@ -75,7 +76,21 @@ void LLAudioDeviceObserver::OnCaptureData(const void    *audio_samples,
     totalSum += energy;
     mMicrophoneEnergy = std::sqrt(totalSum / (num_samples * buffer_size));
 }
-
+class CustomnLogSink : public rtc::LogSink
+{
+public:
+    CustomnLogSink(const std::string &filepath)
+    {
+        m_stream.open(filepath);
+    }
+public:
+    void OnLogMessage(const std::string& message) override
+    {
+        m_stream << message;
+    }
+private:
+    std::ofstream m_stream;
+};
 void LLAudioDeviceObserver::OnRenderData(const void    *audio_samples,
                                          const size_t   num_samples,
                                          const size_t   bytes_per_sample,
@@ -163,7 +178,8 @@ void LLWebRTCImpl::init()
     rtc::InitializeSSL();
 
     // Normal logging is rather spammy, so turn it off.
-    rtc::LogMessage::LogToDebug(rtc::LS_NONE);
+    //rtc::LogMessage::LogToDebug(rtc::LS_NONE);
+    rtc::LogMessage::AddLogToStream(new CustomnLogSink("c:/temp/webrtc.log"),rtc::LS_INFO);
     rtc::LogMessage::SetLogToStderr(true);
 
     mTaskQueueFactory = webrtc::CreateDefaultTaskQueueFactory();
@@ -1026,6 +1042,7 @@ void LLWebRTCPeerConnectionImpl::OnIceCandidate(const webrtc::IceCandidateInterf
 //
 void LLWebRTCPeerConnectionImpl::OnSuccess(webrtc::SessionDescriptionInterface *desc)
 {
+    
     std::string sdp;
     desc->ToString(&sdp);
     RTC_LOG(LS_INFO) << sdp;

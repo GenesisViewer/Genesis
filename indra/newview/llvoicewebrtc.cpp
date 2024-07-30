@@ -899,7 +899,7 @@ void LLWebRTCVoiceClient::clearRenderDevices()
 
 void LLWebRTCVoiceClient::addRenderDevice(const LLVoiceDevice& device)
 {
-    LL_DEBUGS("Voice") << "display: '" << device.display_name << "' device: '" << device.full_name << "'" << LL_ENDL;
+    LL_INFOS("Voice") << "display: '" << device.display_name << "' device: '" << device.full_name << "'" << LL_ENDL;
     mRenderDevices.push_back(device);
 
 }
@@ -956,13 +956,10 @@ bool LLWebRTCVoiceClient::deviceSettingsAvailable()
 {
 	bool result = true;
 
-	if(!mConnected)
-		result = false;
+    if(mRenderDevices.empty() || mCaptureDevices.empty())
+        result = false;
 
-	if(mRenderDevices.empty())
-		result = false;
-
-	return result;
+    return result;
 }
 void LLWebRTCVoiceClient::setDevicesListUpdated(bool state)
 {
@@ -2160,9 +2157,9 @@ void LLVoiceWebRTCConnection::breakVoiceConnectionCoro() {
 // Secondlife WebRTC server.
 bool LLVoiceWebRTCConnection::connectionStateMachine()
 {
-	LL_INFOS() << "WebRTC : Connection connectionStateMachine" << LL_ENDL;
+	//LL_INFOS() << "WebRTC : Connection connectionStateMachine" << LL_ENDL;
     processIceUpdates();
-	LL_INFOS() << "WebRTC : Connection state " << getVoiceConnectionState()<<LL_ENDL;
+	//LL_INFOS() << "WebRTC : Connection state " << getVoiceConnectionState()<<LL_ENDL;
     switch (getVoiceConnectionState())
     {
         case VOICE_STATE_START_SESSION:
@@ -2800,6 +2797,33 @@ void LLVoiceWebRTCConnection::processIceUpdatesCoro()
         //     // couldn't trickle the candidates, so restart the session.
         //     setVoiceConnectionState(VOICE_STATE_SESSION_RETRY);
         // }
+		LL_INFOS() << "OnIce gathered body " << ll_print_sd(body)<< LL_ENDL;
+		CURL *curl;
+  	CURLcode res;
+	curl_global_init(CURL_GLOBAL_ALL);
+	curl = curl_easy_init();
+	struct memory chunk = {0};
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_callback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+	struct curl_slist *hs=NULL;
+	hs = curl_slist_append(hs, "Content-Type: application/llsd+xml");
+	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hs);
+  	if(curl) {
+		 curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		/* Now specify the POST data */
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, ll_print_sd(body));
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+		res = curl_easy_perform(curl);
+		/* Check for errors */
+		if(res != CURLE_OK) {
+			LL_INFOS() << "requestVoiceConnection failed " << curl_easy_strerror(res) << LL_ENDL;
+			setVoiceConnectionState(VOICE_STATE_SESSION_RETRY);
+		}
+		free(chunk.response);
+		curl_easy_cleanup(curl);
+	}
+
+
     }
     mOutstandingRequests--;
 }

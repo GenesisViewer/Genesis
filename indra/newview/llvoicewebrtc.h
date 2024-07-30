@@ -77,6 +77,7 @@ protected:
 
     void                  setVoiceConnectionState(EVoiceConnectionState new_voice_connection_state)
     {
+		LL_INFOS() << "Switching from " << getVoiceConnectionState() << "to " << new_voice_connection_state << LL_ENDL;
         if (new_voice_connection_state & VOICE_STATE_SESSION_STOPPING)
         {
             // the new state is shutdown or restart.

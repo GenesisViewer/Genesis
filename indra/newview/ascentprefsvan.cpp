@@ -233,7 +233,13 @@ void LLPrefsAscentVan::refreshValues()
 //contact sets
     mShowContactSetOnAvatarTag = gSavedSettings.getBOOL("ShowContactSetOnAvatarTag");
     mShowContactSetOnLocalChat = gSavedSettings.getBOOL("ShowContactSetOnLocalChat");
+    mShowContactSetOnImChat = gSavedSettings.getBOOL("ShowContactSetOnImChat");
     mShowContactSetOnRadar = gSavedSettings.getBOOL("ShowContactSetOnRadar");
+    mShowContactSetOnNearby = gSavedSettings.getBOOL("ShowContactSetOnNearby");
+    mShowContactSetColorOnAvatarTag = gSavedSettings.getBOOL("ShowContactSetColorOnAvatarTag");
+    mShowContactSetColorOnChat = gSavedSettings.getBOOL("ShowContactSetColorOnChat");
+    mShowContactSetColorOnRadar = gSavedSettings.getBOOL("ShowContactSetColorOnRadar");
+    mShowContactSetColorOnNearby = gSavedSettings.getBOOL("ShowContactSetColorOnNearby");
 
     //adv. features
     mShowFavBar = gSavedSettings.getBOOL("GenxFavBar");    
@@ -347,7 +353,13 @@ void LLPrefsAscentVan::cancel()
          SHClientTagMgr::instance().resetAvatarTags();
     }
     gSavedSettings.setBOOL("ShowContactSetOnLocalChat",       mShowContactSetOnLocalChat);
+    gSavedSettings.setBOOL("ShowContactSetOnImChat",          mShowContactSetOnImChat);
     gSavedSettings.setBOOL("ShowContactSetOnRadar",           mShowContactSetOnRadar);
+    gSavedSettings.setBOOL("ShowContactSetOnNearby",          mShowContactSetOnNearby);
+    gSavedSettings.setBOOL("ShowContactSetColorOnAvatarTag",  mShowContactSetColorOnAvatarTag);
+    gSavedSettings.setBOOL("ShowContactSetColorOnChat",       mShowContactSetColorOnChat);
+    gSavedSettings.setBOOL("ShowContactSetColorOnRadar",      mShowContactSetColorOnRadar);
+    gSavedSettings.setBOOL("ShowContactSetColorOnNearby",     mShowContactSetColorOnNearby);
     gSavedSettings.setBOOL("GenxFavBar",                      mShowFavBar);
     gSavedSettings.setBOOL("ShowToolBar",                     mShowToolBar);
     gSavedSettings.setF32("ToolTipDelay",                     mUiToolTipDelay);

@@ -19445,10 +19445,76 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <key>ShowContactSetOnImChat</key>
+    <map>
+      <key>Comment</key>
+      <string>Enable or disable the contact set tag appearing in the IM Chat</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
     <key>ShowContactSetOnRadar</key>
     <map>
       <key>Comment</key>
       <string>Enable or disable the contact set name appearing in the radar floater</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>ShowContactSetOnNearby</key>
+    <map>
+      <key>Comment</key>
+      <string>Enable or disable the contact set tag appearing in the nearby voice floater</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>ShowContactSetColorOnAvatarTag</key>
+    <map>
+      <key>Comment</key>
+      <string>Enable or disable the contact set Color appearing on the avatar tag</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>ShowContactSetColorOnChat</key>
+    <map>
+      <key>Comment</key>
+      <string>Enable or disable the contact set Color appearing in chat</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>ShowContactSetColorOnRadar</key>
+    <map>
+      <key>Comment</key>
+      <string>Enable or disable the contact set Color appearing in the radar floater</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>ShowContactSetColorOnNearby</key>
+    <map>
+      <key>Comment</key>
+      <string>Enable or disable the contact set Color appearing in the nearby voice floater</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>

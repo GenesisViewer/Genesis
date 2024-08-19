@@ -21,7 +21,7 @@
 	scale_image="true"
 	tab_stop="false"
 	bottom="0"
-	tooltip="Toggle favorites bar on/off"
+	tool_tip="Toggle favorites bar on/off"
 	width="20" 
 	/>
 			 

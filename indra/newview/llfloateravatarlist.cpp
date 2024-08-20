@@ -825,13 +825,7 @@ void LLFloaterAvatarList::refreshAvatarList()
 			if (!csId.empty()) {
 				if (gSavedSettings.getBOOL("ShowContactSetOnRadar"))
 					name.value = entry->getName()+ " (" + contactSet.getName() + ")";
-				if (gSavedSettings.getBOOL("ShowContactSetColorOnRadar"))
-				{
-					name.color = contactSet.getColor();
-				}
-				else {
-					name.color = color * 0.5f + unselected_color * 0.5f;
-				}
+				name.color = contactSet.getColor();
 			} else {
 				name.color = color*0.5f + unselected_color*0.5f;
 			}

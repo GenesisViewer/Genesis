@@ -75,22 +75,10 @@
       <spinner bottom_delta="-20" decimal_digits="5" follows="top" height="16" increment="0.1" label="Z Modifier" label_width="65" max_val="5.0" min_val="-5.0" name="Z Modifier" width="128" control_name="AscentAvatarZModifier" tool_tip="Use this to manipulate, to a degree, your avatar bounding box. This can be used to distort orbiters, or to raise you up or down without altering your shape."/>
     </panel>
     <panel border="true" left="1" bottom="-190" height="180" width="600" label="Contact Sets" name="Contact Sets">
-      <text bottom_delta="-24"  follows="top" height="16" left="20" tool_tip="" name="">Display the Contact-Set name and color on the avatar tag:</text>
-      <check_box control_name="ShowContactSetOnAvatarTag" follows="top" bottom_delta="-24" height="18" left_delta="10" max_chars="32" label="Display the Contact-Set Name" tool_tip="Display the contact set name on avatar tag"  width="130"/>
-      <text bottom_delta="-40" left_delta="-10" follows="top" height="16" tool_tip="" name="">Display the Contact-Set name and color in the chat:</text>
-      <check_box control_name="ShowContactSetOnLocalChat" bottom_delta="-24" follows="top" height="16" left_delta="10" initial_value="true" label="Display the Contact-Set Name in Local chat" tool_tip="Display the contact set name in local chat"/>
-      <check_box control_name="ShowContactSetOnImChat" bottom_delta="-24" follows="top" height="16" initial_value="true" label="Display the Contact-Set Name in IM chat" left_delta="0" tool_tip="Display the contact set name in IM chat"/>
-      <text bottom_delta="-40" left_delta="-10" follows="top" height="16" tool_tip="" name="">Display the Contact-Set name and color in the radar:</text>
-      <check_box control_name="ShowContactSetOnRadar" bottom_delta="-24" left_delta="10" follows="top" height="16" initial_value="true" label="Display the Contact-Set Name" tool_tip="Display the contact set name in radar"/>
-      <text bottom_delta="-40" left_delta="-10" follows="top" height="16" tool_tip="" name="">Display the Contact-Set name and color in the nearby voice floater:</text>
-      <check_box control_name="ShowContactSetOnNearby" bottom_delta="-24" left_delta="10" follows="top" height="16" initial_value="false" label="Display the Contact-Set Name" tool_tip="Display the contact set name in nearby voice floater"/>
-      <!-- End of Left Side -->
-      <check_box enabled_control="ShowContactSetOnAvatarTag" control_name="ShowContactSetColorOnAvatarTag" bottom_delta="216" left="310" follows="top" height="16" initial_value="true" label="show Color on avatar tag" tool_tip="Display the contact set color on avatar tag"/>
-      <check_box control_name="ShowContactSetColorOnChat" bottom_delta="-76"  left_delta="0" follows="top" font="SansSerif" height="18" label="show Color in Local and IM chat" tool_tip="Display the contact set color IM chat" width="100"/>
-      <check_box control_name="ShowContactSetColorOnRadar" bottom_delta="-76 " left_delta="0" follows="top" font="SansSerif" height="18" label="show Color in radar floater" tool_tip="Display the contact set color in radar" width="100"/>
-      <check_box control_name="ShowContactSetColorOnNearby" bottom_delta="-64" left_delta="0" follows="top" font="SansSerif" height="18"  label="show Color in neaby voice floater" tool_tip="Display the contact set color in nearby voice floater" width="100"/>
+      <check_box bottom_delta="-20" control_name="ShowContactSetOnAvatarTag" follows="top" height="16" initial_value="true" label="Display the contact set name on avatar tag" left="10" tool_tip="Display the contact set name on avatar tag" name="show_contact_set_avatar_tag"/>
+      <check_box bottom_delta="-20" control_name="ShowContactSetOnLocalChat" follows="top" height="16" initial_value="true" label="Display the contact set name in local chat" left="10" tool_tip="Display the contact set name in the local chat" name="show_contact_set_local_chat"/>
+      <check_box bottom_delta="-20" control_name="ShowContactSetOnRadar" follows="top" height="16" initial_value="true" label="Display the contact set name on the radar floater" left="10" tool_tip="Display the contact set name on the radar floater" name="show_contact_set_radar"/>
     </panel>
-
     <panel border="true" left="1" bottom="-190" height="180" width="600" label="Adv. Features" name="FavBar">
       <text bottom_delta="-25" follows="top" height="16" left="15" name="UIoptions">UI options :</text>
       <check_box bottom_delta="0" control_name="GenxFavBar" follows="top" height="16" initial_value="true" label="Display the favorites bar" left="150" tool_tip="Display the favorites bar on screen" name="genxfavbar"/>
@@ -129,17 +117,15 @@
     <panel border="true" left="1" bottom="-190" height="180" width="600" label="Texture Management" name="TextureManagement">
       
       <text_editor enabled="false"  width="580" name="TextureManagementNotes" height="250" bottom_delta="-20" left="5" word_wrap="true" max_length="1000">
-YOU MUST APPLY THEN RESTART THE VIEWER EACH TIME YOU CHANGE ANY SETTING IN THIS TAB FOR IT TO TAKE EFFECT.
+        PLEASE NOTE THIS IS AN EXPERIMENTAL SETTING
 
-Genesis defaults to 1 thread with Partial texture rendering enabled.
+Genesis defaults to 1 thread and Partial texture rendering enabled.
 
 Your PC can run at least 1 thread per core but beyond that, you will need to find the best setting for your particular computer.
 
-Some users see a performance gain by unchecking 'partial texture rendering', but this depends on specific GPU and you will need to try this setting enabled and disabled.
+You will likely see a performance gain by unchecking 'partial texture rendering'.
 
-To find your starting point, in Windows: Press Ctrl + Shift + Esc to open Task Manager. Select the Performance tab to see how many cores and logical processors your PC has.  
-Try setting threads to the same amount of cores your processor supports, then adjusting up and down (restarting the viewer each time) to find the "sweet spot" for your computer.  
-The number here, should not exceed the total amount of 'logical processors'.
+To find your starting point, in Windows: Press Ctrl + Shift + Esc to open Task Manager. Select the Performance tab to see how many cores and logical processors your PC has.  You should set your threads to either the amount of cores you have or logical processors, whichever is the higher value.
       </text_editor>
       <slider bottom_delta="-300" follows="top" decimal_digits="0" height="16" increment="1" initial_val="1" label="Number of threads to decode textures" width="320" label_width="220" left="5" min_val="1" max_val="16" control_name="GenxDecodeImageThreads" name="GenxDecodeImageThreads" tool_tip="Set the number of threads used to decode textures : Requires a Restart to take effect"/>
       <check_box bottom_delta="-25" left="5" follows="top" height="16" label="Use partial textures rendering" name="GenxDecodePartialImage"

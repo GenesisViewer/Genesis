@@ -110,13 +110,7 @@ private:
 	//contact sets
 	bool mShowContactSetOnAvatarTag;
 	bool mShowContactSetOnLocalChat;
-	bool mShowContactSetOnImChat; 
 	bool mShowContactSetOnRadar;
-	bool mShowContactSetOnNearby;
-	bool mShowContactSetColorOnAvatarTag;
-	bool mShowContactSetColorOnChat;
-	bool mShowContactSetColorOnRadar;
-	bool mShowContactSetColorOnNearby;
 
 	// Adv. Features
 	bool mShowFavBar;

@@ -356,7 +356,7 @@ void LLParticipantList::refreshSpeakers()
 						static const LLCachedControl<LLColor4> sDefaultListText(gColors, "DefaultListText");
 						name_cell->setColor(sDefaultListText);
 						
-						if (!contactSet.getId().empty() && gSavedSettings.getBOOL("ShowContactSetColorOnNearby")) {
+						if (!contactSet.getId().empty()){
 							name_cell->setColor(contactSet.getColor());
 						}
 					}
@@ -369,7 +369,7 @@ void LLParticipantList::refreshSpeakers()
 			std::string speaker_name = speakerp->mDisplayName.empty() ? LLCacheName::getDefaultName() : speakerp->mDisplayName;
 			if (speakerp->mIsModerator)
 				speaker_name += ' ' + getString("moderator_label");
-			if (!contactSet.getId().empty() && gSavedSettings.getBOOL("ShowContactSetOnNearby")) {
+			if (!contactSet.getId().empty()) {
 				speaker_name+= " (" +contactSet.getName() +")";
 			}	
 			if (name_cell->getValue().asString() != speaker_name)

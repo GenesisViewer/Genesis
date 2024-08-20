@@ -103,7 +103,7 @@ jobs:
           ref: ${{env.GITHUB_REF}}
           fetch-depth: 0
      - id: autobuild-configure
-       run : echo 'set AUTOBUILD_WIN_VSHOST=v143  && autobuild configure -cRelease -A64 --config-file autobuild-github.xml -- -DUSE_FMODSTUDIO:BOOL=ON -DVIEWER_CHANNEL_BASE="Genesis" -DVIEWER_CHANNEL_TYPE=Test' >configure.cmd
+       run : echo 'set AUTOBUILD_WIN_VSHOST=v143  && autobuild configure -cRelease -A64 --config-file autobuild-github.xml -- -DUSE_FMODSTUDIO:BOOL=ON -DUSE_CRASHPAD:BOOL=ON -DVIEWER_CHANNEL_BASE="Genesis" -DVIEWER_CHANNEL_TYPE=Test' >configure.cmd
      - id: run-autobuild-configure  
        run : ./configure.cmd
      - id: build-setup

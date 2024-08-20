@@ -2900,6 +2900,7 @@ U32 LLVOAvatar::processUpdateMessage(LLMessageSystem *mesgsys,
 		debugAvatarRezTime("AvatarRezArrivedNotification","avatar arrived");
 	}
 
+	
 	if(retval & LLViewerObject::INVALID_UPDATE)
 	{
 		if(isSelf())

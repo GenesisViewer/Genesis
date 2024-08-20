@@ -152,7 +152,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///C:/temp/crashpad-c6d76a90.194-windows64-194.tar.bz2</string>
+              <string>http://pkg.genesisviewer.org/crashpad-c6d76a90.194-windows64-194.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>

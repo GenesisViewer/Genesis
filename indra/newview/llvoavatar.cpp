@@ -4109,7 +4109,13 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		}
 		if (!contactSetId.empty() && gSavedSettings.getBOOL("ShowContactSetOnAvatarTag")) {
 			LLColor4 contactSetColor = contactSet.getColor();
-			addNameTagLine(contactSetName, contactSetColor, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
+			if (gSavedSettings.getBOOL("ShowContactSetColorOnAvatarTag")) {
+				addNameTagLine(contactSetName, contactSetColor, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
+			}
+			else
+			{
+				addNameTagLine(contactSetName, name_tag_color, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
+			}
 		}
 		if (!isSelf() && gSavedSettings.getBOOL("GenxDisplayDistanceInTag")) {
 			

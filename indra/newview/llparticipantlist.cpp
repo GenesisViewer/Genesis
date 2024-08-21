@@ -369,7 +369,7 @@ void LLParticipantList::refreshSpeakers()
 			std::string speaker_name = speakerp->mDisplayName.empty() ? LLCacheName::getDefaultName() : speakerp->mDisplayName;
 			if (speakerp->mIsModerator)
 				speaker_name += ' ' + getString("moderator_label");
-			if (!contactSet.getId().empty()) {
+			if (!contactSet.getId().empty() && gSavedSettings.getBOOL("ShowContactSetOnNearby")) {
 				speaker_name+= " (" +contactSet.getName() +")";
 			}	
 			if (name_cell->getValue().asString() != speaker_name)

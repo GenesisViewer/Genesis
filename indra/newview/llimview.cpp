@@ -99,7 +99,7 @@ LLColor4 agent_chat_color(const LLUUID& id, const std::string& name, bool local_
 	if (color_friend_chat && LLAvatarTracker::instance().isBuddy(id))
 		return gSavedSettings.getColor4("AscentFriendColor");
 	ContactSet contactSet = GenxContactSetMgr::instance().getAvatarContactSet(id.asString());
-	if (!contactSet.getId().empty()) {
+	if (!contactSet.getId().empty() && gSavedSettings.getBOOL("ShowContactSetColorOnChat")) {
 		return contactSet.getColor();
 	}
 	static const LLCachedControl<bool> color_eo_chat("ColorEstateOwnerChat");

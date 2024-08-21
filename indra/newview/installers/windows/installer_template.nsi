@@ -429,28 +429,42 @@ Section "Viewer"
   CreateDirectory "$TEMP\AlchemyInst"
   SetOutPath "$TEMP\AlchemyInst"
 
-!ifdef WIN64_BIN_BUILD
-        ReadRegStr $1 HKLM "SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64" "Installed"
-        StrCmp $1 1 installed
-!else
-        ReadRegStr $1 HKLM "SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86" "Installed"
-        StrCmp $1 1 installed
-!endif
+
+  ;ReadRegStr $1 HKLM "SOFTWARE\Microsoft\VisualStudio\14.40\VC\Runtimes\x64" "Installed"
+  ;StrCmp $1 1 installed
+
   
   ;Download and install VC redist
-!ifdef WIN64_BIN_BUILD
-  inetc::get /RESUME "Failed to download VS2019 redistributable package. Retry?" "https://aka.ms/vs/16/release/vc_redist.x64.exe" "$TEMP\AlchemyInst\vc_redist_16.x64.exe" /END
-  ExecWait "$TEMP\AlchemyInst\vc_redist_16.x64.exe /install /passive /norestart"
+
+  ;inetc::get /RESUME "Failed to download VS2019 redistributable package. Retry?" "https://aka.ms/vs/17/release/vc_redist.x64.exe" "$TEMP\AlchemyInst\vc_redist_16.x64.exe" /END
+  ;ExecWait "$TEMP\AlchemyInst\vc_redist_16.x64.exe /install /passive /norestart"
 
   ;inetc::get /RESUME "Failed to download VS2013 redistributable package. Retry?" "https://aka.ms/highdpimfc2013x64enu" "$TEMP\AlchemyInst\vc_redist_12.x64.exe" /END
   ;ExecWait "$TEMP\AlchemyInst\vc_redist_12.x64.exe /install /passive /norestart"
-!else
-  inetc::get /RESUME "Failed to download VS2019 redistributable package. Retry?" "https://aka.ms/vs/16/release/vc_redist.x86.exe" "$TEMP\AlchemyInst\vc_redist_16.x86.exe" /END
-  ExecWait "$TEMP\AlchemyInst\vc_redist_16.x86.exe /install /passive /norestart"
 
-  ;inetc::get /RESUME "Failed to download VS2013 redistributable package. Retry?" "https://aka.ms/highdpimfc2013x86enu" "$TEMP\AlchemyInst\vc_redist_12.x86.exe" /END
-  ;ExecWait "$TEMP\AlchemyInst\vc_redist_12.x86.exe /install /passive /norestart"
-!endif
+
+ReadRegDWORD $0 HKLM "SOFTWARE\WOW6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\X64" "Installed"
+ReadRegDWORD $1 HKLM "SOFTWARE\WOW6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\X64" "Major"
+ReadRegDWORD $2 HKLM "SOFTWARE\WOW6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\X64" "Minor"
+${If} $0 <> 0
+    DetailPrint "Found version $1.$2"
+    ${If} "$1 $2" >= "14 40"
+        DetailPrint "The installed version is usable"
+        Goto installed
+    ${Else}
+        DetailPrint "Must install redist"
+        Goto install_redist
+    ${EndIf}
+${Else}
+    DetailPrint "Must install redist"
+    Goto install_redist
+${EndIf}
+
+
+install_redist:
+  inetc::get /RESUME "Failed to download VS2019 redistributable package. Retry?" "https://aka.ms/vs/17/release/vc_redist.x64.exe" "$TEMP\AlchemyInst\vc_redist_17.x64.exe" /END
+  ExecWait "$TEMP\AlchemyInst\vc_redist_17.x64.exe /install /passive /norestart"
+
 installed:
   ;Remove temp dir and reset out to inst dir
   RMDir /r "$TEMP\AlchemyInst\"

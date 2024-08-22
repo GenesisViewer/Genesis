@@ -960,7 +960,7 @@ void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, U32 timestamp,
 			source_style->mItalic = is_irc;
 			mHistoryEditor->appendText(show_name,false,prepend_newline,source_style, system);
 			ContactSet contactSet = GenxContactSetMgr::instance().getAvatarContactSet(source.asString());
-			if (!contactSet.getId().empty()) {
+			if (!contactSet.getId().empty() && gSavedSettings.getBOOL("ShowContactSetOnImChat")) {
 				mHistoryEditor->appendText(" (" + contactSet.getName() +")",false,prepend_newline,source_style, system);
 				
 			}

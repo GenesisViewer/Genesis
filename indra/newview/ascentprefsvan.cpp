@@ -233,8 +233,13 @@ void LLPrefsAscentVan::refreshValues()
 //contact sets
     mShowContactSetOnAvatarTag = gSavedSettings.getBOOL("ShowContactSetOnAvatarTag");
     mShowContactSetOnLocalChat = gSavedSettings.getBOOL("ShowContactSetOnLocalChat");
+    mShowContactSetOnImChat = gSavedSettings.getBOOL("ShowContactSetOnImChat");
     mShowContactSetOnRadar = gSavedSettings.getBOOL("ShowContactSetOnRadar");
-
+    mShowContactSetOnNearby = gSavedSettings.getBOOL("ShowContactSetOnNearby");
+    mShowContactSetColorOnAvatarTag = gSavedSettings.getBOOL("ShowContactSetColorOnAvatarTag");
+    mShowContactSetColorOnChat = gSavedSettings.getBOOL("ShowContactSetColorOnChat");
+    mShowContactSetColorOnRadar = gSavedSettings.getBOOL("ShowContactSetColorOnRadar");
+    mShowContactSetColorOnNearby = gSavedSettings.getBOOL("ShowContactSetColorOnNearby");
     //adv. features
     mShowFavBar = gSavedSettings.getBOOL("GenxFavBar");    
     mShowToolBar = gSavedSettings.getBOOL("ShowToolBar");
@@ -348,8 +353,14 @@ void LLPrefsAscentVan::cancel()
     }
     gSavedSettings.setBOOL("ShowContactSetOnLocalChat",       mShowContactSetOnLocalChat);
     gSavedSettings.setBOOL("ShowContactSetOnRadar",           mShowContactSetOnRadar);
+    gSavedSettings.setBOOL("ShowContactSetOnImChat",          mShowContactSetOnImChat);
     gSavedSettings.setBOOL("GenxFavBar",                      mShowFavBar);
     gSavedSettings.setBOOL("ShowToolBar",                     mShowToolBar);
+    gSavedSettings.setBOOL("ShowContactSetOnNearby",          mShowContactSetOnNearby);
+    gSavedSettings.setBOOL("ShowContactSetColorOnAvatarTag",  mShowContactSetColorOnAvatarTag);
+    gSavedSettings.setBOOL("ShowContactSetColorOnChat",       mShowContactSetColorOnChat);
+    gSavedSettings.setBOOL("ShowContactSetColorOnRadar",      mShowContactSetColorOnRadar);
+    gSavedSettings.setBOOL("ShowContactSetColorOnNearby",     mShowContactSetColorOnNearby);
     gSavedSettings.setF32("ToolTipDelay",                     mUiToolTipDelay);
     gSavedSettings.setBOOL("SLBShowFPS",                      mSLBShowFPS);
     gSavedSettings.setBOOL("GenxShowFpsTop",                  mGenxShowFpsTop);

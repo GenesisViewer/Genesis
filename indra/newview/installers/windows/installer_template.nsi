@@ -443,27 +443,7 @@ Section "Viewer"
   ;ExecWait "$TEMP\AlchemyInst\vc_redist_12.x64.exe /install /passive /norestart"
 
 
-ReadRegDWORD $0 HKLM "SOFTWARE\WOW6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\X86" "Installed"
-ReadRegDWORD $1 HKLM "SOFTWARE\WOW6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\X86" "Major"
-ReadRegDWORD $2 HKLM "SOFTWARE\WOW6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\X86" "Minor"
-${If} $0 <> 0
-    DetailPrint "Found version $1.$2"
-    ${If} "$1 $2" >= "14 40"
-        DetailPrint "The installed version is usable"
-        Goto installed
-    ${Else}
-        DetailPrint "Must install redist"
-        Goto install_redist
-    ${EndIf}
-${Else}
-    DetailPrint "Must install redist"
-    Goto install_redist
-${EndIf}
 
-
-install_redist:
-  inetc::get /RESUME "Failed to download VS2019 redistributable package. Retry?" "https://aka.ms/vs/17/release/vc_redist.x86.exe" "$TEMP\AlchemyInst\vc_redist_17.x86.exe" /END
-  ExecWait "$TEMP\AlchemyInst\vc_redist_17.x86.exe /install /passive /norestart"
 
 installed:
   ;Remove temp dir and reset out to inst dir

@@ -786,13 +786,14 @@ void LLAppViewer::initCrashReporting()
 			LL_WARNS() << "Failed to initialize crashpad database at path: " << wstring_to_utf8str(database.value()) << LL_ENDL;
 			return;
 		}
-
-		auto prune_condition = crashpad::PruneCondition::GetDefault();
-		if (prune_condition != nullptr)
-		{
-			auto ret = crashpad::PruneCrashReportDatabase(db.get(), prune_condition.get());
-			LL_INFOS() << "Pruned " << ret << " reports from the crashpad database." << LL_ENDL;
-		}
+		crashpad::BinaryPruneCondition condition(crashpad::BinaryPruneCondition::OR,
+        new crashpad::DatabaseSizePruneCondition(1024 * 24),
+        new crashpad::AgePruneCondition(12));
+		//auto prune_condition = crashpad::PruneCondition::GetDefault();
+		
+		auto ret = crashpad::PruneCrashReportDatabase(db.get(), &condition);
+		LL_INFOS() << "Pruned " << ret << " reports from the crashpad database." << LL_ENDL;
+		
 	}
 
 	crashpad::CrashpadClient client;

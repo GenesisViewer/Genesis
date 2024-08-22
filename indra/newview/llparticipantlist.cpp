@@ -356,7 +356,7 @@ void LLParticipantList::refreshSpeakers()
 						static const LLCachedControl<LLColor4> sDefaultListText(gColors, "DefaultListText");
 						name_cell->setColor(sDefaultListText);
 						
-						if (!contactSet.getId().empty()){
+						if (!contactSet.getId().empty() && gSavedSettings.getBOOL("ShowContactSetColorOnNearby")){
 							name_cell->setColor(contactSet.getColor());
 						}
 					}

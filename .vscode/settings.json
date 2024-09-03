@@ -109,6 +109,7 @@
         "__string": "cpp",
         "__tree": "cpp",
         "string_view": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "hash_set": "cpp"
     }
 }

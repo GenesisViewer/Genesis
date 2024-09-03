@@ -174,7 +174,7 @@ public:
 	virtual void leaveNonSpatialChannel()=0;
 
 	virtual void leaveChannel(void)=0;
-
+	virtual void processChannels(bool process) = 0;
 	// Returns the URI of the current channel, or an empty string if not currently in a channel.
 	// NOTE that it will return an empty string if it's in the process of joining a channel.
 	virtual std::string getCurrentChannel()=0;
@@ -330,7 +330,7 @@ public:
 	//static const F32 VOLUME_DEFAULT;
 	
 	static const F32 VOLUME_MAX;
-
+	static const F32 VOLUME_DEFAULT;
 	void updateSettings(); // call after loading settings and whenever they change
 
 	bool isVoiceWorking() const; // connected to a voice server and voice channel
@@ -381,7 +381,7 @@ public:
 						   const std::string &uri,
 						   const std::string &credentials);
 	void leaveNonSpatialChannel();
-
+	
 	// Returns the URI of the current channel, or an empty string if not currently in a channel.
 	// NOTE that it will return an empty string if it's in the process of joining a channel.
 	std::string getCurrentChannel();
@@ -475,11 +475,13 @@ public:
 	// Returns NULL if voice effects are not supported, or not enabled.
 	LLVoiceEffectInterface* getVoiceEffectInterface() const;
 	//@}
-
+	void onRegionChanged();
+	void handleSimulatorFeaturesReceived(const LLSD &simulatorFeatures);
 protected:
+	std::string mVoiceServerType;
 	LLVoiceModuleInterface* mVoiceModule;
 	LLPumpIO *m_servicePump;
-
+	boost::signals2::connection  mSimulatorFeaturesReceivedSlot;
 
 	LLCachedControl<bool> mVoiceEffectEnabled;
 	LLCachedControl<std::string> mVoiceEffectDefault;

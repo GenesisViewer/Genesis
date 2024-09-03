@@ -341,6 +341,7 @@ LLVivoxVoiceClient::LLVivoxVoiceClient() :
 	mMicVolumeDirty(true),
 
 	mVoiceEnabled(false),
+	mProcessChannels(false),
 	mWriteInProgress(false),
 
 	mLipSyncEnabled(false),
@@ -446,7 +447,7 @@ const LLVoiceVersionInfo& LLVivoxVoiceClient::getVersion()
 
 void LLVivoxVoiceClient::updateSettings()
 {
-	setVoiceEnabled(gSavedSettings.getBOOL("EnableVoiceChat"));
+	setVoiceEnabled(gSavedSettings.getBOOL("EnableVoiceChat") && mProcessChannels);
 	setEarLocation(gSavedSettings.getS32("VoiceEarLocation"));
 
 	std::string inputDevice = gSavedSettings.getString("VoiceInputAudioDevice");
@@ -748,11 +749,16 @@ std::string LLVivoxVoiceClient::state2string(LLVivoxVoiceClient::state inState)
 
 void LLVivoxVoiceClient::setState(state inState)
 {
-	LL_DEBUGS("Voice") << "entering state " << state2string(inState) << LL_ENDL;
+	LL_INFOS("Voice") << "entering state " << state2string(inState) << LL_ENDL;
 
 	mState = inState;
 }
-
+void LLVivoxVoiceClient::processChannels(bool process)
+{
+    
+    mProcessChannels = process;
+	
+}
 void LLVivoxVoiceClient::stateMachine()
 {
 	if(gDisconnected)
@@ -2018,6 +2024,7 @@ void LLVivoxVoiceClient::requestRelog()
 
 void LLVivoxVoiceClient::leaveAudioSession()
 {
+	
 	if(mAudioSession)
 	{
 		LL_DEBUGS("Voice") << "leaving session: " << mAudioSession->mSIPURI << LL_ENDL;
@@ -2027,7 +2034,7 @@ void LLVivoxVoiceClient::leaveAudioSession()
 			case stateNoChannel:
 				// In this case, we want to pretend the join failed so our state machine doesn't get stuck.
 				// Skip the join failed transition state so we don't send out error notifications.
-				setState(stateJoinSessionFailedWaiting);
+				//setState(stateJoinSessionFailedWaiting);
 			break;
 			case stateJoiningSession:
 			case stateSessionJoined:

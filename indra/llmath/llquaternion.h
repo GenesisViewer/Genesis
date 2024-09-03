@@ -132,7 +132,7 @@ public:
 	friend LLQuaternion operator~(const LLQuaternion &a);							// Returns a* (Conjugate of a)
 	bool operator==(const LLQuaternion &b) const;			// Returns a == b
 	bool operator!=(const LLQuaternion &b) const;			// Returns a != b
-
+	F64 operator[](int idx) const { return mQ[idx]; }
 	friend const LLQuaternion& operator*=(LLQuaternion &a, const LLQuaternion &b);	// Returns a * b
 
 	friend LLVector4 operator*(const LLVector4 &a, const LLQuaternion &rot);		// Rotates a by rot

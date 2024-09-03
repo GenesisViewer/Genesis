@@ -443,6 +443,7 @@ http://secondlife.com/support for help fixing this problem.
 	<!-- Chat -->
 	<string name="whisper">whispers:</string>
 	<string name="shout">shouts:</string>
+	<string name="voicechanging">Connecting to [VOICE_SERVER_TYPE] Voice System...</string>
 	<string name="ringing">Connecting to in-world Voice Chat...</string>
 	<string name="connected">Connected</string>
 	<string name="unavailable">Voice not available at your current location</string>

@@ -129,7 +129,7 @@ public:
 	virtual void leaveNonSpatialChannel();
 
 	virtual void leaveChannel(void);
-
+	void processChannels(bool process) override;
 	// Returns the URI of the current channel, or an empty string if not currently in a channel.
 	// NOTE that it will return an empty string if it's in the process of joining a channel.
 	virtual std::string getCurrentChannel();
@@ -327,6 +327,7 @@ protected:
 		bool		mIsP2P;
 		bool		mIncoming;
 		bool		mVoiceEnabled;
+		
 		bool		mReconnect;	// Whether we should try to reconnect to this session if it's dropped
 
 		// Set to true when the volume/mute state of someone in the participant list changes.
@@ -790,6 +791,7 @@ private:
 	bool		mMicVolumeDirty;
 
 	bool		mVoiceEnabled;
+	bool        mProcessChannels;
 	bool		mWriteInProgress;
 	std::string mWriteString;
 	size_t		mWriteOffset;

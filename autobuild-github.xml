@@ -1222,7 +1222,7 @@
               <key>hash_algorithm</key>
               <string>sha1</string>
               <key>url</key>
-              <string>https://github.com/secondlife/3p-webrtc-build/releases/download/m114.5735.08.59-debug/webrtc-m114.5735.08.59-debug.8823062977-darwin64-8823062977.tar.zst</string>
+              <string>http://pkg.genesisviewer.org/webrtc-m114.5735.08.59-debug.8823062977-darwin64-8823062977.tar.zst</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -1236,7 +1236,7 @@
               <key>hash_algorithm</key>
               <string>sha1</string>
               <key>url</key>
-              <string>https://github.com/secondlife/3p-webrtc-build/releases/download/m114.5735.08.59-debug/webrtc-m114.5735.08.59-debug.8823062977-linux64-8823062977.tar.zst</string>
+              <string>http://pkg.genesisviewer.org/webrtc-m114.5735.08.59-debug.8823062977-linux64-8823062977.tar.zst</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1252,7 +1252,7 @@
               <key>hash_algorithm</key>
               <string>sha1</string>
               <key>url</key>
-              <string>https://github.com/secondlife/3p-webrtc-build/releases/download/m114.5735.08.59-debug/webrtc-m114.5735.08.59-debug.8823062977-windows64-8823062977.tar.zst</string>
+              <string>http://pkg.genesisviewer.org/webrtc-m114.5735.08.59-debug.8823062977-windows64-8823062977.tar.zst</string>
             </map>
             <key>name</key>
             <string>windows64</string>

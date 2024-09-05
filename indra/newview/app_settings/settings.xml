@@ -19788,7 +19788,18 @@ This should be as low as possible, but too low may break functionality</string>
       <key>Value</key>
       <real>0.5</real>
     </map>
+    <key>VoiceNoiseSuppressionLevel</key>
+    <map>
+      <key>Comment</key>
+      <string>Voice Noise Suppression Level (0-none to 4-very high).Default very high</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>U32</string>
+      <key>Value</key>
+      <integer>4</integer>
+    </map>
   </map>
-
+  
 </llsd>
 

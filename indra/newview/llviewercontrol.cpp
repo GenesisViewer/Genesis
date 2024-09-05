@@ -864,6 +864,7 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("VoiceOutputAudioDevice")->getSignal()->connect(boost::bind(&handleVoiceClientPrefsChanged, _2));
 	gSavedSettings.getControl("AudioLevelMic")->getSignal()->connect(boost::bind(&handleVoiceClientPrefsChanged, _2));
 	gSavedSettings.getControl("LipSyncEnabled")->getSignal()->connect(boost::bind(&handleVoiceClientPrefsChanged, _2));	
+	gSavedSettings.getControl("VoiceNoiseSuppressionLevel")->getSignal()->connect(boost::bind(&handleVoiceClientPrefsChanged, _2));	
 	gSavedSettings.getControl("VelocityInterpolate")->getSignal()->connect(boost::bind(&handleVelocityInterpolate, _2));
 	gSavedSettings.getControl("StateMachineMaxTime")->getSignal()->connect(boost::bind(&handleStateMachineMaxTimeChanged, _2));
 

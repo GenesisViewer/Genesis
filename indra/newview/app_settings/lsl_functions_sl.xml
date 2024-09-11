@@ -2974,5 +2974,144 @@ Incorrectly performs an exclusive or on two Base64 strings and returns a Base64 
 DEPRECATED !  Please use llXorBase64() instead.
 Performs an exclusive or on two Base64 strings and returns a Base64 string. Doesn&apos;t work properly when s2 contains NULLs.</string>
         </map>
+	
+	
+    <key>llAdjustDamage</key>
+        <map>
+        <key>tooltip</key>
+            <string>llAdjustDamage(integer number, float new_damage)
+The llAdjustDamage modifies the amount of damage that will be applied by the current on_damage event after it has completed processing.</string>
+        </map>
+<!-- BEGIN
+	New functions added with Combat 2.0 -->
+    <key>llComputeHash</key>
+        <map>
+        <key>tooltip</key>
+            <string>string llComputeHash(string message, string algorithm)
+Returns a string hex-encoded hash digest of message using cryptographic algorithm.
+Supported values of algorithm are md5, md5_sha1, sha1, sha224, sha256, sha384, sha512.</string>
+        </map>
+    <key>llDamage</key>
+        <map>
+        <key>tooltip</key>
+            <string>llDamage(key target, float damage, integer damage_type)
+This function delivers damage to tasks and agent in the same region.</string>
+        </map>
+    <key>llDerezObject</key>
+        <map>
+        <key>tooltip</key>
+            <string>integer llDerezObject(key id, integer flag)
+Derezzes an object previously rezzed from within the object containing the script.
+Returns an integer Returns success or failure.</string>
+        </map>
+    <key>llDetectedDamage</key>
+        <map>
+        <key>tooltip</key>
+            <string>list llDetectedDamage(integer number)
+Returns a list containing pending damage information.</string>
+        </map>
+    <key>llDetectedRezzer</key>
+        <map>
+        <key>tooltip</key>
+            <string>key llDetectedRezzer(integer number)
+Returns a key that is the UUID of the object or avatar that rezzed the detected object number.</string>
+        </map>
+    <key>llFindNotecardTextSync</key>
+        <map>
+        <key>tooltip</key>
+            <string>list llFindNotecardTextSync(string name, string pattern, integer start, integer count, list options)
+Returns a list of lines and columns where the search pattern is found in the notecard.</string>
+        </map>
+    <key>llGetCameraAspect</key>
+        <map>
+        <key>tooltip</key>
+            <string>float llGetCameraAspect()
+Returns a float value for the current camera's aspect ratio (e.g. width/height) of the agent for which the task has permissions.</string>
+        </map>
+    <key>llGetCameraFOV</key>
+        <map>
+        <key>tooltip</key>
+            <string>float llGetCameraFOV()
+Returns a float value for the current camera's field of view (FOV), in radians, of the agent for which the task has permissions.</string>
+        </map>
+    <key>llGetHealth</key>
+        <map>
+        <key>tooltip</key>
+            <string>float llGetHealth(key id)
+Returns the current health of an avatar or object in the region.</string>
+        </map>
+    <key>llGetNotecardLineSync</key>
+        <map>
+        <key>tooltip</key>
+            <string>string llGetNotecardLineSync(string name, integer line)
+Gets the line of the notecard name from the region's notecard cache immediately without raising a dataserver event.</string>
+        </map>
+    <key>llGetLinkKey</key>
+        <map>
+        <key>tooltip</key>
+            <string>key llGetLinkKey(integer link)
+Returns the key of the linked prim link</string>
+        </map>
+    <key>llGetStartString</key>
+        <map>
+        <key>tooltip</key>
+            <string>string llGetStartString()
+Returns a string that was passed to the object on rez with llRezObjectWithParams.</string>
+        </map>
+    <key>llIsFriend</key>
+        <map>
+        <key>tooltip</key>
+            <string>integer llIsFriend(key agent_id)
+Returns a boolean (an integer) that is TRUE if agent_id and the owner of the prim the script is in are friends, otherwise FALSE.</string>
+        </map>
+    <key>llList2ListSlice</key>
+        <map>
+        <key>tooltip</key>
+            <string>list llList2ListSlice(list src, integer start, integer end, integer stride, integer slice_index)
+Returns a list of the slice_index'th element of every stride in strided list whose index is a multiple of stride in the range start to end.</string>
+        </map>
+    <key>llListFindListNext</key>
+        <map>
+        <key>tooltip</key>
+            <string>integer llListFindListNext(list src, list test, integer instance)
+Returns the integer index of the nth instance of test in src.</string>
+        </map>
+    <key>llListFindStrided</key>
+        <map>
+        <key>tooltip</key>
+            <string>integer llListFindStrided(list src, list test, integer start, integer end, integer stride)
+Returns the integer index of the first instance of test in src matching conditions.</string>
+        </map>
+    <key>llListSortStrided</key>
+        <map>
+        <key>tooltip</key>
+            <string>list llListSortStrided(list src, integer stride, integer stride_index, integer ascending)
+llListSortStrided is llListSort with the added parameter of stride_index, adding the flexibility to sort by any item in the stride. These routines use the same underlying code and have the same computational complexity.
+Returns a list that is src sorted by the stride_index item in every stride.</string>
+        </map>
+    <key>llReplaceSubString</key>
+        <map>
+        <key>tooltip</key>
+            <string>string llReplaceSubString(string src, string pattern, string replacement_pattern, integer count)
+Returns a string that is the result of replacing the first count matching instances pattern in src with replacement_pattern.</string>
+        </map>
+    <key>llRezObjectWithParams</key>
+        <map>
+        <key>sleep_time</key>
+            <real>0.1</real>
+        <key>tooltip</key>
+            <string>key llRezObjectWithParams(string inventory, list params)
+Instantiate inventory object at pos with an initial set of parameters specified in params.
+pos will default to the position of the object containing the script, unless REZ_POS is specified.
+Returns a key which will be the key of the object when it is successfully rezzed in the world.</string>
+        </map>
+    <key>llSetLinkSitFlags</key>
+        <map>
+        <key>tooltip</key>
+            <string>llSetLinkSitFlags(integer link, integer flags)
+Sets flags on the link's sittarget.</string>
+        </map>
+<!-- New functions added with Combat 2.0
+	End -->
     </map>
 </llsd>

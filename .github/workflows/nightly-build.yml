@@ -114,7 +114,7 @@ jobs:
      - name: ls
        run : ls -l c:/temp/
      - name: store artefact
-       uses: actions/upload-artifact@v2
+       uses: actions/upload-artifact@v3
        with:
         name: Genesis-setup
         path: c:/temp/Genesis*

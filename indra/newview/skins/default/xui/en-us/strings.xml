@@ -443,7 +443,6 @@ http://secondlife.com/support for help fixing this problem.
 	<!-- Chat -->
 	<string name="whisper">whispers:</string>
 	<string name="shout">shouts:</string>
-	<string name="voicechanging">Connecting to [VOICE_SERVER_TYPE] Voice System...</string>
 	<string name="ringing">Connecting to in-world Voice Chat...</string>
 	<string name="connected">Connected</string>
 	<string name="unavailable">Voice not available at your current location</string>
@@ -2006,7 +2005,7 @@ Returns the number of sides of the specified linked prim.
 	</string>
 	<string name="LSLTipText_llGetUsername">
 string llGetUsername(key id)
-Returns the single-word username of an avatar, iff the avatar is in the current region, otherwise the empty string.
+Returns the single-word username of an avatar, if the avatar is in the current region, otherwise the empty string.
 	</string>
 	<string name="LSLTipText_llRequestUsername">
 key llRequestUsername(key id)
@@ -2172,6 +2171,100 @@ For AI Character: Get the closest navigable point to the point provided.
 list llGetStaticPath(vector start, vector end, float radius, list params)
 Returns a list of position vectors indicating pathfinding waypoints between positions at start and end, for a character of a given radius. The waypoints this function returns are for the 'static' nav mesh, meaning that dynamic objects are ignored.
 	</string>
+<!-- BEGIN
+	New functions added with Combat 2.0 -->
+	<string name="LSLTipText_llAdjustDamage">
+llAdjustDamage(integer number, float new_damage)
+The llAdjustDamage modifies the amount of damage that will be applied by the current on_damage event after it has completed processing.
+	</string>
+	<string name="LSLTipText_llComputeHash">
+string llComputeHash(string message, string algorithm)
+Returns a string hex-encoded hash digest of message using cryptographic algorithm.
+Supported values of algorithm are md5, md5_sha1, sha1, sha224, sha256, sha384, sha512.
+	</string>
+	<string name="LSLTipText_llDamage">
+llDamage(key target, float damage, integer damage_type)
+This function delivers damage to tasks and agent in the same region.
+	</string>
+	<string name="LSLTipText_llDerezObject">
+integer llDerezObject(key id, integer flag)
+Derezzes an object previously rezzed from within the object containing the script.
+Returns an integer Returns success or failure.
+	</string>
+	<string name="LSLTipText_llDetectedDamage">
+list llDetectedDamage(integer number)
+Returns a list containing pending damage information.
+	</string>
+	<string name="LSLTipText_llDetectedRezzer">
+key llDetectedRezzer(integer number)
+Returns a key that is the UUID of the object or avatar that rezzed the detected object number.
+	</string>
+	<string name="LSLTipText_llFindNotecardTextSync">
+list llFindNotecardTextSync( string name, string pattern, integer start, integer count, list options )
+Returns a list of lines and columns where the search pattern is found in the notecard.
+	</string>
+	<string name="LSLTipText_llGetCameraAspect">
+float llGetCameraAspect()
+Returns a float value for the current camera's aspect ratio (e.g. width/height) of the agent for which the task has permissions.
+	</string>
+	<string name="LSLTipText_llGetCameraFOV">
+float llGetCameraFOV()
+Returns a float value for the current camera's field of view (FOV), in radians, of the agent for which the task has permissions.
+	</string>
+	<string name="LSLTipText_llGetHealth">
+float llGetHealth(key id)
+Returns the current health of an avatar or object in the region.
+	</string>
+	<string name="LSLTipText_llGetNotecardLineSync">
+string llGetNotecardLineSync(string name, integer line)
+Gets the line of the notecard name from the region's notecard cache immediately without raising a dataserver event.
+	</string>
+	<string name="LSLTipText_llGetLinkKey">
+key llGetLinkKey(integer link)
+Returns the key of the linked prim link
+	</string>
+	<string name="LSLTipText_llGetStartString">
+string llGetStartString()
+Returns a string that was passed to the object on rez with llRezObjectWithParams.
+	</string>
+	<string name="LSLTipText_llIsFriend">
+integer llIsFriend(key agent_id)
+Returns a boolean (an integer) that is TRUE if agent_id and the owner of the prim the script is in are friends, otherwise FALSE.
+	</string>
+	<string name="LSLTipText_llList2ListSlice">
+list llList2ListSlice(list src, integer start, integer end, integer stride, integer slice_index)
+Returns a list of the slice_index'th element of every stride in strided list whose index is a multiple of stride in the range start to end.
+	</string>
+	<string name="LSLTipText_llListFindListNext">
+integer llListFindListNext(list src, list test, integer instance)
+Returns the integer index of the nth instance of test in src.
+	</string>
+	<string name="LSLTipText_llListFindStrided">
+integer llListFindStrided(list src, list test, integer start, integer end, integer stride)
+Returns the integer index of the first instance of test in src matching conditions.
+	</string>
+	<string name="LSLTipText_">
+list llListSortStrided(list src, integer stride, integer stride_index, integer ascending)
+llListSortStrided is llListSort with the added parameter of stride_index, adding the flexibility to sort by any item in the stride. These routines use the same underlying code and have the same computational complexity.
+Returns a list that is src sorted by the stride_index item in every stride.
+	</string>
+	<string name="LSLTipText_llReplaceSubString">
+string llReplaceSubString(string src, string pattern, string replacement_pattern, integer count)
+Returns a string that is the result of replacing the first count matching instances pattern in src with replacement_pattern.
+	</string>
+	<string name="LSLTipText_llRezObjectWithParams">
+key llRezObjectWithParams(string inventory, list params)
+Instantiate inventory object at pos with an initial set of parameters specified in params.
+pos will default to the position of the object containing the script, unless REZ_POS is specified.
+Returns a key which will be the key of the object when it is successfully rezzed in the world.
+	</string>
+	<string name="LSLTipText_llSetLinkSitFlags">
+llSetLinkSitFlags(integer link, integer flags)
+Sets flags on the link's sittarget.
+	</string>
+<!-- New functions added with Combat 2.0
+	End -->
+
 <!-- Not in LL list yes -->
 	<string name="LSLTipText_llManageEstateAccess" translate="false">
 integer llManageEstateAccess(integer action, key id)

@@ -127,7 +127,7 @@ jobs:
       - name: create a tmp dir
         run: mkdir -p ./Genesis
       - name: download artefact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: Genesis-setup
           path: ./Genesis/

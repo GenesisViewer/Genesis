@@ -546,6 +546,31 @@ void LLScriptLibrary::init()
 	addFunction(10.f, 0.f, dummy_func, "llScaleByFactor" , "i", "f");
 	addFunction(10.f, 0.f, dummy_func, "llGetMinScaleFactor" , "f", NULL);
 	addFunction(10.f, 0.f, dummy_func, "llGetMaxScaleFactor" , "f", NULL);
+	
+	// Combat 2.0 new functions
+	// I don't know what the server version is to tag this with - Fidget Nebula
+	addFunction(10.f, 0.f, dummy_func, "llAdjustDamage" , NULL, "if");
+	addFunction(10.f, 0.f, dummy_func, "llComputeHash" , "s", "ss");
+	addFunction(10.f, 0.f, dummy_func, "llDamage" , NULL, "kfi");
+	addFunction(10.f, 0.f, dummy_func, "llDerezObject" , "i", "ki");
+	addFunction(0.f, 0.f, dummy_func, "llDetectedDamage" , "l", "i");
+	addFunction(10.f, 0.f, dummy_func, "llDetectedRezzer" , "k", "i");
+	addFunction(10.f, 0.f, dummy_func, "llFindNotecardTextSync" , "k", "ssiil");
+	addFunction(10.f, 0.f, dummy_func, "llGetCameraAspect" , "f", NULL);
+	addFunction(10.f, 0.f, dummy_func, "llGetCameraFOV" , "f", NULL);
+	addFunction(10.f, 0.f, dummy_func, "llGetHealth" , "f", "k");
+	addFunction(10.f, 0.f, dummy_func, "llGetNotecardLineSync" , "s", "si");
+	addFunction(10.f, 0.f, dummy_func, "llGetLinkKey" , "k", "i");
+	addFunction(10.f, 0.f, dummy_func, "llGetStartString" , "s", NULL);
+	addFunction(10.f, 0.f, dummy_func, "llIsFriend" , "i", "k");
+	addFunction(10.f, 0.f, dummy_func, "llList2ListSlice" , "l", "liiii");
+	addFunction(10.f, 0.f, dummy_func, "llListFindListNext" , "i", "lli");
+	addFunction(10.f, 0.f, dummy_func, "llListFindStrided" , "i", "lliii");
+	addFunction(10.f, 0.f, dummy_func, "llListSortStrided" , "l", "liii");
+	addFunction(10.f, 0.f, dummy_func, "llReplaceSubString" , "s", "sssi");
+	addFunction(200.f, 0.1f, dummy_func, "llRezObjectWithParams" , "k", "sl");
+	addFunction(10.f, 0.f, dummy_func, "llSetLinkSitFlags" , NULL, "ii");
+	
 
 	// SL-LSL Functions to be added above this line
 	// ---------------------------------------------

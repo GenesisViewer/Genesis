@@ -4186,16 +4186,36 @@ class LLViewFullscreen final : public view_listener_t
 	}
 };
 
-class LLViewDefaultUISize final : public view_listener_t
+// Begin UI Scale Settings
+//
+// Original code for setting default UI size
+//
+//class LLViewDefaultUISize final : public view_listener_t
+//{
+//	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
+//	{
+//		gSavedSettings.setF32("UIScaleFactor", 1.0f);
+//		gSavedSettings.setBOOL("UIAutoScale", FALSE);	
+//		gViewerWindow->reshape(gViewerWindow->getWindowDisplayWidth(), gViewerWindow->getWindowDisplayHeight());
+//		return true;
+//	}
+//};
+class LLViewSetUISize final : public view_listener_t
 {
-	bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
-	{
-		gSavedSettings.setF32("UIScaleFactor", 1.0f);
-		gSavedSettings.setBOOL("UIAutoScale", FALSE);	
-		gViewerWindow->reshape(gViewerWindow->getWindowDisplayWidth(), gViewerWindow->getWindowDisplayHeight());
-		return true;
-	}
+	public:
+		LLViewSetUISize(F32 val) : uiVal(val) {}
+		bool handleEvent(LLPointer<LLEvent> event, const LLSD& userdata) override
+		{
+			gSavedSettings.setF32("UIScaleFactor", uiVal);
+			gSavedSettings.setBOOL("UIAutoScale", TRUE);
+			gViewerWindow->reshape(gViewerWindow->getWindowDisplayWidth(), gViewerWindow->getWindowDisplayHeight());
+			return true;
+		}
+	private:
+		F32 uiVal;
 };
+// End UI Scale Settings
+
 
 class LLEditDuplicate final : public view_listener_t
 {
@@ -10165,7 +10185,15 @@ void initialize_menus()
 	addMenu(new LLZoomer(1/1.2f), "View.ZoomIn");
 	addMenu(new LLZoomer(DEFAULT_FIELD_OF_VIEW, false), "View.ZoomDefault");
 	addMenu(new LLViewFullscreen(), "View.Fullscreen");
-	addMenu(new LLViewDefaultUISize(), "View.DefaultUISize");
+	addMenu(new LLViewSetUISize(2.0f), "View.HugeUISize");
+	addMenu(new LLViewSetUISize(1.5f), "View.LargerUISize");
+	addMenu(new LLViewSetUISize(1.25f), "View.LargeUISize");
+	addMenu(new LLViewSetUISize(1.0f), "View.NormalUISize");
+	addMenu(new LLViewSetUISize(0.9f), "View.SmallUISize");
+	addMenu(new LLViewSetUISize(0.8f), "View.SmallerUISize");
+	addMenu(new LLViewSetUISize(0.7f), "View.TinyUISize");
+// Removed in favour of the above for new UI Scale Settings
+//	addMenu(new LLViewDefaultUISize(), "View.DefaultUISize");
 
 	addMenu(new LLViewEnableMouselook(), "View.EnableMouselook");
 	addMenu(new LLViewEnableJoystickFlycam(), "View.EnableJoystickFlycam");

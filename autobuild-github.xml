@@ -1133,16 +1133,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b890b109b526cc6ad211eadefed83316</string>
+              <string>d56002da7435bab166c88d59eeaf69fd87cd897d</string>
+              <key>hash_algorithm</key>
+              <string>sha1</string>
               <key>url</key>
-              <string>file:///C:/temp/vlc_bin-3.0.8.189-windows64-189.tar.bz2</string>
+              <string>http://pkg.genesisviewer.org/vlc_bin-3.0.16.c219a5d-windows64-c219a5d.tar.zst</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>3.0.8.189</string>
+        <string>3.0.16.c219a5d</string>
       </map>
       <key>xmlrpc-epi</key>
       <map>

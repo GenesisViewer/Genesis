@@ -43,6 +43,7 @@
 #include "llpanelvoicedevicesettings.h"
 #include "lltrans.h"
 #include "lluictrlfactory.h"
+#include "llcombobox.h"
 
 
 class LLVoiceSetKeyDialog : public LLModalDialog
@@ -120,8 +121,10 @@ BOOL LLPrefsVoice::postBuild()
 	getChild<LLUICtrl>("enable_voice_check")->setCommitCallback(boost::bind(&LLPrefsVoice::onCommitEnableVoiceChat, this, _2));
 	getChild<LLUICtrl>("set_voice_hotkey_button")->setCommitCallback(boost::bind(LLVoiceSetKeyDialog::start, this));
 	getChild<LLUICtrl>("set_voice_middlemouse_button")->setCommitCallback(boost::bind(&LLView::setValue, getChildView("modifier_combo"), "MiddleMouse"));
-
 	getChildView("enable_voice_check")->setValue(!gSavedSettings.getBOOL("CmdLineDisableVoice") && gSavedSettings.getBOOL("EnableVoiceChat"));
+
+	LLComboBox* GenxGroupNotifyPos_combobox = getChild<LLComboBox>("VoiceNoiseSuppressionLevel_combobox");
+	GenxGroupNotifyPos_combobox->setCurrentByIndex(gSavedSettings.getU32("VoiceNoiseSuppressionLevel"));
 
 	if (LLCheckBoxCtrl* check = findChild<LLCheckBoxCtrl>("enable_multivoice_check"))
 	{
@@ -166,6 +169,7 @@ void LLPrefsVoice::apply()
 	{
 		gSavedSettings.setBOOL("EnableVoiceChat", enable_voice);
 	}
+	gSavedSettings.setU32("VoiceNoiseSuppressionLevel", getChild<LLComboBox>("VoiceNoiseSuppressionLevel_combobox")->getCurrentIndex());
 }
 
 void LLPrefsVoice::cancel()

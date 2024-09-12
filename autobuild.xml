@@ -1215,8 +1215,7 @@
           <map>
             <key>archive</key>
             <map>
-              <key>creds</key>
-              <string>github</string>
+              
               <key>hash</key>
               <string>e89de3c1352589be64fd838f9b4c06927a139db3</string>
               <key>hash_algorithm</key>
@@ -1245,8 +1244,7 @@
           <map>
             <key>archive</key>
             <map>
-              <key>creds</key>
-              <string>github</string>
+              
               <key>hash</key>
               <string>abbd27bdbeec9b8c01ab7c176bee7bacbf7252f5</string>
               <key>hash_algorithm</key>

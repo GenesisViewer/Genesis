@@ -8,7 +8,7 @@ GenxMembers::GenxMembers()
     	members.push_back("0de266c4-8bbe-4ba5-9217-20d22d04f36e"); //Torric Rodas
 	members.push_back("87ae9358-8df0-48e9-a77f-194fe79c6dc1"); //Mely
 	members.push_back("ecf77488-7ead-4e75-80ff-88661bce6037"); //Shep62
-	members.push_back("b0fd5e6d-fb23-4608-9aee-4928225722d3"); //illianna1
+	// members.push_back("b0fd5e6d-fb23-4608-9aee-4928225722d3"); //illianna1  - "sabbatical"
 	members.push_back("82d88055-7897-4e5b-8804-e5befe86d92f"); //Coffeequeen68
 	members.push_back("a524cfd5-0e03-4c2a-865c-747bb2fa0f16"); //biyayo
 	members.push_back("64bcffb1-6466-40fe-affd-b97319692c55"); //Jazzi Slade

@@ -344,6 +344,7 @@ LLUserAuth::UserAuthcode LLUserAuth::parseResponse()
 	// will all be string => string pairs.
 	UserAuthcode rv = E_UNHANDLED_ERROR;
 	XMLRPC_REQUEST response = mResponder->response();
+	
 	if(!response)
 	{
 		U32 status = mResponder->getStatus();
@@ -375,6 +376,7 @@ LLSD LLUserAuth::parseValues(UserAuthcode &auth_code, const std::string& key_pfx
 {
 	auth_code = E_OK;
 	LLSD responses;
+	
 	for(XMLRPC_VALUE current = XMLRPC_VectorRewind(param); current;
 		current = XMLRPC_VectorNext(param))
 	{
@@ -418,9 +420,11 @@ LLSD LLUserAuth::parseValues(UserAuthcode &auth_code, const std::string& key_pfx
 				array.append(parseValues(auth_code,
 									STRINGIZE(key_pfx << key << '[' << i << "]:"),
 									row));
+				 									
 			}
 			// Having collected an 'array' of 'submap's, insert that whole
 			// 'array' as the value of this 'key'.
+			
 			responses.insert(key, array);
 		}
 		else if (xmlrpc_type_struct == type)

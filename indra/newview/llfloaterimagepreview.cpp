@@ -98,7 +98,12 @@ BOOL LLFloaterImagePreview::postBuild()
 	}
 
 	auto& grid = *gHippoGridManager->getConnectedGrid();
-	childSetLabelArg("ok_btn", "[UPLOADFEE]", grid.formatFee(LLAgentBenefitsMgr::current().getTextureUploadCost()));
+
+
+	S32 upload_cost = LLAgentBenefitsMgr::current().getTextureUploadCost(mRawImagep);
+	
+
+	childSetLabelArg("ok_btn", "[UPLOADFEE]", grid.formatFee(upload_cost));
 
 	LLCtrlSelectionInterface* iface = childGetSelectionInterface("clothing_type_combo");
 	if (iface)
@@ -433,7 +438,7 @@ bool LLFloaterImagePreview::loadImage(const std::string& src_filename)
 		return false;
 	}
 
-	raw_image->biasedScaleToPowerOfTwo(1024);
+	raw_image->biasedScaleToPowerOfTwo(2048);
 	mRawImagep = raw_image;
 	
 	return true;

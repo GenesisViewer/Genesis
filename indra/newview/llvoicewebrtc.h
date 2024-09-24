@@ -271,6 +271,7 @@ public:
         bool mIsModeratorMuted;
 		bool mVoiceEnabled;
 		bool mOnMuteList;
+        bool isBuddy;
         LLUUID mRegion;
     };
     typedef std::shared_ptr<participantState> participantStatePtr_t;
@@ -412,7 +413,7 @@ private:
     LLVoiceVersionInfo mVoiceVersion;
 
     float mNonFriendsVoiceAttenuation;  
-
+    
     bool mHidden;
     bool mTuningMode;
     float mTuningMicGain;
@@ -482,6 +483,7 @@ private:
 	static void predShutdownSession(const LLWebRTCVoiceClient::sessionStatePtr_t &session);
 	static void predUpdateOwnVolume(const LLWebRTCVoiceClient::sessionStatePtr_t &session, F32 audio_level);
 	static void predSetUserMute(const LLWebRTCVoiceClient::sessionStatePtr_t &session, const LLUUID& id, bool mute);
+    static void predSetNonFriendsAttenuation(const LLWebRTCVoiceClient::sessionStatePtr_t &session);
 	/////////////////////////////
     // Sending updates of current state
     void setListenerPosition(const LLVector3d &position, const LLVector3 &velocity, const LLQuaternion &rot);

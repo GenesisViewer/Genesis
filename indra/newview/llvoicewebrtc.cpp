@@ -208,8 +208,22 @@ void LLWebRTCVoiceClient::updateDefaultBoostLevel(float volume)
 
 void LLWebRTCVoiceClient::setNonFriendsVoiceAttenuation(float volume)
 {
-}
+    if (mNonFriendsVoiceAttenuation != volume) {
+        mNonFriendsVoiceAttenuation = volume;
+        
+        sessionState::for_each(boost::bind(predSetNonFriendsAttenuation, _1));
+    }
 
+    
+}
+void LLWebRTCVoiceClient::predSetNonFriendsAttenuation(const LLWebRTCVoiceClient::sessionStatePtr_t &session)
+{
+    for (auto& entry : session->mParticipantsByUUID){
+        
+
+        LLWebRTCVoiceClient::getInstance()->setUserVolume(entry.second->mAvatarID, entry.second->mVolume);
+    }
+}
 bool LLWebRTCVoiceClient::deviceSettingsAvailable()
 {
     bool result = true;
@@ -858,7 +872,13 @@ void LLWebRTCVoiceClient::setUserVolume(const LLUUID& id, F32 volume)
                 LLSpeakerVolumeStorage::getInstance()->removeSpeakerVolume(id);
             }
 
-            participant->mVolume = clamped_volume;
+            participant->mVolume = volume;
+
+            if (!participant->isBuddy) {
+                LL_INFOS() << "Non Friends " << mNonFriendsVoiceAttenuation << LL_ENDL;
+                volume = volume+mNonFriendsVoiceAttenuation;
+                clamped_volume = llclamp(volume, LLVoiceClient::VOLUME_MIN, LLVoiceClient::VOLUME_MAX);
+            }
         }
     }
     sessionState::for_each(boost::bind(predSetUserVolume, _1, id, clamped_volume));
@@ -2355,7 +2375,9 @@ LLWebRTCVoiceClient::participantStatePtr_t LLWebRTCVoiceClient::sessionState::ad
         mParticipantsByUUID.insert(participantUUIDMap::value_type(agent_id, result));
         result->mAvatarID = agent_id;
     }
-
+    if (result) {
+        result->isBuddy = LLAvatarTracker::instance().isBuddy(agent_id);
+    }
     LLWebRTCVoiceClient::getInstance()->lookupName(agent_id);
 
     LLSpeakerVolumeStorage::getInstance()->getSpeakerVolume(result->mAvatarID, result->mVolume);
@@ -2365,7 +2387,7 @@ LLWebRTCVoiceClient::participantStatePtr_t LLWebRTCVoiceClient::sessionState::ad
     }
 
     LL_DEBUGS("Voice") << "Participant \"" << result->mURI << "\" added." << LL_ENDL;
-
+    LLWebRTCVoiceClient::getInstance()->setUserVolume(result->mAvatarID, result->mVolume);
     return result;
 }
 void LLWebRTCVoiceClient::sessionState::removeParticipant(const LLWebRTCVoiceClient::participantStatePtr_t &participant)

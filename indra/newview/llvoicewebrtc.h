@@ -471,6 +471,8 @@ private:
     void setEarLocation(S32 loc);
     LLVoiceDeviceList mCaptureDevices;
     LLVoiceDeviceList mRenderDevices;
+
+    uint32_t mAudioLevel;
     bool mDevicesListUpdated;
 
 	static void predSendData(const LLWebRTCVoiceClient::sessionStatePtr_t &session, const std::string& spatial_data);
@@ -608,7 +610,7 @@ class LLVoiceWebRTCConnection :
             // state changes.
             return;
         }
-
+        LL_INFOS() << "WebRTC new state " << new_voice_connection_state << LL_ENDL;
         mVoiceConnectionState = new_voice_connection_state;
     }
     EVoiceConnectionState getVoiceConnectionState()

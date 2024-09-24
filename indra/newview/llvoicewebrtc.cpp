@@ -108,11 +108,10 @@ const LLVoiceVersionInfo &LLWebRTCVoiceClient::getVersion()
 }
 void LLWebRTCVoiceClient::setMicGain(F32 gain)
 {
-    if (gain != mMicGain)
-    {
+    
         mMicGain = gain;
         mWebRTCDeviceInterface->setPeerConnectionGain(gain);
-    }
+   
 }
 
 void LLWebRTCVoiceClient::updateSettings()
@@ -733,7 +732,7 @@ void LLWebRTCVoiceClient::setMuteMic(bool muted)
 void LLWebRTCVoiceClient::predSetMuteMic(const LLWebRTCVoiceClient::sessionStatePtr_t &session, bool muted)
 {
     participantStatePtr_t participant = session->findParticipantByID(gAgentID);
-    if (participant)
+    if (participant && muted)
     {
         participant->mLevel = 0.0;
     }
@@ -742,6 +741,7 @@ void LLWebRTCVoiceClient::predSetMuteMic(const LLWebRTCVoiceClient::sessionState
 BOOL LLWebRTCVoiceClient::getVoiceEnabled(const LLUUID &id)
 {
     BOOL result = FALSE;
+    
     if (!mProcessChannels || !mSession)
     {
         return result;
@@ -803,7 +803,7 @@ BOOL LLWebRTCVoiceClient::getIsModeratorMuted(const LLUUID& id)
 }
 F32 LLWebRTCVoiceClient::getCurrentPower(const LLUUID &id)
 {
-    F32 result = 0.0;
+    F32 result = 0.0f;
     if (!mProcessChannels || !mSession)
     {
         return result;
@@ -816,6 +816,7 @@ F32 LLWebRTCVoiceClient::getCurrentPower(const LLUUID &id)
             result = participant->mLevel;
         }
     }
+    
     return result;
 }
 
@@ -1186,7 +1187,7 @@ void LLWebRTCVoiceClient::notifyStatusObservers(LLVoiceClientStatusObserver::ESt
         status != LLVoiceClientStatusObserver::STATUS_LEFT_CHANNEL &&
         status != LLVoiceClientStatusObserver::STATUS_VOICE_DISABLED)
     {
-        bool voice_status = LLVoiceClient::getInstance()->voiceEnabled() && LLVoiceClient::getInstance()->isVoiceWorking();
+        bool voice_status = mIsProcessingChannels;
 
         gAgent.setVoiceConnected(voice_status);
 
@@ -1724,6 +1725,9 @@ void LLVoiceWebRTCConnection::OnDataReceivedImpl(const std::string &data, bool b
                 if (isMuted)
                 {
                     mute[participant_id] = true;
+                }
+                else {
+                    mute[participant_id] = false;
                 }
                 F32 volume;
                 if(LLSpeakerVolumeStorage::getInstance()->getSpeakerVolume(agent_id, volume))

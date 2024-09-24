@@ -58,7 +58,7 @@ with the same filename but different name
   <texture name="Favorite_Link_Over" file_name="navbar/Favorite_Link_Over.png" preload="false" />
 
   <texture name="FMOD_Logo" file_name="FMOD_Logo.png" preload="true"/>
-
+  <texture name="WEBRTC_Logo" file_name="WEBRTC_Logo.png" preload="true"/>
   <texture name="Parcel_M_Dark" file_name="map_event_mature.tga" preload="true" />
   <texture name="Parcel_M_Light" file_name="map_event_mature.tga" preload="false" />
   <texture name="Parcel_PG_Light" file_name="map_event.tga" preload="false" />

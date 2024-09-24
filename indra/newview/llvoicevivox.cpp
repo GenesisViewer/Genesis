@@ -5056,7 +5056,7 @@ F32 LLVivoxVoiceClient::getCurrentPower(const LLUUID& id)
 	{
 		result = participant->mPower;
 	}
-
+	
 	return result;
 }
 

@@ -4083,7 +4083,7 @@ void on_benefits_failed_callback(const LLSD& notification, const LLSD& response)
 bool init_benefits(LLSD& response)
 {
 	bool succ = true;
-
+	LL_INFOS() << "benefits " << response << LL_ENDL;
 	std::string package_name = response["account_type"].asString();
 	const LLSD& benefits_sd = response["account_level_benefits"];
 	if (!LLAgentBenefitsMgr::init(package_name, benefits_sd) ||

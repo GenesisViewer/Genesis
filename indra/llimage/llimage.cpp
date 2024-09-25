@@ -1695,7 +1695,8 @@ BOOL LLImageFormatted::load(const std::string &filename, int load_size)
 	{
 		res = updateData();
 	}
-	
+	if (!res)
+		LL_WARNS() << "load image failed " << LLImage::getLastError() << LL_ENDL;
 	return res;
 }
 

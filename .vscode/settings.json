@@ -110,6 +110,7 @@
         "__tree": "cpp",
         "string_view": "cpp",
         "ranges": "cpp",
-        "hash_set": "cpp"
+        "hash_set": "cpp",
+        "memory_resource": "cpp"
     }
 }

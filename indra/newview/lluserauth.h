@@ -156,7 +156,7 @@ private:
 	UserAuthcode parseResponse();
 
 	LLSD parseValues(UserAuthcode &auth_code, const std::string& key_pfx, XMLRPC_VALUE param);
-
+	LLSD parseValue(UserAuthcode &auth_code, const std::string& key, const std::string& key_pfx, XMLRPC_VALUE param);
 	F64 mLastTransferRateBPS;	// bits per second, only valid after a big transfer like inventory
 
 	std::string mMFAToken;

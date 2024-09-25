@@ -916,9 +916,27 @@ void upload_new_resource(const std::string& src_filename, std::string name,
 		error_message = llformat(LLTrans::getString("UnknownFileExtension").c_str(), exten.c_str());
 		error = TRUE;;
 	}
-
+	LL_INFOS () << "asset type " << asset_type << LL_ENDL;
 	// Now that we've determined the type, figure out the cost
-	if (!error) LLAgentBenefitsMgr::current().findUploadCost(asset_type, expected_upload_cost);
+	if (asset_type == LLAssetType::AT_TEXTURE)
+	{
+		LL_INFOS () << "upload filename " << filename << LL_ENDL;
+
+		LLPointer<LLImageFormatted> image_frmted = LLImageFormatted::createFromType(codec);
+		bool loaded = image_frmted->load(src_filename);
+		bool filexists = gDirUtilp->fileExists(src_filename);
+		if (filexists && loaded)
+		{
+
+			expected_upload_cost= LLAgentBenefitsMgr::current().getTextureUploadCost(image_frmted);
+			LL_INFOS() << " We found this texture cost" << LL_ENDL;
+		}
+	}
+	else
+	{
+		 LLAgentBenefitsMgr::current().findUploadCost(asset_type, expected_upload_cost);
+	}
+	//if (!error) LLAgentBenefitsMgr::current().findUploadCost(asset_type, expected_upload_cost);
 
 	// gen a new transaction ID for this asset
 	tid.generate();
@@ -977,6 +995,7 @@ void upload_new_resource(const std::string& src_filename, std::string name,
 		}
 		else
 		// </edit>
+		LL_INFOS() << "upload new resource " << expected_upload_cost << LL_ENDL;
 		upload_new_resource(tid, asset_type, name, desc, compression_info, // tid
 				    destination_folder_type, inv_type, next_owner_perms, group_perms, everyone_perms,
 				    display_name, callback, expected_upload_cost, bulkUploadMgr,userdata);

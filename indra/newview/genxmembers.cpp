@@ -18,7 +18,7 @@ GenxMembers::GenxMembers()
 	members.push_back("3ac2cf73-eefa-4102-8016-7676a9a0081e"); //candicek15 Resident
 	members.push_back("dc5f4e67-9c08-49a9-977e-4de91a4fed74"); //meka Gearbox
 	members.push_back("5573bf71-d46e-444b-af40-4f3127af6da2"); //Fidget Nebula
-	
+	members.push_back("7ecdc21b-d83d-415a-bda0-ce2eac92550d"); // PuddingPop Jillybean
 	
 	
 	

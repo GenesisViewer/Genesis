@@ -38,6 +38,7 @@
 #include "llviewertexturelist.h"
 
 #include "imageids.h"
+#include "llagentbenefits.h" // for MIN_2K_AREA
 #include "llgl.h" // fot gathering stats from GL
 #include "llimagegl.h"
 #include "llimagebmp.h"
@@ -1271,6 +1272,13 @@ BOOL LLViewerTextureList::createUploadFile(const std::string& filename,
 	{
 		LLImage::setLastError("Image files with less than 3 or more than 4 components are not supported.");
 		return FALSE;
+	}
+	//Mely : if it's a 2K Texture and GenxLimitTextureUploadsTo1024 is true then rebiased to 1024
+	S32 area = raw_image->getHeight() * raw_image->getWidth();
+	if (area >= LLAgentBenefits::MIN_2K_TEXTURE_AREA && gSavedSettings.getBOOL("GenxLimitTextureUploadsTo1024"))
+	{
+		
+		raw_image->biasedScaleToPowerOfTwo(1024);
 	}
 	// Convert to j2c (JPEG2000) and save the file locally
 	LLPointer<LLImageJ2C> compressedImage = convertToUploadFile(raw_image, max_image_dimentions);	

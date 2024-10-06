@@ -721,7 +721,17 @@ void upload_new_resource(const std::string& src_filename, std::string name,
 			upload_error(error_message, "ProblemWithFile", filename, args);
 			return;
 		}
-		filename = src_filename;
+		created_temp_file = true;
+		if (!LLViewerTextureList::createUploadFile(src_filename, filename, codec))
+		{
+			error_message = llformat( "Problem with file %s:\n\n%s\n",
+					src_filename.c_str(), LLImage::getLastError().c_str());
+			args["FILE"] = src_filename;
+			args["ERROR"] = LLImage::getLastError();
+			upload_error(error_message, "ProblemWithFile", filename, args);
+			return;
+		}
+		
 	}
 	else if (codec != IMG_CODEC_INVALID)
 	{
@@ -922,9 +932,10 @@ void upload_new_resource(const std::string& src_filename, std::string name,
 	{
 		LL_INFOS () << "upload filename " << filename << LL_ENDL;
 
-		LLPointer<LLImageFormatted> image_frmted = LLImageFormatted::createFromType(codec);
-		bool loaded = image_frmted->load(src_filename);
-		bool filexists = gDirUtilp->fileExists(src_filename);
+		LLPointer<LLImageFormatted> image_frmted = LLImageFormatted::createFromType(IMG_CODEC_J2C);
+		bool loaded = image_frmted->load(filename);
+		bool filexists = gDirUtilp->fileExists(filename);
+		
 		if (filexists && loaded)
 		{
 

@@ -149,6 +149,7 @@ public:
 	static void onMouseCaptureLostImagePreview(LLMouseHandler*);
 
 	void clearAllPreviewTextures();
+	void onRestrictionChecked();
 
 protected:
 	static void		onPreviewTypeCommit(LLUICtrl*,void*);
@@ -163,6 +164,8 @@ protected:
 	LLRect			mPreviewRect;
 	LLRectf			mPreviewImageRect;
 	LLPointer<LLViewerTexture> mImagep ;
+
+	bool mShow1024Restriction;
 };
 
 #endif  // LL_LLFLOATERIMAGEPREVIEW_H

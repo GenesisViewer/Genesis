@@ -96,14 +96,8 @@ BOOL LLFloaterImagePreview::postBuild()
 	{
 		return FALSE;
 	}
-
 	auto& grid = *gHippoGridManager->getConnectedGrid();
-
-
-	S32 upload_cost = LLAgentBenefitsMgr::current().getTextureUploadCost(mRawImagep);
-	
-
-	childSetLabelArg("ok_btn", "[UPLOADFEE]", grid.formatFee(upload_cost));
+	onRestrictionChecked();
 
 	LLCtrlSelectionInterface* iface = childGetSelectionInterface("clothing_type_combo");
 	if (iface)
@@ -150,10 +144,23 @@ BOOL LLFloaterImagePreview::postBuild()
 	}
 
 	getChild<LLUICtrl>("ok_btn")->setCommitCallback(boost::bind(&LLFloaterNameDesc::onBtnOK, this));
-
+	childSetVisible("genxlimitto1024_check",mShow1024Restriction);
+	getChild<LLUICtrl>("genxlimitto1024_check")->setCommitCallback(boost::bind(&LLFloaterImagePreview::onRestrictionChecked, this));
 	return TRUE;
 }
+void LLFloaterImagePreview::onRestrictionChecked()
+{
+	auto& grid = *gHippoGridManager->getConnectedGrid();
 
+
+	S32 upload_cost = 0;
+	if (gSavedSettings.getBOOL("GenxLimitTextureUploadsTo1024"))
+	
+		upload_cost = LLAgentBenefitsMgr::current().getTextureUploadCost();
+	else	
+		upload_cost=LLAgentBenefitsMgr::current().getTextureUploadCost(mRawImagep);
+	childSetLabelArg("ok_btn", "[UPLOADFEE]", grid.formatFee(upload_cost));
+}
 //-----------------------------------------------------------------------------
 // LLFloaterImagePreview()
 //-----------------------------------------------------------------------------
@@ -437,8 +444,17 @@ bool LLFloaterImagePreview::loadImage(const std::string& src_filename)
 	default:
 		return false;
 	}
+	
+	//raw_image->biasedScaleToPowerOfTwo(2048);
+	
 
-	raw_image->biasedScaleToPowerOfTwo(2048);
+	//Mely : if it's a 2K Texture and GenxLimitTextureUploadsTo1024 is true then rebiased to 1024
+	S32 area = raw_image->getHeight() * raw_image->getWidth();
+	
+	mShow1024Restriction = area >= LLAgentBenefits::MIN_2K_TEXTURE_AREA;
+	
+	raw_image->biasedScaleToPowerOfTwo(area >= LLAgentBenefits::MIN_2K_TEXTURE_AREA?2048:1024);
+	
 	mRawImagep = raw_image;
 	
 	return true;

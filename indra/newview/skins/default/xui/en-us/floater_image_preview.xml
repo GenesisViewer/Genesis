@@ -5,8 +5,12 @@
 	<text bottom_delta="-40" follows="top|left" height="15" left="10" name="name_label">
 		Name:
 	</text>
+	<check_box control_name="GenxLimitTextureUploadsTo1024" bottom_delta="0"
+	     follows="top|left|right" font="SansSerifSmall" height="16"
+	     initial_value="false" label="Restrict upload to 1024" left="100"
+	     name="genxlimitto1024_check" width="280" />
 	<line_editor bottom_delta="-24" follows="top|left|right" height="19" max_length="254"
-	     name="name_form" width="280" />
+	     name="name_form" width="280" left="10"/>
 	<text bottom_delta="-20" follows="top|left" height="15" name="description_label">
 		Description:
 	</text>

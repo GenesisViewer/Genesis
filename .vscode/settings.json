@@ -111,6 +111,8 @@
         "string_view": "cpp",
         "ranges": "cpp",
         "hash_set": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "opj_includes.h": "c",
+        "opj_codec.h": "c"
     }
 }

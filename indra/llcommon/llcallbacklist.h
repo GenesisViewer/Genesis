@@ -38,6 +38,7 @@ public:
 	typedef void (*callback_t)(void*);
 
 	typedef std::pair< callback_t,void* >	callback_pair_t;
+	
 	// NOTE: It is confirmed that we DEPEND on the order provided by using a list :(
 	//
 	typedef std::list< callback_pair_t >	callback_list_t; 
@@ -50,7 +51,6 @@ public:
 	bool deleteFunction( callback_t func, void *data = NULL );		// removes the first instance of this function/data pair from the list, false if not found
 	void callFunctions();														// calls all functions
 	void deleteAllFunctions();
-
 	static void test();
 
 protected:
@@ -58,6 +58,8 @@ protected:
 	inline callback_list_t::iterator find(callback_t func, void *data);
 
 	callback_list_t	mCallbackList;
+private:
+	
 };
 
 typedef boost::function<void ()> nullary_func_t;

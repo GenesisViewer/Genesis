@@ -27,7 +27,7 @@
 #include "llcallbacklist.h"
 #include "lleventtimer.h"
 #include "llerrorlegacy.h"
-
+#include <thread>
 // Globals
 //
 LLCallbackList gIdleCallbacks;
@@ -108,12 +108,25 @@ void LLCallbackList::deleteAllFunctions()
 
 void LLCallbackList::callFunctions()
 {
-	for (callback_list_t::iterator iter = mCallbackList.begin(); iter != mCallbackList.end();  )
-	{
-		callback_list_t::iterator curiter = iter++;
-		curiter->first(curiter->second);
-	}
+	// Vecteur pour stocker les threads créés
+    std::vector<std::thread> threads;
+
+    // Parcourt la liste des callbacks
+    for (callback_list_t::iterator iter = mCallbackList.begin(); iter != mCallbackList.end(); ++iter)
+    {
+        // Pour chaque callback, on lance un nouveau thread qui exécute le callback
+        threads.emplace_back(iter->first, iter->second);
+    }
+
+    // Attendre que tous les threads se terminent avant de quitter la fonction
+    for (std::thread &t : threads)
+    {
+        if (t.joinable()) {
+            t.join();  // Joindre le thread (attendre la fin de son exécution)
+        }
+    }
 }
+
 
 // Shim class to allow arbitrary boost::bind
 // expressions to be run as one-time idle callbacks.

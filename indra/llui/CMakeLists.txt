@@ -36,6 +36,8 @@ set(llui_SOURCE_FILES
     llctrlselectioninterface.cpp
     lldraghandle.cpp
     lleditmenuhandler.cpp
+    lleditmenuhandler.cpp
+    llemojidictionary.cpp
     llfiltereditor.cpp
     llflatlistview.cpp
     llfloater.cpp
@@ -116,6 +118,8 @@ set(llui_HEADER_FILES
     llctrlselectioninterface.h
     lldraghandle.h
     lleditmenuhandler.h
+    lleditmenuhandler.h
+    llemojidictionary.h
     llfiltereditor.h 
     llflatlistview.h
     llfloater.h

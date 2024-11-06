@@ -294,7 +294,54 @@
         <key>version</key>
         <string>1.3.201911222103_78.3.7_gea7ef34_chromium-78.0.3904.108</string>
       </map>
-      
+      <key>emoji_shortcodes</key>
+      <map>
+        <key>platforms</key>
+        <map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>52c41a4547d2d9aceb4a9a1e9e1680c71e5ffa79</string>
+              <key>hash_algorithm</key>
+              <string>sha1</string>
+              <key>url</key>
+              <string>https://github.com/secondlife/3p-emoji-shortcodes/releases/download/v6.1.0.5413f58/emoji_shortcodes-6.1.0.5413f58-darwin64-5413f58.tar.zst</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
+          <key>windows64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>3137e06d376767a631bc9626832d558c4d5e5aa9</string>
+              <key>hash_algorithm</key>
+              <string>sha1</string>
+              <key>url</key>
+              <string>https://github.com/secondlife/3p-emoji-shortcodes/releases/download/v6.1.0.5413f58/emoji_shortcodes-6.1.0.5413f58-windows64-5413f58.tar.zst</string>
+            </map>
+            <key>name</key>
+            <string>windows64</string>
+          </map>
+        </map>
+        <key>license</key>
+        <string>MIT</string>
+        <key>license_file</key>
+        <string>LICENSES/emojibase-license.txt</string>
+        <key>copyright</key>
+        <string>Copyright 2017-2019 Miles Johnson.</string>
+        <key>version</key>
+        <string>6.1.0.5413f58</string>
+        <key>name</key>
+        <string>emoji_shortcodes</string>
+        <key>canonical_repo</key>
+        <string>https://github.com/secondlife/3p-emoji-shortcodes</string>
+        <key>description</key>
+        <string>Emoji shortcodes</string>
+      </map>
       <key>expat</key>
       <map>
         <key>copyright</key>

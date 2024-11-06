@@ -35,7 +35,8 @@
 #include "linden_common.h"
 
 #include "lltexteditor.h"
-
+#include "llemojidictionary.h"
+#include "llemojihelper.h"
 #include "llfontgl.h"
 #include "lllocalcliprect.h"
 #include "llrender.h"
@@ -4575,6 +4576,28 @@ S32 LLTextEditor::insertStringNoUndo(const S32 pos, const LLWString &wstr)
 	S32 old_len = mWText.length();		// length() returns character length
 	S32 insert_len = wstr.length();
 
+	
+    //emojis
+    {
+        LLStyleSP emoji_style;
+        LLEmojiDictionary* ed = LLEmojiDictionary::instanceExists() ? LLEmojiDictionary::getInstance() : NULL;
+        for (S32 text_kitty = 0, text_len = static_cast<S32>(wstr.size()); text_kitty < text_len; text_kitty++)
+        {
+            llwchar code = wstr[text_kitty];
+            bool isEmoji = ed ? ed->isEmoji(code) : LLStringOps::isEmoji(code);
+            if (isEmoji)
+            {
+                if (!emoji_style)
+                {
+                    emoji_style = new LLStyle(getStyleParams());
+                    emoji_style->setFont(LLFontGL::getFontEmojiLarge());
+                }
+
+                S32 new_seg_start = pos + text_kitty;
+                insertSegment(new LLEmojiTextSegment(emoji_style, new_seg_start, new_seg_start + 1, *this));
+            }
+        }
+    }
 	mWText.insert(pos, wstr);
 	mTextIsUpToDate = FALSE;
 

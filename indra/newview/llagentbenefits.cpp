@@ -103,7 +103,7 @@ bool LLAgentBenefits::init(const LLSD& benefits_sd)
             LLSD::array_const_iterator it = large_texture_cost.beginArray();
             for (; it != end; ++it)
             {
-				LL_INFOS() << "m_2k_texture_upload_cost.push_back" << it->asInteger()<<  LL_ENDL;
+				
                 m_2k_texture_upload_cost.push_back(it->asInteger());
             }
             std::sort(m_2k_texture_upload_cost.begin(), m_2k_texture_upload_cost.end());

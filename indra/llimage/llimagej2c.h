@@ -29,7 +29,8 @@
 
 #include "llimage.h"
 #include "llassettype.h"
-
+// JPEG2000 : compression rate used in j2c conversion.
+const F32 DEFAULT_COMPRESSION_RATE = 1.f/8.f;
 class LLImageJ2CImpl;
 class LLImageJ2C : public LLImageFormatted
 {

@@ -446,21 +446,25 @@ public:
 
         if (reversible)
         {
+            parameters.max_cs_size = 0; // do not limit size for reversible compression
+            parameters.irreversible = 0; // should be the default, but, just in case
             parameters.tcp_numlayers = 1;
-            parameters.tcp_rates[0] = 1.0f;
+            /* documentation seems to be wrong, should be 0.0f for lossless, not 1.0f
+               see https://github.com/uclouvain/openjpeg/blob/39e8c50a2f9bdcf36810ee3d41bcbf1cc78968ae/src/lib/openjp2/j2k.c#L7755
+            */
+            parameters.tcp_rates[0] = 0.0f;
         }
         else
         {
-            parameters.tcp_numlayers = 5;
-            parameters.tcp_rates[0] = 1920.0f;
-            parameters.tcp_rates[1] = 960.0f;
-            parameters.tcp_rates[2] = 480.0f;
-            parameters.tcp_rates[3] = 120.0f;
-            parameters.tcp_rates[4] = 30.0f;
-            parameters.irreversible = 1;
-            parameters.tcp_mct = 1;
+            // parameters.tcp_numlayers = 5;
+            // parameters.tcp_rates[0] = 1920.0f;
+            // parameters.tcp_rates[1] = 960.0f;
+            // parameters.tcp_rates[2] = 480.0f;
+            // parameters.tcp_rates[3] = 120.0f;
+            // parameters.tcp_rates[4] = 30.0f;
+             parameters.irreversible = 1;
         }
-
+        
         if (comment_text)
         {
             free(comment_text);
@@ -511,7 +515,51 @@ public:
         parameters.cod_format = OPJ_CODEC_J2K;
         parameters.prog_order = OPJ_RLCP;
         parameters.cp_disto_alloc = 1;
+        // if not lossless compression, computes tcp_numlayers and max_cs_size depending on the image dimensions
+        if( parameters.irreversible ) {
 
+            // computes a number of layers
+            U32 surface = rawImageIn.getWidth() * rawImageIn.getHeight();
+            U32 nb_layers = 1;
+            U32 s = 64*64;
+            while (surface > s)
+            {
+                nb_layers++;
+                s *= 4;
+            }
+            nb_layers = llclamp((int)nb_layers, 1, 6);
+
+            parameters.tcp_numlayers = nb_layers;
+            parameters.tcp_rates[nb_layers - 1] = (U32)(1.f / DEFAULT_COMPRESSION_RATE); // 1:8 by default
+
+            // for each subsequent layer, computes its rate and adds surface * numcomps * 1/rate to the max_cs_size
+            U32 max_cs_size = (U32)(surface * image->numcomps * DEFAULT_COMPRESSION_RATE);
+            U32 multiplier;
+            for (int i = nb_layers - 2; i >= 0; i--)
+            {
+                if( i == nb_layers - 2 )
+                {
+                    multiplier = 15;
+                }
+                else if( i == nb_layers - 3 )
+                {
+                    multiplier = 4;
+                }
+                else
+                {
+                    multiplier = 2;
+                }
+                parameters.tcp_rates[i] = parameters.tcp_rates[i + 1] * multiplier;
+                max_cs_size += (U32)(surface * image->numcomps * (1 / parameters.tcp_rates[i]));
+            }
+
+            //ensure that we have at least a minimal size
+            max_cs_size = llmax((int)max_cs_size, (int)FIRST_PACKET_SIZE);
+
+            parameters.max_cs_size = max_cs_size;
+        
+
+        }
         if (!opj_setup_encoder(encoder, &parameters, image))
         {
             return false;

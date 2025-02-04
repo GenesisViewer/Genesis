@@ -1,40 +1,6 @@
-/**
- * @file llgltfmaterial.cpp
- * @brief Material definition
- *
- * $LicenseInfo:firstyear=2022&license=viewerlgpl$
- * Second Life Viewer Source Code
- * Copyright (C) 2022, Linden Research, Inc.
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation;
- * version 2.1 of the License only.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
- * $/LicenseInfo$
- */
-
-
-#include "linden_common.h"
-
 #include "llgltfmaterial.h"
-
-#include "llsdserialize.h"
-
 // NOTE -- this should be the one and only place tiny_gltf.h is included
 #include "tinygltf/tiny_gltf.h"
-
-
 const char* const LLGLTFMaterial::ASSET_VERSION = "1.1";
 const char* const LLGLTFMaterial::ASSET_TYPE = "GLTF 2.0";
 const std::array<std::string, 2> LLGLTFMaterial::ACCEPTED_ASSET_VERSIONS = { "1.0", "1.1" };
@@ -44,48 +10,64 @@ const char* const LLGLTFMaterial::GLTF_FILE_EXTENSION_TRANSFORM_SCALE = "scale";
 const char* const LLGLTFMaterial::GLTF_FILE_EXTENSION_TRANSFORM_OFFSET = "offset";
 const char* const LLGLTFMaterial::GLTF_FILE_EXTENSION_TRANSFORM_ROTATION = "rotation";
 
-// Make a static default material for accessors
-const LLGLTFMaterial LLGLTFMaterial::sDefault;
+// special UUID that indicates a null UUID in override data
+const LLUUID LLGLTFMaterial::GLTF_OVERRIDE_NULL_UUID = LLUUID("ffffffff-ffff-ffff-ffff-ffffffffffff");
+LLGLTFMaterial::LLGLTFMaterial()
+{
+    // IMPORTANT: since we use the hash of the member variables memory block of
+    // this class to detect changes, we must ensure that all its padding bytes
+    // have been zeroed out. But of course, we must leave the LLRefCount member
+    // variable untouched (and skip it when hashing), and we cannot either
+    // touch the local texture overrides map (else we destroy pointers, and
+    // sundry private data, which would lead to a crash when using that map).
+    // The variable members have therefore been arranged so that anything,
+    // starting at mLocalTexDataDigest and up to the end of the members, can be
+    // safely zeroed. HB
+    const size_t offset = intptr_t(&mLocalTexDataDigest) - intptr_t(this);
+    memset((void*)((const char*)this + offset), 0, sizeof(*this) - offset);
 
-S32 LLGLTFMaterial::getDefaultAlphaMode()
-{
-    return (S32) sDefault.mAlphaMode;
-}
-void LLGLTFMaterial::setAlphaMode(const std::string& mode, bool for_override)
-{
-    S32 m = getDefaultAlphaMode();
-    if (mode == "MASK")
+    // Now that we zeroed out our member variables, we can set the ones that
+    // should not be zero to their default value. HB
+    mBaseColor.set(1.f, 1.f, 1.f, 1.f);
+    mMetallicFactor = mRoughnessFactor = 1.f;
+    mAlphaCutoff = 0.5f;
+    for (U32 i = 0; i < GLTF_TEXTURE_INFO_COUNT; ++i)
     {
-        m = ALPHA_MODE_MASK;
+        mTextureTransform[i].mScale.set(1.f, 1.f);
+#if 0
+        mTextureTransform[i].mOffset.clear();
+        mTextureTransform[i].mRotation = 0.f;
+#endif
     }
-    else if (mode == "BLEND")
-    {
-        m = ALPHA_MODE_BLEND;
-    }
-
-    setAlphaMode(m, for_override);
+#if 0
+    mLocalTexDataDigest = 0;
+    mAlphaMode = ALPHA_MODE_OPAQUE;    // This is 0
+    mOverrideDoubleSided = mOverrideAlphaMode = false;
+#endif
 }
-void LLGLTFMaterial::setAlphaMode(S32 mode, bool for_override)
+void LLGLTFMaterial::TextureTransform::getPacked(Pack& packed) const
 {
-    mAlphaMode = (AlphaMode) llclamp(mode, (S32) ALPHA_MODE_OPAQUE, (S32) ALPHA_MODE_MASK);
-    mOverrideAlphaMode = for_override && mAlphaMode == getDefaultAlphaMode();
+    packed[0] = mScale.mV[VX];
+    packed[1] = mScale.mV[VY];
+    packed[2] = mRotation;
+    packed[4] = mOffset.mV[VX];
+    packed[5] = mOffset.mV[VY];
+    // Not used but nonetheless zeroed for proper hashing. HB
+    packed[3] = packed[6] = packed[7] = 0.f;
 }
 
-std::string LLGLTFMaterial::asJSON(bool prettyprint) const
+void LLGLTFMaterial::TextureTransform::getPackedTight(PackTight& packed) const
 {
-    tinygltf::TinyGLTF gltf;
+    packed[0] = mScale.mV[VX];
+    packed[1] = mScale.mV[VY];
+    packed[2] = mRotation;
+    packed[3] = mOffset.mV[VX];
+    packed[4] = mOffset.mV[VY];
+}
 
-    tinygltf::Model model_out;
-
-    std::ostringstream str;
-
-    writeToModel(model_out, 0);
-
-    // To ensure consistency in asset upload, this should be the only reference
-    // to WriteGltfSceneToStream in the viewer.
-    gltf.WriteGltfSceneToStream(&model_out, str, prettyprint, false);
-
-    return str.str();
+bool LLGLTFMaterial::TextureTransform::operator==(const TextureTransform& other) const
+{
+    return mOffset == other.mOffset && mScale == other.mScale && mRotation == other.mRotation;
 }
 void LLGLTFMaterial::writeToModel(tinygltf::Model& model, S32 mat_index) const
 {
@@ -148,6 +130,38 @@ void LLGLTFMaterial::writeToModel(tinygltf::Model& model, S32 mat_index) const
 
     model.asset.version = "2.0";
 }
+std::string LLGLTFMaterial::asJSON(bool prettyprint) const
+{
+    tinygltf::TinyGLTF gltf;
+
+    tinygltf::Model model_out;
+
+    std::ostringstream str;
+
+    writeToModel(model_out, 0);
+
+    // To ensure consistency in asset upload, this should be the only reference
+    // to WriteGltfSceneToStream in the viewer.
+    gltf.WriteGltfSceneToStream(&model_out, str, prettyprint, false);
+
+    return str.str();
+}
+
+void LLGLTFMaterial::setAlphaMode(const std::string& mode, bool for_override)
+{
+    S32 m = getDefaultAlphaMode();
+    if (mode == "MASK")
+    {
+        m = ALPHA_MODE_MASK;
+    }
+    else if (mode == "BLEND")
+    {
+        m = ALPHA_MODE_BLEND;
+    }
+
+    setAlphaMode(m, for_override);
+}
+
 const char* LLGLTFMaterial::getAlphaMode() const
 {
     switch (mAlphaMode)
@@ -157,24 +171,78 @@ const char* LLGLTFMaterial::getAlphaMode() const
     default: return "OPAQUE";
     }
 }
+
+void LLGLTFMaterial::setAlphaMode(S32 mode, bool for_override)
+{
+    mAlphaMode = (AlphaMode) llclamp(mode, (S32) ALPHA_MODE_OPAQUE, (S32) ALPHA_MODE_MASK);
+    mOverrideAlphaMode = for_override && mAlphaMode == getDefaultAlphaMode();
+}
+
+
+// Default value accessors (NOTE: these MUST match the GLTF specification)
+
+// Make a static default material for accessors
+const LLGLTFMaterial LLGLTFMaterial::sDefault;
+
+F32 LLGLTFMaterial::getDefaultAlphaCutoff()
+{
+    return sDefault.mAlphaCutoff;
+}
+
+S32 LLGLTFMaterial::getDefaultAlphaMode()
+{
+    return (S32) sDefault.mAlphaMode;
+}
+
+F32 LLGLTFMaterial::getDefaultMetallicFactor()
+{
+    return sDefault.mMetallicFactor;
+}
+
+F32 LLGLTFMaterial::getDefaultRoughnessFactor()
+{
+    return sDefault.mRoughnessFactor;
+}
+
+LLColor4 LLGLTFMaterial::getDefaultBaseColor()
+{
+    return sDefault.mBaseColor;
+}
+
+LLColor3 LLGLTFMaterial::getDefaultEmissiveColor()
+{
+    return sDefault.mEmissiveColor;
+}
+
 bool LLGLTFMaterial::getDefaultDoubleSided()
 {
     return sDefault.mDoubleSided;
 }
-LLColor3 LLGLTFMaterial::getDefaultEmissiveColor()
+
+LLVector2 LLGLTFMaterial::getDefaultTextureOffset()
 {
-    return sDefault.mEmissiveColor;
+    return sDefault.mTextureTransform[0].mOffset;
+}
+
+LLVector2 LLGLTFMaterial::getDefaultTextureScale()
+{
+    return sDefault.mTextureTransform[0].mScale;
+}
+
+F32 LLGLTFMaterial::getDefaultTextureRotation()
+{
+    return sDefault.mTextureTransform[0].mRotation;
 }
 // static
 template<typename T>
 void LLGLTFMaterial::allocateTextureImage(tinygltf::Model& model, T& texture_info, const std::string& uri)
 {
-    const S32 image_idx = model.images.size();
+    const S32 image_idx = static_cast<S32>(model.images.size());
     model.images.emplace_back();
     model.images[image_idx].uri = uri;
 
     // The texture, not to be confused with the texture info
-    const S32 texture_idx = model.textures.size();
+    const S32 texture_idx = static_cast<S32>(model.textures.size());
     model.textures.emplace_back();
     tinygltf::Texture& texture = model.textures[texture_idx];
     texture.source = image_idx;
@@ -219,8 +287,4 @@ void LLGLTFMaterial::writeToTexture(tinygltf::Model& model, T& texture_info, con
         transform_map[GLTF_FILE_EXTENSION_TRANSFORM_ROTATION] = tinygltf::Value(transform.mRotation);
         texture_info.extensions[GLTF_FILE_EXTENSION_TRANSFORM] = tinygltf::Value(transform_map);
     }
-}
-bool LLGLTFMaterial::TextureTransform::operator==(const TextureTransform& other) const
-{
-    return mOffset == other.mOffset && mScale == other.mScale && mRotation == other.mRotation;
 }

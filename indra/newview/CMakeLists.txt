@@ -325,6 +325,7 @@ set(viewer_SOURCE_FILES
     llgiveinventory.cpp
     llgivemoney.cpp
     llglsandbox.cpp
+    llfetchedgltfmaterial.cpp
     llgroupactions.cpp
     llgroupmgr.cpp
     llgroupnotify.cpp
@@ -895,6 +896,7 @@ set(viewer_HEADER_FILES
     llgesturemgr.h
     llgiveinventory.h
     llgivemoney.h
+    llfetchedgltfmaterial.h
     llgroupactions.h
     llgroupmgr.h
     llgroupnotify.h

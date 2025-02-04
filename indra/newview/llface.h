@@ -239,7 +239,11 @@ public:
 
 	void	notifyAboutCreatingTexture(LLViewerTexture *texture);
 	void	notifyAboutMissingAsset(LLViewerTexture *texture);
+	void 	setPBR(bool is_pbr){
 
+		pbrface=is_pbr;
+	}
+	bool isPBR() {return pbrface;}
 public: //aligned members
 	LL_ALIGN_16(LLVector4a		mExtents[2]);
 
@@ -266,6 +270,7 @@ public:
 	bool		mShinyInAlpha;
 
 private:
+	bool pbrface;
 	LLPointer<LLVertexBuffer> mVertexBuffer;
 	
 	U32			mState;

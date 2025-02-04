@@ -674,3 +674,52 @@ bool LLTextureEntry::isMediaVersionString(const std::string &version_string)
 {
 	return std::string::npos != version_string.find(MEDIA_VERSION_STRING_PREFIX);
 }
+void LLTextureEntry::setGLTFMaterial(LLGLTFMaterial* material, bool local_origin)
+{
+    if (material != getGLTFMaterial())
+    {
+        // assert on precondtion:
+        // whether or not mGLTFMaterial is null, any existing override should have been cleared
+        // before calling setGLTFMaterial
+        // NOTE: if you're hitting this assert, try to make sure calling code is using LLViewerObject::setRenderMaterialID
+        //llassert(!local_origin || getGLTFMaterialOverride() == nullptr || getGLTFMaterialOverride()->isClearedForBaseMaterial());
+
+        if (mGLTFMaterial)
+        {
+            // Local materials have to keep track
+            // due to update mechanics
+            mGLTFMaterial->removeTextureEntry(this);
+        }
+
+        mGLTFMaterial = material;
+
+        if (mGLTFMaterial)
+        {
+            mGLTFMaterial->addTextureEntry(this);
+        }
+
+        if (mGLTFMaterial == nullptr)
+        {
+            setGLTFRenderMaterial(nullptr);
+        }
+    }
+}
+LLGLTFMaterial* LLTextureEntry::getGLTFRenderMaterial() const
+{
+    if (mGLTFRenderMaterial.notNull())
+    {
+        return mGLTFRenderMaterial;
+    }
+
+    llassert(getGLTFMaterialOverride() == nullptr || getGLTFMaterialOverride()->isClearedForBaseMaterial());
+    return getGLTFMaterial();
+}
+S32 LLTextureEntry::setGLTFRenderMaterial(LLGLTFMaterial* mat)
+{
+    if (mGLTFRenderMaterial != mat)
+    {
+        mGLTFRenderMaterial = mat;
+        return TEM_CHANGE_TEXTURE;
+    }
+    return TEM_CHANGE_NONE;
+}

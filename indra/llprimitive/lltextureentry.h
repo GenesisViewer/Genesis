@@ -32,6 +32,7 @@
 #include "llsd.h"
 #include "llmaterialid.h"
 #include "llmaterial.h"
+#include "llgltfmaterial.h"
 
 // These bits are used while unpacking TEM messages to tell which aspects of
 // the texture entry changed.
@@ -190,7 +191,14 @@ public:
 	
 	// Media flags
 	enum { MF_NONE = 0x0, MF_HAS_MEDIA = 0x1 };
-
+	// GLTF asset
+    // GLTF asset
+    void setGLTFMaterial(LLGLTFMaterial* material, bool local_origin = true);
+    LLGLTFMaterial* getGLTFMaterial() const { return mGLTFMaterial; }
+	// GLTF render material
+    // nuanced behavior here -- if there is no render material, fall back to getGLTFMaterial, but ONLY for the getter, not the setter
+    LLGLTFMaterial* getGLTFRenderMaterial() const;
+	S32 setGLTFRenderMaterial(LLGLTFMaterial* mat);
 public:
 	F32                 mScaleS;                // S, T offset
 	F32                 mScaleT;                // S, T offset
@@ -224,7 +232,16 @@ protected:
 	// NOTE: when adding new data to this class, in addition to adding it to the serializers asLLSD/fromLLSD and the
 	// message packers (e.g. LLPrimitive::packTEMessage) you must also implement its copy in LLPrimitive::copyTEs()
 
-	
+	// Reference to GLTF material asset state
+    // On the viewer, this should be the same LLGLTFMaterial instance that exists in LLGLTFMaterialList
+    LLPointer<LLGLTFMaterial> mGLTFMaterial;
+
+    // GLTF material parameter overrides -- the viewer will use this data to override material parameters
+    // set by the asset and store the results in mRenderGLTFMaterial
+    LLPointer<LLGLTFMaterial> mGLTFMaterialOverrides;
+
+    // GLTF material to use for rendering -- will always be an LLFetchedGLTFMaterial
+    LLPointer<LLGLTFMaterial> mGLTFRenderMaterial;
 };
 
 #endif

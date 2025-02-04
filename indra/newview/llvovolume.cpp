@@ -58,6 +58,7 @@
 #include "lldrawpoolavatar.h"
 #include "lldrawpoolbump.h"
 #include "llface.h"
+#include "llfetchedgltfmaterial.h"
 #include "llspatialpartition.h"
 #include "llhudmanager.h"
 #include "llflexibleobject.h"
@@ -5354,12 +5355,16 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 			//for each face
 			for (S32 i = 0; i < drawablep->getNumFaces(); i++)
 			{
+				
+
 				LLFace* facep = drawablep->getFace(i);
 				if (!facep)
 				{
 					continue;
 				}
-
+				LLFetchedGLTFMaterial *gltf_mat = (LLFetchedGLTFMaterial*) facep->getTextureEntry()->getGLTFRenderMaterial();
+                bool is_pbr = gltf_mat != nullptr;
+				facep->setPBR(is_pbr);
 				//ALWAYS null out vertex buffer on rebuild -- if the face lands in a render
 				// batch, it will recover its vertex buffer reference from the spatial group
 				facep->setVertexBuffer(NULL);

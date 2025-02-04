@@ -50,6 +50,7 @@
 #include "llvertexbuffer.h"
 #include "llbbox.h"
 
+
 class LLAgent;			// TODO: Get rid of this.
 class LLAudioSource;
 class LLAudioSourceVO;
@@ -200,6 +201,19 @@ public:
 
 	virtual BOOL	isAttachment() const { return FALSE; }
 	virtual LLVOAvatar* getAvatar() const;  //get the avatar this object is attached to, or NULL if object is not an attachment
+
+	bool hasRenderMaterialParams() const;
+    void setHasRenderMaterialParams(bool has_params);
+
+    const LLUUID& getRenderMaterialID(U8 te) const;
+
+    // set the RenderMaterialID for the given TextureEntry
+    // te - TextureEntry index to set, or -1 for all TEs
+    // id - asset id of material asset
+    // update_server - if true, will send updates to server and clear most overrides
+    void setRenderMaterialID(S32 te, const LLUUID& id, bool update_server = true, bool local_origin = true);
+    void setRenderMaterialIDs(const LLUUID& id);
+
 	virtual BOOL	isHUDAttachment() const { return FALSE; }
 	virtual BOOL	isTempAttachment() const;
 	virtual void 	updateRadius() {};
@@ -663,6 +677,30 @@ private:
 			}
 		}
 		return nullptr;
+
+	}
+	LLNetworkData* getParameterEntry(U16 param_type) const {
+		ExtraParameter param = getExtraParameterEntry(param_type);
+		if (!param.is_invalid)
+		{
+			return param.data;
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	bool LLViewerObject::getParameterEntryInUse(U16 param_type) const
+	{
+		ExtraParameter param = getExtraParameterEntry(param_type);
+		if (!param.is_invalid)
+		{
+			return param.in_use;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	bool unpackParameterEntry(U16 param_type, LLDataPacker* dp);
 
@@ -677,6 +715,8 @@ private:
 
 	// forms task inventory request if none are pending
 	void fetchInventoryFromServer();
+
+	void  setRenderMaterialIDs(const LLRenderMaterialParams* material_params, bool local_origin);
 
 public:
 	void print();

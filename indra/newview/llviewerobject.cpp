@@ -105,7 +105,7 @@
 #include "rlvhandler.h"
 #include "rlvlocks.h"
 // [/RLVa:KB]
-
+#include "llfetchedgltfmaterial.h"
 //#define DEBUG_UPDATE_TYPE
 
 BOOL		LLViewerObject::sVelocityInterpolate = TRUE;
@@ -5943,6 +5943,16 @@ LLViewerObject::ExtraParameter* LLViewerObject::createNewParameterEntry(U16 para
 			in_use = &mExtendedMeshParamsInUse;
 			break;
 		}
+		case LLNetworkData::PARAMS_RENDER_MATERIAL:
+      {
+          new_block = new LLRenderMaterialParams();
+          break;
+      }
+      case LLNetworkData::PARAMS_REFLECTION_PROBE:
+      {
+          new_block = new LLReflectionProbeParams();
+          break;
+      }
 		default:
 		{
 			LL_INFOS() << "Unknown param type. (" << llformat("0x%2x", param_type) << ")" << LL_ENDL;
@@ -6019,6 +6029,10 @@ void LLViewerObject::parameterChanged(U16 param_type, LLNetworkData* data, BOOL 
 {
 	if (local_origin)
 	{
+		// *NOTE: Do not send the render material ID in this way as it will get
+        // out-of-sync with other sent client data.
+        // See LLViewerObject::setRenderMaterialID and LLGLTFMaterialList
+        llassert(param_type != LLNetworkData::PARAMS_RENDER_MATERIAL);
 		LLViewerRegion* regionp = getRegion();
 		if(!regionp) return;
 
@@ -6050,6 +6064,14 @@ void LLViewerObject::parameterChanged(U16 param_type, LLNetworkData* data, BOOL 
 			LL_WARNS() << "Failed to send object extra parameters: " << param_type << LL_ENDL;
 		}
 	}
+	else
+    {
+        if (param_type == LLNetworkData::PARAMS_RENDER_MATERIAL)
+        {
+            const LLRenderMaterialParams* params = in_use ? (LLRenderMaterialParams*)getParameterEntry(LLNetworkData::PARAMS_RENDER_MATERIAL) : nullptr;
+            setRenderMaterialIDs(params, local_origin);
+        }
+    }
 }
 
 void LLViewerObject::setDrawableState(U32 state, BOOL recursive)
@@ -6835,7 +6857,188 @@ LLVOAvatar* LLViewerObject::getAvatar() const
 	return NULL;
 }
 
+bool LLViewerObject::hasRenderMaterialParams() const
+{
+    return getParameterEntryInUse(LLNetworkData::PARAMS_RENDER_MATERIAL);
+}
+void LLViewerObject::setHasRenderMaterialParams(bool has_materials)
+{
+    bool had_materials = hasRenderMaterialParams();
 
+    if (had_materials != has_materials)
+    {
+        if (has_materials)
+        {
+            setParameterEntryInUse(LLNetworkData::PARAMS_RENDER_MATERIAL, true, true);
+        }
+        else
+        {
+            setParameterEntryInUse(LLNetworkData::PARAMS_RENDER_MATERIAL, false, true);
+        }
+    }
+}
+const LLUUID& LLViewerObject::getRenderMaterialID(U8 te) const
+{
+    LLRenderMaterialParams* param_block = (LLRenderMaterialParams*)getParameterEntry(LLNetworkData::PARAMS_RENDER_MATERIAL);
+    if (param_block)
+    {
+        return param_block->getMaterial(te);
+    }
+
+    return LLUUID::null;
+}
+void LLViewerObject::setRenderMaterialID(S32 te_in, const LLUUID& id, bool update_server, bool local_origin)
+{
+    // implementation is delicate
+
+    // if update is bound for server, should always null out GLTFRenderMaterial and clear GLTFMaterialOverride even if ids haven't changed
+    //  (the case where ids haven't changed indicates the user has reapplied the original material, in which case overrides should be dropped)
+    // otherwise, should only null out the render material where ids or overrides have changed
+    //  (the case where ids have changed but overrides are still present is from unsynchronized updates from the simulator, or synchronized
+    //  updates with solely transform overrides)
+
+    llassert(!update_server || local_origin);
+
+    S32 start_idx = 0;
+    S32 end_idx = getNumTEs();
+
+    if (te_in != -1)
+    {
+        start_idx = te_in;
+        end_idx = start_idx + 1;
+    }
+
+    start_idx = llmax(start_idx, 0);
+    end_idx = llmin(end_idx, (S32) getNumTEs());
+
+    LLRenderMaterialParams* param_block = (LLRenderMaterialParams*)getParameterEntry(LLNetworkData::PARAMS_RENDER_MATERIAL);
+    if (!param_block && id.notNull())
+    { // block doesn't exist, but it will need to
+        param_block = (LLRenderMaterialParams*)createNewParameterEntry(LLNetworkData::PARAMS_RENDER_MATERIAL)->data;
+    }
+
+
+    LLFetchedGLTFMaterial* new_material = nullptr;
+    if (id.notNull())
+    {
+        new_material = gGLTFMaterialList.getMaterial(id);
+    }
+
+    // update local state
+    for (S32 te = start_idx; te < end_idx; ++te)
+    {
+        LLTextureEntry* tep = getTE(te);
+
+        // If local_origin=false (i.e. it's from the server), we know the
+        // material has updated or been created, because extra params are
+        // checked for equality on unpacking. In that case, checking the
+        // material ID for inequality won't work, because the material ID has
+        // already been set.
+        bool material_changed = !local_origin || !param_block || id != param_block->getMaterial(te);
+
+        if (update_server)
+        {
+            // Clear most overrides so the render material better matches the material
+            // ID (preserve transforms). If overrides become passthrough, set the overrides
+            // to nullptr.
+            if (tep->setBaseMaterial())
+            {
+                material_changed = true;
+            }
+        }
+
+        if (update_server || material_changed)
+        {
+            tep->setGLTFRenderMaterial(nullptr);
+        }
+
+        if (new_material != tep->getGLTFMaterial())
+        {
+            tep->setGLTFMaterial(new_material, !update_server);
+        }
+
+        if (material_changed && new_material)
+        {
+            // Sometimes, the material may change out from underneath the overrides.
+            // This is usually due to the server sending a new material ID, but
+            // the overrides have not changed due to being only texture
+            // transforms. Re-apply the overrides to the render material here,
+            // if present.
+            // Also, sometimes, the material has baked textures, which requires
+            // a copy unique to this object.
+            // Currently, we do not deduplicate render materials.
+            new_material->onMaterialComplete([obj_id = getID(), te]()
+            {
+                LLViewerObject* obj = gObjectList.findObject(obj_id);
+                if (!obj) { return; }
+                obj->initRenderMaterial(te);
+            });
+        }
+    }
+
+    // signal to render pipe that render batches must be rebuilt for this object
+    if (!new_material)
+    {
+        rebuildMaterial();
+    }
+    else
+    {
+        new_material->onMaterialComplete([obj_id = getID()]()
+            {
+                LLViewerObject* obj = gObjectList.findObject(obj_id);
+                if (obj)
+                {
+                    obj->rebuildMaterial();
+                }
+            });
+    }
+
+    // predictively update LLRenderMaterialParams (don't wait for server)
+    if (param_block)
+    { // update existing parameter block
+        for (S32 te = start_idx; te < end_idx; ++te)
+        {
+            param_block->setMaterial(te, id);
+        }
+    }
+
+    if (update_server)
+    {
+        // update via ModifyMaterialParams cap (server will echo back changes)
+        for (S32 te = start_idx; te < end_idx; ++te)
+        {
+            // This sends a cleared version of this object's current material
+            // override, but the override should already be cleared due to
+            // calling setBaseMaterial above.
+            LLGLTFMaterialList::queueApply(this, te, id);
+        }
+    }
+
+    if (!update_server)
+    {
+        // Land impact may have changed
+        setObjectCostStale();
+    }
+}
+
+void LLViewerObject::setRenderMaterialIDs(const LLUUID& id)
+{
+    setRenderMaterialID(-1, id);
+}
+
+void LLViewerObject::setRenderMaterialIDs(const LLRenderMaterialParams* material_params, bool local_origin)
+{
+    if (!local_origin)
+    {
+        for (S32 te = 0; te < getNumTEs(); ++te)
+        {
+            const LLUUID& id = material_params ? material_params->getMaterial(te) : LLUUID::null;
+            // We know material_params has updated or been created, because
+            // extra params are checked for equality on unpacking.
+            setRenderMaterialID(te, id, false, false);
+        }
+    }
+}
 class ObjectPhysicsProperties : public LLHTTPNode
 {
 public:

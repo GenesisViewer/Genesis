@@ -107,7 +107,10 @@ public:
 		PARAMS_RESERVED = 0x50, // Used on server-side
 		PARAMS_MESH     = 0x60,
 		PARAMS_EXTENDED_MESH = 0x70,
-		PARAMS_MAX = PARAMS_EXTENDED_MESH
+		
+		PARAMS_RENDER_MATERIAL = 0x80,
+        PARAMS_REFLECTION_PROBE = 0x90,
+		PARAMS_MAX = PARAMS_REFLECTION_PROBE,
 	};
 	
 public:
@@ -310,6 +313,73 @@ public:
 	void setFlags(const U32& flags) { mFlags = flags; }
 	U32 getFlags() const { return mFlags; }
 	
+};
+extern const F32 REFLECTION_PROBE_MIN_AMBIANCE;
+extern const F32 REFLECTION_PROBE_MAX_AMBIANCE;
+extern const F32 REFLECTION_PROBE_DEFAULT_AMBIANCE;
+extern const F32 REFLECTION_PROBE_MIN_CLIP_DISTANCE;
+extern const F32 REFLECTION_PROBE_MAX_CLIP_DISTANCE;
+extern const F32 REFLECTION_PROBE_DEFAULT_CLIP_DISTANCE;
+class LLReflectionProbeParams : public LLNetworkData
+{
+public:
+    enum EFlags : U8
+    {
+        FLAG_BOX_VOLUME     = 0x01, // use a box influence volume
+        FLAG_DYNAMIC        = 0x02, // render dynamic objects (avatars) into this Reflection Probe
+        FLAG_MIRROR         = 0x04, // This probe is used for reflections on realtime mirrors.
+    };
+
+protected:
+    F32 mAmbiance = REFLECTION_PROBE_DEFAULT_AMBIANCE;
+    F32 mClipDistance = REFLECTION_PROBE_DEFAULT_CLIP_DISTANCE;
+    U8 mFlags = 0;
+
+public:
+    LLReflectionProbeParams();
+    /*virtual*/ BOOL pack(LLDataPacker& dp) const;
+    /*virtual*/ BOOL unpack(LLDataPacker& dp);
+    /*virtual*/ bool operator==(const LLNetworkData& data) const;
+    /*virtual*/ void copy(const LLNetworkData& data);
+    // LLSD implementations here are provided by Eddy Stryker.
+    // NOTE: there are currently unused in protocols
+    LLSD asLLSD() const;
+    operator LLSD() const { return asLLSD(); }
+    bool fromLLSD(LLSD& sd);
+
+    void setAmbiance(F32 ambiance) { mAmbiance = llclamp(ambiance, REFLECTION_PROBE_MIN_AMBIANCE, REFLECTION_PROBE_MAX_AMBIANCE); }
+    void setClipDistance(F32 distance) { mClipDistance = llclamp(distance, REFLECTION_PROBE_MIN_CLIP_DISTANCE, REFLECTION_PROBE_MAX_CLIP_DISTANCE); }
+    void setIsBox(bool is_box);
+    void setIsDynamic(bool is_dynamic);
+    void setIsMirror(bool is_mirror);
+
+    F32 getAmbiance() const { return mAmbiance; }
+    F32 getClipDistance() const { return mClipDistance; }
+    bool getIsBox() const { return (mFlags & FLAG_BOX_VOLUME) != 0; }
+    bool getIsDynamic() const { return (mFlags & FLAG_DYNAMIC) != 0; }
+    bool getIsMirror() const { return (mFlags & FLAG_MIRROR) != 0; }
+};
+class LLRenderMaterialParams : public LLNetworkData
+{
+private:
+    struct Entry
+    {
+        U8 te_idx;
+        LLUUID id;
+    };
+    std::vector< Entry > mEntries;
+
+public:
+    LLRenderMaterialParams();
+    BOOL pack(LLDataPacker& dp) const override;
+    BOOL unpack(LLDataPacker& dp) override;
+    bool operator==(const LLNetworkData& data) const override;
+    void copy(const LLNetworkData& data) override;
+
+    void setMaterial(U8 te_idx, const LLUUID& id);
+    const LLUUID& getMaterial(U8 te_idx) const;
+
+    bool isEmpty() { return mEntries.empty(); }
 };
 
 // This code is not naming-standards compliant. Leaving it like this for

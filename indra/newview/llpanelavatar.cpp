@@ -442,6 +442,7 @@ BOOL LLPanelAvatarSecondLife::postBuild()
 	ctrl->setFallbackImageName("default_profile_picture.j2c");
 	auto show_pic = [&]
 	{
+		
 		show_picture(getChild<LLTextureCtrl>("img")->getImageAssetID(), profile_picture_title(getChild<LLLineEditor>("dnname")->getText()));
 	};
 	auto show_pic_if_not_self = [=] { if (!ctrl->canChange()) show_pic(); };

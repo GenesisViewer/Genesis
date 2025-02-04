@@ -1430,7 +1430,7 @@ BOOL LLViewerFetchedTexture::createTexture(LLImageGL::GLTextureName* usename)
 		mOrigWidth = mFullWidth;
 		mOrigHeight = mFullHeight;
 	}
-	
+	LL_INFOS() << "Commentaire " << mRawImage->getComment() << LL_ENDL;
 	if (!mRawImage->mComment.empty())
 	{
 		// a is for uploader
@@ -3092,6 +3092,7 @@ F32 LLViewerFetchedTexture::getElapsedLastReferencedSavedRawImageTime() const
 
 LLUUID LLViewerFetchedTexture::getUploader()
 {
+	
 	return (mComment.find('a') != mComment.end()) ? LLUUID(mComment['a']) : LLUUID::null;
 }
 

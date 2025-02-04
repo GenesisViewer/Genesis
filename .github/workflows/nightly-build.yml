@@ -52,11 +52,11 @@ jobs:
          dep_user: ${{secrets.DEP_USER}}
         run: mkdir -p /tmp/nsis/ && curl -k --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 -u ${dep_user}:${dep_pass} https://genesisviewer.org/dependencies/nsis/StdUtils.nsh --output /tmp/nsis/StdUtils.nsh
         
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: fmod
           path: /tmp/deps/
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: nsis
           path: /tmp/nsis/    
@@ -66,7 +66,7 @@ jobs:
     runs-on: windows-latest
     steps:
      - id: nsis-plugins-download
-       uses: actions/download-artifact@v3
+       uses: actions/download-artifact@v4
        with:
            name: nsis
            path: c:/temp/
@@ -81,7 +81,7 @@ jobs:
      - run : pip install autobuild llbase
      
      - name: downloading-private-fmod
-       uses: actions/download-artifact@v3
+       uses: actions/download-artifact@v4
        with:
            name: fmod
            path: c:/temp/
@@ -98,7 +98,7 @@ jobs:
     
          
      - id: code-checkout
-       uses: actions/checkout@v3
+       uses: actions/checkout@v4
        with:
           ref: ${{env.GITHUB_REF}}
           fetch-depth: 0
@@ -114,7 +114,7 @@ jobs:
      - name: ls
        run : ls -l c:/temp/
      - name: store artefact
-       uses: actions/upload-artifact@v3
+       uses: actions/upload-artifact@v4
        with:
         name: Genesis-setup
         path: c:/temp/Genesis*
@@ -127,7 +127,7 @@ jobs:
       - name: create a tmp dir
         run: mkdir -p ./Genesis
       - name: download artefact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: Genesis-setup
           path: ./Genesis/

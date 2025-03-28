@@ -84,7 +84,7 @@ jobs:
            name: fmod
            path: c:/temp/
      
-     - uses: geekyeggo/delete-artifact@v1
+     - uses: geekyeggo/delete-artifact@v5
        with:
           name: fmod
      - name: ls
@@ -141,6 +141,6 @@ jobs:
           local-dir: ./Genesis/
           server-dir: genesis/uploadsfromgit/
       - run: curl --connect-timeout 5 --max-time 10  --retry 5 --retry-delay 0 --retry-max-time 40 https://londoncitysl.com/genesis/releases/moveuploadedfiles.php
-      - uses: geekyeggo/delete-artifact@v1
+      - uses: geekyeggo/delete-artifact@v5
         with:
           name: Genesis-setup  

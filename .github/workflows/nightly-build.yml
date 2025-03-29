@@ -86,7 +86,7 @@ jobs:
            name: fmod
            path: c:/temp/
      
-     - uses: geekyeggo/delete-artifact@v1
+     - uses: geekyeggo/delete-artifact@v5
        with:
           name: fmod
      - name: ls
@@ -144,6 +144,6 @@ jobs:
           source: "./Genesis/*.exe"
           target: ${{ secrets.SCP_PATH }}  
       
-      - uses: geekyeggo/delete-artifact@v1
+      - uses: geekyeggo/delete-artifact@v5
         with:
           name: Genesis-setup  

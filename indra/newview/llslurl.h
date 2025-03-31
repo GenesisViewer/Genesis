@@ -75,7 +75,7 @@ public:
 	
 	SLURL_TYPE getType() const { return mType; }
 	
-	std::string getSLURLString() const;
+	std::string getSLURLString(bool escapeRegion = true) const;
 	std::string getLoginString() const;
 	std::string getLocationString() const; 
 	std::string getGrid() const { return mGrid; }

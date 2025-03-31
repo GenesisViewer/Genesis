@@ -85,6 +85,8 @@ public:
 	S32 getSquareMetersCredit() const;
 	S32 getSquareMetersCommitted() const;
 	S32 getSquareMetersLeft() const;
+	void switchParcelInfo();
+	void changeLMLocation();
 
 private:
 	// simple method to setup the part that holds the date
@@ -101,7 +103,7 @@ private:
 	LLTextBox	*mTextTime;
 
 	LLTextBox*	mTextParcelName;
-
+	LLLineEditor*	mTextParcelLM;
 	LLStatGraph *mSGBandwidth;
 	LLStatGraph *mSGPacketLoss;
 
@@ -121,6 +123,7 @@ private:
 	LLUICtrl*	mStatusNoVoice;
 	LLUICtrl*	mSearchEditor;
 	LLUICtrl*	mSearchBtn;
+	LLUICtrl*   mShowHideLMButton;
 	LLView*		mSearchBevel;
 	LLTextBox*	mStatBtn;
 
@@ -139,6 +142,7 @@ private:
 	static std::vector<std::string> sDays;
 	static std::vector<std::string> sMonths;
 	static const U32 MAX_DATE_STRING_LENGTH;
+	std::string mBackupTextParcelLM;
 };
 
 // *HACK: Status bar owns your cached money balance. JC

@@ -1314,9 +1314,9 @@ public:
 		avatar_locs.clear();
 		avatar_ids.clear();
 
-		//LL_INFOS() << "coarse locations agent[0] " << input["body"]["AgentData"][0]["AgentID"].asUUID() << LL_ENDL;
-		//LL_INFOS() << "my agent id = " << gAgent.getID() << LL_ENDL;
-		//LL_INFOS() << ll_pretty_print_sd(input) << LL_ENDL;
+		// LL_INFOS() << "coarse locations agent[0] " << input["body"]["AgentData"][0]["AgentID"].asUUID() << LL_ENDL;
+		// LL_INFOS() << "my agent id = " << gAgent.getID() << LL_ENDL;
+		// LL_INFOS() << ll_pretty_print_sd(input) << LL_ENDL;
 
 		LLSD 
 			locs   = input["body"]["Location"],

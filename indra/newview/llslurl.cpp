@@ -417,7 +417,7 @@ LLSLURL::LLSLURL(const std::string& command, const LLUUID&id, const std::string&
 }
 
 
-std::string LLSLURL::getSLURLString() const
+std::string LLSLURL::getSLURLString(bool escapeRegion) const
 {
 	switch(mType)
 	{
@@ -444,7 +444,8 @@ std::string LLSLURL::getSLURLString() const
 				else
 					fixed_slurl = llformat(DEFAULT_SLURL_BASE, gHippoGridManager->getCurrentGridNick().c_str());
 				return fixed_slurl +
-				LLURI::escape(mRegion) + llformat("/%d/%d/%d",x,y,z); 
+				(escapeRegion?LLURI::escape(mRegion):mRegion) + 
+				llformat("/%d/%d/%d",x,y,z); 
 			}
 		case APP:
 		{

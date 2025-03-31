@@ -2332,7 +2332,7 @@ void LLViewerObject::processTerseData(LLMessageSystem *mesgsys, void **user_data
 		new_pos_parent.mV[VX] = U16_to_F32(val[VX], -0.5f*size, 1.5f*size);
 		new_pos_parent.mV[VY] = U16_to_F32(val[VY], -0.5f*size, 1.5f*size);
 		new_pos_parent.mV[VZ] = U16_to_F32(val[VZ], MIN_HEIGHT, MAX_HEIGHT);
-
+		
 #ifdef LL_BIG_ENDIAN
 		htonmemcpy(valswizzle, &data[count], MVT_U16Vec3, 6);
 		val = valswizzle;
@@ -2422,6 +2422,11 @@ void LLViewerObject::processTerseData(LLMessageSystem *mesgsys, void **user_data
 	U8 state;
 	mesgsys->getU8Fast(_PREHASH_ObjectData, _PREHASH_State, state, block_num);
 	mAttachmentState = state;
+	if (isAvatar()) {
+		LLVOAvatar* avi = asAvatar();
+		LL_INFOS() << avi->getFullname() << " New Z:" << new_pos_parent.mV[VZ] << LL_ENDL; 
+		
+	}
 }
 
 BOOL LLViewerObject::isActive() const

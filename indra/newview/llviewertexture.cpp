@@ -1430,7 +1430,6 @@ BOOL LLViewerFetchedTexture::createTexture(LLImageGL::GLTextureName* usename)
 		mOrigWidth = mFullWidth;
 		mOrigHeight = mFullHeight;
 	}
-	LL_INFOS() << "Commentaire " << mRawImage->getComment() << LL_ENDL;
 	if (!mRawImage->mComment.empty())
 	{
 		// a is for uploader

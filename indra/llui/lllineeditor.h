@@ -251,7 +251,7 @@ public:
 	void			setReplaceNewlinesWithSpaces(BOOL replace);
 
 	void			setContextMenu(LLMenuGL* new_context_menu);
-
+	const LLFontGL* getFont() const							{ return mGLFont; }
 private:
 	// private helper methods
 

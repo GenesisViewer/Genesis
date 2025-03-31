@@ -55,6 +55,7 @@
 #include "llpathfindingmanager.h"
 #include "llpathfindingnavmeshstatus.h"
 #include "llimview.h"
+#include "llslurl.h"
 #include "lltextbox.h"
 #include "lltrans.h"
 #include "llui.h"
@@ -63,6 +64,7 @@
 #include "llviewerstats.h"
 #include "llviewerwindow.h"
 #include "llframetimer.h"
+#include "llurlaction.h"
 #include "llvoavatarself.h"
 #include "llresmgr.h"
 #include "llworld.h"
@@ -121,6 +123,8 @@ const F32 ICON_FLASH_FREQUENCY	= 2.f;
 const S32 TEXT_HEIGHT = 18;
 
 static void onClickParcelInfo();
+static void onSwitchParcelInfo();
+static void onChangeLMLocation();
 static bool rebakeRegionCallback(const LLSD& n, const LLSD& r);
 static void pf_dirty_click() { LLNotificationsUtil::add("PathfindingDirty", LLSD(), LLSD(), rebakeRegionCallback); }
 static void onClickScripts();
@@ -189,6 +193,8 @@ mIsNavMeshDirty(false)
 	setupDate();
 
 	mTextParcelName = getChild<LLTextBox>("ParcelNameText" );
+	mTextParcelLM = getChild<LLLineEditor>("ParcelLMText" );
+	mShowHideLMButton = getChild<LLUICtrl>("showHideParcelLM" );
 	mTextBalance = getChild<LLTextBox>("BalanceText" );
 	mTextUPC = getChild<LLTextBox>("UPCText" );
 
@@ -236,6 +242,10 @@ mIsNavMeshDirty(false)
 	mSearchBevel->setVisible(show_search);
 
 	mTextParcelName->setClickedCallback(boost::bind(onClickParcelInfo));
+	mShowHideLMButton->setCommitCallback(boost::bind(onSwitchParcelInfo));
+	mTextParcelLM->setVisible(FALSE);
+	mTextParcelLM->setCommitCallback(boost::bind(onChangeLMLocation));
+	
 	mTextBalance->setClickedCallback(boost::bind(LLStatusBar::sendMoneyBalanceRequest, true));
 
 	// TODO: Disable buying currency when connected to non-SL grids
@@ -530,6 +540,7 @@ void LLStatusBar::refresh()
 	else mBuyLand->setVisible(false);
 
 	std::string location_name;
+	std::string location_lm;
 	if (region && parcel)
 	{
 // [RLVa:KB] - Checked: 2009-07-04 (RLVa-1.0.0a) | Modified: RLVa-1.0.0a
@@ -538,27 +549,56 @@ void LLStatusBar::refresh()
 			location_name = llformat("%s (%s) - %s",
 					RlvStrings::getString(RLV_STRING_HIDDEN_REGION).c_str(), region->getSimAccessString().c_str(), 
 					RlvStrings::getString(RLV_STRING_HIDDEN).c_str());
+			location_lm = location_name;
+			mTextParcelLM->setEnabled(FALSE);
 		}
-		else
+		else {
 // [/RLVa:KB]
-		if (!LLAgentUI::buildLocationString(location_name, LLAgentUI::LOCATION_FORMAT_FULL)) 
-			location_name = "???";
-		else
-		{
-			const std::string& grid(LFSimFeatureHandler::instance().gridName());
-			if (!grid.empty()) location_name += ", " + grid;
-		}
-
+			if (mTextParcelName->getVisible()) {
+				if (!LLAgentUI::buildLocationString(location_name, LLAgentUI::LOCATION_FORMAT_FULL)) 
+					location_name = "???";
+				else
+				{
+					const std::string& grid(LFSimFeatureHandler::instance().gridName());
+					if (!grid.empty()) location_name += ", " + grid;
+				}
+			}
+			if (mTextParcelLM->getVisible() ) {
+				LLSLURL slurl;
+				LLAgentUI::buildSLURL(slurl,false);
+				location_lm = slurl.getSLURLString();
+				mTextParcelLM->setEnabled(TRUE);
+			}
+		}	
 		static const LLCachedControl<bool> show_channel("ShowSimChannel");
 		if (show_channel && !gLastVersionChannel.empty()) location_name += " - " + gLastVersionChannel;
+		
 	}
 	else
 	{
 		// no region
 		location_name = "(Unknown)";
+		location_lm = "(Unknown)";
+		mTextParcelLM->setEnabled(FALSE);
 	}
 
 	mTextParcelName->setText(location_name);
+	if (location_lm!=mBackupTextParcelLM){
+		mTextParcelLM->setText(location_lm);
+		
+		mBackupTextParcelLM=location_lm;
+		//resize the text field to the good size, depending on the font size
+		const LLFontGL* font = mTextParcelLM->getFont();
+		S32 new_text_width = font->getWidth(location_lm);
+		LLRect rect = mTextParcelLM->getRect();
+		// rect.setOriginAndSize(mTextParcelName->getRect().mLeft, mTextParcelName->getRect().mBottom, new_text_width+20, rect.getHeight());
+		// mTextParcelLM->reshape(rect.getWidth(), rect.getHeight(), true);
+		rect.set(mTextParcelName->getRect().mLeft, getRect().getHeight() - 2, llmin(mTextParcelName->getRect().mLeft+new_text_width+20,mTextTime->getRect().mLeft), 0);
+    	mTextParcelLM->setRect(rect);
+		mTextParcelLM->draw();
+		
+	}
+		
 
 	// x = right edge
 	// loop through: stat graphs, search btn, search text editor, money, buy money, clock
@@ -610,13 +650,18 @@ void LLStatusBar::refresh()
 	r = mTextTime->getRect();
 	r.translate( new_right - r.mRight, 0);
 	mTextTime->setRect(r);
-
+	
+	
+	r.set(x+10,getRect().getHeight() - 2,x+28,0);
+	mShowHideLMButton->setRect(r);
 	// Adjust region name and parcel name
-	x += 8;
-
+	x += 26;
+	
 	const S32 PARCEL_RIGHT =  llmin(mTextTime->getRect().mLeft, mTextParcelName->getTextPixelWidth() + x + 5);
 	r.set(x+4, getRect().getHeight() - 2, PARCEL_RIGHT, 0);
 	mTextParcelName->setRect(r);
+	//mTextParcelLM->setRect(r);
+	
 }
 
 void LLStatusBar::setVisibleForMouselook(bool visible)
@@ -761,7 +806,31 @@ static void onClickParcelInfo()
 	LLViewerParcelMgr::getInstance()->selectParcelAt(gAgent.getPositionGlobal());
 	LLFloaterLand::showInstance();
 }
-
+static void onSwitchParcelInfo() {
+	gStatusBar->switchParcelInfo();
+}
+static void onChangeLMLocation() {
+	gStatusBar->changeLMLocation();
+}
+void LLStatusBar::switchParcelInfo()
+{
+	mTextParcelLM->setVisible(!mTextParcelLM->getVisible());
+	if (mTextParcelLM->getVisible()) {
+		mTextParcelLM->selectAll();
+	}
+	mTextParcelName->setVisible(!mTextParcelName->getVisible());
+}
+void LLStatusBar::changeLMLocation()
+{
+	std::string new_lm = mTextParcelLM->getText();
+	LLSLURL slurl = LLSLURL(new_lm);
+	if (slurl.isValid()) {
+		//to avoid two teleport actions
+		mTextParcelLM->setText(mBackupTextParcelLM);
+		LLUrlAction::teleportToLocation(slurl.getSLURLString());
+		
+	}
+}
 static bool rebakeRegionCallback(const LLSD& n, const LLSD& r)
 {
 	if(!LLNotificationsUtil::getSelectedOption(n, r)) //0 is Yes

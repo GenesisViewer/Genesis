@@ -146,10 +146,11 @@ LLGLTFMaterial* LLGLTFMaterialList::getMaterial(const LLUUID& id)
                 for (const LLUUID& obj_id : it->second)
                 {
                     LLViewerObject* obj = gObjectList.findObject(obj_id);
-                    if (obj && obj->mDrawable.notNull())
+                    if (!obj) continue;
+                    const LLRenderMaterialParams* params = obj->getRenderMaterialParams();
+                    obj->setRenderMaterialIDs(params);  // always update TEs
+                    if (obj->mDrawable.notNull())
                     {
-                        const LLRenderMaterialParams* params = obj->getRenderMaterialParams();
-                        obj->setRenderMaterialIDs(params);
                         LLVOVolume* vobj = obj->mDrawable->getVOVolume();
                         if (vobj)
                         {

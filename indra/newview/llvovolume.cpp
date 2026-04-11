@@ -87,6 +87,7 @@
 #include "llvoavatarself.h"
 #include "llvocache.h"
 #include "llmaterialmgr.h"
+#include "llgltfmaterial.h"
 #include "llsculptidsize.h"
 
 // [RLVa:KB] - Checked: 2010-04-04 (RLVa-1.2.0d)
@@ -932,7 +933,13 @@ void LLVOVolume::setScale(const LLVector3 &scale, BOOL damped)
 LLFace* LLVOVolume::addFace(S32 f)
 {
 	const LLTextureEntry* te = getTE(f);
-	LLViewerTexture* imagep = getTEImage(f);
+	LLGLTFMaterial* gltf_mat = te ? te->getGLTFMaterial() : nullptr;
+	const LLUUID& base_color_id = gltf_mat
+	? gltf_mat->mTextureId[LLGLTFMaterial::GLTF_TEXTURE_INFO_BASE_COLOR]
+	: LLUUID::null;
+	LLViewerTexture* imagep = base_color_id.notNull()
+	? LLViewerTextureManager::getFetchedTexture(base_color_id)
+	: getTEImage(f);
 	if (te->getMaterialParams().notNull())
 	{
 		LLViewerTexture* normalp = getTENormalMap(f);

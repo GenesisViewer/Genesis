@@ -61,7 +61,7 @@ jobs:
           
   build :
     needs: [download-artefacts]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
      - id: nsis-plugins-download
        uses: actions/download-artifact@v4
@@ -98,7 +98,7 @@ jobs:
      - id: code-checkout
        uses: actions/checkout@v4
        with:
-          ref: ${{env.GITHUB_REF}}
+          ref: ${{ github.ref }}
           fetch-depth: 0
      - id: autobuild-configure
        run : echo 'set AUTOBUILD_WIN_VSHOST=v143  && autobuild configure -cRelease -A64 --config-file autobuild-github.xml -- -DUSE_FMODSTUDIO:BOOL=ON -DVIEWER_CHANNEL_BASE="Genesis" -DVIEWER_CHANNEL_TYPE=Release' >configure.cmd

@@ -14,6 +14,7 @@
 #include "lltinygltfhelper.h"
 #include "llviewerobjectlist.h"
 #include "llviewerobject.h"
+#include "llvovolume.h"
 #include "pipeline.h"
 
 #include "tinygltf/tiny_gltf.h"
@@ -149,7 +150,12 @@ LLGLTFMaterial* LLGLTFMaterialList::getMaterial(const LLUUID& id)
                     {
                         const LLRenderMaterialParams* params = obj->getRenderMaterialParams();
                         obj->setRenderMaterialIDs(params);
-                        gPipeline.markTextured(obj->mDrawable);
+                        LLVOVolume* vobj = obj->mDrawable->getVOVolume();
+                        if (vobj)
+                        {
+                            vobj->faceMappingChanged();
+                            gPipeline.markRebuild(obj->mDrawable, LLDrawable::REBUILD_VOLUME, TRUE);
+                        }
                     }
                 }
                 gGLTFMaterialList.mPendingObjects.erase(it);

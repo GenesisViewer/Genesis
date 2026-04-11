@@ -5948,6 +5948,12 @@ LLViewerObject::ExtraParameter* LLViewerObject::createNewParameterEntry(U16 para
 			in_use = &mExtendedMeshParamsInUse;
 			break;
 		}
+		case LLNetworkData::PARAMS_RENDER_MATERIAL:
+		{
+			new_block = &mRenderMaterialParams;
+			in_use = &mRenderMaterialParamsInUse;
+			break;
+		}
 		default:
 		{
 			LL_INFOS() << "Unknown param type. (" << llformat("0x%2x", param_type) << ")" << LL_ENDL;
@@ -6053,6 +6059,17 @@ void LLViewerObject::parameterChanged(U16 param_type, LLNetworkData* data, BOOL 
 		else
 		{
 			LL_WARNS() << "Failed to send object extra parameters: " << param_type << LL_ENDL;
+		}
+	}
+	else
+	{
+		// Received from server
+		if (param_type == LLNetworkData::PARAMS_RENDER_MATERIAL)
+		{
+			const LLRenderMaterialParams* params = in_use
+			? (const LLRenderMaterialParams*)data
+			: nullptr;
+			setRenderMaterialIDs(params);
 		}
 	}
 }
@@ -6894,3 +6911,37 @@ public:
 LLHTTPRegistration<ObjectPhysicsProperties>
 	gHTTPRegistrationObjectPhysicsProperties("/message/ObjectPhysicsProperties");
 
+
+const LLUUID& LLViewerObject::getRenderMaterialID(U8 te) const
+{
+    if (mRenderMaterialParamsInUse)
+    {
+        return mRenderMaterialParams.getMaterial(te);
+    }
+    return LLUUID::null;
+}
+
+void LLViewerObject::setRenderMaterialIDs(const LLRenderMaterialParams* material_params)
+{
+    for (S32 te = 0; te < getNumTEs(); ++te)
+    {
+        const LLUUID& id = material_params ? material_params->getMaterial(te) : LLUUID::null;
+        LLTextureEntry* tep = getTE(te);
+        if (!tep) continue;
+
+		if (id.notNull())
+		{
+			LLGLTFMaterial* mat = gGLTFMaterialList.getMaterial(id);
+			tep->setGLTFMaterial(mat);
+			if (!mat)
+			{
+				// Asset not yet loaded, register for callback when it arrives
+				gGLTFMaterialList.addPendingObject(id, getID());
+			}
+		}
+        else
+        {
+            tep->setGLTFMaterial(nullptr);
+        }
+    }
+}

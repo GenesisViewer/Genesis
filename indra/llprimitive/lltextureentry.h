@@ -32,6 +32,8 @@
 #include "llsd.h"
 #include "llmaterialid.h"
 #include "llmaterial.h"
+#include "llgltfmaterial.h"
+#include "llpointer.h"
 
 // These bits are used while unpacking TEM messages to tell which aspects of
 // the texture entry changed.
@@ -191,6 +193,10 @@ public:
 	// Media flags
 	enum { MF_NONE = 0x0, MF_HAS_MEDIA = 0x1 };
 
+	// GLTF material asset
+	void setGLTFMaterial(LLGLTFMaterial* material);
+	LLGLTFMaterial* getGLTFMaterial() const { return mGLTFMaterial; }
+
 public:
 	F32                 mScaleS;                // S, T offset
 	F32                 mScaleT;                // S, T offset
@@ -217,6 +223,9 @@ protected:
 	bool                mMaterialUpdatePending;
 	LLMaterialID        mMaterialID;
 	LLMaterialPtr		mMaterial;
+
+	// GLTF render material asset
+	LLPointer<LLGLTFMaterial> mGLTFMaterial;
 
 	// Note the media data is not sent via the same message structure as the rest of the TE
 	LLMediaEntry*		mMediaEntry;			// The media data for the face

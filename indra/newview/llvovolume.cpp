@@ -1508,7 +1508,21 @@ void LLVOVolume::regenFaces()
 		if (!facep) continue;
 
 		facep->setTEOffset(i);
-		facep->setTexture(getTEImage(i));
+		{
+			const LLTextureEntry* te = getTE(i);
+			LLGLTFMaterial* gltf_mat = te ? te->getGLTFMaterial() : nullptr;
+			const LLUUID& base_color_id = gltf_mat
+			? gltf_mat->mTextureId[LLGLTFMaterial::GLTF_TEXTURE_INFO_BASE_COLOR]
+			: LLUUID::null;
+			if (base_color_id.notNull())
+			{
+				facep->setTexture(LLViewerTextureManager::getFetchedTexture(base_color_id));
+			}
+			else
+			{
+				facep->setTexture(getTEImage(i));
+			}
+		}
 		if (facep->getTextureEntry()->getMaterialParams().notNull())
 		{
 			facep->setNormalMap(getTENormalMap(i));

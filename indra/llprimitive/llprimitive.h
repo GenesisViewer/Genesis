@@ -107,7 +107,8 @@ public:
 		PARAMS_RESERVED = 0x50, // Used on server-side
 		PARAMS_MESH     = 0x60,
 		PARAMS_EXTENDED_MESH = 0x70,
-		PARAMS_MAX = PARAMS_EXTENDED_MESH
+		PARAMS_RENDER_MATERIAL = 0x80,
+		PARAMS_MAX = PARAMS_RENDER_MATERIAL
 	};
 	
 public:
@@ -118,6 +119,29 @@ public:
 	virtual bool operator==(const LLNetworkData& data) const = 0;
 	virtual void copy(const LLNetworkData& data) = 0;
 	static BOOL isValid(U16 param_type, U32 size);
+};
+
+class LLRenderMaterialParams : public LLNetworkData
+{
+private:
+	struct Entry
+	{
+		U8 te_idx;
+		LLUUID id;
+	};
+	std::vector<Entry> mEntries;
+
+public:
+	LLRenderMaterialParams();
+	BOOL pack(LLDataPacker& dp) const override;
+	BOOL unpack(LLDataPacker& dp) override;
+	bool operator==(const LLNetworkData& data) const override;
+	void copy(const LLNetworkData& data) override;
+
+	void setMaterial(U8 te_idx, const LLUUID& id);
+	const LLUUID& getMaterial(U8 te_idx) const;
+
+	bool isEmpty() { return mEntries.empty(); }
 };
 
 extern const F32 LIGHT_MIN_RADIUS;

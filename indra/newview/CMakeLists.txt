@@ -370,6 +370,7 @@ set(viewer_SOURCE_FILES
     llmapresponders.cpp
     llmarketplacefunctions.cpp
     llmarketplacenotifications.cpp
+    llgltfmateriallist.cpp
     llmaterialmgr.cpp
     llmediactrl.cpp
     llmediadataclient.cpp
@@ -940,6 +941,7 @@ set(viewer_HEADER_FILES
     llmapresponders.h
     llmarketplacefunctions.h
     llmarketplacenotifications.h
+    llgltfmateriallist.h
     llmaterialmgr.h
     llmediactrl.h
     llmediadataclient.h

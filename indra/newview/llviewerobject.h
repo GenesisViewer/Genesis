@@ -41,6 +41,7 @@
 #include "llinventory.h"
 #include "llrefcount.h"
 #include "llprimitive.h"
+#include "llgltfmateriallist.h"
 #include "lluuid.h"
 #include "llvoinventorylistener.h"
 #include "object_flags.h"
@@ -137,11 +138,13 @@ private:
 	bool mSculptParamsInUse = false;
 	bool mLightImageParamsInUse = false;
 	bool mExtendedMeshParamsInUse = false;
+	bool mRenderMaterialParamsInUse = false;
 	LLFlexibleObjectData mFlexibleObjectData;
 	LLLightParams mLightParams;
 	LLSculptParams mSculptParams;
 	LLLightImageParams mLightImageParams;
 	LLExtendedMeshParams mExtendedMeshParams;
+	LLRenderMaterialParams mRenderMaterialParams;
 
 public:
 	typedef std::list<LLPointer<LLViewerObject> > child_list_t;
@@ -605,6 +608,9 @@ public:
 	const LLSculptParams* getSculptParams() const { return mSculptParamsInUse ? &mSculptParams : nullptr; }
 	const LLLightImageParams* getLightImageParams() const { return mLightImageParamsInUse ? &mLightImageParams : nullptr; }
 	const LLExtendedMeshParams* getExtendedMeshParams() const { return mExtendedMeshParamsInUse ? &mExtendedMeshParams : nullptr; }
+	const LLRenderMaterialParams* getRenderMaterialParams() const { return mRenderMaterialParamsInUse ? &mRenderMaterialParams : nullptr; }
+	const LLUUID& getRenderMaterialID(U8 te) const;
+	void setRenderMaterialIDs(const LLRenderMaterialParams* material_params);
 
 	bool setParameterEntry(U16 param_type, const LLNetworkData& new_value, bool local_origin);
 	bool setParameterEntryInUse(U16 param_type, BOOL in_use, bool local_origin);

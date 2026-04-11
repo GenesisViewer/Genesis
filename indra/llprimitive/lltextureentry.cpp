@@ -92,6 +92,7 @@ LLTextureEntry::LLTextureEntry(const LLTextureEntry &rhs)
 	mGlow = rhs.mGlow;
 	mMaterialID = rhs.mMaterialID;
 	mMaterial = rhs.mMaterial;
+	mGLTFMaterial = rhs.mGLTFMaterial;
 	if (rhs.mMediaEntry != NULL) {
 		// Make a copy
 		mMediaEntry = new LLMediaEntry(*rhs.mMediaEntry);
@@ -114,6 +115,7 @@ LLTextureEntry &LLTextureEntry::operator=(const LLTextureEntry &rhs)
 		mGlow = rhs.mGlow;
 		mMaterialID = rhs.mMaterialID;
 		mMaterial = rhs.mMaterial;
+		mGLTFMaterial = rhs.mGLTFMaterial;
 		if (mMediaEntry != NULL) {
 			delete mMediaEntry;
 		}
@@ -673,4 +675,9 @@ LLUUID LLTextureEntry::getAgentIDFromMediaVersionString(const std::string &versi
 bool LLTextureEntry::isMediaVersionString(const std::string &version_string)
 {
 	return std::string::npos != version_string.find(MEDIA_VERSION_STRING_PREFIX);
+}
+
+void LLTextureEntry::setGLTFMaterial(LLGLTFMaterial* material)
+{
+	mGLTFMaterial = material;
 }

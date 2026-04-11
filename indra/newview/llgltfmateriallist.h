@@ -30,14 +30,6 @@ public:
     // Register an object as waiting for a material to load
     void addPendingObject(const LLUUID& material_id, const LLUUID& object_id);
 
-protected:
-    static void onAssetLoadComplete(
-        const LLUUID& asset_uuid,
-        LLAssetType::EType type,
-        void* user_data,
-        S32 status,
-        LLExtStat ext_status);
-
     typedef boost::unordered_map<LLUUID, LLPointer<LLGLTFMaterial>> uuid_mat_map_t;
     uuid_mat_map_t mList;
 
